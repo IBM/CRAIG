@@ -614,6 +614,26 @@ describe("security groups", () => {
     });
   });
   describe("security_groups.schema", () => {
+    it("should have the correct name helper text", () => {
+      assert.deepEqual(
+        craig.security_groups.name.helperText(
+          {},
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "hi",
+                  },
+                },
+              },
+            },
+          }
+        ),
+        "hi-undefined-undefined-sg",
+        "it should have correct helper text"
+      );
+    });
     it("should hide use_data", () => {
       assert.isTrue(
         craig.security_groups.use_data.hideWhen({}, { craig: craig }),

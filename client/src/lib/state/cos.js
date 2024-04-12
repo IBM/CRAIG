@@ -22,7 +22,8 @@ const {
   unconditionalInvalidText,
 } = require("./utils");
 const { cosPlans } = require("../constants");
-const { nameField } = require("./reusable-fields");
+const { nameField, hideWhenFieldFalse } = require("./reusable-fields");
+const { invalidCrnList } = require("../forms/invalid-callbacks");
 
 /**
  * set cosBuckets and cosKeys in slz store
@@ -259,6 +260,27 @@ function cosKeyDelete(config, stateData, componentProps) {
 }
 
 /**
+ * create cos helper text function
+ * @param {*} isKey
+ * @returns {Function} helpertext function
+ */
+function cosChildHelperText(isKey) {
+  /**
+   * helper text for object storage child form names
+   * @param {*} stateData
+   * @param {*} componentProps
+   * @returns {string} helper text
+   */
+  return function (stateData, componentProps) {
+    return `${componentProps.craig.store.json._options.prefix}-${
+      componentProps.arrayParentName
+    }-${isKey ? "key-" : ""}${stateData.name}${
+      componentProps.parent.use_random_suffix ? "-<random-suffix>" : ""
+    }`;
+  };
+}
+
+/**
  * initialize object storage store
  * @param {*} store
  */
@@ -309,7 +331,7 @@ function initObjectStorageStore(store) {
             stateData.use_data
               ? ""
               : componentProps.craig.store.json._options.prefix + "-"
-          }${stateData.name}${
+          }${stateData.name}-object-storage${
             stateData.use_random_suffix ? "-<random-suffix>" : ""
           }`;
         },
@@ -358,13 +380,21 @@ function initObjectStorageStore(store) {
         save: cosBucketSave,
         delete: cosBucketDelete,
         shouldDisableSave: shouldDisableComponentSave(
-          ["name", "storage_class"],
+          [
+            "name",
+            "storage_class",
+            "activity_tracking_crn",
+            "metrics_monitoring_crn",
+          ],
           "object_storage",
           "buckets"
         ),
         schema: {
-          name: nameField("buckets"),
+          name: nameField("buckets", {
+            helperText: cosChildHelperText(),
+          }),
           storage_class: {
+            size: "small",
             default: "",
             type: "select",
             invalid: fieldIsNullOrEmptyString("storage_class"),
@@ -375,6 +405,7 @@ function initObjectStorageStore(store) {
             onRender: titleCaseRender("storage_class"),
           },
           kms_key: {
+            size: "small",
             labelText: "Encryption Key",
             type: "select",
             default: null,
@@ -418,6 +449,7 @@ function initObjectStorageStore(store) {
             },
           },
           force_delete: {
+            size: "small",
             default: false,
             type: "toggle",
             tooltip: {
@@ -425,6 +457,82 @@ function initObjectStorageStore(store) {
                 "Toggling this on will force delete contents of the bucket after the bucket is deleted",
             },
             labelText: "Force Delete Contents",
+          },
+          activity_tracking: {
+            type: "toggle",
+            size: "small",
+            default: false,
+            labelText: "Enable Activity Tracking",
+          },
+          read_data_events: {
+            type: "toggle",
+            size: "small",
+            default: false,
+            labelText: "Read Data Events",
+            hideWhen: hideWhenFieldFalse("activity_tracking"),
+          },
+          write_data_events: {
+            type: "toggle",
+            size: "small",
+            default: false,
+            labelText: "Write Data Events",
+            hideWhen: hideWhenFieldFalse("activity_tracking"),
+          },
+          activity_tracking_crn: {
+            labelText: "Activity Tracking CRN",
+            default: null,
+            size: "small",
+            hideWhen: function (stateData, componentProps) {
+              return (
+                hideWhenFieldFalse("activity_tracking")(stateData) ||
+                componentProps.craig.store.json.atracker.instance
+              );
+            },
+            invalid: function (stateData, componentProps) {
+              return hideWhenFieldFalse("activity_tracking")(stateData) ||
+                componentProps.craig.store.json.atracker.instance
+                ? false
+                : invalidCrnList([stateData.activity_tracking_crn]);
+            },
+            invalidText: unconditionalInvalidText("Enter a valid resource CRN"),
+          },
+          metrics_monitoring: {
+            type: "toggle",
+            size: "small",
+            default: false,
+            labelText: "Enable Metrics Monitoring",
+          },
+          usage_metrics_enabled: {
+            type: "toggle",
+            size: "small",
+            default: false,
+            labelText: "Usage Metrics",
+            hideWhen: hideWhenFieldFalse("metrics_monitoring"),
+          },
+          request_metrics_enabled: {
+            type: "toggle",
+            size: "small",
+            default: false,
+            labelText: "Request Metrics",
+            hideWhen: hideWhenFieldFalse("metrics_monitoring"),
+          },
+          metrics_monitoring_crn: {
+            labelText: "Cloud Monitoring CRN",
+            default: null,
+            size: "small",
+            hideWhen: function (stateData, componentProps) {
+              return (
+                hideWhenFieldFalse("metrics_monitoring")(stateData) ||
+                componentProps.craig.store.json.sysdig.enabled
+              );
+            },
+            invalid: function (stateData, componentProps) {
+              return hideWhenFieldFalse("metrics_monitoring")(stateData) ||
+                componentProps.craig.store.json.sysdig.enabled
+                ? false
+                : invalidCrnList([stateData.metrics_monitoring_crn]);
+            },
+            invalidText: unconditionalInvalidText("Enter a valid resource CRN"),
           },
         },
       },
@@ -438,7 +546,9 @@ function initObjectStorageStore(store) {
           "keys"
         ),
         schema: {
-          name: nameField("cos_keys"),
+          name: nameField("cos_keys", {
+            helperText: cosChildHelperText(true),
+          }),
           role: {
             type: "select",
             default: "",

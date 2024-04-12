@@ -4,7 +4,6 @@ const { splat } = require("lazy-z");
 const json = require("../data-files/craig-json.json");
 const hardSetData = require("../data-files/expected-hard-set.json");
 const brokenSubnets = require("../data-files/broken-subnets.json");
-const { deepEqual } = require("assert");
 
 /**
  * initialize store

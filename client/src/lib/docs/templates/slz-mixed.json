@@ -124,7 +124,7 @@
           "key_ring": "ring",
           "name": "roks-key",
           "root_key": true,
-          "force_delete": null,
+          "force_delete": false,
           "endpoint": null,
           "rotation": 1,
           "dual_auth_delete": false
@@ -153,7 +153,15 @@
           "kms_key": "atracker-key",
           "name": "atracker-bucket",
           "storage_class": "standard",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         }
       ],
       "keys": [
@@ -179,7 +187,15 @@
           "kms_key": "key",
           "name": "management-bucket",
           "storage_class": "standard",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         },
         {
           "endpoint": "public",
@@ -187,7 +203,15 @@
           "kms_key": "key",
           "name": "workload-bucket",
           "storage_class": "standard",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         }
       ],
       "use_random_suffix": true,
@@ -994,15 +1018,24 @@
       "subnetTiers": [
         {
           "name": "vsi",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpn",
-          "zones": 1
+          "zones": 1,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpe",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         }
       ],
       "use_data": false
@@ -1242,11 +1275,17 @@
       "subnetTiers": [
         {
           "name": "vsi",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpe",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         }
       ],
       "use_data": false
@@ -1286,7 +1325,13 @@
       "primary_interface_ip_spoofing": false,
       "use_variable_names": false,
       "snapshot": null,
-      "use_snapshot": false
+      "use_snapshot": false,
+      "reserved_ips": [
+        ["", ""],
+        ["", ""],
+        ["", ""]
+      ],
+      "enable_static_ips": false
     }
   ]
 }

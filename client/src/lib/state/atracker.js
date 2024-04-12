@@ -104,7 +104,7 @@ function initAtracker(store) {
         readOnly: true,
         hideWhen: hideWhenDisabled,
         onRender: function (stateData, componentProps) {
-          return `${componentProps.craig.store.json._options.prefix}-atracker`;
+          return `${componentProps.craig.store.json._options.prefix}-${componentProps.craig.store.json._options.region}-atracker`;
         },
       },
       resource_group: {

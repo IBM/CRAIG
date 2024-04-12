@@ -122,6 +122,77 @@ describe("routing_tables", () => {
         "it should return groups"
       );
     });
+    it("should return correct advertise groups", () => {
+      assert.deepEqual(
+        craig.routing_tables.advertise_routes_to.groups({}),
+        [],
+        "it should return groups"
+      );
+      assert.deepEqual(
+        craig.routing_tables.advertise_routes_to.groups({
+          route_direct_link_ingress: true,
+        }),
+        ["Direct Link"],
+        "it should return groups"
+      );
+      assert.isTrue(
+        craig.routing_tables.route_direct_link_ingress.disabled({
+          advertise_routes_to: ["direct_link"],
+        }),
+        "it should be disabled"
+      );
+      assert.isTrue(
+        craig.routing_tables.transit_gateway_ingress.disabled({
+          advertise_routes_to: ["transit_gateway"],
+        }),
+        "it should be disabled"
+      );
+      assert.deepEqual(
+        craig.routing_tables.advertise_routes_to.groups({
+          transit_gateway_ingress: true,
+        }),
+        ["Transit Gateway"],
+        "it should return groups"
+      );
+    });
+    it("should return list of routes on render", () => {
+      assert.deepEqual(
+        craig.routing_tables.advertise_routes_to.onRender({
+          advertise_routes_to: ["vpn_server", "vpn_gateway"],
+        }),
+        ["VPN Server", "VPN Gateway"],
+        "it should return groups"
+      );
+    });
+    it("should return list of routes on input change", () => {
+      assert.deepEqual(
+        craig.routing_tables.advertise_routes_to.onInputChange({
+          advertise_routes_to: ["VPN Server", "VPN Gateway"],
+        }),
+        ["vpn_server", "vpn_gateway"],
+        "it should return groups"
+      );
+    });
+    it("should have the correct name helper text", () => {
+      assert.deepEqual(
+        craig.routing_tables.name.helperText(
+          {},
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "hi",
+                  },
+                },
+              },
+            },
+          }
+        ),
+        "hi-undefined-vpc-undefined-table",
+        "it should have correct helper text"
+      );
+    });
   });
   describe("routing_tables.routes", () => {
     beforeEach(() => {

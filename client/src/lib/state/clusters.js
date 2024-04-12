@@ -615,7 +615,7 @@ function initClusterStore(store) {
             type: "date",
             default: null,
             invalid: function (stateData) {
-              return !stateData.expiration_date;
+              return isNullOrEmptyString(stateData.expiration_date, true);
             },
             invalidText: unconditionalInvalidText("Select a date"),
           },

@@ -27,7 +27,7 @@ const {
   powerStoragePoolSelect,
 } = require("../utils");
 const { sapProfiles, systemTypes } = require("../../constants");
-const { nameField } = require("../reusable-fields");
+const { nameField, hideWhenFieldFalse } = require("../reusable-fields");
 
 /**
  * hide field for vtl forms when no workspace is selected
@@ -185,9 +185,7 @@ function powerVsInstanceSchema(vtl) {
       size: "small",
     },
     sap_profile: {
-      hideWhen: function (stateData) {
-        return stateData.sap !== true;
-      },
+      hideWhen: hideWhenFieldFalse("sap"),
       default: "",
       invalid: function (stateData) {
         return stateData.sap && isNullOrEmptyString(stateData.sap_profile);

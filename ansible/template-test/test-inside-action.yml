@@ -34,5 +34,9 @@
             metadata:
               secure: true
           - name: tf_var_ssh_key
-            value: "{{ tf_var_ssh_key }}"                                   
+            value: "{{ tf_var_ssh_key }}"
+          - name: use_existing_workspace
+            value: "{{ use_existing_workspace }}"
+          - name: existing_workspace_id
+            value: "{{ existing_workspace_id }}"
     - role: run_schematics_action

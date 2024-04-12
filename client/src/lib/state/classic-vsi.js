@@ -12,6 +12,7 @@ const {
   fieldIsNullOrEmptyString,
   unconditionalInvalidText,
   classicPrivateNetworkOnly,
+  hideWhenFieldFalse,
 } = require("./reusable-fields");
 
 /**
@@ -191,9 +192,7 @@ function initClassicVsi(store) {
             "name"
           );
         },
-        hideWhen: function (stateData) {
-          return stateData.private_network_only;
-        },
+        hideWhen: hideWhenFieldFalse("private_network_only", true),
       },
     },
   });

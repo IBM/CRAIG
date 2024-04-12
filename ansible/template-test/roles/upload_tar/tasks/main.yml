@@ -2,13 +2,13 @@
 # tasks file for upload_tar
 - name: Upload {{template}}.tar to Schematics Workspace
   ansible.builtin.shell: "curl -s --request PUT \
-            --url 'https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}/template_data/{{ workspace.json.template_data[0].id }}/template_repo_upload' \
+            --url 'https://schematics.cloud.ibm.com/v1/workspaces/{{ existing_workspace_id if use_existing_workspace == 'true' else new_workspace_id }}/template_data/{{ template_id }}/template_repo_upload' \
             -H 'Authorization: Bearer {{ token.json.access_token }}' \
             -H 'Content-Type: multipart/form-data' \
             --form 'file=@{{playbook_dir}}/{{template}}.tar'"
 - name: Wait until {{template}}.tar has been successfully uploaded
   uri:
-    url: https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}
+    url: "https://schematics.cloud.ibm.com/v1/workspaces/{{ existing_workspace_id if use_existing_workspace == 'true' else new_workspace_id }}"
     method: GET
     body_format: json
     headers:

@@ -18,6 +18,24 @@ describe("vpcs", () => {
   beforeEach(() => {
     state = newState();
   });
+  describe("vpc.onStoreUpdate", () => {
+    it("should update unfound and changed address prefixes on store update when using manual subnet addressing", () => {
+      state.store.json._options.dynamic_subnets = false;
+      state.store.json.vpcs[0].address_prefixes.shift();
+      state.store.json.vpcs[0].subnets[1].cidr = "1.2.3.4/5";
+      state.update();
+      assert.deepEqual(
+        state.store.json.vpcs[0].address_prefixes.length,
+        7,
+        "it should have correct number of address prefixes"
+      );
+      assert.deepEqual(
+        state.store.json.vpcs[0].address_prefixes[1].cidr,
+        "1.2.3.4/5",
+        "it should update cidr"
+      );
+    });
+  });
   describe("vpcs.save", () => {
     it("should rename a vpc", () => {
       state.store.json.dns = [
@@ -963,6 +981,12 @@ describe("vpcs", () => {
           },
           {
             vpc: "management",
+            zone: 1,
+            cidr: "1.2.3.4/5",
+            name: "frog",
+          },
+          {
+            vpc: "management",
             zone: 2,
             cidr: "10.20.10.0/24",
             name: "vsi-zone-2",
@@ -990,12 +1014,6 @@ describe("vpcs", () => {
             zone: 3,
             cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "1.2.3.4/5",
-            name: "frog",
           },
         ];
         state.vpcs.subnetTiers.save(
@@ -1158,6 +1176,62 @@ describe("vpcs", () => {
           "it should be frog"
         );
       });
+      it("should update vpc address prefixes when advanced subnet is created with no matching prefix", () => {
+        let state = new newState(true);
+        state.store.json._options.dynamic_subnets = false;
+        state.vpcs.subnetTiers.save(
+          {
+            advanced: true,
+            select_zones: [1],
+            name: "vpn",
+          },
+          {
+            vpc_name: "management",
+            data: {
+              name: "vpn",
+              craig: {
+                store: state.store.json.vpcs[0],
+              },
+            },
+          }
+        );
+        state.store.subnetTiers.management[2].subnets.push("lol");
+        state.store.json.vpcs[0].address_prefixes = [];
+        state.vpcs.subnets.save(
+          {
+            name: "frog",
+            acl_name: "",
+            tier: "vpn",
+            cidr: "1.2.3.4/5",
+            zone: "vpn-zone-1",
+            vpc: "management",
+          },
+          {
+            vpc_name: "management",
+            data: { name: "vpn-zone-1" },
+          }
+        );
+        assert.deepEqual(
+          state.store.json.vpcs[0].subnets[1].name,
+          "frog",
+          "it should be null"
+        );
+        assert.deepEqual(
+          state.store.subnetTiers.management[2].subnets,
+          ["frog", "lol"],
+          "it should update subnets"
+        );
+        assert.deepEqual(
+          state.store.json.vpcs[0].address_prefixes[1],
+          {
+            name: "frog",
+            cidr: "1.2.3.4/5",
+            zone: "vpn-zone-1",
+            vpc: "management",
+          },
+          "it should update address prefixes"
+        );
+      });
       describe("vpcs.subnets.save (from tier JSON)", () => {
         let craig;
         beforeEach(() => {
@@ -1172,6 +1246,12 @@ describe("vpcs", () => {
               zone: 1,
               cidr: "10.10.10.0/24",
               name: "vsi-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 1,
+              cidr: "1.2.3.4/5",
+              name: "frog",
             },
             {
               vpc: "management",
@@ -1202,12 +1282,6 @@ describe("vpcs", () => {
               zone: 3,
               cidr: "10.30.20.0/24",
               name: "vpe-zone-3",
-            },
-            {
-              vpc: "management",
-              zone: 1,
-              cidr: "1.2.3.4/5",
-              name: "frog",
             },
           ];
           craig.vpcs.subnetTiers.save(
@@ -1400,9 +1474,9 @@ describe("vpcs", () => {
         assert.deepEqual(
           craig.vpcs.subnets.name.helperText(
             { name: "iac-subnet" },
-            { craig: craig }
+            { craig: craig, vpc_name: "hi" }
           ),
-          "iac-iac-subnet",
+          "iac-hi-iac-subnet",
           "it should return correct helper text"
         );
       });
@@ -1569,6 +1643,12 @@ describe("vpcs", () => {
           },
           {
             vpc: "management",
+            zone: 1,
+            cidr: "10.10.30.0/24",
+            name: "vpn-zone-1",
+          },
+          {
+            vpc: "management",
             zone: 2,
             cidr: "10.20.10.0/24",
             name: "frog-zone-2",
@@ -1590,12 +1670,6 @@ describe("vpcs", () => {
             zone: 3,
             cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.30.0/24",
-            name: "vpn-zone-1",
           },
         ];
         vpcState.vpcs.subnetTiers.save(
@@ -1817,6 +1891,12 @@ describe("vpcs", () => {
           },
           {
             vpc: "management",
+            zone: 1,
+            cidr: "10.10.30.0/24",
+            name: "vpn-zone-1",
+          },
+          {
+            vpc: "management",
             zone: 2,
             cidr: "10.20.10.0/24",
             name: "vsi-zone-2",
@@ -1844,12 +1924,6 @@ describe("vpcs", () => {
             zone: 3,
             cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.30.0/24",
-            name: "vpn-zone-1",
           },
           {
             vpc: "management",
@@ -2230,6 +2304,12 @@ describe("vpcs", () => {
           },
           {
             vpc: "management",
+            zone: 1,
+            cidr: "10.10.30.0/24",
+            name: "vpn-zone-1",
+          },
+          {
+            vpc: "management",
             zone: 2,
             cidr: "10.20.10.0/24",
             name: "frog-zone-2",
@@ -2251,12 +2331,6 @@ describe("vpcs", () => {
             zone: 3,
             cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.30.0/24",
-            name: "vpn-zone-1",
           },
         ];
         assert.deepEqual(
@@ -2401,6 +2475,12 @@ describe("vpcs", () => {
           },
           {
             vpc: "management",
+            zone: 1,
+            cidr: "10.10.30.0/24",
+            name: "vpn-zone-1",
+          },
+          {
+            vpc: "management",
             zone: 2,
             cidr: "10.20.10.0/24",
             name: "frog-zone-2",
@@ -2422,12 +2502,6 @@ describe("vpcs", () => {
             zone: 3,
             cidr: "10.30.20.0/24",
             name: "vpe-zone-3",
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.30.0/24",
-            name: "vpn-zone-1",
           },
         ];
         assert.deepEqual(
@@ -3198,6 +3272,12 @@ describe("vpcs", () => {
             },
             {
               vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+            },
+            {
+              vpc: "management",
               zone: 2,
               cidr: "10.20.10.0/24",
               name: "frog-zone-2",
@@ -3221,10 +3301,10 @@ describe("vpcs", () => {
               name: "vpe-zone-3",
             },
             {
+              cidr: undefined,
+              name: "test",
               vpc: "management",
-              zone: 1,
-              cidr: "10.10.30.0/24",
-              name: "vpn-zone-1",
+              zone: undefined,
             },
           ];
           craig.vpcs.subnetTiers.save(
@@ -3572,6 +3652,12 @@ describe("vpcs", () => {
             },
             {
               vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+            },
+            {
+              vpc: "management",
               zone: 2,
               cidr: "10.20.10.0/24",
               name: "vsi-zone-2",
@@ -3601,10 +3687,10 @@ describe("vpcs", () => {
               name: "vpe-zone-3",
             },
             {
+              cidr: undefined,
+              name: "test",
               vpc: "management",
-              zone: 1,
-              cidr: "10.10.30.0/24",
-              name: "vpn-zone-1",
+              zone: undefined,
             },
             {
               vpc: "management",
@@ -4110,6 +4196,12 @@ describe("vpcs", () => {
             },
             {
               vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+            },
+            {
+              vpc: "management",
               zone: 2,
               cidr: "10.20.10.0/24",
               name: "frog-zone-2",
@@ -4133,10 +4225,10 @@ describe("vpcs", () => {
               name: "vpe-zone-3",
             },
             {
+              cidr: undefined,
+              name: "test",
               vpc: "management",
-              zone: 1,
-              cidr: "10.10.30.0/24",
-              name: "vpn-zone-1",
+              zone: undefined,
             },
           ];
           assert.deepEqual(
@@ -4287,6 +4379,12 @@ describe("vpcs", () => {
             },
             {
               vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+            },
+            {
+              vpc: "management",
               zone: 2,
               cidr: "10.20.10.0/24",
               name: "frog-zone-2",
@@ -4310,10 +4408,10 @@ describe("vpcs", () => {
               name: "vpe-zone-3",
             },
             {
+              cidr: undefined,
+              name: "test",
               vpc: "management",
-              zone: 1,
-              cidr: "10.10.30.0/24",
-              name: "vpn-zone-1",
+              zone: undefined,
             },
           ];
           assert.deepEqual(
@@ -4515,6 +4613,12 @@ describe("vpcs", () => {
             },
             {
               vpc: "management",
+              zone: 1,
+              cidr: "10.10.30.0/24",
+              name: "vpn-zone-1",
+            },
+            {
+              vpc: "management",
               zone: 3,
               cidr: "10.30.10.0/24",
               name: "vsi-zone-3",
@@ -4538,10 +4642,10 @@ describe("vpcs", () => {
               name: "vpe-zone-3",
             },
             {
+              cidr: undefined,
+              name: "test",
               vpc: "management",
-              zone: 1,
-              cidr: "10.10.30.0/24",
-              name: "vpn-zone-1",
+              zone: undefined,
             },
           ];
           assert.deepEqual(
@@ -6765,6 +6869,12 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
+            cidr: "10.10.20.0/24",
+            name: "vpn-zone-1",
+          },
+          {
+            vpc: "management",
+            zone: 1,
             cidr: "10.10.10.0/24",
             name: "vpe-zone-1",
           },
@@ -6779,12 +6889,6 @@ describe("vpcs", () => {
             zone: 3,
             cidr: "10.30.10.0/24",
             name: "vpe-zone-3",
-          },
-          {
-            vpc: "management",
-            zone: 1,
-            cidr: "10.10.20.0/24",
-            name: "vpn-zone-1",
           },
         ];
         vpcState.vpcs.subnetTiers.delete(
@@ -7066,6 +7170,12 @@ describe("vpcs", () => {
             {
               vpc: "management",
               zone: 1,
+              cidr: "10.10.10.0/24",
+              name: "vpn-zone-1",
+            },
+            {
+              vpc: "management",
+              zone: 1,
               cidr: "10.10.20.0/24",
               name: "vpe-zone-1",
             },
@@ -7080,12 +7190,6 @@ describe("vpcs", () => {
               zone: 3,
               cidr: "10.30.20.0/24",
               name: "vpe-zone-3",
-            },
-            {
-              vpc: "management",
-              zone: 1,
-              cidr: "10.10.10.0/24",
-              name: "vpn-zone-1",
             },
           ];
           craig.vpcs.subnetTiers.delete(

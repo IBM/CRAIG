@@ -272,7 +272,12 @@ function initSecurityGroupStore(store) {
           );
         },
       },
-      name: nameField("security_groups", { size: "small" }),
+      name: nameField("security_groups", {
+        size: "small",
+        helperText: function (stateData, componentProps) {
+          return `${componentProps.craig.store.json._options.prefix}-${stateData.vpc}-${stateData.name}-sg`;
+        },
+      }),
       resource_group: resourceGroupsField(true),
       vpc: {
         type: "select",

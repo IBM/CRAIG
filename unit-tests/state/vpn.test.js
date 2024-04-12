@@ -413,6 +413,53 @@ describe("vpn_gateways", () => {
           "it should be disabled"
         );
       });
+      it("should handle invalid for peer cidrs when parent is policy based", () => {
+        craig.store.json.vpn_gateways[0].policy_mode = true;
+        craig.store.json.vpn_gateways.unshift({ name: "um" });
+        assert.isTrue(
+          craig.vpn_gateways.connections.peer_cidrs.invalid(
+            { peer_cidrs: [] },
+            { craig: craig, arrayParentName: "management-gateway" }
+          ),
+          "it should be valid"
+        );
+        craig.store.json.vpn_gateways[1].policy_mode = false;
+        craig.store.json.vpn_gateways.unshift({ name: "um" });
+        assert.isFalse(
+          craig.vpn_gateways.connections.peer_cidrs.invalid(
+            { peer_cidrs: [] },
+            { craig: craig, arrayParentName: "management-gateway" }
+          ),
+          "it should be invalid"
+        );
+      });
+      it("should handle hideWhen for peer cidrs when parent is policy based", () => {
+        craig.store.json.vpn_gateways[0].policy_mode = true;
+        craig.store.json.vpn_gateways.unshift({ name: "um" });
+        assert.isFalse(
+          craig.vpn_gateways.connections.peer_cidrs.hideWhen(
+            { peer_cidrs: [] },
+            { craig: craig, arrayParentName: "management-gateway" }
+          ),
+          "it should be valid"
+        );
+        craig.store.json.vpn_gateways[1].policy_mode = false;
+        craig.store.json.vpn_gateways.unshift({ name: "um" });
+        assert.isTrue(
+          craig.vpn_gateways.connections.peer_cidrs.hideWhen(
+            { peer_cidrs: [] },
+            { craig: craig, arrayParentName: "management-gateway" }
+          ),
+          "it should be invalid"
+        );
+        assert.isFalse(
+          craig.vpn_gateways.connections.peer_cidrs.hideWhen(
+            { peer_cidrs: [] },
+            { craig: craig }
+          ),
+          "it should be invalid"
+        );
+      });
     });
   });
 });

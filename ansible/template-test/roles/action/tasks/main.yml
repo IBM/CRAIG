@@ -2,7 +2,7 @@
 # tasks file for action
 - name: Start {{ action_type }} action
   uri:
-    url: https://schematics.cloud.ibm.com/v1/workspaces/{{ workspace.json.id }}/{{ action_type }}
+    url: "https://schematics.cloud.ibm.com/v1/workspaces/{{ existing_workspace_id if use_existing_workspace == 'true' else new_workspace_id }}/{{ action_type }}"
     method: "{{ 'POST' if action_type == 'plan' else 'PUT' }}"
     body_format: json
     headers:

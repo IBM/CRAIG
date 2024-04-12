@@ -49,6 +49,11 @@ function deploymentIconBoxClassName(props) {
         addBoxClassName = " diagramIconBoxInvalid";
     });
     boxClassName += addBoxClassName;
+  } else if (
+    props.itemName === "f5_vsi" &&
+    isNullOrEmptyString(props.item.template.tmos_admin_password)
+  ) {
+    boxClassName += " diagramIconBoxInvalid";
   }
   return boxClassName;
 }

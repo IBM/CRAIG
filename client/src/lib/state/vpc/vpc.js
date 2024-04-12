@@ -66,6 +66,7 @@ const {
   genericNameCallback,
   nameHelperText,
 } = require("../reusable-fields");
+const { RegexButWithWords } = require("regex-but-with-words");
 
 /**
  * read only when
@@ -246,6 +247,7 @@ function vpcOnStoreUpdate(config) {
         subnet.public_gateway = false;
       }
     });
+
     network.acls.forEach((acl) => {
       if (isNullOrEmptyString(acl.use_data, true)) {
         acl.use_data = false;
@@ -340,6 +342,22 @@ function vpcOnStoreUpdate(config) {
         newSubnets.push(nextSubnet);
       });
       vpc.subnets = newSubnets;
+    });
+  } else if (config.store.json._options.dynamic_subnets === false) {
+    config.store.json.vpcs.forEach((vpc) => {
+      // if the vpc is not the edge vpc, create new prefixes for subnets
+      // is_edge_vpc only used when creating f5 network with setup wizatd
+      if (vpc.name !== config.store.edge_vpc_name && !vpc.is_edge_vpc) {
+        vpc.address_prefixes = [];
+        vpc.subnets.forEach((subnet) => {
+          vpc.address_prefixes.push({
+            cidr: subnet.cidr,
+            name: subnet.name,
+            vpc: vpc.name,
+            zone: subnet.zone,
+          });
+        });
+      }
     });
   }
 }
@@ -451,6 +469,13 @@ function subnetSave(config, stateData, componentProps) {
         if (prefix) {
           prefix.name = stateData.name;
           prefix.cidr = stateData.cidr;
+        } else {
+          data.address_prefixes.push({
+            name: stateData.name,
+            cidr: stateData.cidr,
+            zone: stateData.zone,
+            vpc: stateData.vpc,
+          });
         }
       }
     })
@@ -1400,7 +1425,16 @@ function initVpcStore(store) {
             helperText: function (stateData, componentProps) {
               if (stateData.use_data) {
                 return "";
-              } else return nameHelperText(stateData, componentProps);
+              } else
+                return nameHelperText(stateData, componentProps).replace(
+                  new RegexButWithWords()
+                    .stringBegin()
+                    .literal(
+                      componentProps.craig.store.json._options.prefix + "-"
+                    )
+                    .done("s"),
+                  `${componentProps.craig.store.json._options.prefix}-${componentProps.vpc_name}-`
+                );
             },
             size: "small",
             invalid: function (stateData, componentProps) {

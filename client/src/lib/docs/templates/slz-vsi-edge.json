@@ -120,7 +120,15 @@
           "kms_key": "slz-atracker-key",
           "name": "atracker-bucket",
           "storage_class": "standard",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         }
       ],
       "keys": [
@@ -146,7 +154,15 @@
           "kms_key": "key",
           "name": "management-bucket",
           "storage_class": "standard",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         },
         {
           "endpoint": "public",
@@ -154,7 +170,15 @@
           "kms_key": "key",
           "name": "workload-bucket",
           "storage_class": "standard",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         },
         {
           "endpoint": "public",
@@ -162,7 +186,15 @@
           "kms_key": "key",
           "name": "edge-bucket",
           "storage_class": "standard",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         }
       ],
       "keys": []
@@ -2148,31 +2180,52 @@
       "subnetTiers": [
         {
           "name": "vpn-2",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpn-1",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "f5-workload",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "f5-management",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "f5-external",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "f5-bastion",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpe",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         }
       ],
       "use_data": false
@@ -2360,46 +2413,46 @@
       ],
       "address_prefixes": [
         {
-          "name": "vsi-zone-1",
           "cidr": "10.10.10.0/24",
-          "zone": 1,
-          "vpc": "management"
+          "name": "vsi-zone-1",
+          "vpc": "management",
+          "zone": 1
         },
         {
-          "name": "vpe-zone-1",
           "cidr": "10.10.20.0/24",
-          "zone": 1,
-          "vpc": "management"
+          "name": "vpe-zone-1",
+          "vpc": "management",
+          "zone": 1
         },
         {
-          "name": "vpn-zone-1",
           "cidr": "10.10.30.0/24",
-          "zone": 1,
-          "vpc": "management"
+          "name": "vpn-zone-1",
+          "vpc": "management",
+          "zone": 1
         },
         {
-          "name": "vsi-zone-2",
           "cidr": "10.20.10.0/24",
-          "zone": 2,
-          "vpc": "management"
+          "name": "vsi-zone-2",
+          "vpc": "management",
+          "zone": 2
         },
         {
-          "name": "vpe-zone-2",
           "cidr": "10.20.20.0/24",
-          "zone": 2,
-          "vpc": "management"
+          "name": "vpe-zone-2",
+          "vpc": "management",
+          "zone": 2
         },
         {
-          "name": "vsi-zone-3",
           "cidr": "10.30.10.0/24",
-          "zone": 3,
-          "vpc": "management"
+          "name": "vsi-zone-3",
+          "vpc": "management",
+          "zone": 3
         },
         {
-          "name": "vpe-zone-3",
           "cidr": "10.30.20.0/24",
-          "zone": 3,
-          "vpc": "management"
+          "name": "vpe-zone-3",
+          "vpc": "management",
+          "zone": 3
         }
       ],
       "bucket": "management-bucket",
@@ -2414,15 +2467,24 @@
       "subnetTiers": [
         {
           "name": "vsi",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpe",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpn",
-          "zones": 1
+          "zones": 1,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         }
       ],
       "use_data": false
@@ -2600,40 +2662,40 @@
       ],
       "address_prefixes": [
         {
-          "name": "vsi-zone-1",
           "cidr": "10.40.10.0/24",
-          "zone": 1,
-          "vpc": "workload"
+          "name": "vsi-zone-1",
+          "vpc": "workload",
+          "zone": 1
         },
         {
-          "name": "vpe-zone-1",
           "cidr": "10.40.20.0/24",
-          "zone": 1,
-          "vpc": "workload"
+          "name": "vpe-zone-1",
+          "vpc": "workload",
+          "zone": 1
         },
         {
-          "name": "vsi-zone-2",
           "cidr": "10.50.10.0/24",
-          "zone": 2,
-          "vpc": "workload"
+          "name": "vsi-zone-2",
+          "vpc": "workload",
+          "zone": 2
         },
         {
-          "name": "vpe-zone-2",
           "cidr": "10.50.20.0/24",
-          "zone": 2,
-          "vpc": "workload"
+          "name": "vpe-zone-2",
+          "vpc": "workload",
+          "zone": 2
         },
         {
-          "name": "vsi-zone-3",
           "cidr": "10.60.10.0/24",
-          "zone": 3,
-          "vpc": "workload"
+          "name": "vsi-zone-3",
+          "vpc": "workload",
+          "zone": 3
         },
         {
-          "name": "vpe-zone-3",
           "cidr": "10.60.20.0/24",
-          "zone": 3,
-          "vpc": "workload"
+          "name": "vpe-zone-3",
+          "vpc": "workload",
+          "zone": 3
         }
       ],
       "bucket": "workload-bucket",
@@ -2648,11 +2710,17 @@
       "subnetTiers": [
         {
           "name": "vsi",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpe",
-          "zones": 3
+          "zones": 3,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         }
       ],
       "use_data": false
@@ -2692,7 +2760,9 @@
       "primary_interface_ip_spoofing": false,
       "use_variable_names": false,
       "snapshot": null,
-      "use_snapshot": false
+      "use_snapshot": false,
+      "reserved_ips": [[""], [""], [""]],
+      "enable_static_ips": false
     },
     {
       "kms": "kms",
@@ -2716,7 +2786,9 @@
       "primary_interface_ip_spoofing": false,
       "use_variable_names": false,
       "snapshot": null,
-      "use_snapshot": false
+      "use_snapshot": false,
+      "reserved_ips": [[""], [""], [""]],
+      "enable_static_ips": false
     }
   ]
 }

@@ -18,10 +18,11 @@ const {
   isArray,
   capitalize,
   containsKeys,
+  getObjectFromArray,
 } = require("lazy-z");
 const { commaSeparatedIpListExp, newResourceNameExp } = require("../constants");
 const { validSshKey } = require("../forms/invalid-callbacks");
-const { nameField } = require("./reusable-fields");
+const { nameField, hideWhenFieldFalse } = require("./reusable-fields");
 const {
   unconditionalInvalidText,
   fieldIsNullOrEmptyString,
@@ -615,9 +616,7 @@ function sshKeySchema(fieldName) {
           ? "SSH Public Key in use"
           : "";
       },
-      hideWhen: function (stateData) {
-        return stateData.use_data;
-      },
+      hideWhen: hideWhenFieldFalse("use_data", true),
     },
   };
   if (fieldName === "ssh_keys" || fieldName === "power_vs_ssh_keys") {
@@ -677,6 +676,7 @@ function subnetMultiSelect(options) {
         (isFunction(options?.invalid) && options.invalid(stateData))
       );
     },
+    onInputChange: options?.onInputChange,
     invalidText: unconditionalInvalidText(
       options?.invalidText ? options.invalidText : "Select at least one subnet"
     ),
@@ -790,7 +790,19 @@ function ipCidrListTextArea(field, options) {
     type: "textArea",
     labelText: options.labelText || "Additional Address Prefixes",
     placeholder: "X.X.X.X/X, X.X.X.X/X, ...",
-    invalid: function (stateData) {
+    invalid: function (stateData, componentProps) {
+      if (componentProps?.arrayParentName) {
+        if (
+          getObjectFromArray(
+            componentProps.craig.store.json.vpn_gateways,
+            "name",
+            componentProps.arrayParentName
+          ).policy_mode !== true
+        ) {
+          return false;
+        }
+      }
+
       return isNullOrEmptyString(stateData[field], true) && !options.strict
         ? false
         : // prevent empty array from passing regex
@@ -815,6 +827,20 @@ function ipCidrListTextArea(field, options) {
       return isNullOrEmptyString(stateData[field], true)
         ? []
         : stateData[field].split(/,\s?/g);
+    },
+    hideWhen: function (stateData, componentProps) {
+      if (componentProps?.arrayParentName) {
+        if (
+          getObjectFromArray(
+            componentProps.craig.store.json.vpn_gateways,
+            "name",
+            componentProps.arrayParentName
+          ).policy_mode !== true
+        ) {
+          return true;
+        }
+      }
+      return false;
     },
   };
 }

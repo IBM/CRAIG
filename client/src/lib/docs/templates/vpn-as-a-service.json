@@ -67,7 +67,7 @@
         {
           "name": "encryption-key",
           "root_key": false,
-          "key_ring": "",
+          "key_ring": null,
           "force_delete": false,
           "endpoint": null,
           "rotation": 1,
@@ -103,7 +103,15 @@
           "storage_class": "standard",
           "kms_key": "encryption-key",
           "endpoint": "public",
-          "use_random_suffix": true
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
         }
       ],
       "keys": []
@@ -151,7 +159,8 @@
       "direct_link_ingress": false,
       "accept_routes_from_resource_type": ["vpn_gateway", "vpn_server"],
       "route_direct_link_ingress": false,
-      "route_vpc_zone_ingress": false
+      "route_vpc_zone_ingress": false,
+      "advertise_routes_to": []
     },
     {
       "routes": [],
@@ -163,7 +172,8 @@
       "direct_link_ingress": false,
       "accept_routes_from_resource_type": ["vpn_server"],
       "route_direct_link_ingress": false,
-      "route_vpc_zone_ingress": false
+      "route_vpc_zone_ingress": false,
+      "advertise_routes_to": []
     }
   ],
   "scc": {
@@ -286,16 +296,16 @@
       "default_routing_table_name": null,
       "address_prefixes": [
         {
-          "name": "vpn-zone-1",
           "cidr": "10.10.0.0/28",
-          "zone": 1,
-          "vpc": "vpc"
+          "name": "vpn-zone-1",
+          "vpc": "vpc",
+          "zone": 1
         },
         {
+          "cidr": "10.134.0.0/28",
           "name": "vpn-server-zone-1",
-          "cidr": "10.10.0.32/29",
-          "zone": 1,
-          "vpc": "vpc"
+          "vpc": "vpc",
+          "zone": 1
         }
       ],
       "subnets": [
@@ -467,13 +477,19 @@
       "subnetTiers": [
         {
           "name": "vpn",
-          "zones": 1
+          "zones": 1,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
         },
         {
           "name": "vpn-server",
           "select_zones": [1],
           "advanced": true,
-          "subnets": ["vpn-server-zone-1"]
+          "subnets": ["vpn-server-zone-1"],
+          "zones": "3",
+          "networkAcl": null,
+          "addPublicGateway": false
         }
       ],
       "use_data": false

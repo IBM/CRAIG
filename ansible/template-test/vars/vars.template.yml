@@ -2,14 +2,19 @@
 # To run this playbook , copy this file to `vars.yml` and fill in your data
 # tf_var_preshared_key is only needed for the POC template
 
+# Terrafrom variabes
 tf_var_api_key: "<api-key>"
 tf_var_ssh_key: "<public-ssh-key>"
 tf_var_prefix: "<unique-prefix>"
 tf_var_preshared_key: "<preshared-key>" # 6-128 characters
 
-workspace_name: "<schematics-workspace-name>"
-template: "<template>"
+#Schematics variables
+use_existing_workspace: "<boolean>"
+workspace_name: "<new-schematics-workspace-name>"  # Only needed when use_existing_workspace is false
+existing_workspace_id: "<existing-schematics-workspace-id>" # Only needed when use_existing_workspace is true
 action_name: "<schematics-action-name>"
+
+template: "<craig-template-name>"
 git_branch: "<branch-of-playbook>"
 
 craig_url: https://craig.119gqgw56ti1.us-south.codeengine.appdomain.cloud/api/craig/template-tar

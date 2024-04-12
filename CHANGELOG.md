@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.15.0
+
+### Upgrade Notes
+
+- Updated to the latest version of `lazy-z` to fix an issue with some CIDR ranges and IP addresses being incorrectly flagged as invalid
+
+### Features
+
+- VPC Routing Tables can now be advertised to Transit Gateway, and Direct Link
+- VPC Routing Table routes can now be assigned a Priority value and can advertise to the parent table's sources by using the `Advertise` toggle
+- Cloud Object Storage buckets now support Metrics Monitoring and Activity Tracking
+- Local CIDRs and Peer CIDRs are no longer required when creating a connection for a route-based VPN Gateway
+- F5 Templates with an invalid TMOS Admin Password are now shown as invalid from `/v2/vpcDeployments`
+- Image validation is now performed before a CRAIG configuration can be uploaded to Schematics
+- Users can now reserve specific IPs for VPC VSI Deployments by toggling the `Configure VSI IP Addresses` toggle
+- Domain Fields for Classic Gateways can now have `-` characters
+- Invalid VPC deployments are now shown in `/v2/vpcDeployments` even when there are no VPCs in the current configuration
+- F5 Templates with an invalid TMOS Admin Password are now shown as invalid from `/v2/vpcDeployments`
+- When updating to the latest CRAIG version in a project using Manual VPC Address Management, VPC Subnet Address Prefixes will automatically be updated to match custom subnet CIDRs
+- Updated resource helper text fields to more accurately display resource names at time of provision
+
+### Fixes
+
+- Fixed an issue causing encryption keys with no Key Ring value to populate with a `null` key ring
+- Fixed an issue where VPC address prefixes were not being updated when advanced subnets were created with Manual Address Management enabled
+- Fixed an issue preventing Terraform from being created when using an existing VPC
+- Fixed an issue causing Routing Tables to not have correct reference to an imported VPC
+- Clusters with names longer than 32 characters are now correctly shown as invalid
+- Fixed an issue where the VPN as a service template had an incorrect VPC address prefix
+
 ## 1.14.1
 
 ### Upgrade Notes

@@ -4,10 +4,16 @@ const {
   hideWhenNotAllIcmp,
   onRuleFieldInputChange,
   invalidPort,
+  invalidNewResourceName,
 } = require("../../client/src/lib/state/reusable-fields");
 
 describe("reusable fields", () => {
   describe("utility functions", () => {
+    describe("invalidNewResourceName", () => {
+      it("should be true if no value", () => {
+        assert.isTrue(invalidNewResourceName(), "it should be false");
+      });
+    });
     describe("onRuleFieldInputChange", () => {
       it("should set rule when no rule is found", () => {
         let task = onRuleFieldInputChange("port_max");

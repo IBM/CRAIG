@@ -8,8 +8,6 @@ const {
   cosTf,
 } = require("../../client/src/lib/json-to-iac/object-storage");
 
-// add object-storage
-
 describe("object storage", () => {
   describe("formatCosInstance", () => {
     it("should create an object storage resource instance", () => {
@@ -1149,7 +1147,88 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   region_location      = var.region
   key_protect          = ibm_kms_key.kms_key_key.crn
   metrics_monitoring {
-    metrics_monitoring_crn  = "metrics_monitoring"
+    metrics_monitoring_crn  = ibm_resource_instance.sysdig.crn
+    usage_metrics_enabled   = true
+    request_metrics_enabled = true
+  }
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return cos bucket tf"
+      );
+    });
+    it("should create cos bucket terraform code from data source with random suffix and metrics monitoring from crn", () => {
+      let actualData = formatCosBucket(
+        {
+          force_delete: true,
+          kms_key: "key",
+          name: "bucket",
+          storage_class: "standard",
+          metrics_monitoring: true,
+          metrics_monitoring_crn: "crn",
+          usage_metrics_enabled: true,
+          request_metrics_enabled: true,
+        },
+        {
+          name: "cos",
+          plan: "standard",
+          resource_group: "slz-service-rg",
+          use_random_suffix: true,
+          use_data: true,
+          kms: "kms",
+        },
+        {
+          _options: {
+            endpoints: "public",
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: true,
+              use_hs_crypto: true,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  endpoint: "private",
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
+  resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
+  storage_class        = "standard"
+  endpoint_type        = "public"
+  force_delete         = true
+  region_location      = var.region
+  key_protect          = ibm_kms_key.kms_key_key.crn
+  metrics_monitoring {
+    metrics_monitoring_crn  = "crn"
     usage_metrics_enabled   = true
     request_metrics_enabled = true
   }
@@ -1171,7 +1250,87 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
           kms_key: "key",
           name: "bucket",
           storage_class: "standard",
-          atracker: "atracker",
+          activity_tracking: true,
+          read_data_events: true,
+          write_data_events: true,
+          activity_tracking_crn: "crn",
+        },
+        {
+          name: "cos",
+          plan: "standard",
+          resource_group: "slz-service-rg",
+          use_random_suffix: true,
+          use_data: true,
+          kms: "kms",
+        },
+        {
+          _options: {
+            region: "us-south",
+            tags: ["hello", "world"],
+            prefix: "iac",
+            endpoints: "public",
+          },
+          resource_groups: [
+            {
+              use_data: false,
+              name: "slz-service-rg",
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: true,
+              use_hs_crypto: true,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
+  bucket_name          = "\${var.prefix}-cos-bucket-\${random_string.cos_random_suffix.result}"
+  resource_instance_id = data.ibm_resource_instance.cos_object_storage.id
+  storage_class        = "standard"
+  endpoint_type        = "public"
+  force_delete         = true
+  region_location      = var.region
+  key_protect          = ibm_kms_key.kms_key_key.crn
+  activity_tracking {
+    read_data_events     = true
+    write_data_events    = true
+    activity_tracker_crn = "crn"
+  }
+  depends_on = [
+    ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy
+  ]
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return cos bucket tf"
+      );
+    });
+    it("should create cos bucket terraform code from data source with random suffix and activity tracking from crn", () => {
+      let actualData = formatCosBucket(
+        {
+          force_delete: true,
+          kms_key: "key",
+          name: "bucket",
+          storage_class: "standard",
+          activity_tracking: "atracker",
           read_data_events: true,
           write_data_events: true,
         },
@@ -1230,7 +1389,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
   activity_tracking {
     read_data_events     = true
     write_data_events    = true
-    activity_tracker_crn = "atracker"
+    activity_tracker_crn = ibm_resource_instance.atracker.crn
   }
   depends_on = [
     ibm_iam_authorization_policy.cos_cos_to_kms_kms_policy

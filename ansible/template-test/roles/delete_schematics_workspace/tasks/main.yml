@@ -2,7 +2,7 @@
 # tasks file for delete_schematics_workspace
 - name: Delete Schematics Workspace
   uri:
-    url: https://schematics.cloud.ibm.com/v1/workspaces/{{workspace.json.id}}
+    url: https://schematics.cloud.ibm.com/v1/workspaces/{{ new_workspace_id }}
     method: DELETE
     headers:
       Authorization: Bearer {{token.json.access_token}}

@@ -1,0 +1,12 @@
+---
+# tasks file for get_workspace_data 
+- name: Get workspace data
+  uri:
+    url: "https://schematics.cloud.ibm.com/v1/workspaces/{{existing_workspace_id}}"
+    method: GET
+    headers:
+      Authorization: Bearer {{token.json.access_token}}
+  register: workspace_data
+- name: Store template_id from workspace
+  set_fact:
+    template_id: "{{workspace_data.json.template_data[0].id}}"

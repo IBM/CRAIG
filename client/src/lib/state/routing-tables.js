@@ -131,7 +131,11 @@ function initRoutingTable(store) {
       "routing_tables"
     ),
     schema: {
-      name: nameField("routing_tables"),
+      name: nameField("routing_tables", {
+        helperText: function (stateData, componentProps) {
+          return `${componentProps.craig.store.json._options.prefix}-${stateData.vpc}-vpc-${stateData.name}-table`;
+        },
+      }),
       vpc: {
         type: "select",
         default: "",
@@ -161,6 +165,9 @@ function initRoutingTable(store) {
           alignModal: "bottom-left",
         },
         labelText: "Direct Link Ingress",
+        disabled: function (stateData) {
+          return contains(stateData.advertise_routes_to, "direct_link");
+        },
       },
       transit_gateway_ingress: {
         default: false,
@@ -172,6 +179,9 @@ function initRoutingTable(store) {
           align: "bottom-left",
           alignModal: "bottom-left",
         },
+        disabled: function (stateData) {
+          return contains(stateData.advertise_routes_to, "transit_gateway");
+        },
       },
       route_vpc_zone_ingress: {
         default: false,
@@ -182,6 +192,28 @@ function initRoutingTable(store) {
             "If set to true, the routing table is used to route traffic that originates from subnets in other zones in the VPC. To succeed, the VPC must not already have a routing table with the property set to true",
           align: "bottom-left",
           alignModal: "bottom-left",
+        },
+      },
+      advertise_routes_to: {
+        default: [],
+        type: "multiselect",
+        labelText: "Advertise Routes to Service",
+        groups: function (stateData, componentProps) {
+          return []
+            .concat(stateData.route_direct_link_ingress ? ["Direct Link"] : [])
+            .concat(
+              stateData.transit_gateway_ingress ? ["Transit Gateway"] : []
+            );
+        },
+        onRender: function (stateData) {
+          return stateData.advertise_routes_to.map((type) => {
+            return titleCase(type).replace(/Vpn/g, "VPN");
+          });
+        },
+        onInputChange: function (stateData) {
+          return stateData.advertise_routes_to.map((type) => {
+            return snakeCase(type);
+          });
         },
       },
       accept_routes_from_resource_type: {
@@ -269,6 +301,27 @@ function initRoutingTable(store) {
             ),
             placeholder: "X.X.X.X/X",
             size: "small",
+          },
+          advertise: {
+            size: "small",
+            labelText: "Advertise",
+            type: "toggle",
+            default: false,
+            tooltip: {
+              content:
+                "Indicates whether this route will be advertised to the ingress sources of the parent route",
+              align: "right",
+              alignModal: "right",
+            },
+          },
+          priority: {
+            size: "small",
+            type: "select",
+            default: "",
+            groups: ["0", "1", "2", "3", "4"],
+            tooltip: {
+              content: "Smaller values have higher priority",
+            },
           },
         },
       },

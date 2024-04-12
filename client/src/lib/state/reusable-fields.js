@@ -365,6 +365,13 @@ function invalidName(field, craig) {
             1 +
             componentProps.craig.store.json._options.prefix.length >
             20) ||
+        // prevent clusters with names that include prefix and "-cluster" longer than 32 characters
+        (field === "clusters" &&
+          stateData.name &&
+          stateData.name.length +
+            9 +
+            componentProps.craig.store.json._options.prefix.length >
+            32) ||
         stateData[stateField] === "" ||
         (!stateData.use_data && invalidNewResourceName(stateData[stateField]))
       );
@@ -445,6 +452,15 @@ function invalidNameText(field, craig) {
         20
     ) {
       return "Classic VLAN names must be 20 or fewer characters including the environment prefix";
+    } else if (
+      field === "clusters" &&
+      stateData.name &&
+      stateData.name.length +
+        9 +
+        componentProps.craig.store.json._options.prefix.length >
+        32
+    ) {
+      return "Cluster names must be 32 or fewer characters including the environment prefix and suffix";
     } else return genericNameCallback();
   }
   if (field === "vpcs") {
@@ -779,11 +795,12 @@ function domainField() {
         (stateData.domain || "").match(
           new RegexButWithWords()
             .stringBegin()
-            .set("a-z")
+            .set("A-z")
             .oneOrMore()
             .literal(".")
-            .set("a-z")
+            .set("A-z-")
             .oneOrMore()
+            .set("a-z")
             .stringEnd()
             .done("g")
         ) === null
@@ -863,9 +880,7 @@ function classicPublicVlan() {
     invalidText: selectInvalidText("public VLAN"),
     groups: classicVlanFilter("PUBLIC"),
     size: "small",
-    hideWhen: function (stateData) {
-      return stateData.private_network_only;
-    },
+    hideWhen: hideWhenFieldFalse("private_network_only", true),
   };
 }
 
@@ -885,6 +900,18 @@ function classicPrivateNetworkOnly() {
       } else stateData.private_network_only = false;
     },
     size: "small",
+  };
+}
+
+/**
+ * shortcut for hide when field false
+ * @param {*} field
+ * @param {boolean=} hideWhenTrue
+ * @returns {Function} hide when function
+ */
+function hideWhenFieldFalse(field, hideWhenTrue) {
+  return function (stateData) {
+    return hideWhenTrue ? stateData[field] : !stateData[field];
   };
 }
 
@@ -914,4 +941,6 @@ module.exports = {
   classicPrivateVlan,
   classicPublicVlan,
   classicPrivateNetworkOnly,
+  invalidNewResourceName,
+  hideWhenFieldFalse,
 };

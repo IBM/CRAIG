@@ -12,12 +12,20 @@ const { kebabName, vpcRef, jsonToTfPrint, tfRef, tfBlock } = require("./utils");
  * @param {*} config
  * @returns {object} terraform
  */
-function ibmIsVpcRoutingTable(table) {
+function ibmIsVpcRoutingTable(table, config) {
+  let vpcIdRef = vpcRef(table.vpc);
+  if (config?.vpcs) {
+    config.vpcs.forEach((vpc) => {
+      if (vpc.use_data && table.vpc === vpc.name) {
+        vpcIdRef = vpcIdRef.replace("ibm_is_vpc", "data.ibm_is_vpc");
+      }
+    });
+  }
   return {
     name: `${table.vpc}-vpc-${table.name}-table`,
     data: {
       name: kebabName([table.vpc, "vpc", table.name, "table"]),
-      vpc: vpcRef(table.vpc),
+      vpc: vpcIdRef,
       route_direct_link_ingress: table.route_direct_link_ingress,
       route_transit_gateway_ingress: table.transit_gateway_ingress,
       route_vpc_zone_ingress: table.route_vpc_zone_ingress,
@@ -40,6 +48,9 @@ function ibmIsVpcRoutingTable(table) {
  */
 function formatRoutingTable(table, config) {
   let data = ibmIsVpcRoutingTable(table, config);
+  if (table.advertise_routes_to) {
+    data.data.advertise_routes_to = table.advertise_routes_to;
+  }
   return jsonToTfPrint(
     "resource",
     "ibm_is_vpc_routing_table",
@@ -99,6 +110,11 @@ function ibmIsVpcRoutingTableRoute(route, config) {
  */
 function formatRoutingTableRoute(route, config) {
   let data = ibmIsVpcRoutingTableRoute(route, config);
+  ["advertise", "priority"].forEach((item) => {
+    if (route[item]) {
+      data.data[item] = route[item];
+    }
+  });
   return jsonToTfPrint(
     "resource",
     "ibm_is_vpc_routing_table_route",

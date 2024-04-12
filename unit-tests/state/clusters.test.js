@@ -373,6 +373,52 @@ describe("clusters", () => {
     });
   });
   describe("clusters.schema", () => {
+    describe("clusters.name.invalid", () => {
+      it("should be invalid when cluster name length is greater than 32", () => {
+        assert.isTrue(
+          craig.clusters.name.invalid(
+            { name: "a-super-long-name-yes" },
+            {
+              vpc_name: "vpc",
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      prefix: "iac",
+                    },
+                    clusters: [],
+                  },
+                },
+              },
+            }
+          ),
+          "should be invalid"
+        );
+      });
+    });
+    describe("clusters.name.invalidText", () => {
+      it("should return correct text when name is longer than 32 characters", () => {
+        assert.deepEqual(
+          craig.clusters.name.invalidText(
+            { name: "a-super-long-name-yes" },
+            {
+              vpc_name: "vpc",
+              craig: {
+                store: {
+                  json: {
+                    _options: {
+                      prefix: "iac",
+                    },
+                    clusters: [],
+                  },
+                },
+              },
+            }
+          ),
+          "Cluster names must be 32 or fewer characters including the environment prefix and suffix"
+        );
+      });
+    });
     describe("clusters.name.helperText", () => {
       it("should return correct text", () => {
         assert.deepEqual(
@@ -431,6 +477,20 @@ describe("clusters", () => {
         }),
         "iks",
         "it should return correct data"
+      );
+    });
+    it("should be not have invalid cos when openshift", () => {
+      assert.isFalse(
+        craig.clusters.cos.invalid({}),
+        "it should not be invalid"
+      );
+    });
+    it("should be have invalid cos when openshift and not selected", () => {
+      assert.isFalse(
+        craig.clusters.cos.invalid({
+          kube_type: "openshift",
+        }),
+        "it should not be invalid"
       );
     });
     it("should return correct groups for cos", () => {
@@ -665,6 +725,42 @@ describe("clusters", () => {
       });
     });
     describe("clusters.opaque_secrets.schema", () => {
+      it("should have invalid expiration date", () => {
+        assert.isTrue(
+          craig.clusters.opaque_secrets.expiration_date.invalid({}),
+          "it should be invalid"
+        );
+      });
+      it("should have invalid username_password_secret_description", () => {
+        assert.isTrue(
+          craig.clusters.opaque_secrets.username_password_secret_description.invalid(
+            {
+              username_password_secret_description: "@@@",
+            }
+          ),
+          "it should be invalid"
+        );
+      });
+      it("should have invalid arbitrary_secret_description", () => {
+        assert.isTrue(
+          craig.clusters.opaque_secrets.arbitrary_secret_description.invalid({
+            arbitrary_secret_description: "@@@",
+          }),
+          "it should be invalid"
+        );
+      });
+      it("should have correct invalid values", () => {
+        assert.isTrue(
+          craig.clusters.opaque_secrets.labels.invalid({}),
+          "it should be invalid"
+        );
+        assert.isTrue(
+          craig.clusters.opaque_secrets.labels.invalid({
+            labels: ["@!@@"],
+          }),
+          "it should be invalid"
+        );
+      });
       it("should return true if arbitrary_secret_name has empty string as name", () => {
         let actualData =
           craig.clusters.opaque_secrets.arbitrary_secret_name.invalid(

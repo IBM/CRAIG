@@ -84,6 +84,7 @@ const doNotRenderFields = [
   "pgw_zone_2",
   "pgw_zone_3",
   "ip_address",
+  "vsi_static_ips",
 ];
 
 class DynamicForm extends React.Component {
@@ -146,6 +147,9 @@ class DynamicForm extends React.Component {
     this.handleOverrideInputChange = this.handleOverrideInputChange.bind(this);
     this.getAllVsi = this.getAllVsi.bind(this);
     this.onPowerImageLoad = this.onPowerImageLoad.bind(this);
+    this.getVsiFromState = this.getVsiFromState.bind(this);
+    this.handleReservedIpInputChange =
+      this.handleReservedIpInputChange.bind(this);
   }
 
   /**
@@ -179,6 +183,14 @@ class DynamicForm extends React.Component {
     });
     // return to override toggle setstate
     return madeChanges;
+  }
+
+  handleReservedIpInputChange(subnetIndex, vsiIndex) {
+    return (event) => {
+      let reserved_ips = [...this.state.reserved_ips];
+      reserved_ips[subnetIndex][vsiIndex] = event.target.value;
+      this.setState({ reserved_ips });
+    };
   }
 
   /**
@@ -219,6 +231,35 @@ class DynamicForm extends React.Component {
   }
 
   /**
+   * get dynamic list of vsi for rendering static reserved ips
+   * @returns {Array<object>} vsi
+   */
+  getVsiFromState() {
+    let allVsi = [];
+    let nextRow = [];
+    // for each subnet vsi
+    for (let subnet = 0; subnet < this.state.subnets.length; subnet++) {
+      // for each vsi per subnet
+      for (let count = 0; count < this.state.vsi_per_subnet; count++) {
+        nextRow.push({
+          name: this.state.name + "-" + (count + 1),
+          subnet: this.state.subnets[subnet] + "-" + (count + 1),
+          subnetIndex: subnet,
+          vsiIndex: count,
+        });
+        if (nextRow.length === 3) {
+          allVsi.push(nextRow);
+          nextRow = [];
+        }
+      }
+    }
+    if (nextRow.length > 0) {
+      allVsi.push(nextRow);
+    }
+    return allVsi;
+  }
+
+  /**
    * get dynamic list of vsi for lb page
    * @returns {Array<string>} list of vsi
    */
@@ -238,6 +279,8 @@ class DynamicForm extends React.Component {
           nextRow.push({
             name: deployment + "-" + (count + 1),
             subnet: vsi.subnets[subnet],
+            subnetIndex: subnet,
+            vsiIndex: count,
           });
           if (nextRow.length === 3) {
             allVsi.push(nextRow);
@@ -288,6 +331,37 @@ class DynamicForm extends React.Component {
                 ))}
               </CraigFormGroup>
             ))
+          ) : group.vsi_static_ips ? (
+            (this.state.enable_static_ips ? this.getVsiFromState() : []).map(
+              (row, index) => {
+                return (
+                  <CraigFormGroup key={"vsi-row-" + index}>
+                    {row.map((vsi, vsiIndex) => {
+                      let propsCopy = { ...this.props };
+                      propsCopy.subnet = vsi.subnetIndex;
+                      propsCopy.vsi = vsi.vsiIndex;
+                      return (
+                        <div className="fieldWidthSmaller">
+                          <h4 style={{ fontWeight: "bold" }}>{vsi.subnet}</h4>
+                          {RenderForm(DynamicFormTextInput, {
+                            name: "reserved_ips",
+                            subnet: vsi.subnetIndex,
+                            vsi: vsi.vsiIndex,
+                            field: this.props.craig.vsi.reserved_ips,
+                            parentState: this.state,
+                            parentProps: propsCopy,
+                            handleInputChange: this.handleReservedIpInputChange(
+                              vsi.subnetIndex,
+                              vsi.vsiIndex
+                            ),
+                          })}
+                        </div>
+                      );
+                    })}
+                  </CraigFormGroup>
+                );
+              }
+            )
           ) : (
             <CraigFormGroup
               {...dynamicCraigFormGroupsProps(this.props, index, this.state)}
@@ -300,7 +374,8 @@ class DynamicForm extends React.Component {
                   : field.type;
                 return (field.hideWhen &&
                   field.hideWhen(this.state, this.props)) ||
-                  key === "hideWhen" ? (
+                  key === "hideWhen" ||
+                  key === "className" ? (
                   ""
                 ) : (
                   <DynamicToolTipWrapper

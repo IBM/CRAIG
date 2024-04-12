@@ -945,10 +945,51 @@ function craigForms(craig) {
               {
                 name: craig.object_storage.buckets.name,
                 storage_class: craig.object_storage.buckets.storage_class,
+                kms_key: craig.object_storage.buckets.kms_key,
               },
               {
-                kms_key: craig.object_storage.buckets.kms_key,
                 force_delete: craig.object_storage.buckets.force_delete,
+              },
+              {
+                activity_tracking:
+                  craig.object_storage.buckets.activity_tracking,
+                metrics_monitoring:
+                  craig.object_storage.buckets.metrics_monitoring,
+              },
+              {
+                heading: {
+                  type: "subHeading",
+                  name: "Activity Tracking",
+                  className: "marginBottomSmall",
+                },
+                hideWhen:
+                  craig.object_storage.buckets.read_data_events.hideWhen,
+              },
+              {
+                read_data_events: craig.object_storage.buckets.read_data_events,
+                write_data_events:
+                  craig.object_storage.buckets.write_data_events,
+                activity_tracking_crn:
+                  craig.object_storage.buckets.activity_tracking_crn,
+                className: "subForm",
+              },
+              {
+                heading: {
+                  type: "subHeading",
+                  name: "Metrics Monitoring",
+                  className: "marginBottomSmall",
+                },
+                hideWhen:
+                  craig.object_storage.buckets.request_metrics_enabled.hideWhen,
+              },
+              {
+                request_metrics_enabled:
+                  craig.object_storage.buckets.request_metrics_enabled,
+                usage_metrics_enabled:
+                  craig.object_storage.buckets.usage_metrics_enabled,
+                metrics_monitoring_crn:
+                  craig.object_storage.buckets.metrics_monitoring_crn,
+                className: "subForm",
               },
             ],
           },
@@ -1197,6 +1238,7 @@ function craigForms(craig) {
         {
           accept_routes_from_resource_type:
             craig.routing_tables.accept_routes_from_resource_type,
+          advertise_routes_to: craig.routing_tables.advertise_routes_to,
         },
       ],
       subForms: [
@@ -1214,6 +1256,10 @@ function craigForms(craig) {
               {
                 action: craig.routing_tables.routes.action,
                 next_hop: craig.routing_tables.routes.next_hop,
+                priority: craig.routing_tables.routes.priority,
+              },
+              {
+                advertise: craig.routing_tables.routes.advertise,
               },
             ],
           },
@@ -1586,12 +1632,23 @@ function craigForms(craig) {
           profile: craig.vsi.profile,
         },
         {
+          user_data: craig.vsi.user_data,
+        },
+        {
+          heading: {
+            type: "subHeading",
+            name: "Address Options",
+            className: "marginBottomSmall",
+          },
+        },
+        {
           enable_floating_ip: craig.vsi.enable_floating_ip,
           primary_interface_ip_spoofing:
             craig.vsi.primary_interface_ip_spoofing,
+          enable_static_ips: craig.vsi.enable_static_ips,
         },
         {
-          user_data: craig.vsi.user_data,
+          vsi_static_ips: true,
         },
       ],
       subForms: [

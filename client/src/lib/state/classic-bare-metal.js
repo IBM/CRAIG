@@ -8,6 +8,7 @@ const {
   classicPrivateNetworkOnly,
   classicPrivateVlan,
   classicPublicVlan,
+  hideWhenFieldFalse,
 } = require("./reusable-fields");
 const { shouldDisableComponentSave, onArrayInputChange } = require("./utils");
 
@@ -146,9 +147,7 @@ function initClassicBareMetalStore(store) {
         placeholder: "500",
         size: "small",
         labelText: "Public Bandwidth (GB/month)",
-        hideWhen: function (stateData) {
-          return stateData.private_network_only;
-        },
+        hideWhen: hideWhenFieldFalse("private_network_only", true),
         invalid: (stateData) => {
           return (
             !stateData.private_network_only &&

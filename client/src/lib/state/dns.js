@@ -35,6 +35,7 @@ const {
   nameField,
   hasDuplicateName,
   invalidNameText,
+  hideWhenFieldFalse,
 } = require("./reusable-fields");
 
 function dnsInit(config) {
@@ -241,15 +242,6 @@ function hideWhenRecordNotSrv(stateData) {
 }
 
 /**
- * hide when not targeting vs
- * @param {*} stateData
- * @returns {boolean} true when should be hidden
- */
-function hideWhenNotVsi(stateData) {
-  return stateData.use_vsi !== true;
-}
-
-/**
  * init dns store
  * @param {*} store
  */
@@ -397,7 +389,7 @@ function initDnsStore(store) {
                 ? isNullOrEmptyString(stateData.vpc, true)
                 : false;
             },
-            hideWhen: hideWhenNotVsi,
+            hideWhen: hideWhenFieldFalse("use_vsi"),
           },
           vsi: {
             size: "small",
@@ -426,7 +418,7 @@ function initDnsStore(store) {
               });
               return allVsiNames;
             },
-            hideWhen: hideWhenNotVsi,
+            hideWhen: hideWhenFieldFalse("use_vsi"),
           },
           name: nameField("records", { size: "small" }),
           dns_zone: {
@@ -454,9 +446,7 @@ function initDnsStore(store) {
             invalidText: unconditionalInvalidText(
               "Resource Data cannot be null or empty string."
             ),
-            hideWhen: function (stateData) {
-              return stateData.use_vsi === true;
-            },
+            hideWhen: hideWhenFieldFalse("use_vsi", true),
           },
           ttl: timeToLive(),
           type: {

@@ -9,6 +9,7 @@ const quickStartPower = require("../client/src/lib/docs/templates/quick-start-po
 const slzMixed = require("../client/src/lib/docs/templates/slz-mixed.json");
 const slzVsiEdge = require("../client/src/lib/docs/templates/slz-vsi-edge.json");
 const slzVsi = require("../client/src/lib/docs/templates/slz-vsi.json");
+const vpnaas = require("../client/src/lib/docs/templates/vpn-as-a-service.json");
 const { transpose } = require("lazy-z");
 const templateNameToJson = {
   "from-scratch": fromScratch,
@@ -20,6 +21,7 @@ const templateNameToJson = {
   mixed: slzMixed,
   "vsi-edge": slzVsiEdge,
   vsi: slzVsi,
+  vpnaas: vpnaas,
 };
 
 /**

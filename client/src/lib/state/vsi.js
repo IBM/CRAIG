@@ -7,6 +7,11 @@ const {
   isInRange,
   isNullOrEmptyString,
   getObjectFromArray,
+  buildNumberDropdownList,
+  isIpv4CidrOrAddress,
+  contains,
+  containsKeys,
+  isWholeNumber,
 } = require("lazy-z");
 const { newDefaultManagementServer } = require("./defaults");
 const {
@@ -29,7 +34,7 @@ const {
   encryptionKeyGroups,
   vpcSshKeyMultiselect,
 } = require("./utils");
-const { nameField } = require("./reusable-fields");
+const { nameField, hideWhenFieldFalse } = require("./reusable-fields");
 
 /**
  * initialize vsi
@@ -210,6 +215,26 @@ function updateVsi(config, key) {
         }
       });
       deployment.ssh_keys = nextSshKeys;
+      let nextReservedIps = [];
+      deployment.subnets.forEach((subnet, subnetIndex) => {
+        nextReservedIps.push([]);
+        buildNumberDropdownList(Number(deployment.vsi_per_subnet)).forEach(
+          (vsi) => {
+            if (
+              deployment.reserved_ips &&
+              deployment?.reserved_ips[subnetIndex] &&
+              deployment?.reserved_ips[subnetIndex][vsi]
+            ) {
+              nextReservedIps[subnetIndex].push(
+                deployment.reserved_ips[subnetIndex][vsi]
+              );
+            } else {
+              nextReservedIps[subnetIndex].push("");
+            }
+          }
+        );
+      });
+      deployment.reserved_ips = nextReservedIps;
     });
     config.store[camelCase(key + " List")] = splat(data, "name");
   });
@@ -350,6 +375,39 @@ function vsiVolumeDelete(config, stateData, componentProps) {
 }
 
 /**
+ * handle reserved ip input change
+ * @param {*} fieldToUpdate
+ * @returns {Function} on input change function
+ */
+function reservedIpInputChange(fieldToUpdate) {
+  return function (stateData) {
+    let reservedIps = [];
+    if (isWholeNumber(Number(stateData.vsi_per_subnet)))
+      stateData.subnets.forEach((subnet, subnetIndex) => {
+        reservedIps.push([]);
+        buildNumberDropdownList(Number(stateData.vsi_per_subnet)).forEach(
+          (vsi) => {
+            if (
+              stateData.reserved_ips[subnetIndex]
+                ? !isNullOrEmptyString(
+                    stateData.reserved_ips[subnetIndex][vsi],
+                    true
+                  )
+                : false
+            ) {
+              reservedIps[subnetIndex].push(
+                stateData.reserved_ips[subnetIndex][vsi]
+              );
+            } else reservedIps[subnetIndex].push("");
+          }
+        );
+      });
+    stateData.reserved_ips = reservedIps;
+    return stateData[fieldToUpdate];
+  };
+}
+
+/**
  * init vsi store
  * @param {*} store
  */
@@ -373,6 +431,7 @@ function initVsiStore(store) {
         "subnets",
         "ssh_keys",
         "snapshot",
+        "reserved_ips",
       ],
       "vsi"
     ),
@@ -394,7 +453,9 @@ function initVsiStore(store) {
           stateData.subnets = [];
         },
       },
-      subnets: subnetMultiSelect(),
+      subnets: subnetMultiSelect({
+        onInputChange: reservedIpInputChange("subnets"),
+      }),
       image_name: {
         labelText: "Image",
         size: "small",
@@ -435,9 +496,7 @@ function initVsiStore(store) {
         apiEndpoint: function (stateData, componentProps) {
           return `/api/vsi/${componentProps.craig.store.json._options.region}/snapshots`;
         },
-        hideWhen: function (stateData) {
-          return stateData.use_snapshot !== true;
-        },
+        hideWhen: hideWhenFieldFalse("use_snapshot"),
       },
       profile: {
         size: "small",
@@ -471,6 +530,7 @@ function initVsiStore(store) {
           "Enter a whole number between 1 and 10"
         ),
         labelText: "VSI Per Subnet",
+        onInputChange: reservedIpInputChange("vsi_per_subnet"),
       },
       security_groups: securityGroupsMultiselect(),
       ssh_keys: vpcSshKeyMultiselect(),
@@ -509,6 +569,54 @@ function initVsiStore(store) {
         type: "toggle",
         default: false,
         labelText: "Create VSI From Snapshot",
+      },
+      enable_static_ips: {
+        size: "small",
+        type: "toggle",
+        default: false,
+        labelText: "Configure VSI IP Addresses",
+      },
+      reserved_ips: {
+        default: [],
+        size: "small",
+        labelText: "Reserved IP Address",
+        placeholder: "X.X.X.X",
+        onRender: function (stateData, componentProps) {
+          return stateData.reserved_ips
+            ? stateData.reserved_ips[componentProps.subnet][componentProps.vsi]
+            : "";
+        },
+        invalidText: unconditionalInvalidText("Enter a valid IP address"),
+        invalid: function (stateData, componentProps) {
+          if (!stateData.reserved_ips) {
+            return false;
+          } else if (
+            containsKeys(componentProps, "subnet") &&
+            !isNullOrEmptyString(componentProps.subnet)
+          ) {
+            let ipRef =
+              stateData.reserved_ips[componentProps.subnet][componentProps.vsi];
+            // 0 is falsy
+            return isNullOrEmptyString(ipRef, true)
+              ? false
+              : !isIpv4CidrOrAddress(ipRef)
+              ? true
+              : contains(ipRef, "/");
+          } else {
+            let invalidReservedIps = false;
+            stateData.reserved_ips.forEach((row) => {
+              row.forEach((ip) => {
+                if (
+                  (ip !== "" && !isIpv4CidrOrAddress(ip)) ||
+                  contains(ip, "/")
+                ) {
+                  invalidReservedIps = true;
+                }
+              });
+            });
+            return invalidReservedIps;
+          }
+        },
       },
     },
     subComponents: {

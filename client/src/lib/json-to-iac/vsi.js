@@ -491,7 +491,14 @@ function vsiTf(config) {
         transpose(deployment, instance);
         instance.subnet = subnet;
         instance.index = i + 1;
-        if (deployment.reserved_ips) {
+        if (
+          deployment.reserved_ips &&
+          deployment.enable_static_ips &&
+          !isNullOrEmptyString(
+            deployment.reserved_ips[deployment.subnets.indexOf(subnet)][i],
+            true
+          )
+        ) {
           instance.reserved_ip = // get address at same index as subnet followed by index of vsi
             deployment.reserved_ips[deployment.subnets.indexOf(subnet)][i];
         }
