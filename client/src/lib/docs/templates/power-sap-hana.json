@@ -2259,22 +2259,22 @@
       "publicGateways": [],
       "address_prefixes": [
         {
-          "name": "vsi-zone-1",
           "cidr": "10.10.0.0/29",
-          "zone": 1,
-          "vpc": "management"
+          "name": "vsi-zone-1",
+          "vpc": "management",
+          "zone": 1
         },
         {
-          "name": "vpn-zone-1",
           "cidr": "10.10.0.16/28",
-          "zone": 1,
-          "vpc": "management"
+          "name": "vpn-zone-1",
+          "vpc": "management",
+          "zone": 1
         },
         {
-          "name": "vpe-zone-1",
           "cidr": "10.10.0.48/29",
-          "zone": 1,
-          "vpc": "management"
+          "name": "vpe-zone-1",
+          "vpc": "management",
+          "zone": 1
         }
       ],
       "subnets": [
@@ -4218,16 +4218,16 @@
       "publicGateways": [],
       "address_prefixes": [
         {
-          "name": "vsi-zone-1",
           "cidr": "10.40.0.0/28",
-          "zone": 1,
-          "vpc": "workload"
+          "name": "vsi-zone-1",
+          "vpc": "workload",
+          "zone": 1
         },
         {
-          "name": "vpe-zone-1",
           "cidr": "10.40.0.32/29",
-          "zone": 1,
-          "vpc": "workload"
+          "name": "vpe-zone-1",
+          "vpc": "workload",
+          "zone": 1
         }
       ],
       "subnets": [
@@ -4679,16 +4679,16 @@
       "default_routing_table_name": null,
       "address_prefixes": [
         {
-          "vpc": "transit",
-          "zone": 1,
           "cidr": "10.70.10.0/24",
-          "name": "vsi-zone-1"
+          "name": "vsi-zone-1",
+          "vpc": "transit",
+          "zone": 1
         },
         {
-          "vpc": "transit",
-          "zone": 1,
           "cidr": "10.70.20.0/24",
-          "name": "vpe-zone-1"
+          "name": "vpe-zone-1",
+          "vpc": "transit",
+          "zone": 1
         }
       ],
       "subnets": [

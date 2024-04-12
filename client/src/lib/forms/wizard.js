@@ -155,6 +155,7 @@ function wizard(wizardJson, json) {
       wizardJson.zones,
       true
     );
+    json.vpcs[0].is_edge_vpc = true;
   }
 
   return json;

@@ -6411,6 +6411,7 @@ describe("setup wizard", () => {
           default_network_acl_name: null,
           default_routing_table_name: null,
           default_security_group_name: null,
+          is_edge_vpc: true,
           publicGateways: [],
           address_prefixes: [
             { vpc: "edge", zone: 1, cidr: "10.5.0.0/16", name: "edge-zone-1" },
@@ -6726,8 +6727,14 @@ describe("setup wizard", () => {
             {
               vpc: "workload",
               zone: 1,
-              name: "workload-zone-1",
-              cidr: "10.40.0.0/22",
+              name: "vsi-zone-1",
+              cidr: "10.40.0.0/28",
+            },
+            {
+              vpc: "workload",
+              zone: 1,
+              name: "vpe-zone-1",
+              cidr: "10.40.0.32/29",
             },
           ],
           subnets: [

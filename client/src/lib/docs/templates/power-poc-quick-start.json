@@ -866,10 +866,22 @@
       "publicGateways": [1],
       "address_prefixes": [
         {
+          "cidr": "10.10.0.0/26",
+          "name": "vsi-zone-1",
           "vpc": "transit",
-          "zone": 1,
-          "name": "transit-zone-1",
-          "cidr": "10.10.0.0/22"
+          "zone": 1
+        },
+        {
+          "cidr": "10.10.0.128/29",
+          "name": "vpe-zone-1",
+          "vpc": "transit",
+          "zone": 1
+        },
+        {
+          "cidr": "10.10.0.144/28",
+          "name": "vpn-zone-1",
+          "vpc": "transit",
+          "zone": 1
         }
       ],
       "subnets": [

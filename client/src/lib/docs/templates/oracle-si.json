@@ -884,46 +884,46 @@
       "publicGateways": [],
       "address_prefixes": [
         {
-          "name": "vsi-zone-1",
           "cidr": "10.10.0.0/29",
-          "zone": 1,
-          "vpc": "management"
+          "name": "vsi-zone-1",
+          "vpc": "management",
+          "zone": 1
         },
         {
-          "name": "vpn-zone-1",
           "cidr": "10.10.0.16/28",
-          "zone": 1,
-          "vpc": "management"
+          "name": "vpn-zone-1",
+          "vpc": "management",
+          "zone": 1
         },
         {
-          "name": "vsi-zone-2",
           "cidr": "10.20.0.0/29",
-          "zone": 2,
-          "vpc": "management"
+          "name": "vsi-zone-2",
+          "vpc": "management",
+          "zone": 2
         },
         {
-          "name": "vsi-zone-3",
           "cidr": "10.30.0.0/29",
-          "zone": 3,
-          "vpc": "management"
+          "name": "vsi-zone-3",
+          "vpc": "management",
+          "zone": 3
         },
         {
-          "name": "vpe-zone-1",
           "cidr": "10.10.0.48/29",
-          "zone": 1,
-          "vpc": "management"
+          "name": "vpe-zone-1",
+          "vpc": "management",
+          "zone": 1
         },
         {
-          "name": "vpe-zone-2",
           "cidr": "10.20.0.16/29",
-          "zone": 2,
-          "vpc": "management"
+          "name": "vpe-zone-2",
+          "vpc": "management",
+          "zone": 2
         },
         {
-          "name": "vpe-zone-3",
           "cidr": "10.30.0.16/29",
-          "zone": 3,
-          "vpc": "management"
+          "name": "vpe-zone-3",
+          "vpc": "management",
+          "zone": 3
         }
       ],
       "subnets": [
@@ -1175,40 +1175,40 @@
       "publicGateways": [],
       "address_prefixes": [
         {
-          "name": "vsi-zone-1",
           "cidr": "10.40.0.0/29",
-          "zone": 1,
-          "vpc": "workload"
+          "name": "vsi-zone-1",
+          "vpc": "workload",
+          "zone": 1
         },
         {
-          "name": "vsi-zone-2",
           "cidr": "10.50.0.0/29",
-          "zone": 2,
-          "vpc": "workload"
+          "name": "vsi-zone-2",
+          "vpc": "workload",
+          "zone": 2
         },
         {
-          "name": "vsi-zone-3",
           "cidr": "10.60.0.0/29",
-          "zone": 3,
-          "vpc": "workload"
+          "name": "vsi-zone-3",
+          "vpc": "workload",
+          "zone": 3
         },
         {
-          "name": "vpe-zone-1",
           "cidr": "10.40.0.16/29",
-          "zone": 1,
-          "vpc": "workload"
+          "name": "vpe-zone-1",
+          "vpc": "workload",
+          "zone": 1
         },
         {
-          "name": "vpe-zone-2",
           "cidr": "10.50.0.16/29",
-          "zone": 2,
-          "vpc": "workload"
+          "name": "vpe-zone-2",
+          "vpc": "workload",
+          "zone": 2
         },
         {
-          "name": "vpe-zone-3",
           "cidr": "10.60.0.16/29",
-          "zone": 3,
-          "vpc": "workload"
+          "name": "vpe-zone-3",
+          "vpc": "workload",
+          "zone": 3
         }
       ],
       "subnets": [
