@@ -9,6 +9,11 @@ All notable changes to this project will be documented in this file.
 - Environment prefix is now prepended to the beginning of Classic SSH Key names
 - Power VS Cloud Connections now support connections to Classic Infrastructure and VPCs
 
+### Fixes
+
+- Fixed an issue causing schematics workspace URL to not be provided to the user after creation
+- Fixed an issue causing workspace creation modal to be incorrectly labelled as `Upload`
+
 ## 1.15.0
 
 ### Upgrade Notes

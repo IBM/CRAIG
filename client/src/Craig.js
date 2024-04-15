@@ -98,6 +98,7 @@ class Craig extends React.Component {
         clickedWorkspaceUrl: "",
         current_project: craig.store.project_name,
         showOverviewForDownload: false,
+        workspaceAction: "upload",
       };
     } catch (err) {
       // if there are initialization errors, redirect user to reset state path
@@ -259,6 +260,7 @@ class Craig extends React.Component {
         loadingModalOpen: false,
         loadingDone: false,
         schematicsFailed: false,
+        workspaceAction: "create",
       },
       () => {
         this.toggleLoadingModal();
@@ -277,6 +279,7 @@ class Craig extends React.Component {
               {
                 loadingDone: true,
                 clickedWorkspaceUrl: projects[projectKeyName].workspace_url,
+                workspaceAction: "upload",
               },
               () => {
                 this.setItem("craigProjects", projects);
@@ -286,7 +289,11 @@ class Craig extends React.Component {
           },
           // project reject callback
           (err) => {
-            this.setState({ schematicsFailed: true, loadingDone: true });
+            this.setState({
+              schematicsFailed: true,
+              loadingDone: true,
+              workspaceAction: "upload",
+            });
             console.error(err);
           }
         );
@@ -771,8 +778,10 @@ class Craig extends React.Component {
         {this.state.loadingModalOpen && (
           <LoadingModal
             className="alignItemsCenter"
+            action={this.state.workspaceAction}
             project={this.state.clickedProject}
             workspace={this.state.clickedWorkspace}
+            workspace_url={this.state.clickedWorkspaceUrl}
             open={this.state.loadingModalOpen}
             completed={this.state.loadingDone}
             toggleModal={this.toggleLoadingModal}
