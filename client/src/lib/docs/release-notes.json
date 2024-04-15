@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.15.1",
+    "features": [
+      "Environment prefix is now prepended to the beginning of Classic SSH Key names",
+      "Power VS Cloud Connections now support connections to Classic Infrastructure and VPCs"
+    ],
+    "fixes": [],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.15.0",
     "features": [
       "VPC Routing Tables can now be advertised to Transit Gateway, and Direct Link",

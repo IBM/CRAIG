@@ -319,7 +319,7 @@ resource "ibm_pi_cloud_connection" "power_network_example_connection_dev_connect
         "it should return correctly formatted data"
       );
     });
-    it("should format power cloud connection with workspace use data", () => {
+    it("should format power cloud connection with workspace use data and classic connection", () => {
       let actualData = formatPowerVsCloudConnection({
         name: "dev-connection",
         workspace: "example",
@@ -329,6 +329,7 @@ resource "ibm_pi_cloud_connection" "power_network_example_connection_dev_connect
         pi_cloud_connection_transit_enabled: true,
         zone: "dal10",
         workspace_use_data: true,
+        pi_cloud_connection_classic_enabled: true,
       });
       let expectedData = `
 resource "ibm_pi_cloud_connection" "power_network_example_connection_dev_connection" {
@@ -339,6 +340,42 @@ resource "ibm_pi_cloud_connection" "power_network_example_connection_dev_connect
   pi_cloud_connection_global_routing  = false
   pi_cloud_connection_metered         = false
   pi_cloud_connection_transit_enabled = true
+  pi_cloud_connection_classic_enabled = true
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted data"
+      );
+    });
+    it("should format power cloud connection with workspace use data for cloud connection with vpc enabled", () => {
+      let actualData = formatPowerVsCloudConnection({
+        name: "dev-connection",
+        workspace: "example",
+        pi_cloud_connection_speed: 50,
+        pi_cloud_connection_global_routing: false,
+        pi_cloud_connection_metered: false,
+        pi_cloud_connection_transit_enabled: true,
+        zone: "dal10",
+        workspace_use_data: true,
+        pi_cloud_connection_vpc_enabled: true,
+        vpcs: ["management", "workload"],
+      });
+      let expectedData = `
+resource "ibm_pi_cloud_connection" "power_network_example_connection_dev_connection" {
+  provider                            = ibm.power_vs_dal10
+  pi_cloud_instance_id                = data.ibm_resource_instance.power_vs_workspace_example.guid
+  pi_cloud_connection_name            = "\${var.prefix}-power-network-dev-connection-connection"
+  pi_cloud_connection_speed           = 50
+  pi_cloud_connection_global_routing  = false
+  pi_cloud_connection_metered         = false
+  pi_cloud_connection_transit_enabled = true
+  pi_cloud_connection_vpc_enabled     = true
+  pi_cloud_connection_vpc_crns = [
+    module.management_vpc.crn,
+    module.workload_vpc.crn
+  ]
 }
 `;
       assert.deepEqual(

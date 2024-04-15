@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.15.1
+
+### Features
+
+- Environment prefix is now prepended to the beginning of Classic SSH Key names
+- Power VS Cloud Connections now support connections to Classic Infrastructure and VPCs
+
 ## 1.15.0
 
 ### Upgrade Notes

@@ -1349,7 +1349,16 @@ describe("automate schema generation", () => {
                   type: "boolean",
                   default: false,
                 },
+                pi_cloud_connection_vpc_enabled: {
+                  type: "boolean",
+                  default: false,
+                },
+                pi_cloud_connection_classic_enabled: {
+                  type: "boolean",
+                  default: false,
+                },
                 transit_gateways: { type: "Array", default: [] },
+                vpcs: { type: "Array", default: [] },
               },
             },
             attachments: {

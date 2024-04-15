@@ -7,6 +7,7 @@ const {
   cbrSaveType,
   powerAffinityInvalid,
   invalidTagList,
+  timeToLive,
 } = require("../../client/src/lib/state/utils");
 
 describe("utils", () => {
@@ -517,7 +518,6 @@ describe("utils", () => {
       );
     });
   });
-
   describe("invalidTagList", () => {
     it("should return true when invalid tag list", () => {
       assert.isTrue(invalidTagList(["hi", "2@@@2"]));
@@ -532,6 +532,12 @@ describe("utils", () => {
     });
     it("should return false when no tags", () => {
       assert.isFalse(invalidTagList([]));
+    });
+  });
+  describe("timeToLive", () => {
+    it("should not be invalid when no value is provided", () => {
+      let ttl = timeToLive();
+      assert.isFalse(ttl.invalid({}), "it should be valid");
     });
   });
 });

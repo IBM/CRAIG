@@ -491,10 +491,7 @@ function initDnsStore(store) {
             default: "",
             invalid: function (stateData) {
               if (stateData.type === "SRV") {
-                return (
-                  isNullOrEmptyString(stateData.protocol) ||
-                  stateData.protocol === undefined
-                );
+                return isNullOrEmptyString(stateData.protocol, true);
               } else return false;
             },
             invalidText: selectInvalidText("protocol"),
@@ -537,7 +534,7 @@ function initDnsStore(store) {
             default: "",
             invalid: function (stateData) {
               if (stateData.type === "SRV") {
-                if (!isNullOrEmptyString(stateData.weight)) {
+                if (!isNullOrEmptyString(stateData.weight, true)) {
                   return !isInRange(parseInt(stateData.weight), 0, 65535);
                 } else return true;
               } else return false;
