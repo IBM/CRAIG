@@ -283,7 +283,7 @@
       "workspace": "oracle-template",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": null,
+      "pi_volume_type": "tier3",
       "attachments": ["oracle"],
       "zone": "dal12",
       "pi_volume_size": "90",
@@ -293,7 +293,7 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
-      "pi_affinity_instance": null,
+      "pi_affinity_instance": "oracle",
       "pi_volume_pool": null,
       "pi_affinity_volume": null,
       "count": null
@@ -303,7 +303,7 @@
       "workspace": "oracle-template",
       "pi_volume_shareable": false,
       "pi_replication_enabled": false,
-      "pi_volume_type": null,
+      "pi_volume_type": "tier3",
       "attachments": ["oracle"],
       "zone": "dal12",
       "pi_volume_size": "90",
@@ -313,7 +313,7 @@
       "pi_anti_affinity_volume": null,
       "pi_anti_affinity_instance": null,
       "pi_affinity_policy": "affinity",
-      "pi_affinity_instance": null,
+      "pi_affinity_instance": "oracle",
       "pi_volume_pool": null,
       "pi_affinity_volume": null,
       "count": null
@@ -817,7 +817,7 @@
       "name": "ssh-key",
       "public_key": null,
       "resource_group": "management-rg",
-      "use_data": true
+      "use_data": false
     }
   ],
   "sysdig": {
