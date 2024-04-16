@@ -172,7 +172,6 @@ function schematicsRoutes(axios, controller) {
               Authorization: `Bearer ${controller.token}`,
             },
           };
-
           return axios(requestConfig);
         })
         .then((response) => {
@@ -198,11 +197,9 @@ function schematicsRoutes(axios, controller) {
     return new Promise((resolve, reject) => {
       if (process.env.NO_SCHEMATICS) {
         reject("Schematics feature not supported on development.");
-        return;
       }
       if (isNullOrEmptyString(region) || !region) {
         reject("No region provided for workspace.");
-        return;
       }
 
       return controller
@@ -210,7 +207,6 @@ function schematicsRoutes(axios, controller) {
         .then((rgData) => {
           if (rgData.resources.length === 0) {
             reject("> Provided resource group not found.");
-            return;
           }
 
           console.log("> Creating resource group...");
