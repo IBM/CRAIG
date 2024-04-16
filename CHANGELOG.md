@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## 1.15.1
 
+### Upgrade Notes
+
+- A resource groups is now required for existing Object Storage instances. To use an existing instance, the resource group for that instance must be added into CRAIG
+
 ### Features
 
 - Environment prefix is now prepended to the beginning of Classic SSH Key names
@@ -14,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing schematics workspace URL to not be provided to the user after creation
 - Fixed an issue causing workspace creation modal to be incorrectly labelled as `Upload`
 - Fixed an issue where the helper text for an exising COS instance would incorrectly include added suffixes
+- Fixed an issue where Load Balancer Health Timeout invalid text showed a maximum value of `300` instead of `3000`
 
 ## 1.15.0
 

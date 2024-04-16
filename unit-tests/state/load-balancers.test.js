@@ -366,6 +366,26 @@ describe("load_balancers", () => {
     });
   });
   describe("load balancer schema", () => {
+    it("should have invalid load balancer port when not in range", () => {
+      assert.isTrue(
+        craig.load_balancers.port.invalid({
+          port: "",
+        }),
+        "it should be invalid"
+      );
+      assert.isTrue(
+        craig.load_balancers.port.invalid({
+          port: "1.2",
+        }),
+        "it should be invalid"
+      );
+      assert.isTrue(
+        craig.load_balancers.port.invalid({
+          port: "-1",
+        }),
+        "it should be invalid"
+      );
+    });
     it("should hide persistance cookie name when session_persistence_type is not app_cookie", () => {
       assert.isTrue(
         craig.load_balancers.session_persistence_app_cookie_name.hideWhen({}),
@@ -492,6 +512,14 @@ describe("load_balancers", () => {
         "it should return correct value"
       );
     });
+    it("should have invalid target_vsi if none selected", () => {
+      assert.isTrue(
+        craig.load_balancers.target_vsi.invalid({
+          target_vsi: [],
+        }),
+        "it should be invalid"
+      );
+    });
     it("should return correct groups for target vsi", () => {
       assert.deepEqual(
         craig.load_balancers.target_vsi.groups({}),
@@ -566,6 +594,43 @@ describe("load_balancers", () => {
           subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
         },
         "it should return correct data"
+      );
+    });
+    it("should return correct invalid values for connection_limit", () => {
+      assert.isFalse(
+        craig.load_balancers.connection_limit.invalid({}),
+        "it should be valid when no connection limit"
+      );
+      assert.isTrue(
+        craig.load_balancers.connection_limit.invalid({
+          connection_limit: "-12",
+        }),
+        "it should be invalid when not in range"
+      );
+    });
+    it("should return correct invalid values for health_delay", () => {
+      assert.isTrue(
+        craig.load_balancers.health_delay.invalid({}),
+        "it should be invalid when unfound"
+      );
+      assert.isTrue(
+        craig.load_balancers.health_delay.invalid({
+          health_delay: "5.5",
+        }),
+        "it should be invalid when not whole number"
+      );
+      assert.isTrue(
+        craig.load_balancers.health_delay.invalid({
+          health_delay: "-12",
+        }),
+        "it should be invalid when not in range"
+      );
+      assert.isTrue(
+        craig.load_balancers.health_delay.invalid({
+          health_delay: "12",
+          health_timeout: "12",
+        }),
+        "it should be invalid when in range and less or equal to than health_timeout"
       );
     });
   });
