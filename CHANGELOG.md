@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed an issue causing schematics workspace URL to not be provided to the user after creation
 - Fixed an issue causing workspace creation modal to be incorrectly labelled as `Upload`
+- Fixed an issue where the helper text for an exising COS instance would incorrectly include added suffixes
 
 ## 1.15.0
 
