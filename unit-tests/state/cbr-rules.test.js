@@ -19,7 +19,11 @@ describe("cbr_rules", () => {
   });
   describe("cbr_rules.init", () => {
     it("should initialize cbr_rules", () => {
-      assert.deepEqual(craig.store.json.cbr_rules, []);
+      assert.deepEqual(
+        craig.store.json.cbr_rules,
+        [],
+        "should initialize with empty array"
+      );
     });
   });
   describe("cbr_rules crud operations", () => {
@@ -44,7 +48,11 @@ describe("cbr_rules", () => {
           tags: [],
         },
       ];
-      assert.deepEqual(craig.store.json.cbr_rules, expectedData);
+      assert.deepEqual(
+        craig.store.json.cbr_rules,
+        expectedData,
+        "it should return correct cbr rule"
+      );
     });
     it("should save a cbr rule", () => {
       craig.cbr_rules.create({
@@ -69,6 +77,22 @@ describe("cbr_rules", () => {
           },
         }
       );
+      let expectedData = [
+        {
+          name: "new-cbr-rule-name",
+          description: "hi",
+          enforcement_mode: "disabled",
+          api_type_id: "new",
+          contexts: [],
+          resource_attributes: [],
+          tags: [],
+        },
+      ];
+      assert.deepEqual(
+        craig.store.json.cbr_rules,
+        expectedData,
+        "it should return correct cbr rule"
+      );
     });
     it("should delete a cbr rule", () => {
       craig.cbr_rules.create({
@@ -87,6 +111,11 @@ describe("cbr_rules", () => {
             name: "cbr-rule",
           },
         }
+      );
+      assert.deepEqual(
+        craig.store.json.cbr_rules,
+        [],
+        "it should delete cbr rule"
       );
     });
     describe("cbr rules contexts crud", () => {
@@ -109,10 +138,14 @@ describe("cbr_rules", () => {
             arrayData: craig.store.json.cbr_rules[0].contexts,
           }
         );
-        assert.deepEqual(craig.store.json.cbr_rules[0].contexts[0], {
-          name: "context",
-          value: "blah",
-        });
+        assert.deepEqual(
+          craig.store.json.cbr_rules[0].contexts[0],
+          {
+            name: "context",
+            value: "blah",
+          },
+          "it should return correct cbr rule context"
+        );
       });
       it("should update a context", () => {
         craig.cbr_rules.contexts.create(
@@ -129,10 +162,14 @@ describe("cbr_rules", () => {
             data: { name: "context" },
           }
         );
-        assert.deepEqual(craig.store.json.cbr_rules[0].contexts[0], {
-          name: "context-new",
-          value: "hey",
-        });
+        assert.deepEqual(
+          craig.store.json.cbr_rules[0].contexts[0],
+          {
+            name: "context-new",
+            value: "hey",
+          },
+          "it should return correct cbr rule context"
+        );
       });
       it("should delete a context", () => {
         craig.cbr_rules.contexts.create(
@@ -145,6 +182,11 @@ describe("cbr_rules", () => {
         craig.cbr_rules.contexts.delete(
           {},
           { arrayParentName: "cbr-rule", data: { name: "context" } }
+        );
+        assert.deepEqual(
+          craig.store.json.cbr_rules[0].contexts,
+          [],
+          "it should delete cbr rule context"
         );
       });
     });
@@ -170,10 +212,14 @@ describe("cbr_rules", () => {
             arrayData: craig.store.json.cbr_rules[0].resource_attributes,
           }
         );
-        assert.deepEqual(craig.store.json.cbr_rules[0].resource_attributes[0], {
-          name: "attribute",
-          value: "blah",
-        });
+        assert.deepEqual(
+          craig.store.json.cbr_rules[0].resource_attributes[0],
+          {
+            name: "attribute",
+            value: "blah",
+          },
+          "it should return correct cbr rule resource attribute"
+        );
       });
       it("should update an attribute", () => {
         craig.cbr_rules.resource_attributes.create(
@@ -190,10 +236,14 @@ describe("cbr_rules", () => {
             data: { name: "attribute" },
           }
         );
-        assert.deepEqual(craig.store.json.cbr_rules[0].resource_attributes[0], {
-          name: "attribute-new",
-          value: "hey",
-        });
+        assert.deepEqual(
+          craig.store.json.cbr_rules[0].resource_attributes[0],
+          {
+            name: "attribute-new",
+            value: "hey",
+          },
+          "it should return correct cbr rule resource attribute"
+        );
       });
       it("should delete an attribute", () => {
         craig.cbr_rules.resource_attributes.create(
@@ -206,6 +256,11 @@ describe("cbr_rules", () => {
         craig.cbr_rules.resource_attributes.delete(
           {},
           { arrayParentName: "cbr-rule", data: { name: "attribute" } }
+        );
+        assert.deepEqual(
+          craig.store.json.cbr_rules[0].resource_attributes,
+          [],
+          "it should delete cbr rule resource attribute"
         );
       });
     });
@@ -231,11 +286,15 @@ describe("cbr_rules", () => {
             arrayData: craig.store.json.cbr_rules[0].tags,
           }
         );
-        assert.deepEqual(craig.store.json.cbr_rules[0].tags[0], {
-          name: "tag",
-          operator: "op",
-          value: "blah",
-        });
+        assert.deepEqual(
+          craig.store.json.cbr_rules[0].tags[0],
+          {
+            name: "tag",
+            operator: "op",
+            value: "blah",
+          },
+          "it should return correct cbr rule tag"
+        );
       });
       it("should update an attribute", () => {
         craig.cbr_rules.tags.create(
@@ -252,25 +311,34 @@ describe("cbr_rules", () => {
             data: { name: "tag" },
           }
         );
-        assert.deepEqual(craig.store.json.cbr_rules[0].tags[0], {
-          name: "tag-new",
-          operator: "op",
-          value: "blah",
-        });
-      });
-      it("should delete an attribute", () => {
-        craig.cbr_rules.tags.create(
-          { name: "tag", operator: "op", value: "blah" },
+        assert.deepEqual(
+          craig.store.json.cbr_rules[0].tags[0],
           {
-            innerFormProps: { arrayParentName: "cbr-rule" },
-            arrayData: craig.store.json.cbr_rules[0].tags,
-          }
-        );
-        craig.cbr_rules.tags.delete(
-          {},
-          { arrayParentName: "cbr-rule", data: { name: "tag" } }
+            name: "tag-new",
+            operator: "op",
+            value: "blah",
+          },
+          "it should return correct cbr rule tag"
         );
       });
+      it(
+        "should delete an attribute",
+        () => {
+          craig.cbr_rules.tags.create(
+            { name: "tag", operator: "op", value: "blah" },
+            {
+              innerFormProps: { arrayParentName: "cbr-rule" },
+              arrayData: craig.store.json.cbr_rules[0].tags,
+            }
+          );
+          craig.cbr_rules.tags.delete(
+            {},
+            { arrayParentName: "cbr-rule", data: { name: "tag" } }
+          );
+          assert.deepEqual(craig.store.json.cbr_rules[0].tags, []);
+        },
+        "it should delete cbr rule tag"
+      );
     });
     describe("cbr_rules.onStoreUpdate", () => {
       it("should initialize context to empty array", () => {
@@ -281,12 +349,20 @@ describe("cbr_rules", () => {
           api_type_id: "frog",
         });
         craig.update();
-        assert.deepEqual(craig.store.json.cbr_rules[0].tags, []);
+        assert.deepEqual(
+          craig.store.json.cbr_rules[0].contexts,
+          [],
+          "it should initialize with empty contexts array"
+        );
       });
       it("should make cbr rules empty if undefined", () => {
         craig.store.json.cbr_rules = undefined;
         craig.update();
-        assert.deepEqual(craig.store.json.cbr_rules, []);
+        assert.deepEqual(
+          craig.store.json.cbr_rules,
+          [],
+          "it shoud return empty array"
+        );
       });
     });
   });
