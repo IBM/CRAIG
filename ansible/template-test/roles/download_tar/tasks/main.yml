@@ -9,3 +9,5 @@
     status_code: 200
     dest: "{{playbook_dir}}/{{template}}.tar"
     timeout: 500
+  delay: 60
+  retries: 2

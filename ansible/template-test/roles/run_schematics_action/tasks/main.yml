@@ -7,6 +7,7 @@
     headers:
       Authorization: Bearer {{token.json.access_token}}
   register: schematics_actions
+  timeout: 120
 
 - name: Get target action ID
   set_fact:
@@ -39,3 +40,4 @@
       command_name: ansible_playbook_run
       command_parameter: main.yml
     status_code: 201
+  timeout: 120

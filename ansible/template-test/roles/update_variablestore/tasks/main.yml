@@ -2,5 +2,6 @@
 # tasks file for update_variablestore
 - name: Update variablestore
   set_fact:
-    variablestore: "{{ variablestore +  [{'name': item, 'secure': false, 'use_default': false,  'value': (item == 'dal10gw_on_prem_connection_preshared_key') | ternary(tf_var_preshared_key, tf_var_ssh_key) }] }}"
+    variablestore: "{{ variablestore +  [{'name': item, 'secure': false, 'use_default': false,  'value': vars[ssh_key_map[item]] }] }}"
   loop: "{{template_map[template]}}"
+

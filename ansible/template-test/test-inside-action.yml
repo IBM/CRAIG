@@ -18,25 +18,24 @@
         inputs:
           - name: template
             value: "{{ template }}"
-            use_default: false
           - name: tf_var_api_key
             value: "{{ tf_var_api_key }}"
-            use_default: false
             metadata:
               secure: true
           - name: tf_var_prefix
             value: "{{ tf_var_prefix }}"
-            use_default: false  
           - name: workspace_name
             value: "{{ workspace_name }}"
           - name: tf_var_preshared_key
-            value: "{{ tf_var_preshared_key }}"
+            value: "{{ tf_var_preshared_key | default('NONE') }}"
             metadata:
               secure: true
           - name: tf_var_ssh_key
-            value: "{{ tf_var_ssh_key }}"
+            value: "{{ tf_var_ssh_key | default('NONE') }}"
+          - name: tf_var_power_ssh_key
+            value: "{{ tf_var_power_ssh_key | default('NONE') }}"
           - name: use_existing_workspace
-            value: "{{ use_existing_workspace }}"
+            value: "{{ use_existing_workspace | default('false')}}"
           - name: existing_workspace_id
-            value: "{{ existing_workspace_id }}"
+            value: "{{ existing_workspace_id | default('NONE') }}"
     - role: run_schematics_action

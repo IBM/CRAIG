@@ -1,0 +1,85 @@
+---
+- name: "Playbook to run end-to-end test for all CRAIG templates"
+  hosts: localhost
+  vars_files: ../template-test/vars/vars.yml
+  tasks:
+  - name: Generate random suffix for schematics workspace/action names
+    set_fact:
+      suffix: "{{lookup('community.general.random_string', special=false, length=4)}}"
+- import_playbook: ../template-test/test-inside-action.yml
+  vars:
+    template: "from-scratch"
+    action_name: "from-scratch-{{suffix}}"
+    workspace_name: "from-scratch-{{suffix}}"
+    tf_var_prefix: "from-scratch"
+- import_playbook: ../template-test/test-inside-action.yml
+  vars:
+    template: "mixed"
+    action_name: "mixed-{{suffix}}"
+    workspace_name: "mixed-{{suffix}}"
+    tf_var_prefix: "mixed"
+    tf_var_ssh_key: "{{mixed}}"
+- import_playbook: ../template-test/test-inside-action.yml
+  vars:
+    template: "vsi"
+    action_name: "vsi-{{suffix}}"
+    workspace_name: "vsi-{{suffix}}"
+    tf_var_prefix: "vsi"
+    tf_var_ssh_key: "{{vsi}}"
+- import_playbook: ../template-test/test-inside-action.yml
+  vars:
+    template: "vsi-edge"
+    action_name: "vsi-edge-{{suffix}}"
+    workspace_name: "vsi-edge-{{suffix}}"
+    tf_var_prefix: "vsi-edge"
+    tf_var_ssh_key: "{{vsi_edge}}"
+- import_playbook: ../template-test/test-inside-action.yml
+  vars:
+    template: "quick-start-power"
+    action_name: "quick-{{suffix}}"
+    workspace_name: "quick-{{suffix}}"
+    tf_var_prefix: "quick"
+    tf_var_ssh_key: "{{quick_start}}"
+- name: "Wait 30 minutes before executing the remaining templates"
+  hosts: localhost
+  tasks:
+    - ansible.builtin.pause:
+        minutes: 30
+- import_playbook: ../template-test/test-inside-action.yml
+  vars:
+    template: "power-vs-sap-hana"
+    action_name: "sap-hana-{{suffix}}"
+    workspace_name: "sap-hana-{{suffix}}"
+    tf_var_prefix: "sap-hana"
+    tf_var_ssh_key: "{{sap_hana}}"
+    tf_var_power_ssh_key: "{{sap_hana_power}}"
+- import_playbook: ../template-test/test-inside-action.yml
+  vars:
+    template: "oracle-rac"
+    action_name: "oracle-rac-{{suffix}}"
+    workspace_name: "oracle-rac-{{suffix}}"
+    tf_var_prefix: "oracle-rac"
+    tf_var_ssh_key: "{{oracle_rac}}"
+    tf_var_power_ssh_key: "{{oracle_rac_power}}"
+- import_playbook: ../template-test/test-inside-action.yml
+  vars:
+    template: "oracle-si"
+    action_name: "oracle-si-{{suffix}}"
+    workspace_name: "oracle-si-{{suffix}}"
+    tf_var_prefix: "oracle-si"
+    tf_var_ssh_key: "{{oracle_si}}"
+    tf_var_power_ssh_key: "{{oracle_si_power}}"
+- import_playbook: ../template-test/test-inside-action.yml
+  vars:
+    template: "power-vs-poc"
+    action_name: "poc-{{suffix}}"
+    workspace_name: "poc-{{suffix}}"
+    tf_var_prefix: "power-poc"
+    tf_var_ssh_key: "{{poc}}"
+    tf_var_power_ssh_key: "{{poc_power}}"
+- import_playbook: ../template-test/test-inside-action.yml
+  vars:
+    template: "vpnaas"
+    action_name: "vpnaas-{{suffix}}"
+    workspace_name: "vpnaas-{{suffix}}"
+    tf_var_prefix: "vpn-test"

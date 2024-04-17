@@ -110,3 +110,29 @@ override_craig:
       pi_pin_policy: "none"
       pi_license_repository_capacity: null
       pi_health_status: "OK"
+  vsi:
+    - kms: kms
+      encryption_key: key
+      image: ibm-redhat-9-2-minimal-amd64-3
+      image_name: Red Hat Enterprise Linux 9.x - Minimal Install (amd64) [ibm-redhat-9-2-minimal-amd64-3]
+      profile: bx2-4x16
+      name: example-deployment
+      security_groups:
+      - transit-vsi
+      ssh_keys:
+      - vsi-ssh-key
+      vpc: transit
+      vsi_per_subnet: 1
+      resource_group: transit-rg
+      override_vsi_name: 
+      user_data: 
+      network_interfaces: []
+      subnets:
+      - vsi-zone-1
+      volumes: []
+      subnet: ''
+      enable_floating_ip: false
+      primary_interface_ip_spoofing: false
+      use_variable_names: false
+      snapshot: 
+      use_snapshot: false
