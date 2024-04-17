@@ -24,6 +24,9 @@ All notable changes to this project will be documented in this file.
 - The `VSI` template now correctly includes an ssh key for both VPC VSI Instances, instead of no key being present
 - The `VSI Edge` template now correctly includes an ssh key for both VPC VSI Instances, instead of no key being present
 - The `VPN as a Service` template now correctly force deletes the cos bucket `vpc-bucket` and the encryption key `encryption-key`
+- Fixed visual bugs on the DNS Record sub form form causing fields to be misaligned
+- Fixed an issue causing DNS records using VSI IPs to always be invalid
+- Fixed an issue causing Terraform code for DNS resource records to have invalid references to their parent DNS instance
 
 ## 1.15.0
 

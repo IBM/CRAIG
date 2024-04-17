@@ -3,7 +3,7 @@ const res = require("../mocks/response.mock");
 const { craigApi } = require("../../express-controllers/craig-api");
 const sinon = require("sinon");
 const slz = require("../../client/src/lib/docs/templates/slz-mixed.json");
-const { getObjectFromArray } = require("lazy-z");
+const { getObjectFromArray, arraySplatIndex } = require("lazy-z");
 
 function mockPackTar() {
   this.files = [];
@@ -484,6 +484,230 @@ describe("craig api", () => {
           assert.deepEqual(
             tar.files,
             expectedFiles,
+            "it should contain added-rg in the tar file"
+          );
+        });
+    });
+    it("it should have correct updated data in tar when finalized and using recursive changes", () => {
+      let mockController = {
+        createBlob: function () {
+          return new ArrayBuffer(5);
+        },
+      };
+      let tar = new mockPackTar();
+      let api = new craigApi(mockController, tar);
+
+      return api
+        .updateTemplateTar(
+          {
+            params: { template: "vsi" },
+            body: {
+              vsi: [
+                {
+                  vsi_per_subnet: 1,
+                },
+                {
+                  vsi_per_subnet: 1,
+                },
+              ],
+            },
+          },
+          res
+        )
+        .then(() => {
+          assert.deepEqual(
+            tar.files[5],
+            {
+              name: "vsi/virtual_servers.tf",
+              data:
+                "##############################################################################\n" +
+                "# Image Data Sources\n" +
+                "##############################################################################\n" +
+                "\n" +
+                'data "ibm_is_image" "ibm_ubuntu_22_04_1_minimal_amd64_1" {\n' +
+                '  name = "ibm-ubuntu-22-04-1-minimal-amd64-1"\n' +
+                "}\n" +
+                "\n" +
+                'data "ibm_is_image" "ibm_centos_7_9_minimal_amd64_11" {\n' +
+                '  name = "ibm-centos-7-9-minimal-amd64-11"\n' +
+                "}\n" +
+                "\n" +
+                "##############################################################################\n" +
+                "\n" +
+                "##############################################################################\n" +
+                "# Management VPC Management Server Deployment\n" +
+                "##############################################################################\n" +
+                "\n" +
+                'resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {\n' +
+                '  name           = "${var.prefix}-management-management-server-vsi-zone-1-1"\n' +
+                "  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id\n" +
+                '  profile        = "cx2-4x8"\n' +
+                "  resource_group = ibm_resource_group.management_rg.id\n" +
+                "  vpc            = module.management_vpc.id\n" +
+                '  zone           = "${var.region}-1"\n' +
+                "  tags = [\n" +
+                '    "hello",\n' +
+                '    "world"\n' +
+                "  ]\n" +
+                "  primary_network_interface {\n" +
+                "    subnet = module.management_vpc.vsi_zone_1_id\n" +
+                "    security_groups = [\n" +
+                "      module.management_vpc.management_vsi_id\n" +
+                "    ]\n" +
+                "  }\n" +
+                "  boot_volume {\n" +
+                "    encryption = ibm_kms_key.kms_slz_vsi_volume_key_key.crn\n" +
+                "  }\n" +
+                "  keys = [\n" +
+                "    ibm_is_ssh_key.slz_ssh_key.id\n" +
+                "  ]\n" +
+                "  volumes = [\n" +
+                "  ]\n" +
+                "}\n" +
+                "\n" +
+                'resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {\n' +
+                '  name           = "${var.prefix}-management-management-server-vsi-zone-2-1"\n' +
+                "  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id\n" +
+                '  profile        = "cx2-4x8"\n' +
+                "  resource_group = ibm_resource_group.management_rg.id\n" +
+                "  vpc            = module.management_vpc.id\n" +
+                '  zone           = "${var.region}-2"\n' +
+                "  tags = [\n" +
+                '    "hello",\n' +
+                '    "world"\n' +
+                "  ]\n" +
+                "  primary_network_interface {\n" +
+                "    subnet = module.management_vpc.vsi_zone_2_id\n" +
+                "    security_groups = [\n" +
+                "      module.management_vpc.management_vsi_id\n" +
+                "    ]\n" +
+                "  }\n" +
+                "  boot_volume {\n" +
+                "    encryption = ibm_kms_key.kms_slz_vsi_volume_key_key.crn\n" +
+                "  }\n" +
+                "  keys = [\n" +
+                "    ibm_is_ssh_key.slz_ssh_key.id\n" +
+                "  ]\n" +
+                "  volumes = [\n" +
+                "  ]\n" +
+                "}\n" +
+                "\n" +
+                'resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {\n' +
+                '  name           = "${var.prefix}-management-management-server-vsi-zone-3-1"\n' +
+                "  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id\n" +
+                '  profile        = "cx2-4x8"\n' +
+                "  resource_group = ibm_resource_group.management_rg.id\n" +
+                "  vpc            = module.management_vpc.id\n" +
+                '  zone           = "${var.region}-3"\n' +
+                "  tags = [\n" +
+                '    "hello",\n' +
+                '    "world"\n' +
+                "  ]\n" +
+                "  primary_network_interface {\n" +
+                "    subnet = module.management_vpc.vsi_zone_3_id\n" +
+                "    security_groups = [\n" +
+                "      module.management_vpc.management_vsi_id\n" +
+                "    ]\n" +
+                "  }\n" +
+                "  boot_volume {\n" +
+                "    encryption = ibm_kms_key.kms_slz_vsi_volume_key_key.crn\n" +
+                "  }\n" +
+                "  keys = [\n" +
+                "    ibm_is_ssh_key.slz_ssh_key.id\n" +
+                "  ]\n" +
+                "  volumes = [\n" +
+                "  ]\n" +
+                "}\n" +
+                "\n" +
+                "##############################################################################\n" +
+                "\n" +
+                "##############################################################################\n" +
+                "# Workload VPC Workload Server Deployment\n" +
+                "##############################################################################\n" +
+                "\n" +
+                'resource "ibm_is_instance" "workload_vpc_workload_server_vsi_1_1" {\n' +
+                '  name           = "${var.prefix}-workload-workload-server-vsi-zone-1-1"\n' +
+                "  image          = data.ibm_is_image.ibm_centos_7_9_minimal_amd64_11.id\n" +
+                '  profile        = "cx2-4x8"\n' +
+                "  resource_group = ibm_resource_group.workload_rg.id\n" +
+                "  vpc            = module.workload_vpc.id\n" +
+                '  zone           = "${var.region}-1"\n' +
+                "  tags = [\n" +
+                '    "hello",\n' +
+                '    "world"\n' +
+                "  ]\n" +
+                "  primary_network_interface {\n" +
+                "    subnet = module.workload_vpc.vsi_zone_1_id\n" +
+                "    security_groups = [\n" +
+                "      module.workload_vpc.workload_vsi_id\n" +
+                "    ]\n" +
+                "  }\n" +
+                "  boot_volume {\n" +
+                "    encryption = ibm_kms_key.kms_slz_vsi_volume_key_key.crn\n" +
+                "  }\n" +
+                "  keys = [\n" +
+                "    ibm_is_ssh_key.slz_ssh_key.id\n" +
+                "  ]\n" +
+                "  volumes = [\n" +
+                "  ]\n" +
+                "}\n" +
+                "\n" +
+                'resource "ibm_is_instance" "workload_vpc_workload_server_vsi_2_1" {\n' +
+                '  name           = "${var.prefix}-workload-workload-server-vsi-zone-2-1"\n' +
+                "  image          = data.ibm_is_image.ibm_centos_7_9_minimal_amd64_11.id\n" +
+                '  profile        = "cx2-4x8"\n' +
+                "  resource_group = ibm_resource_group.workload_rg.id\n" +
+                "  vpc            = module.workload_vpc.id\n" +
+                '  zone           = "${var.region}-2"\n' +
+                "  tags = [\n" +
+                '    "hello",\n' +
+                '    "world"\n' +
+                "  ]\n" +
+                "  primary_network_interface {\n" +
+                "    subnet = module.workload_vpc.vsi_zone_2_id\n" +
+                "    security_groups = [\n" +
+                "      module.workload_vpc.workload_vsi_id\n" +
+                "    ]\n" +
+                "  }\n" +
+                "  boot_volume {\n" +
+                "    encryption = ibm_kms_key.kms_slz_vsi_volume_key_key.crn\n" +
+                "  }\n" +
+                "  keys = [\n" +
+                "    ibm_is_ssh_key.slz_ssh_key.id\n" +
+                "  ]\n" +
+                "  volumes = [\n" +
+                "  ]\n" +
+                "}\n" +
+                "\n" +
+                'resource "ibm_is_instance" "workload_vpc_workload_server_vsi_3_1" {\n' +
+                '  name           = "${var.prefix}-workload-workload-server-vsi-zone-3-1"\n' +
+                "  image          = data.ibm_is_image.ibm_centos_7_9_minimal_amd64_11.id\n" +
+                '  profile        = "cx2-4x8"\n' +
+                "  resource_group = ibm_resource_group.workload_rg.id\n" +
+                "  vpc            = module.workload_vpc.id\n" +
+                '  zone           = "${var.region}-3"\n' +
+                "  tags = [\n" +
+                '    "hello",\n' +
+                '    "world"\n' +
+                "  ]\n" +
+                "  primary_network_interface {\n" +
+                "    subnet = module.workload_vpc.vsi_zone_3_id\n" +
+                "    security_groups = [\n" +
+                "      module.workload_vpc.workload_vsi_id\n" +
+                "    ]\n" +
+                "  }\n" +
+                "  boot_volume {\n" +
+                "    encryption = ibm_kms_key.kms_slz_vsi_volume_key_key.crn\n" +
+                "  }\n" +
+                "  keys = [\n" +
+                "    ibm_is_ssh_key.slz_ssh_key.id\n" +
+                "  ]\n" +
+                "  volumes = [\n" +
+                "  ]\n" +
+                "}\n" +
+                "\n" +
+                "##############################################################################\n",
+            },
             "it should contain added-rg in the tar file"
           );
         });

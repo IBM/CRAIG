@@ -239,8 +239,6 @@ describe("dns", () => {
         resource_group: "service-rg",
         plan: "standard",
       });
-    });
-    it("should create a new record", () => {
       craig.dns.records.create(
         {
           name: "zone",
@@ -249,8 +247,11 @@ describe("dns", () => {
           innerFormProps: { arrayParentName: "dev" },
         }
       );
+    });
+    it("should create a new record", () => {
       let expectedData = {
         name: "zone",
+        instance: "dev",
       };
       assert.deepEqual(
         craig.store.json.dns[0].records[0],
@@ -259,14 +260,6 @@ describe("dns", () => {
       );
     });
     it("should update a record", () => {
-      craig.dns.records.create(
-        {
-          name: "zone",
-        },
-        {
-          innerFormProps: { arrayParentName: "dev" },
-        }
-      );
       craig.dns.records.save(
         {
           name: "zzzz",
@@ -278,6 +271,7 @@ describe("dns", () => {
       );
       let expectedData = {
         name: "zzzz",
+        instance: "dev",
       };
       assert.deepEqual(
         craig.store.json.dns[0].records[0],
@@ -286,14 +280,6 @@ describe("dns", () => {
       );
     });
     it("should delete a record", () => {
-      craig.dns.records.create(
-        {
-          name: "zone",
-        },
-        {
-          innerFormProps: { arrayParentName: "dev" },
-        }
-      );
       craig.dns.records.delete(
         {},
         {
@@ -425,6 +411,13 @@ describe("dns", () => {
           "it should be invalid"
         );
       });
+      it("should have a small ttl", () => {
+        assert.deepEqual(
+          craig.dns.records.ttl.size,
+          "small",
+          "it should be small"
+        );
+      });
       it("should return false for vpc invalid if not using vsi", () => {
         assert.deepEqual(
           craig.dns.records.vpc.invalid({}),
@@ -484,6 +477,16 @@ describe("dns", () => {
         assert.isTrue(
           craig.dns.records.vsi.hideWhen({ use_vsi: false }),
           "it should be hidden"
+        );
+      });
+      it("should handle rdata invalid", () => {
+        assert.isFalse(
+          craig.dns.records.rdata.invalid({ use_vsi: true }),
+          "it should have a valid rdata field when undefined and using VSI"
+        );
+        assert.isFalse(
+          craig.dns.records.rdata.invalid({}),
+          "it should have an invalid rdata field when undefined and not using VSI"
         );
       });
     });

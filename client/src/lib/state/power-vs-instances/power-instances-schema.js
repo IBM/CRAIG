@@ -47,96 +47,6 @@ function hideWhenNoWorkspaceAndVtl(vtl) {
 }
 
 /**
- * Network invalidation for powerVs instance
- * @returns {boolean} function will evaluate to true if should be disabled
- */
-function powerVsNetworkInvalid(stateData) {
-  let hasInvalidNetwork = isEmpty(stateData.network || []);
-  if (!hasInvalidNetwork) {
-    stateData.network.forEach((nw) => {
-      if (
-        (!isNullOrEmptyString(nw.ip_address) &&
-          !isIpv4CidrOrAddress(nw.ip_address)) ||
-        contains(nw.ip_address, "/")
-      )
-        hasInvalidNetwork = true;
-    });
-  }
-  return hasInvalidNetwork;
-}
-
-/**
- * Processor invalidation for powerVs instance
- * @returns {boolean} function will evaluate to true if should be disabled
- */
-function powerVsCoresInvalid(stateData) {
-  if (stateData.sap) return false;
-  let isDedicated = stateData.pi_proc_type === "dedicated";
-  let coreMax =
-    stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
-  let coreMin = isDedicated ? 1 : 0.25;
-  let processorsFloat = parseFloat(stateData.pi_processors);
-  return (
-    stateData.pi_processors === "" ||
-    (isDedicated && !isWholeNumber(processorsFloat)) ||
-    (!stateData.sap && (processorsFloat < coreMin || processorsFloat > coreMax))
-  );
-}
-
-/**
- * Memory invalidation for powerVs instance
- * @returns {boolean} function will evaluate to true if should be disabled
- */
-function powerVsMemoryInvalid(stateData) {
-  if (stateData.sap) return false;
-  let memoryFloat = parseFloat(stateData.pi_memory);
-  let memoryMax = stateData.pi_sys_type === "e980" ? 15400 : 934;
-  let vtlMemMin;
-  if (stateData.pi_license_repository_capacity) {
-    vtlMemMin = 16 + 2 * stateData.pi_license_repository_capacity;
-  }
-  return (
-    !isWholeNumber(memoryFloat) ||
-    (!stateData.sap && !isInRange(memoryFloat, 2, memoryMax)) ||
-    (stateData.pi_license_repository_capacity !== undefined &&
-      memoryFloat < vtlMemMin)
-  );
-}
-
-/**
- * return power_instances processor input invalid text
- * @param {Object} stateData
- * @returns {string} invalid text
- */
-function invalidPowerVsProcessorTextCallback(stateData) {
-  let isDedicated = stateData.pi_proc_type === "dedicated";
-  let coreMin = isDedicated ? 1 : 0.25;
-  let coreMax =
-    stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
-  return `Must be a ${
-    isDedicated ? "whole " : ""
-  }number between ${coreMin} and ${coreMax}.`;
-}
-
-/**
- * return power_instances memory input invalid text
- * @param {Object} stateData
- * @returns {string} invalid text
- */
-function invalidPowerVsMemoryTextCallback(stateData) {
-  let memMin = 2;
-  let memMax = stateData.pi_sys_type === "e980" ? 15400 : 934;
-  let vtlMemMin;
-  if (stateData.pi_license_repository_capacity) {
-    vtlMemMin = 16 + 2 * stateData.pi_license_repository_capacity;
-  }
-  let vtlText = stateData.pi_license_repository_capacity
-    ? ` For FalconStor VTL Instances, memory must be greater than or equal to ${vtlMemMin}.`
-    : ``;
-  return `Must be a whole number between ${memMin} and ${memMax}.${vtlText}`;
-}
-
-/**
  * generate a function to handle invalid text
  * @param {string} text text to add to invalid text
  */
@@ -235,7 +145,20 @@ function powerVsInstanceSchema(vtl) {
     network: {
       size: "small",
       default: [],
-      invalid: powerVsNetworkInvalid,
+      invalid: function (stateData) {
+        let hasInvalidNetwork = isEmpty(stateData.network || []);
+        if (!hasInvalidNetwork) {
+          stateData.network.forEach((nw) => {
+            if (
+              (!isNullOrEmptyString(nw.ip_address) &&
+                !isIpv4CidrOrAddress(nw.ip_address)) ||
+              contains(nw.ip_address, "/")
+            )
+              hasInvalidNetwork = true;
+          });
+        }
+        return hasInvalidNetwork;
+      },
       invalidText: powerVsInstanceInvalidText("at least one subnet"),
       type: "multiselect",
       groups: function (stateData, componentProps) {
@@ -393,8 +316,29 @@ function powerVsInstanceSchema(vtl) {
       },
       size: "small",
       default: "",
-      invalid: powerVsCoresInvalid,
-      invalidText: invalidPowerVsProcessorTextCallback,
+      invalid: function (stateData) {
+        if (stateData.sap) return false;
+        let isDedicated = stateData.pi_proc_type === "dedicated";
+        let coreMax =
+          stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
+        let coreMin = isDedicated ? 1 : 0.25;
+        let processorsFloat = parseFloat(stateData.pi_processors);
+        return (
+          stateData.pi_processors === "" ||
+          (isDedicated && !isWholeNumber(processorsFloat)) ||
+          processorsFloat < coreMin ||
+          processorsFloat > coreMax
+        );
+      },
+      invalidText: function (stateData) {
+        let isDedicated = stateData.pi_proc_type === "dedicated";
+        let coreMin = isDedicated ? 1 : 0.25;
+        let coreMax =
+          stateData.pi_sys_type === "e980" ? 17 : isDedicated ? 13 : 13.75;
+        return `Must be a ${
+          isDedicated ? "whole " : ""
+        }number between ${coreMin} and ${coreMax}.`;
+      },
     },
     pi_memory: {
       hideWhen: function (stateData, componentProps) {
@@ -407,8 +351,35 @@ function powerVsInstanceSchema(vtl) {
       placeholder: "4",
       size: "small",
       default: "",
-      invalid: powerVsMemoryInvalid,
-      invalidText: invalidPowerVsMemoryTextCallback,
+      invalid: function (stateData) {
+        if (stateData.sap) return false;
+        let memoryFloat = parseFloat(stateData.pi_memory);
+        let memoryMax = stateData.pi_sys_type === "e980" ? 15400 : 934;
+        let vtlMemMin = 2;
+        if (stateData.pi_license_repository_capacity) {
+          vtlMemMin = 16 + 2 * stateData.pi_license_repository_capacity;
+        }
+        return (
+          !isWholeNumber(memoryFloat) ||
+          !isInRange(
+            memoryFloat,
+            stateData.pi_license_repository_capacity ? vtlMemMin : 2,
+            memoryMax
+          )
+        );
+      },
+      invalidText: function (stateData) {
+        let memMin = 2;
+        let memMax = stateData.pi_sys_type === "e980" ? 15400 : 934;
+        let vtlMemMin;
+        if (stateData.pi_license_repository_capacity) {
+          vtlMemMin = 16 + 2 * stateData.pi_license_repository_capacity;
+        }
+        let vtlText = stateData.pi_license_repository_capacity
+          ? ` For FalconStor VTL Instances, memory must be greater than or equal to ${vtlMemMin}.`
+          : ``;
+        return `Must be a whole number between ${memMin} and ${memMax}.${vtlText}`;
+      },
     },
     pi_storage_pool_affinity: {
       default: false,
@@ -512,6 +483,4 @@ function powerVsInstanceSchema(vtl) {
 
 module.exports = {
   powerVsInstanceSchema,
-  invalidPowerVsMemoryTextCallback,
-  invalidPowerVsProcessorTextCallback,
 };

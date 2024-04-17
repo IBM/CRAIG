@@ -753,7 +753,7 @@ function fieldIsNotWholeNumber(field, min, max) {
  * shortcut for ttl
  * @returns {Function} function
  */
-function timeToLive() {
+function timeToLive(small) {
   return {
     labelText: "Time to Live (Seconds)",
     default: "",
@@ -767,6 +767,7 @@ function timeToLive() {
       "Enter a whole number between 300 and 2147483647"
     ),
     placeholder: "300",
+    size: small ? "small" : undefined,
   };
 }
 
@@ -949,7 +950,7 @@ function powerVsStorageOptions(isVolume, hideWhen) {
       return (
         isNullOrEmptyString(stateData.storage_option, true) ||
         (stateData.storage_option === "Storage Pool" &&
-          isNullOrEmptyString(stateData.workspace))
+          isNullOrEmptyString(stateData.workspace, true))
       );
     },
     invalidText: function (stateData, componentProps) {
@@ -994,9 +995,7 @@ function powerVsStorageType(isVolume, hideWhen) {
     type: "fetchSelect",
     labelText: "Storage Tiers",
     groups: [],
-    invalid: function (stateData) {
-      return isNullOrEmptyString(stateData[storageField]);
-    },
+    invalid: fieldIsNullOrEmptyString(storageField),
     invalidText: selectInvalidText("Storage Tier"),
     onRender: function (stateData) {
       return isNullOrEmptyString(stateData[storageField])
@@ -1234,7 +1233,7 @@ function powerStoragePoolSelect(isVolume) {
     invalid: function (stateData) {
       return (
         stateData.storage_option === "Storage Pool" &&
-        (!stateData[field] || isNullOrEmptyString(stateData[field]))
+        isNullOrEmptyString(stateData[field], true)
       );
     },
     invalidText: function (stateData, componentProps) {
