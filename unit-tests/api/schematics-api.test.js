@@ -20,6 +20,7 @@ describe("schematics api", () => {
   afterEach(() => {
     delete process.env.CRAIG_PROD;
     delete process.env.NO_SCHEMATICS;
+    delete process.env.ACCOUNT_ID;
   });
   describe("getWorkspaceData", () => {
     it("should catch when token fails", () => {
@@ -468,6 +469,44 @@ describe("schematics api", () => {
                 Authorization: "Bearer null",
               },
               params: {
+                name: "toad",
+              },
+            },
+          ],
+          "it should call axios with correct args"
+        );
+        assert.deepEqual(
+          data,
+          { hello: "world" },
+          "it should return correct resource group ID"
+        );
+      });
+    });
+    it("should return correct data when rg is found and ACCOUNT_ID is supplied", () => {
+      process.env.ACCOUNT_ID = "1234";
+      let { axios } = initMockAxios({
+        hello: "world",
+      });
+      let axiosSpy = new sinon.spy(axios);
+      let api = new controller(axiosSpy);
+      api.getBearerToken = new sinon.spy(spyFns, "getBearerToken");
+      return api.getResourceGroupID("toad").then((data) => {
+        assert.isTrue(
+          api.getBearerToken.calledOnce,
+          "it should try to fetch token"
+        );
+        assert.deepEqual(
+          axiosSpy.lastCall.args,
+          [
+            {
+              method: "get",
+              url: `https://resource-controller.cloud.ibm.com/v2/resource_groups`,
+              headers: {
+                Accept: "application/json",
+                Authorization: "Bearer null",
+              },
+              params: {
+                account_id: "1234",
                 name: "toad",
               },
             },

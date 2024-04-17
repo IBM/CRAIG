@@ -3,7 +3,8 @@
     "version": "1.15.1",
     "features": [
       "Environment prefix is now prepended to the beginning of Classic SSH Key names",
-      "Power VS Cloud Connections now support connections to Classic Infrastructure and VPCs"
+      "Power VS Cloud Connections now support connections to Classic Infrastructure and VPCs",
+      "Users can now use a Service ID for CRAIG application's cloud access. To use this feature, add your account ID as the value `ACCOUNT_ID` in your deployment environment"
     ],
     "fixes": [
       "Fixed an issue causing schematics workspace URL to not be provided to the user after creation",

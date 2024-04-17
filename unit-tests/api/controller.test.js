@@ -7,6 +7,7 @@ const { initMockAxios } = require("lazy-z");
 describe("controller", () => {
   beforeEach(() => {
     res.send = new sinon.spy();
+    process.env.API_KEY = "1234"; //set arbitrary API Key value for testing
   });
   afterEach(() => {
     delete process.env.CRAIG_PROD;

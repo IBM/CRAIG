@@ -156,11 +156,24 @@ create_resources() {
   fi
 
   secret_name="${APP_NAME}-apikey"
-  # check/create secret for env var
+  # check/create secret for env var API_KEY
   if ! ibmcloud ce secret list | grep "${secret_name}" > /dev/null; then
     # no secret with name found
     ibmcloud ce secret create -n "${secret_name}" --from-literal "API_KEY=$API_KEY" || fatal "An error occurred creating the API secret in IBM Code Engine"
   fi
+
+  accountid_configmap_name="${APP_NAME}-accountid"
+  # get the Account ID number
+  ACCOUNT_ID=$(ibmcloud account show --output json | jq -r .account_id)
+  [[ -z "$ACCOUNT_ID" ]] && fatal "Failed to retrieve the Account ID."
+  # check/create configmap for env var ACCOUNT_ID
+  if ! ibmcloud ce configmap list | grep "${accountid_configmap_name}" > /dev/null; then
+    # if no accountid configmap env found, import into env
+    ibmcloud ce configmap create -n "${accountid_configmap_name}" --from-literal "ACCOUNT_ID=$ACCOUNT_ID" || fatal "An error occurred creating the Account ID config map in IBM Code Engine"
+  else
+    ibmcloud ce configmap update -n "${accountid_configmap_name}" --from-literal "ACCOUNT_ID=$ACCOUNT_ID" || fatal "An error occurred updating the Account ID config map for the application."
+  fi
+  
 
   # Power VS workspace IDs can be set one of two ways: an env file, or be set automatically
   # by the generated workspaceids.env from the create_powervs_workspaces function. These
@@ -170,9 +183,9 @@ create_resources() {
   if [ ! -z "${ENVIRONMENT_FILE}" ]; then
     configmap_name="${APP_NAME}-env"
     if ! ibmcloud ce configmap list | grep $configmap_name > /dev/null ; then
-      ibmcloud ce configmap create -n "${configmap_name}"  --from-env-file "${ENVIRONMENT_FILE}" || fatal "An error ocurred creating the config map for the application."
+      ibmcloud ce configmap create -n "${configmap_name}"  --from-env-file "${ENVIRONMENT_FILE}" || fatal "An error occurred creating the config map for the application."
     else
-      ibmcloud ce configmap update -n "${configmap_name}" --from-env-file "${ENVIRONMENT_FILE}" || fatal "An error ocurred updating the config map for the application."  
+      ibmcloud ce configmap update -n "${configmap_name}" --from-env-file "${ENVIRONMENT_FILE}" || fatal "An error occurred updating the config map for the application."  
     fi
   fi
 
@@ -180,9 +193,9 @@ create_resources() {
   if [ -f workspaceids.env ]; then
     configmap_name="${APP_NAME}-env"
     if ! ibmcloud ce configmap list | grep $configmap_name > /dev/null ; then
-      ibmcloud ce configmap create -n "${configmap_name}"  --from-env-file workspaceids.env || fatal "An error ocurred creating the config map for the application."
+      ibmcloud ce configmap create -n "${configmap_name}"  --from-env-file workspaceids.env || fatal "An error occurred creating the config map for the application."
     else
-      ibmcloud ce configmap update -n "${configmap_name}" --from-env-file workspaceids.env || fatal "An error ocurred updating the config map for the application."  
+      ibmcloud ce configmap update -n "${configmap_name}" --from-env-file workspaceids.env || fatal "An error occurred updating the config map for the application."  
     fi
   fi
 
@@ -237,6 +250,7 @@ create_resources() {
       --es 2G \
       --scale-down-delay $SCALE_DOWN_DELAY \
       --env-from-secret "${secret_name}" \
+      --env-from-configmap "${accountid_configmap_name}" \
       ${configmap_param} || fatal "An error occurred updating the application"
     echo "The CRAIG application is now ready at the URL above."
   else
@@ -254,6 +268,7 @@ create_resources() {
       --scale-down-delay $SCALE_DOWN_DELAY \
       --es 2G \
       --env-from-secret "${secret_name}" \
+      --env-from-configmap "${accountid_configmap_name}" \
       ${configmap_param} || fatal "An error occurred creating the application"
     echo "The CRAIG application is now ready at the URL above."
   fi

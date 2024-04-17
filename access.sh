@@ -55,6 +55,8 @@ create_craig_deployer() {
     echo "Creating Access Group craig-deployer..."
     ibmcloud iam access-group-create craig-deployer -d "Access group that assigns all access policies required to successfully run deploy.sh to set up CRAIG in Code Engine, create a schematics workspace, and create PowerVS workspaces when running with the -z parameter." || fatal "An error ocurred while creating the craig-deployer access group."
     echo "Creating Access Policies for craig-deployer..."
+    # Account Management viewer access policy - needed for the 'ibmcoud account show' CLI command in deploy script
+    ibmcloud iam access-group-policy-create craig-deployer --account-management --roles Viewer
     # Resource Group access policy
     ibmcloud iam access-group-policy-create craig-deployer --roles Viewer,Editor --resource-type resource-group
     # Code Engine access policy
@@ -87,7 +89,7 @@ create_craig_application() {
     # schematics-api access policy
     ibmcloud iam access-group-policy-create craig-application --roles Manager,Editor --service-name schematics
     # Resource Group access policy
-    ibmcloud iam access-group-policy-create craig-application --roles Viewer,Editor --resource-type resource-group
+    ibmcloud iam access-group-policy-create craig-application --roles Viewer --resource-type resource-group
     echo "Access group craig-application has been successfully created."
   else
     echo "The access group craig-application already exists."

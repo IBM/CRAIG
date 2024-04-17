@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 - Environment prefix is now prepended to the beginning of Classic SSH Key names
 - Power VS Cloud Connections now support connections to Classic Infrastructure and VPCs
+- Users can now use a Service ID for CRAIG application's cloud access. To use this feature, add your account ID as the value `ACCOUNT_ID` in your deployment environment
 
 ### Fixes
 

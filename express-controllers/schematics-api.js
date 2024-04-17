@@ -160,13 +160,16 @@ function schematicsRoutes(axios, controller) {
    */
   controller.getResourceGroupID = function (resourceGroup) {
     return new Promise((resolve, reject) => {
+      let requestConfigParams = { name: resourceGroup };
+      if (process.env.ACCOUNT_ID)
+        requestConfigParams.account_id = process.env.ACCOUNT_ID;
       return controller
         .getBearerToken()
         .then(() => {
           let requestConfig = {
             method: "get",
             url: "https://resource-controller.cloud.ibm.com/v2/resource_groups",
-            params: { name: resourceGroup },
+            params: requestConfigParams,
             headers: {
               Accept: "application/json",
               Authorization: `Bearer ${controller.token}`,
