@@ -317,12 +317,12 @@ function initPowerVsVolumeStore(store) {
           } else {
             return (
               Number(stateData.count) < 1 ||
-              fieldIsNotWholeNumber("count", 1, 100)(stateData)
+              fieldIsNotWholeNumber("count", 1, 127)(stateData)
             );
           }
         },
         invalidText: unconditionalInvalidText(
-          "Enter a whole number between 1 and 100"
+          "Enter a whole number between 1 and 127"
         ),
         tooltip: {
           content: "Create multiple volumes with this configuration",
