@@ -28,6 +28,11 @@ All notable changes to this project will be documented in this file.
 - Fixed visual bugs on the DNS Record sub form form causing fields to be misaligned
 - Fixed an issue causing DNS records using VSI IPs to always be invalid
 - Fixed an issue causing Terraform code for DNS resource records to have invalid references to their parent DNS instance
+- Fixed an issue causing the Schematics workspace creation modal to have an incorrect title
+- Fixed an issue causing the Schematics workspace creation modal to display a success message when after failing to create a workspace
+- Fixed an issue causing Power VS Images to not correctly be update after being removed during validation
+- Fixed an issue in the Project form allowing users to create multiple workspaces for the same project
+- Fixed an issue causing the validation button in the top navigation bar to work inconsistently
 
 ## 1.15.0
 

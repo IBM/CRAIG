@@ -98,7 +98,7 @@ class Craig extends React.Component {
         clickedWorkspaceUrl: "",
         current_project: craig.store.project_name,
         showOverviewForDownload: false,
-        workspaceAction: "upload",
+        workspaceAction: "create",
       };
     } catch (err) {
       // if there are initialization errors, redirect user to reset state path
@@ -121,6 +121,7 @@ class Craig extends React.Component {
     this.saveProject = this.saveProject.bind(this);
     this.showAndSnapshot = this.showAndSnapshot.bind(this);
     this.afterValidation = this.afterValidation.bind(this);
+    this.removeInvalidReferences = this.removeInvalidReferences.bind(this);
   }
 
   // when react component mounts, set update callback for store
@@ -279,7 +280,6 @@ class Craig extends React.Component {
               {
                 loadingDone: true,
                 clickedWorkspaceUrl: projects[projectKeyName].workspace_url,
-                workspaceAction: "upload",
               },
               () => {
                 this.setItem("craigProjects", projects);
@@ -292,7 +292,7 @@ class Craig extends React.Component {
             this.setState({
               schematicsFailed: true,
               loadingDone: true,
-              workspaceAction: "upload",
+              workspaceAction: "create",
             });
             console.error(err);
           }
@@ -509,6 +509,18 @@ class Craig extends React.Component {
                       });
                     }
                   });
+                  workspace.imageNames.forEach((name) => {
+                    if (
+                      !splatContains(foundImages, "name", name) &&
+                      !workspace.use_data
+                    ) {
+                      invalidItems.power_images.push({
+                        workspace: workspace.name,
+                        image: name,
+                        zone: workspace.zone,
+                      });
+                    }
+                  });
                 });
                 completeTasks();
               })
@@ -518,7 +530,6 @@ class Craig extends React.Component {
               });
           });
         }
-
         if (craig.store.json.clusters.length > 0) {
           // get cluster versions
           fetch("/api/cluster/versions")
@@ -616,8 +627,84 @@ class Craig extends React.Component {
       this.setState({
         invalidItems,
         awaitingValidation: false,
+        showValidationModal: true,
         loadingModalOpen: false,
       });
+  }
+
+  /**
+   * remove invalid references
+   */
+  removeInvalidReferences() {
+    // for each item that is checked
+    eachKey(this.state.invalidItems, (item) => {
+      if (item === "power_images") {
+        craig.store.json.power.forEach((workspace) => {
+          if (
+            // if the workspace is in the list of invalid items
+            splatContains(
+              this.state.invalidItems.power_images,
+              "workspace",
+              workspace.name
+            )
+          ) {
+            // get a list of image objects for this workspace
+            let workspaceImages = this.state.invalidItems.power_images.filter(
+              (image) => {
+                if (image.workspace === workspace.name) {
+                  return image;
+                }
+              }
+            );
+
+            // set image names to filter out images
+            workspace.imageNames = workspace.imageNames.filter((name) => {
+              if (!splatContains(workspaceImages, "image", name)) {
+                return name;
+              }
+            });
+
+            // remove references in instances to unfound images
+            craig.store.json.power_instances.forEach((instance) => {
+              if (
+                instance.workspace === workspace.name &&
+                !contains(workspace.imageNames, instance.image)
+              ) {
+                instance.image = null;
+              }
+            });
+          }
+        });
+      } else {
+        // for each item in the json store field
+        craig.store.json[item].forEach((resource) => {
+          // if the resource name is contained in the list of invalid items
+          // set the reference to null
+          if (
+            item === "vsi"
+              ? splatContains(
+                  this.state.invalidItems[item],
+                  "vsi",
+                  resource.name
+                )
+              : contains(this.state.invalidItems[item], resource.name)
+          ) {
+            if (item === "vsi" && resource.image_name) {
+              resource.image_name = null;
+              resource.image = null;
+            } else if (item === "clusters" && resource.kube_version) {
+              resource.kube_version = null;
+            }
+          }
+        });
+      }
+    });
+    // reset invalid items and hide validation modal
+    this.setState({ invalidItems: {}, showValidationModal: false }, () => {
+      // force update state store to ensure changes are saved
+      craig.update();
+      window.location.reload();
+    });
   }
 
   render() {
@@ -787,6 +874,7 @@ class Craig extends React.Component {
             toggleModal={this.toggleLoadingModal}
             // props for retry
             projects={this.state.projects}
+            failed={this.state.schematicsFailed}
             retryCallback={() => {}}
             customHeading={
               this.state.awaitingValidation ? "Validating Images" : undefined

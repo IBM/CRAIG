@@ -258,6 +258,7 @@ class Projects extends React.Component {
     this.setState({ invalidItems: {}, showValidationModal: false }, () => {
       // force update state store to ensure changes are saved
       this.props.craig.update();
+      window.location.reload();
     });
   }
 
