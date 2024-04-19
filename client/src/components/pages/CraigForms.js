@@ -1078,6 +1078,16 @@ function craigForms(craig) {
                 transit_gateways:
                   craig.power.cloud_connections.transit_gateways,
               },
+              {
+                pi_cloud_connection_vpc_enabled:
+                  craig.power.cloud_connections.pi_cloud_connection_vpc_enabled,
+                vpcs: craig.power.cloud_connections.vpcs,
+              },
+              {
+                pi_cloud_connection_classic_enabled:
+                  craig.power.cloud_connections
+                    .pi_cloud_connection_classic_enabled,
+              },
             ],
           },
         },

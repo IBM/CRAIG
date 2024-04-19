@@ -1,0 +1,26 @@
+override_craig:
+  atracker:
+    enabled: false
+    type: cos
+    name: atracker
+    target_name: atracker-cos
+    bucket: atracker-bucket
+    add_route: true
+    cos_key: cos-bind-key
+    locations:
+    - global
+    - us-south
+    instance: false
+    plan: lite
+    resource_group: 
+    archive: false
+  transit_gateways:
+    - name: transit-gateway
+      resource_group: service-rg
+      global: false
+      connections: []
+      use_data: false
+      prefix_filters: []
+      gre_tunnels: []
+      crns: 
+      classic: false

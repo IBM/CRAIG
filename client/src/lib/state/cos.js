@@ -20,6 +20,7 @@ const {
   titleCaseRender,
   kebabCaseInput,
   unconditionalInvalidText,
+  hideWhenUseData,
 } = require("./utils");
 const { cosPlans } = require("../constants");
 const { nameField, hideWhenFieldFalse } = require("./reusable-fields");
@@ -327,16 +328,18 @@ function initObjectStorageStore(store) {
           stateData,
           componentProps
         ) {
-          return `${
-            stateData.use_data
-              ? ""
-              : componentProps.craig.store.json._options.prefix + "-"
-          }${stateData.name}-object-storage${
-            stateData.use_random_suffix ? "-<random-suffix>" : ""
-          }`;
+          return stateData.use_data
+            ? stateData.name
+            : `${componentProps.craig.store.json._options.prefix}-${
+                stateData.name
+              }-object-storage${
+                stateData.use_random_suffix ? "-<random-suffix>" : ""
+              }`;
         },
       }),
-      resource_group: resourceGroupsField(),
+      resource_group: resourceGroupsField(false, {
+        noHideWhen: true,
+      }),
       kms: {
         type: "select",
         default: "",
@@ -372,6 +375,7 @@ function initObjectStorageStore(store) {
         onInputChange: kebabCaseInput("plan"),
         invalid: fieldIsNullOrEmptyString("plan"),
         invalidText: selectInvalidText("plan"),
+        hideWhen: hideWhenUseData,
       },
     },
     subComponents: {

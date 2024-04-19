@@ -11,7 +11,7 @@ describe("classic resources", () => {
       let expectedData = `
 resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic" {
   provider   = ibm.classic
-  label      = "example-classic"
+  label      = "\${var.prefix}-example-classic"
   public_key = var.classic_example_classic_public_key
 }
 `;
@@ -141,7 +141,7 @@ resource "ibm_network_vlan" "classic_vlan_vsrx_public" {
 
 resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic" {
   provider   = ibm.classic
-  label      = "example-classic"
+  label      = "\${var.prefix}-example-classic"
   public_key = var.classic_example_classic_public_key
 }
 
@@ -198,13 +198,13 @@ resource "ibm_network_vlan" "classic_vlan_vsrx_public2" {
 
 resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic1" {
   provider   = ibm.classic
-  label      = "example-classic1"
+  label      = "\${var.prefix}-example-classic1"
   public_key = var.classic_example_classic1_public_key
 }
 
 resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic2" {
   provider   = ibm.classic
-  label      = "example-classic2"
+  label      = "\${var.prefix}-example-classic2"
   public_key = var.classic_example_classic2_public_key
 }
 
@@ -248,13 +248,13 @@ resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic2" {
 
 resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic" {
   provider   = ibm.classic
-  label      = "example-classic"
+  label      = "\${var.prefix}-example-classic"
   public_key = var.classic_example_classic_public_key
 }
 
 resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic1" {
   provider   = ibm.classic
-  label      = "example-classic1"
+  label      = "\${var.prefix}-example-classic1"
   public_key = var.classic_example_classic1_public_key
 }
 
@@ -266,7 +266,7 @@ resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic1" {
 
 resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic2" {
   provider   = ibm.classic
-  label      = "example-classic2"
+  label      = "\${var.prefix}-example-classic2"
   public_key = var.classic_example_classic2_public_key
 }
 

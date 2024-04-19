@@ -2,84 +2,159 @@ const { assert } = require("chai");
 const sinon = require("sinon");
 const controller = require("../../express-controllers/controller");
 const res = require("../mocks/response.mock");
-const vsiInstanceProfilesRaw = require("../data-files/vsiInstanceProfilesRaw.json");
-const vsiImagesRaw = require("../data-files/vsiImagesRaw.json");
-const vsiImagesRawPage2 = require("../data-files/vsiImagesRawPage2.json");
 const { initMockAxios } = require("lazy-z");
-
-/**
- * initialize mock axios
- * @param {object} data arbitrary data to return
- * @param {boolean=} err reject data on error
- * @param {boolean} recursive true if axios is used in a recursive test
- * @returns {Promise} mock axios
- */
-function initRecursiveMockAxios(data, err, recursive) {
-  let timesCalled = -1;
-  /**
-   * moch axios promise
-   * @returns {Promise} axios mock promise
-   */
-  function mockAxios() {
-    timesCalled++;
-    return new Promise((resolve, reject) => {
-      if (err) reject(data);
-      else resolve({ data: recursive ? data[timesCalled] : data });
-    });
-  }
-
-  function constructor() {
-    this.axios = mockAxios;
-    this.axios.get = mockAxios;
-    this.axios.post = mockAxios;
-    this.axios.put = mockAxios;
-    this.axios.patch = mockAxios;
-    this.axios.delete = mockAxios;
-  }
-  return new constructor();
-}
+const { initRecursiveMockAxios } = require("../mocks/recursive-axios.mock");
 
 describe("vsi api", () => {
+  let spyFns;
   beforeEach(() => {
     res.send = new sinon.spy();
+    spyFns = {
+      sendDataOnTokenValid: (res, field, callback) => {
+        return callback();
+      },
+      getBearerToken: () => {
+        return new Promise((resolve) => resolve("token"));
+      },
+    };
   });
   afterEach(() => {
     delete process.env.CRAIG_PROD;
   });
 
-  describe("vsiInstanceProfiles", () => {
+  describe("/api/vsi/us-south/instanceProfiles", () => {
     it("should respond with the correct data", () => {
-      let { axios } = initMockAxios(vsiInstanceProfilesRaw);
+      let { axios } = initMockAxios({
+        profiles: [
+          { name: "bx2-2x8" },
+          { name: "bx2-4x16" },
+          { name: "bx2-8x32" },
+        ],
+      });
       let testController = new controller(axios);
+      testController.sendDataOnTokenValid = new sinon.spy(
+        spyFns,
+        "sendDataOnTokenValid"
+      );
+      testController.getBearerToken = new sinon.spy(spyFns, "getBearerToken");
       return testController
         .vsiInstanceProfiles({ params: { region: "us-south" } }, res)
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith(["bx2-2x8", "bx2-4x16", "bx2-8x32"])
           );
+          assert.isTrue(
+            testController.getBearerToken.calledOnce,
+            "should be true"
+          );
+          assert.isTrue(
+            testController.sendDataOnTokenValid.calledOnce,
+            "should be true"
+          );
         });
     });
     it("should respond with error", () => {
-      let { axios } = initMockAxios(vsiInstanceProfilesRaw, true);
+      let { axios } = initMockAxios(
+        {
+          profiles: [
+            { name: "bx2-2x8" },
+            { name: "bx2-4x16" },
+            { name: "bx2-8x32" },
+          ],
+          response: "response",
+        },
+        true
+      );
       let testController = new controller(axios);
+      testController.sendDataOnTokenValid = new sinon.spy(
+        spyFns,
+        "sendDataOnTokenValid"
+      );
+      testController.getBearerToken = new sinon.spy(spyFns, "getBearerToken");
       return testController
         .vsiInstanceProfiles({ params: { region: "us-south" } }, res)
         .then(() => {
-          assert.isTrue(res.send.calledOnce);
+          assert.isTrue(res.send.calledOnceWith("response"));
+          assert.isTrue(
+            testController.getBearerToken.calledOnce,
+            "should be true"
+          );
+          assert.isTrue(
+            testController.sendDataOnTokenValid.calledOnce,
+            "should be true"
+          );
         });
     });
   });
-  describe("vsiImages", () => {
+  describe("/api/vsi/us-south/images", () => {
     let data;
     beforeEach(() => {
-      data = [vsiImagesRaw, vsiImagesRawPage2];
+      data = [
+        {
+          images: [
+            {
+              name: "windows-2016-amd64",
+              operating_system: {
+                display_name: "Windows Server 2016 Standard Edition (amd64)",
+              },
+            },
+            {
+              name: "debian-9-amd64",
+              operating_system: {
+                display_name:
+                  "Debian GNU/Linux 9.x Stretch/Stable - Minimal Install (amd64)",
+              },
+            },
+            {
+              name: "my-image",
+              operating_system: {
+                display_name:
+                  "Ubuntu Linux 16.04 LTS Xenial Xerus Minimal Install (amd64)",
+              },
+            },
+          ],
+          limit: 50,
+          total_count: 101,
+          next: {
+            href: "https://us-south.iaas.cloud.ibm.com/v1/images?limit=100&start=123456",
+          },
+        },
+        {
+          images: [
+            {
+              name: "windows-2016-amd64",
+              operating_system: {
+                display_name: "Windows Server 2016 Standard Edition (amd64) 2",
+              },
+            },
+            {
+              name: "debian-9-amd64",
+              operating_system: {
+                display_name:
+                  "Debian GNU/Linux 9.x Stretch/Stable - Minimal Install (amd64) 2",
+              },
+            },
+            {
+              name: "my-image",
+              operating_system: {
+                display_name:
+                  "Ubuntu Linux 16.04 LTS Xenial Xerus Minimal Install (amd64) 2",
+              },
+            },
+          ],
+          limit: 50,
+          total_count: 1,
+        },
+      ];
     });
     it("should respond with the correct data", () => {
       let { axios } = initRecursiveMockAxios(data, false, true);
       let testController = new controller(axios);
-      testController.getBearerToken = () => {
-        return new Promise((resolve) => resolve("token"));
-      };
+      testController.getBearerToken = new sinon.spy(spyFns, "getBearerToken");
+      testController.sendDataOnTokenValid = new sinon.spy(
+        spyFns,
+        "sendDataOnTokenValid"
+      );
       return testController
         .vsiImages({ params: { region: "us-south" } }, res)
         .then(() => {
@@ -98,19 +173,67 @@ describe("vsi api", () => {
             ],
             "it should get images"
           );
+          assert.isTrue(
+            testController.getBearerToken.calledTwice,
+            "should be true"
+          );
+          assert.isTrue(testController.sendDataOnTokenValid.calledOnce);
         });
     });
     it("should respond with error", () => {
-      let { axios } = initMockAxios(vsiImagesRaw, true);
+      let { axios } = initMockAxios(
+        {
+          images: [
+            {
+              name: "windows-2016-amd64",
+              operating_system: {
+                display_name: "Windows Server 2016 Standard Edition (amd64)",
+              },
+            },
+            {
+              name: "debian-9-amd64",
+              operating_system: {
+                display_name:
+                  "Debian GNU/Linux 9.x Stretch/Stable - Minimal Install (amd64)",
+              },
+            },
+            {
+              name: "my-image",
+              operating_system: {
+                display_name:
+                  "Ubuntu Linux 16.04 LTS Xenial Xerus Minimal Install (amd64)",
+              },
+            },
+          ],
+          limit: 50,
+          total_count: 101,
+          next: {
+            href: "https://us-south.iaas.cloud.ibm.com/v1/images?limit=100&start=123456",
+          },
+          data: "should be returned on err",
+        },
+        true,
+        true
+      );
       let testController = new controller(axios);
+      testController.getBearerToken = new sinon.spy(spyFns, "getBearerToken");
+      testController.sendDataOnTokenValid = new sinon.spy(
+        spyFns,
+        "sendDataOnTokenValid"
+      );
       return testController
         .vsiImages({ params: { region: "us-south" } }, res)
         .then(() => {
-          assert.isTrue(res.send.calledOnce);
+          assert.isTrue(res.send.calledOnceWith("should be returned on err"));
+          assert.isTrue(
+            testController.getBearerToken.calledOnce,
+            "should be true"
+          );
+          assert.isTrue(testController.sendDataOnTokenValid.calledOnce);
         });
     });
   });
-  describe("vsiSnapShots", () => {
+  describe("/api/vsi/us-south/snapshots", () => {
     let data;
     beforeEach(() => {
       data = [{ name: "frog" }, { name: "toad" }];
@@ -118,9 +241,7 @@ describe("vsi api", () => {
     it("should respond with the correct data", () => {
       let { axios } = initMockAxios({ snapshots: data });
       let testController = new controller(axios);
-      testController.getBearerToken = () => {
-        return new Promise((resolve) => resolve("token"));
-      };
+      testController.getBearerToken = new sinon.spy(spyFns, "getBearerToken");
       return testController
         .vsiSnapShots({ params: { region: "us-south" } }, res)
         .then(() => {
@@ -129,15 +250,21 @@ describe("vsi api", () => {
             res.send.calledOnceWith(["frog", "toad"]),
             "it should get images"
           );
+          assert.isTrue(testController.getBearerToken.calledOnce);
         });
     });
     it("should respond with error", () => {
-      let { axios } = initMockAxios(vsiImagesRaw, true);
+      let { axios } = initMockAxios(
+        { data: "should return this on err" },
+        true
+      );
       let testController = new controller(axios);
+      testController.getBearerToken = new sinon.spy(spyFns, "getBearerToken");
       return testController
         .vsiSnapShots({ params: { region: "us-south" } }, res)
         .then(() => {
-          assert.isTrue(res.send.calledOnce);
+          assert.isTrue(res.send.calledOnceWith("should return this on err"));
+          assert.isTrue(testController.getBearerToken.calledOnce);
         });
     });
   });

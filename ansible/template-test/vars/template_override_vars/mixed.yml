@@ -1,0 +1,54 @@
+override_craig:
+  atracker:
+    enabled: false
+    type: cos
+    name: atracker
+    target_name: atracker-cos
+    bucket: atracker-bucket
+    add_route: true
+    cos_key: cos-bind-key
+    locations:
+    - global
+    - us-south
+    instance: false
+    plan: lite
+    resource_group: 
+    archive: false
+  transit_gateways:
+    - name: transit-gateway
+      resource_group: service-rg
+      global: false
+      connections: []
+      use_data: false
+      prefix_filters: []
+      gre_tunnels: []
+      crns: 
+      classic: false
+  clusters: []
+  vsi:
+    - kms: kms
+      encryption_key: vsi-volume-key
+      image: ibm-ubuntu-22-04-1-minimal-amd64-1
+      profile: cx2-4x8
+      name: management-server
+      security_groups:
+      - management-vsi
+      ssh_keys:
+      - ssh-key
+      subnets:
+      - vsi-zone-1
+      - vsi-zone-2
+      - vsi-zone-3
+      vpc: management
+      vsi_per_subnet: 1
+      resource_group: management-rg
+      override_vsi_name: 
+      user_data: 
+      network_interfaces: []
+      volumes: []
+      image_name: 
+      enable_floating_ip: false
+      primary_interface_ip_spoofing: false
+      use_variable_names: false
+      snapshot: 
+      use_snapshot: false

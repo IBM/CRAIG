@@ -50,6 +50,27 @@ function powerVsCloudConnectionsSchema() {
         return splat(componentProps.craig.store.json.transit_gateways, "name");
       },
     },
+    pi_cloud_connection_vpc_enabled: {
+      type: "toggle",
+      default: false,
+      labelText: "Enable VPC Connections",
+    },
+    vpcs: {
+      default: [],
+      type: "multiselect",
+      labelText: "VPC Connections",
+      groups: function (stateData, componentProps) {
+        return splat(componentProps.craig.store.json.vpcs, "name");
+      },
+      hideWhen: function (stateData) {
+        return stateData?.pi_cloud_connection_vpc_enabled !== true;
+      },
+    },
+    pi_cloud_connection_classic_enabled: {
+      type: "toggle",
+      default: false,
+      labelText: "Enable Classic Connection",
+    },
   };
 }
 

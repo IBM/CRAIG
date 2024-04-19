@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.15.1
+
+### Upgrade Notes
+
+- A resource groups is now required for existing Object Storage instances. To use an existing instance, the resource group for that instance must be added into CRAIG
+
+### Features
+
+- Environment prefix is now prepended to the beginning of Classic SSH Key names
+- Power VS Cloud Connections now support connections to Classic Infrastructure and VPCs
+- Users can now use a Service ID for CRAIG application's cloud access. To use this feature, add your account ID as the value `ACCOUNT_ID` in your deployment environment
+
+### Fixes
+
+- Fixed an issue causing schematics workspace URL to not be provided to the user after creation
+- Fixed an issue causing workspace creation modal to be incorrectly labelled as `Upload`
+- Fixed an issue where the helper text for an exising COS instance would incorrectly include added suffixes
+- Fixed an issue where Load Balancer Health Timeout invalid text showed a maximum value of `300` instead of `3000`
+- The `Power VS Oracle Ready` Template now creates a new VPC SSH Key rather than relying on an existing key
+- The `Power VS Oracle Single Instance` Template now creates a new VPC SSH Key, and sets all Power Volumes to have storage tier `tier3` and affinity instance `oracle`
+- The `VSI` template now correctly includes an ssh key for both VPC VSI Instances, instead of no key being present
+- The `VSI Edge` template now correctly includes an ssh key for both VPC VSI Instances, instead of no key being present
+- The `VPN as a Service` template now correctly force deletes the cos bucket `vpc-bucket` and the encryption key `encryption-key`
+- Fixed visual bugs on the DNS Record sub form form causing fields to be misaligned
+- Fixed an issue causing DNS records using VSI IPs to always be invalid
+- Fixed an issue causing Terraform code for DNS resource records to have invalid references to their parent DNS instance
+- Fixed an issue causing the Schematics workspace creation modal to have an incorrect title
+- Fixed an issue causing the Schematics workspace creation modal to display a success message when after failing to create a workspace
+- Fixed an issue causing Power VS Images to not correctly be update after being removed during validation
+- Fixed an issue in the Project form allowing users to create multiple workspaces for the same project
+- Fixed an issue causing the validation button in the top navigation bar to work inconsistently
+- Fixed an issue causing strange behavior when disabling Acitivity Tracer in the v2 GUI
+
 ## 1.15.0
 
 ### Upgrade Notes

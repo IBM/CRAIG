@@ -7,6 +7,13 @@ const {
   cbrSaveType,
   powerAffinityInvalid,
   invalidTagList,
+  timeToLive,
+  powerStoragePoolSelect,
+  powerAntiAffinityInstance,
+  powerAntiAffinityVolume,
+  powerAffinityVolume,
+  powerAffinityInstance,
+  powerVsStorageOptions,
 } = require("../../client/src/lib/state/utils");
 
 describe("utils", () => {
@@ -517,7 +524,6 @@ describe("utils", () => {
       );
     });
   });
-
   describe("invalidTagList", () => {
     it("should return true when invalid tag list", () => {
       assert.isTrue(invalidTagList(["hi", "2@@@2"]));
@@ -532,6 +538,72 @@ describe("utils", () => {
     });
     it("should return false when no tags", () => {
       assert.isFalse(invalidTagList([]));
+    });
+  });
+  describe("timeToLive", () => {
+    it("should not be invalid when no value is provided", () => {
+      let ttl = timeToLive();
+      assert.isFalse(ttl.invalid({}), "it should be valid");
+    });
+  });
+  describe("powerStoragePoolSelect", () => {
+    it("should be invalid when storage option is storage pool and field is invalid", () => {
+      assert.isTrue(
+        powerStoragePoolSelect().invalid({ storage_option: "Storage Pool" }),
+        "it should be invalid"
+      );
+    });
+  });
+  describe("powerAntiAffinityInstance", () => {
+    it("should be invalid when no instance selected", () => {
+      assert.isTrue(
+        powerAntiAffinityInstance().invalid({
+          pi_anti_affinity_instance: "",
+          storage_option: "Anti-Affinity",
+        }),
+        "it should be invalid"
+      );
+    });
+  });
+  describe("powerAntiAffinityVolume", () => {
+    it("should be invalid when no instance selected", () => {
+      assert.isTrue(
+        powerAntiAffinityVolume().invalid({
+          pi_anti_affinity_volume: "",
+          storage_option: "Anti-Affinity",
+        }),
+        "it should be invalid"
+      );
+    });
+  });
+  describe("powerAffinityInstance", () => {
+    it("should be invalid when no instance selected", () => {
+      assert.isTrue(
+        powerAffinityInstance().invalid({
+          pi_affinity_instance: "",
+          storage_option: "Affinity",
+        }),
+        "it should be invalid"
+      );
+    });
+  });
+  describe("powerAffinityVolume", () => {
+    it("should be invalid when no instance selected", () => {
+      assert.isTrue(
+        powerAffinityVolume().invalid({
+          pi_affinity_volume: "",
+          storage_option: "Affinity",
+        }),
+        "it should be invalid"
+      );
+    });
+  });
+  describe("powerVsStorageOptions", () => {
+    it("should handle invalid cases", () => {
+      assert.isTrue(
+        powerVsStorageOptions().invalid({ storage_option: "Storage Pool" }),
+        "it should be invalid"
+      );
     });
   });
 });

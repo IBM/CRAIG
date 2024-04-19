@@ -195,6 +195,7 @@ export class ProjectFormModal extends React.Component {
                   labelText="Workspace Name"
                   invalid={invalidNewResourceName(this.state.workspace_name)}
                   invalidText={"Invalid Name"}
+                  disabled={this.state.workspace_url !== undefined}
                   componentName="workspace"
                   field="workspace_name"
                   id="workspace-name"
@@ -216,6 +217,7 @@ export class ProjectFormModal extends React.Component {
                     invalid={false}
                     labelText="Workspace Resource Group"
                     name="workspace_resource_group"
+                    disabled={this.state.workspace_url !== undefined}
                     componentName="workspace"
                     field="workspace_resource_group"
                     id="workspace-resource-group"

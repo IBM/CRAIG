@@ -160,19 +160,21 @@ function schematicsRoutes(axios, controller) {
    */
   controller.getResourceGroupID = function (resourceGroup) {
     return new Promise((resolve, reject) => {
+      let requestConfigParams = { name: resourceGroup };
+      if (process.env.ACCOUNT_ID)
+        requestConfigParams.account_id = process.env.ACCOUNT_ID;
       return controller
         .getBearerToken()
         .then(() => {
           let requestConfig = {
             method: "get",
             url: "https://resource-controller.cloud.ibm.com/v2/resource_groups",
-            params: { name: resourceGroup },
+            params: requestConfigParams,
             headers: {
               Accept: "application/json",
               Authorization: `Bearer ${controller.token}`,
             },
           };
-
           return axios(requestConfig);
         })
         .then((response) => {
@@ -198,11 +200,9 @@ function schematicsRoutes(axios, controller) {
     return new Promise((resolve, reject) => {
       if (process.env.NO_SCHEMATICS) {
         reject("Schematics feature not supported on development.");
-        return;
       }
       if (isNullOrEmptyString(region) || !region) {
         reject("No region provided for workspace.");
-        return;
       }
 
       return controller
@@ -210,7 +210,6 @@ function schematicsRoutes(axios, controller) {
         .then((rgData) => {
           if (rgData.resources.length === 0) {
             reject("> Provided resource group not found.");
-            return;
           }
 
           console.log("> Creating resource group...");

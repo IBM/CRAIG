@@ -1088,9 +1088,9 @@
   "ssh_keys": [
     {
       "name": "ssh-key",
-      "public_key": "NONE",
+      "public_key": null,
       "resource_group": "management-rg",
-      "use_data": true
+      "use_data": false
     }
   ],
   "sysdig": {

@@ -252,14 +252,25 @@ describe("object_storage", () => {
   });
   describe("object_storage.schema", () => {
     describe("name helper text", () => {
-      it("should return text if using data", () => {
+      it("should return text without object-storage if using data", () => {
         assert.deepEqual(
           craig.object_storage.name.helperText({
             use_data: true,
             name: "test",
           }),
-          "test-object-storage",
+          "test",
           "it should display data"
+        );
+      });
+      it("should return text without object-storage or random suffix if using data", () => {
+        assert.deepEqual(
+          craig.object_storage.name.helperText({
+            use_data: true,
+            use_random_suffix: true,
+            name: "frog",
+          }),
+          "frog",
+          "it should not include suffix or object-storage"
         );
       });
       it("should return text if not using data and with random suffix", () => {

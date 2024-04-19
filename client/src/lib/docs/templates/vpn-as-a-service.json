@@ -66,9 +66,9 @@
       "keys": [
         {
           "name": "encryption-key",
-          "root_key": false,
+          "root_key": true,
           "key_ring": null,
-          "force_delete": false,
+          "force_delete": true,
           "endpoint": null,
           "rotation": 1,
           "dual_auth_delete": false
@@ -98,7 +98,7 @@
       "kms": "kms",
       "buckets": [
         {
-          "force_delete": false,
+          "force_delete": true,
           "name": "vpc-bucket",
           "storage_class": "standard",
           "kms_key": "encryption-key",

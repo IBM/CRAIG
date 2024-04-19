@@ -1227,6 +1227,21 @@ describe("power-vs", () => {
       );
     });
     describe("power.cloud_connections.schema", () => {
+      describe("power.cloud_connections.vpcs", () => {
+        it("should have correct groups", () => {
+          assert.deepEqual(
+            craig.power.cloud_connections.vpcs.groups({}, { craig: craig }),
+            ["management", "workload"],
+            "it should have correct groups"
+          );
+        });
+        it("should hide vpcs when not enabled", () => {
+          assert.isTrue(
+            craig.power.cloud_connections.vpcs.hideWhen({}),
+            "it should be hidden"
+          );
+        });
+      });
       describe("power.cloud_connections.transit_gateways", () => {
         it("should be invalid when enabled and no tgw", () => {
           assert.isTrue(

@@ -2,11 +2,14 @@
 # tasks file for update_workspace_variables
 - name: Update Workspace Variables
   uri:
-        url: "https://schematics.cloud.ibm.com/v1/workspaces/{{ existing_workspace_id if use_existing_workspace == 'true' else new_workspace_id }}/template_data/{{ template_id }}/values"
-        method: PUT
-        headers:
-          Authorization: Bearer {{token.json.access_token}}
-          Content-Type: application/json
-        body_format: json
-        body: 
-          variablestore: "{{ variablestore }}"
+    url: "https://schematics.cloud.ibm.com/v1/workspaces/{{ existing_workspace_id if use_existing_workspace == 'true' else new_workspace_id }}/template_data/{{ template_id }}/values"
+    method: PUT
+    headers:
+      Authorization: Bearer {{token.json.access_token}}
+      Content-Type: application/json
+    body_format: json
+    body: 
+      variablestore: "{{ variablestore }}"
+    timeout: 500
+  delay: 60
+  retries: 2

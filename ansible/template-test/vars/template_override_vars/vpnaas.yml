@@ -1,0 +1,99 @@
+override_craig:
+  object_storage:
+  - name: object-storage
+    use_data: false
+    resource_group: vpnaas-rg
+    plan: standard
+    use_random_suffix: true
+    kms: kms
+    buckets:
+    - force_delete: true
+      name: vpc-bucket
+      storage_class: standard
+      kms_key: encryption-key
+      endpoint: public
+      use_random_suffix: true
+    keys: []
+  key_management:
+    - use_hs_crypto: false
+      use_data: false
+      name: kms
+      resource_group: vpnaas-rg
+      authorize_vpc_reader_role: false
+      keys:
+      - name: encryption-key
+        root_key: true
+        key_ring: ''
+        force_delete: true
+        endpoint: 
+        rotation: 1
+        dual_auth_delete: false
+  _options:
+    prefix: iac
+    region: us-south
+    tags:
+      - hello
+      - world
+    zones: 3
+    endpoints: private
+    account_id: 
+    fs_cloud: false
+    dynamic_subnets: false
+    enable_power_vs: true
+    craig_version: 1.12.0
+    power_vs_zones:
+      - dal12
+      - dal10
+      - us-south
+    advanced_subnets: true
+    power_vs_high_availability: false
+    no_vpn_secrets_manager_auth: true
+    enable_classic: false
+    power_vs_ha_zone_1: 
+    power_vs_ha_zone_2: 
+    manual_power_vsi_naming: false
+  secrets_manager:
+    - name: shared-trial
+      resource_group: "vpnaas-rg"
+      encryption_key: "encryption-key"
+      kms: "kms"
+      secrets": []
+      use_data: true
+      plan: "standard"
+  transit_gateways:
+    - global: true
+      connections: []
+      resource_group: vpnaas-rg
+      name: tgw
+      crns: []
+      use_data: false
+      prefix_filters: []
+      gre_tunnels: []
+      classic: false
+  vpn_servers:
+    - name: client-to-site
+      certificate_crn: CHEATER
+      method: certificate
+      client_ca_crn: 
+      client_ip_pool: 192.168.8.0/22
+      enable_split_tunneling: false
+      client_idle_timeout: 
+      port: '443'
+      protocol: tcp
+      resource_group: vpnaas-rg
+      vpc: vpc
+      security_groups:
+      - vpn-server-sg
+      client_dns_server_ips: 
+      routes:
+      - name: route
+        destination: 10.0.0.0/8
+        action: deliver
+      subnets:
+      - vpn-server-zone-1
+      additional_prefixes:
+      - 192.168.8.0/22
+      zone: 1
+      bring_your_own_cert: false
+      DANGER_developer_certificate: true
+      secrets_manager: shared-trial

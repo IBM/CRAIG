@@ -39,8 +39,17 @@ template_map:
   vsi: ["slz_ssh_key_public_key"]
   vsi-edge: ["slz_ssh_key_public_key"]
   power-vs-sap-hana: ["ssh_key_public_key", "power_secure_powervs_power_ssh_key_key"]
-  oracle-rac: ["power_oracle_template_power_ssh_key"]
-  oracle-si: ["power_oracle_template_power_ssh_key"]
+  oracle-rac: ["ssh_key_public_key", "power_oracle_template_power_ssh_key"]
+  oracle-si: ["ssh_key_public_key", "power_oracle_template_power_ssh_key"]
   power-vs-poc: ["vsi_ssh_key_public_key", "dal10gw_on_prem_connection_preshared_key", "power_dal10_powervs_ssh_key_key"]
   quick-start-power: ["vsi_ssh_key_public_key"]
   vpnaas: []
+
+ssh_key_map:
+  ssh_key_public_key: "tf_var_ssh_key"
+  slz_ssh_key_public_key: "tf_var_ssh_key"
+  power_secure_powervs_power_ssh_key_key: "tf_var_power_ssh_key"
+  power_oracle_template_power_ssh_key: "tf_var_power_ssh_key"
+  vsi_ssh_key_public_key: "tf_var_ssh_key"
+  dal10gw_on_prem_connection_preshared_key: "tf_var_preshared_key"
+  power_dal10_powervs_ssh_key_key: "tf_var_power_ssh_key"

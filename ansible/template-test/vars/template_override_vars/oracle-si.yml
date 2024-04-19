@@ -1,0 +1,124 @@
+override_craig:
+  atracker:
+    enabled: false
+    type: cos
+    name: atracker
+    target_name: atracker-cos
+    bucket: atracker-bucket
+    add_route: true
+    cos_key: cos-bind-key
+    locations:
+    - global
+    - us-south
+    instance: false
+    plan: lite
+    resource_group: 
+    archive: false
+  transit_gateways:
+    - name: transit-gateway
+      resource_group: service-rg
+      global: false
+      connections: []
+      use_data: false
+      prefix_filters: []
+      gre_tunnels: []
+      crns: 
+      classic: false
+  power_volumes:
+    - name: oracle-db-1
+      workspace: oracle-template
+      pi_volume_shareable: false
+      pi_replication_enabled: false
+      pi_volume_type: tier3
+      attachments:
+      - oracle
+      zone: dal12
+      pi_volume_size: '90'
+      storage_option: Affinity
+      affinity_type: Instance
+      pi_storage_pool: 
+      pi_anti_affinity_volume: 
+      pi_anti_affinity_instance: 
+      pi_affinity_policy: affinity
+      pi_affinity_instance: oracle
+      pi_volume_pool: 
+      pi_affinity_volume: 
+      count: 
+    - name: oracle-db-2
+      workspace: oracle-template
+      pi_volume_shareable: false
+      pi_replication_enabled: false
+      pi_volume_type: tier3
+      attachments:
+      - oracle
+      zone: dal12
+      pi_volume_size: '90'
+      storage_option: Affinity
+      affinity_type: Instance
+      pi_storage_pool: 
+      pi_anti_affinity_volume: 
+      pi_anti_affinity_instance: 
+      pi_affinity_policy: affinity
+      pi_affinity_instance: oracle
+      pi_volume_pool: 
+      pi_affinity_volume: 
+      count:
+  ssh_keys:
+    - name: ssh-key
+      use_data: false
+      resource_group: management-rg
+      public_key: ""
+  vsi:
+    - kms: kms
+      encryption_key: vsi-volume-key
+      image: ibm-ubuntu-22-04-1-minimal-amd64-1
+      profile: cx2-4x8
+      name: management-server
+      security_groups:
+      - management-vsi
+      ssh_keys:
+      - ssh-key
+      subnets:
+      - vsi-zone-1
+      - vsi-zone-2
+      - vsi-zone-3
+      vpc: management
+      vsi_per_subnet: 1
+      resource_group: management-rg
+      override_vsi_name: 
+      user_data: 
+      network_interfaces: []
+      volumes: []
+      image_name: 
+      enable_floating_ip: false
+      primary_interface_ip_spoofing: false
+      use_variable_names: false
+      snapshot: 
+      use_snapshot: false
+    - kms: kms
+      encryption_key: vsi-volume-key
+      image: ibm-ubuntu-22-04-3-minimal-amd64-1
+      image_name: Ubuntu Linux 22.04 LTS Jammy Jellyfish Minimal Install (amd64) [ibm-ubuntu-22-04-3-minimal-amd64-1]
+      profile: bx2-2x8
+      name: workload-server
+      security_groups:
+      - workload-vpe
+      ssh_keys:
+      - ssh-key
+      vpc: workload
+      vsi_per_subnet: 1
+      resource_group: workload-rg
+      override_vsi_name: 
+      user_data: 
+      network_interfaces: []
+      subnets:
+      - vsi-zone-1
+      - vsi-zone-2
+      - vsi-zone-3
+      volumes: []
+      subnet: ''
+      enable_floating_ip: false
+      primary_interface_ip_spoofing: false
+      use_variable_names: false
+      snapshot: 
+      use_snapshot: false

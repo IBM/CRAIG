@@ -34,6 +34,7 @@ function formatPowerVsWorkspace(workspace, config) {
         tags: config._options.tags,
         timeouts: timeouts("6m", "5m", "10m"),
       };
+
   return jsonToTfPrint(
     workspace.use_data ? "data" : "resource",
     "ibm_resource_instance",
@@ -174,27 +175,43 @@ function formatCloudConnectionResourceName(connection) {
  * @param {boolean} connection.pi_cloud_connection_global_routing
  * @param {boolean} connection.pi_cloud_connection_metered
  * @param {boolean} connection.pi_cloud_connection_transit_enabled
+ * @param {object} config craig config json
  * @returns {string} terraform formatted resource
  */
-function formatPowerVsCloudConnection(connection) {
+function formatPowerVsCloudConnection(connection, config) {
+  let data = {
+    provider: `\${ibm.power_vs${snakeCase("_" + connection.zone)}}`,
+    pi_cloud_instance_id: powerVsWorkspaceRef(
+      connection.workspace,
+      connection.workspace_use_data
+    ),
+    pi_cloud_connection_name: formatCloudConnectionName(connection),
+    pi_cloud_connection_speed: connection.pi_cloud_connection_speed,
+    pi_cloud_connection_global_routing:
+      connection.pi_cloud_connection_global_routing,
+    pi_cloud_connection_metered: connection.pi_cloud_connection_metered,
+    pi_cloud_connection_transit_enabled:
+      connection.pi_cloud_connection_transit_enabled,
+  };
+
+  if (connection.pi_cloud_connection_classic_enabled) {
+    data.pi_cloud_connection_classic_enabled = true;
+  }
+
+  if (connection.pi_cloud_connection_vpc_enabled) {
+    data.pi_cloud_connection_vpc_enabled = true;
+    data.pi_cloud_connection_vpc_crns = [];
+    connection.vpcs.forEach((vpc) => {
+      data.pi_cloud_connection_vpc_crns.push(
+        `\${module.${snakeCase(vpc)}_vpc.crn}`
+      );
+    });
+  }
   return jsonToTfPrint(
     "resource",
     "ibm_pi_cloud_connection",
     formatCloudConnectionResourceName(connection),
-    {
-      provider: `\${ibm.power_vs${snakeCase("_" + connection.zone)}}`,
-      pi_cloud_instance_id: powerVsWorkspaceRef(
-        connection.workspace,
-        connection.workspace_use_data
-      ),
-      pi_cloud_connection_name: formatCloudConnectionName(connection),
-      pi_cloud_connection_speed: connection.pi_cloud_connection_speed,
-      pi_cloud_connection_global_routing:
-        connection.pi_cloud_connection_global_routing,
-      pi_cloud_connection_metered: connection.pi_cloud_connection_metered,
-      pi_cloud_connection_transit_enabled:
-        connection.pi_cloud_connection_transit_enabled,
-    }
+    data
   );
 }
 
@@ -368,7 +385,7 @@ function powerVsTf(config) {
     // cloud connections
     workspace.cloud_connections.forEach((connection) => {
       let connectionTf =
-        formatPowerVsCloudConnection(connection) +
+        formatPowerVsCloudConnection(connection, config) +
         formatCloudConnectionDataSource(connection);
       tf +=
         "\n" +

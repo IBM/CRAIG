@@ -56,6 +56,10 @@ function dnsOnStoreUpdate(config) {
         zone.vpcs
       );
     });
+    if (dns.records)
+      dns.records.forEach((record) => {
+        record.instance = dns.name;
+      });
     dns.custom_resolvers.forEach((resolver) => {
       resolver.instance = dns.name;
       if (hasUnfoundVpc(config, resolver)) {
@@ -371,6 +375,7 @@ function initDnsStore(store) {
           use_vsi: {
             type: "toggle",
             labelText: "Use VSI IP Address",
+            size: "small",
             default: false,
             tooltip: {
               content:
@@ -442,13 +447,17 @@ function initDnsStore(store) {
             size: "small",
             labelText: "Resource Data",
             default: "",
-            invalid: fieldIsNullOrEmptyString("rdata"),
+            invalid: function (stateData) {
+              return stateData.use_vsi
+                ? false
+                : fieldIsNullOrEmptyString("rdata")(stateData);
+            },
             invalidText: unconditionalInvalidText(
               "Resource Data cannot be null or empty string."
             ),
             hideWhen: hideWhenFieldFalse("use_vsi", true),
           },
-          ttl: timeToLive(),
+          ttl: timeToLive(true),
           type: {
             size: "small",
             type: "select",
@@ -491,10 +500,7 @@ function initDnsStore(store) {
             default: "",
             invalid: function (stateData) {
               if (stateData.type === "SRV") {
-                return (
-                  isNullOrEmptyString(stateData.protocol) ||
-                  stateData.protocol === undefined
-                );
+                return isNullOrEmptyString(stateData.protocol, true);
               } else return false;
             },
             invalidText: selectInvalidText("protocol"),
@@ -537,7 +543,7 @@ function initDnsStore(store) {
             default: "",
             invalid: function (stateData) {
               if (stateData.type === "SRV") {
-                if (!isNullOrEmptyString(stateData.weight)) {
+                if (!isNullOrEmptyString(stateData.weight, true)) {
                   return !isInRange(parseInt(stateData.weight), 0, 65535);
                 } else return true;
               } else return false;

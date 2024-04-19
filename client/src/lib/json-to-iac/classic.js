@@ -19,7 +19,7 @@ function formatClassicSshKey(sshKey) {
     `classic ssh key ${sshKey.name}`,
     {
       provider: `\${ibm.classic}`,
-      label: sshKey.name,
+      label: "${var.prefix}-" + sshKey.name,
       public_key: snakeCase(`\${var.classic_${sshKey.name}_public_key}`),
     }
   );

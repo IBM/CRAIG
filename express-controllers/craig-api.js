@@ -10,7 +10,7 @@ const slzMixed = require("../client/src/lib/docs/templates/slz-mixed.json");
 const slzVsiEdge = require("../client/src/lib/docs/templates/slz-vsi-edge.json");
 const slzVsi = require("../client/src/lib/docs/templates/slz-vsi.json");
 const vpnaas = require("../client/src/lib/docs/templates/vpn-as-a-service.json");
-const { transpose } = require("lazy-z");
+const { recursiveTranspose } = require("lazy-z");
 const templateNameToJson = {
   "from-scratch": fromScratch,
   "oracle-rac": oracleRac,
@@ -110,7 +110,7 @@ function craigApi(controller, tar) {
       }
       let templateJson = templateNameToJson[template];
       try {
-        transpose(fieldsToUpdate, templateJson);
+        recursiveTranspose(fieldsToUpdate || {}, templateJson);
         let craigData = configToFilesJson(templateJson, false, true);
         let tarFile = `${template}.tar`;
         packTar(pack, tarFile.slice(0, tarFile.length - 4), craigData);
@@ -118,6 +118,12 @@ function craigApi(controller, tar) {
         resolve(controller.createBlob(pack));
       } catch (err) {
         err.status = 400;
+        console.log(
+          "Error creating Terraform code for template " +
+            template +
+            " with additional parameters: ",
+          JSON.stringify(fieldsToUpdate, null, 2)
+        );
         console.error(err);
         reject(err);
       }

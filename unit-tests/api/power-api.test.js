@@ -3,19 +3,29 @@ const sinon = require("sinon");
 const controller = require("../../express-controllers/controller");
 const res = require("../mocks/response.mock");
 const { initMockAxios } = require("lazy-z");
-
-const powerImageJson = require("../../client/src/lib/docs/power-image-map-legacy.json");
+const { initRecursiveMockAxios } = require("../mocks/recursive-axios.mock");
 
 describe("power api", () => {
+  let spyFns;
   beforeEach(() => {
     res.send = new sinon.spy();
+    spyFns = {
+      getBearerToken: () => {
+        return new Promise((resolve) => resolve("token"));
+      },
+      getPowerDetails: (guid) => {
+        return new Promise((resolve) => resolve(guid));
+      },
+      getResourceInstance: (queryName) => {
+        return new Promise((resolve) => resolve(queryName));
+      },
+    };
   });
   afterEach(() => {
     delete process.env.CRAIG_PROD;
     delete process.env.POWER_WORKSPACE_US_SOUTH;
   });
-
-  describe("getPowerImages", () => {
+  describe("/api/power/us-south/images", () => {
     it("should respond with error", () => {
       process.env.POWER_WORKSPACE_US_SOUTH = "fooGuid";
       let { axios } = initMockAxios(
@@ -25,6 +35,13 @@ describe("power api", () => {
         true
       );
       let testPowerController = new controller(axios);
+      testPowerController.getBearerToken = new sinon.spy(
+        spyFns,
+        "getBearerToken"
+      );
+      testPowerController.getPowerDetails = new sinon.spy(
+        testPowerController.getPowerDetails
+      );
       return testPowerController
         .getPowerComponent(
           {
@@ -32,13 +49,15 @@ describe("power api", () => {
           },
           res
         )
-        .catch(() => {
-          assert.isTrue(res.send.calledOnce);
+        .then(() => {
+          assert.isTrue(testPowerController.getBearerToken.calledOnce);
+          assert.isTrue(
+            testPowerController.getPowerDetails.calledOnceWith("fooGuid")
+          );
         });
     });
     it("should respond with a list of images", () => {
       process.env.POWER_WORKSPACE_US_SOUTH = "fooGuid";
-      let usSouthImages = powerImageJson["us-south"];
       let { axios } = initMockAxios(
         {
           resources: [
@@ -47,11 +66,23 @@ describe("power api", () => {
               crn: "fooCrn",
             },
           ],
-          images: usSouthImages,
+          images: [
+            {
+              name: "image1",
+            },
+          ],
         },
         false
       );
       let testPowerController = new controller(axios);
+      testPowerController.getBearerToken = new sinon.spy(
+        spyFns,
+        "getBearerToken"
+      );
+      testPowerController.getPowerDetails = new sinon.spy(
+        spyFns,
+        "getPowerDetails"
+      );
       return testPowerController
         .getPowerComponent(
           {
@@ -61,21 +92,43 @@ describe("power api", () => {
         )
         .then(() => {
           assert.isTrue(
-            res.send.calledOnceWith(usSouthImages),
+            res.send.calledOnceWith([
+              {
+                name: "image1",
+              },
+            ]),
             "it should be true"
+          );
+          assert.isTrue(
+            testPowerController.getBearerToken.calledOnce,
+            "should be true"
+          );
+          assert.isTrue(
+            testPowerController.getPowerDetails.calledOnceWith("fooGuid"),
+            "should be true"
           );
         });
     });
     it("should respond with an error when unable to find workspace", () => {
-      let usSouthImages = powerImageJson["us-south"];
       let { axios } = initMockAxios(
         {
           resources: [],
-          images: usSouthImages,
+          images: [
+            {
+              name: "image1",
+            },
+          ],
         },
         false
       );
       let testPowerController = new controller(axios);
+      testPowerController.getBearerToken = new sinon.spy(
+        spyFns,
+        "getBearerToken"
+      );
+      testPowerController.getResourceInstance = new sinon.spy(
+        testPowerController.getResourceInstance
+      );
       return testPowerController
         .getPowerComponent(
           {
@@ -93,10 +146,17 @@ describe("power api", () => {
             ),
             "it should send"
           );
+          assert.isTrue(
+            testPowerController.getBearerToken.calledOnce,
+            "should be true"
+          );
+          assert.isTrue(
+            testPowerController.getResourceInstance.calledOnceWith("egg"),
+            "should be true"
+          );
         });
     });
     it("should respond with a list of images when using req", () => {
-      let usSouthImages = powerImageJson["us-south"];
       let { axios } = initMockAxios(
         {
           resources: [
@@ -109,11 +169,22 @@ describe("power api", () => {
               id: "no",
             },
           ],
-          images: usSouthImages,
+          images: [
+            {
+              name: "image1",
+            },
+          ],
         },
         false
       );
       let testPowerController = new controller(axios);
+      testPowerController.getBearerToken = new sinon.spy(
+        spyFns,
+        "getBearerToken"
+      );
+      testPowerController.getResourceInstance = new sinon.spy(
+        testPowerController.getResourceInstance
+      );
       return testPowerController
         .getPowerComponent(
           {
@@ -126,13 +197,58 @@ describe("power api", () => {
         )
         .then(() => {
           assert.isTrue(
-            res.send.calledOnceWith(usSouthImages.concat(usSouthImages)),
+            res.send.calledOnceWith([
+              { name: "image1", use_data: true },
+              { name: "image1", use_data: true },
+            ]),
             "it should be true"
+          );
+          assert.isTrue(
+            testPowerController.getBearerToken.calledOnce,
+            "should be true"
+          );
+          assert.isTrue(
+            testPowerController.getResourceInstance.calledOnceWith("egg"),
+            "should be true"
           );
         });
     });
+    it("should respond with error when no environment variable is present", () => {
+      let { axios } = initMockAxios(
+        {
+          images: ["first", "second", "third"],
+        },
+        true
+      );
+      let testPowerController = new controller(axios);
+      testPowerController.getBearerToken = new sinon.spy(
+        spyFns,
+        "getBearerToken"
+      );
+      testPowerController.getPowerDetails = new sinon.spy(
+        spyFns,
+        "getPowerDetails"
+      );
+      return testPowerController
+        .getPowerComponent(
+          {
+            params: { zone: "us-south", component: "images" },
+          },
+          res
+        )
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith(
+              "Error: environment variable POWER_WORKSPACE_US_SOUTH has no value."
+            )
+          );
+          assert.isTrue(testPowerController.getBearerToken.notCalled);
+          assert.isTrue(testPowerController.getPowerDetails.notCalled);
+        });
+    });
+  });
+  describe("/api/power/us-south/storage-capacity/storage-pools", () => {
     it("should respond with a list of storage pools when using req", () => {
-      let usSouthImages = powerImageJson["us-south"];
       let { axios } = initMockAxios(
         {
           resources: [
@@ -145,11 +261,20 @@ describe("power api", () => {
               id: "no",
             },
           ],
-          images: usSouthImages,
+          storagePoolsCapacity: [
+            { poolName: "pool1", replicationEnabled: false },
+          ],
         },
         false
       );
       let testPowerController = new controller(axios);
+      testPowerController.getBearerToken = new sinon.spy(
+        spyFns,
+        "getBearerToken"
+      );
+      testPowerController.getResourceInstance = new sinon.spy(
+        testPowerController.getResourceInstance
+      );
       return testPowerController
         .getPowerComponent(
           {
@@ -161,45 +286,17 @@ describe("power api", () => {
           res
         )
         .then(() => {
-          assert.isFalse(
-            res.send.calledOnceWith(usSouthImages),
+          assert.isTrue(
+            res.send.calledOnceWith(["pool1"]),
             "it should be true"
           );
-        });
-    });
-    it("should respond with a list of storage tiers when using req", () => {
-      let usSouthImages = powerImageJson["us-south"];
-      let { axios } = initMockAxios(
-        {
-          resources: [
-            {
-              guid: "1234",
-              crn: "fooCrn",
-              id: "power-iaas",
-            },
-            {
-              id: "no",
-            },
-          ],
-          images: usSouthImages,
-        },
-        false
-      );
-      let testPowerController = new controller(axios);
-      return testPowerController
-        .getPowerComponent(
-          {
-            params: { zone: "us-south", component: "storage_tiers" },
-            query: {
-              name: "egg",
-            },
-          },
-          res
-        )
-        .then(() => {
-          assert.isFalse(
-            res.send.calledOnceWith(usSouthImages),
-            "it should be true"
+          assert.isTrue(
+            testPowerController.getBearerToken.calledOnce,
+            "should be true"
+          );
+          assert.isTrue(
+            testPowerController.getResourceInstance.calledOnceWith("egg"),
+            "should be true"
           );
         });
     });
@@ -223,6 +320,14 @@ describe("power api", () => {
         false
       );
       let testPowerController = new controller(axios);
+      testPowerController.getBearerToken = new sinon.spy(
+        spyFns,
+        "getBearerToken"
+      );
+      testPowerController.getPowerDetails = new sinon.spy(
+        spyFns,
+        "getPowerDetails"
+      );
       return testPowerController
         .getPowerComponent(
           {
@@ -240,8 +345,107 @@ describe("power api", () => {
             ]),
             "it should be true"
           );
+          assert.isTrue(
+            testPowerController.getBearerToken.calledOnce,
+            "should be true"
+          );
+          assert.isTrue(
+            testPowerController.getPowerDetails.calledOnceWith("fooGuid"),
+            "should be true"
+          );
         });
     });
+    it("should respond with error when powerWorkspaceData is undefined", () => {
+      process.env.POWER_WORKSPACE_US_SOUTH = "fooGuid";
+      let { axios } = initMockAxios(
+        {
+          resources: [undefined],
+          storagePoolsCapacity: [
+            { poolName: "Tier1-Flash-1" },
+            { poolName: "Tier1-Flash-2" },
+            { poolName: "Tier3-Flash-1" },
+            { poolName: "Tier1-Flash-2" },
+          ],
+        },
+        false
+      );
+      let testPowerController = new controller(axios);
+      testPowerController.getBearerToken = new sinon.spy(
+        spyFns,
+        "getBearerToken"
+      );
+      testPowerController.getPowerDetails = new sinon.spy(
+        testPowerController.getPowerDetails
+      );
+      return testPowerController
+        .getPowerComponent(
+          {
+            params: { zone: "us-south", component: "storage_pools" },
+          },
+          res
+        )
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith(
+              "Error: powerWorkspaceData is undefined. Make sure the guid for your power workspace environment variables exist and are correct."
+            )
+          );
+          assert.isTrue(testPowerController.getBearerToken.calledOnce);
+          assert.isTrue(
+            testPowerController.getPowerDetails.calledOnceWith("fooGuid"),
+            "should be true"
+          );
+        });
+    });
+  });
+  describe("/api/power/us-south/storage-tiers", () => {
+    it("should respond with a list of storage tiers when using req", () => {
+      let { axios } = initRecursiveMockAxios(
+        [
+          {
+            resources: [
+              {
+                guid: "1234",
+                crn: "fooCrn",
+                id: "power-iaas",
+              },
+              {
+                id: "no",
+              },
+            ],
+          },
+          [{ name: "Tier1" }, { name: "Tier2" }],
+        ],
+        false,
+        true
+      );
+      let testPowerController = new controller(axios);
+      testPowerController.getBearerToken = new sinon.spy(
+        spyFns,
+        "getBearerToken"
+      );
+      testPowerController.getResourceInstance = new sinon.spy(
+        testPowerController.getResourceInstance
+      );
+      return testPowerController
+        .getPowerComponent(
+          {
+            params: { zone: "us-south", component: "storage_tiers" },
+            query: {
+              name: "egg",
+            },
+          },
+          res
+        )
+        .then(() => {
+          assert.isTrue(
+            res.send.calledOnceWith(["Tier1", "Tier2"]),
+            "it should be true"
+          );
+        });
+    });
+  });
+  describe("/api/power/us-south/system-pools", () => {
     it("should send system pools", () => {
       process.env.POWER_WORKSPACE_US_SOUTH = "fooGuid";
       let { axios } = initMockAxios(
@@ -262,6 +466,14 @@ describe("power api", () => {
         false
       );
       let testPowerController = new controller(axios);
+      testPowerController.getBearerToken = new sinon.spy(
+        spyFns,
+        "getBearerToken"
+      );
+      testPowerController.getPowerDetails = new sinon.spy(
+        spyFns,
+        "getPowerDetails"
+      );
       return testPowerController
         .getPowerComponent(
           {
@@ -274,57 +486,13 @@ describe("power api", () => {
             res.send.calledOnceWith(["resources", "storagePoolsCapacity"]),
             "it should be true"
           );
-        });
-    });
-    it("should respond with error when no environment variable is present", () => {
-      let { axios } = initMockAxios(
-        {
-          images: ["first", "second", "third"],
-        },
-        true
-      );
-      let testPowerController = new controller(axios);
-      return testPowerController
-        .getPowerComponent(
-          {
-            params: { zone: "us-south", component: "images" },
-          },
-          res
-        )
-        .catch(() => {
-          assert.isTrue(res.send.calledOnce);
-        });
-    });
-    it("should respond with error when powerWorkspaceData is undefined", () => {
-      process.env.POWER_WORKSPACE_US_SOUTH = "fooGuid";
-      let { axios } = initMockAxios(
-        {
-          resources: [undefined],
-          storagePoolsCapacity: [
-            { poolName: "Tier1-Flash-1" },
-            { poolName: "Tier1-Flash-2" },
-            { poolName: "Tier3-Flash-1" },
-            { poolName: "Tier1-Flash-2" },
-          ],
-        },
-        false
-      );
-      let testPowerController = new controller(axios);
-      return testPowerController
-        .getPowerComponent(
-          {
-            params: { zone: "us-south", component: "storage_pools" },
-          },
-          res
-        )
-        .catch(() => {
           assert.isTrue(
-            res.send.calledOnceWith([
-              "Tier1-Flash-1",
-              "Tier1-Flash-2",
-              "Tier3-Flash-1",
-              "Tier1-Flash-2",
-            ])
+            testPowerController.getBearerToken.calledOnce,
+            "should be true"
+          );
+          assert.isTrue(
+            testPowerController.getPowerDetails.calledOnceWith("fooGuid"),
+            "should be true"
           );
         });
     });

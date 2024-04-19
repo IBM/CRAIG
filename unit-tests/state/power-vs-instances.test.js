@@ -2633,6 +2633,28 @@ describe("power_instances", () => {
             "it should be true"
           );
         });
+        it("should return true when a network has an invalid ip address", () => {
+          assert.isTrue(
+            craig.power_instances.network.invalid({
+              network: [
+                {
+                  ip_address: "1.2.",
+                },
+              ],
+            }),
+            "it should be true when incomplete"
+          );
+          assert.isTrue(
+            craig.power_instances.network.invalid({
+              network: [
+                {
+                  ip_address: "1.2.3.4/5",
+                },
+              ],
+            }),
+            "it should be true when cidr"
+          );
+        });
         it("should return false when not empty and valid", () => {
           assert.isFalse(
             craig.power_instances.network.invalid({
@@ -2642,7 +2664,7 @@ describe("power_instances", () => {
                 },
               ],
             }),
-            "it should be true"
+            "it should be false"
           );
         });
       });
@@ -2856,6 +2878,74 @@ describe("power_instances", () => {
       });
     });
     describe("power_instances.pi_processors", () => {
+      it("should handle invalid cases for value and return correct invalid text", () => {
+        assert.isFalse(
+          craig.power_instances.pi_processors.invalid({ sap: true }),
+          "it should be false for sap"
+        );
+        assert.isTrue(
+          craig.power_instances.pi_processors.invalid({ pi_processors: "" }),
+          "it should be true when empty string"
+        );
+        assert.isTrue(
+          craig.power_instances.pi_processors.invalid({
+            pi_processors: "1.2",
+            pi_proc_type: "dedicated",
+            pi_sys_type: "e980",
+          }),
+          "it should be true when dedicated and not whole number"
+        );
+        assert.deepEqual(
+          craig.power_instances.pi_processors.invalidText({
+            pi_processors: "1.2",
+            pi_proc_type: "dedicated",
+            pi_sys_type: "e980",
+          }),
+          "Must be a whole number between 1 and 17.",
+          "it should have correct invalid text"
+        );
+        assert.isTrue(
+          craig.power_instances.pi_processors.invalid({
+            pi_processors: "0",
+            pi_proc_type: "dedicated",
+          }),
+          "it should be true when dedicated and out of range"
+        );
+        assert.isTrue(
+          craig.power_instances.pi_processors.invalid({
+            pi_processors: "1000",
+            pi_proc_type: "dedicated",
+          }),
+          "it should be true when dedicated and out of range"
+        );
+        assert.deepEqual(
+          craig.power_instances.pi_processors.invalidText({
+            pi_processors: "1000",
+            pi_proc_type: "dedicated",
+          }),
+          "Must be a whole number between 1 and 13.",
+          "it should have correct invalid text"
+        );
+        assert.isTrue(
+          craig.power_instances.pi_processors.invalid({
+            pi_processors: "0",
+          }),
+          "it should be true when out of range"
+        );
+        assert.deepEqual(
+          craig.power_instances.pi_processors.invalidText({
+            pi_processors: "0",
+          }),
+          "Must be a number between 0.25 and 13.75.",
+          "it should have correct invalid text"
+        );
+        assert.isTrue(
+          craig.power_instances.pi_processors.invalid({
+            pi_processors: "1000",
+          }),
+          "it should be true when out of range"
+        );
+      });
       it("should return true when sap", () => {
         assert.isTrue(
           craig.power_instances.pi_processors.hideWhen({ sap: true }),
@@ -2868,6 +2958,58 @@ describe("power_instances", () => {
         assert.isTrue(
           craig.power_instances.pi_memory.hideWhen({ sap: true }),
           "it should be true when sap"
+        );
+      });
+      it("should handle invalid and invalidText cases for memory", () => {
+        assert.isFalse(
+          craig.power_instances.pi_memory.invalid({ sap: true }),
+          "it should be false for sap"
+        );
+        assert.isTrue(
+          craig.power_instances.pi_memory.invalid({
+            pi_memory: "fff",
+            pi_sys_type: "e980",
+          }),
+          "it should be true when not number"
+        );
+        assert.deepEqual(
+          craig.power_instances.pi_memory.invalidText({
+            pi_memory: "fff",
+            pi_sys_type: "e980",
+          }),
+          "Must be a whole number between 2 and 15400.",
+          "it should have correct invalid text"
+        );
+        assert.isTrue(
+          craig.power_instances.pi_memory.invalid({ pi_memory: "9999999" }),
+          "it should be true when out of range"
+        );
+        assert.deepEqual(
+          craig.power_instances.pi_memory.invalidText({ pi_memory: "fff" }),
+          "Must be a whole number between 2 and 934.",
+          "it should have correct invalid text"
+        );
+        assert.isTrue(
+          craig.power_instances.pi_memory.invalid({
+            pi_memory: "-10",
+            pi_license_repository_capacity: "1",
+          }),
+          "it should be true when out of range and vtl"
+        );
+        assert.isTrue(
+          craig.power_instances.pi_memory.invalid({
+            pi_memory: "1",
+            pi_license_repository_capacity: "16",
+          }),
+          "it should be true when out of range and vtl"
+        );
+        assert.deepEqual(
+          craig.power_instances.pi_memory.invalidText({
+            pi_memory: "-10",
+            pi_license_repository_capacity: "1",
+          }),
+          "Must be a whole number between 2 and 934. For FalconStor VTL Instances, memory must be greater than or equal to 18.",
+          "it should have correct invalid text"
         );
       });
     });

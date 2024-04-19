@@ -14,24 +14,7 @@ function newState() {
   return store;
 }
 
-export const JsonDocs = (props) => {
-  /**
-   * recursive az sort
-   * @param {*} value any value
-   * @returns {Object} object with the keys sorted in alphabetical order
-   */
-  function recursiveAzSort(value) {
-    if (getType(value) === "object") {
-      let newObj = {};
-      keys(value)
-        .sort(azsort)
-        .forEach((field) => {
-          newObj[field] = recursiveAzSort(value[field]);
-        });
-      return newObj;
-    } else return value;
-  }
-
+export const JsonDocs = () => {
   return (
     <div>
       <h1>CRAIG JSON</h1>

@@ -255,7 +255,7 @@ function initLoadBalancers(store) {
         type: "multiselect",
         default: [],
         invalid: function (stateData) {
-          return isEmpty(stateData.target_vsi);
+          return isEmpty(stateData?.target_vsi);
         },
         invalidText: unconditionalInvalidText(
           "select at least one VSI deployment"
@@ -336,18 +336,9 @@ function initLoadBalancers(store) {
         labelText: "Health Timeout (Seconds)",
         placeholder: "5",
         default: "",
-        invalid: function (stateData, componentProps) {
-          return (
-            fieldIsNullOrEmptyString("health_timeout")(
-              stateData,
-              componentProps
-            ) ||
-            !isWholeNumber(Number(stateData.health_timeout)) ||
-            !isInRange(Number(stateData.health_timeout), 5, 3000)
-          );
-        },
+        invalid: disableLoadBalancerSaveRangeValue("health_timeout", 5, 3000),
         invalidText: unconditionalInvalidText(
-          "Must be a whole number between 5 and 300"
+          "Must be a whole number between 5 and 3000"
         ),
       },
       health_delay: {
@@ -376,16 +367,7 @@ function initLoadBalancers(store) {
         size: "small",
         placeholder: "5",
         default: "",
-        invalid: function (stateData, componentProps) {
-          return (
-            fieldIsNullOrEmptyString("health_retries")(
-              stateData,
-              componentProps
-            ) ||
-            !isWholeNumber(Number(stateData.health_retries)) ||
-            !isInRange(Number(stateData.health_retries), 5, 3000)
-          );
-        },
+        invalid: disableLoadBalancerSaveRangeValue("health_retries", 5, 3000),
         invalidText: unconditionalInvalidText(
           "Must be a whole number between 5 and 3000"
         ),

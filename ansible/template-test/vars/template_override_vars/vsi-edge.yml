@@ -1,0 +1,76 @@
+override_craig:
+  atracker:
+    add_route: true
+    bucket: atracker-bucket
+    locations: ["global"]
+    enabled: false
+    type: cos
+    name: atracker
+    cos_key: cos-bind-key
+    target_name: atracker-cos
+    instance: false
+    plan: lite
+    resource_group: 
+    archive: false
+  transit_gateways:
+    - global: false
+      name: transit-gateway
+      resource_group: service-rg
+      connections: []
+      use_data: false
+      prefix_filters: []
+      gre_tunnels: []
+      crns: null
+      classic: false
+  vsi:
+    - kms: kms
+      encryption_key: slz-vsi-volume-key
+      image: ibm-ubuntu-22-04-1-minimal-amd64-1
+      profile: cx2-4x8
+      name: management-server
+      security_groups:
+      - management-vsi
+      ssh_keys: ["slz-ssh-key"]
+      subnets:
+      - vsi-zone-1
+      - vsi-zone-2
+      - vsi-zone-3
+      vpc: management
+      vsi_per_subnet: 1
+      resource_group: management-rg
+      override_vsi_name: 
+      user_data: 
+      network_interfaces: []
+      volumes: []
+      image_name: 
+      enable_floating_ip: false
+      primary_interface_ip_spoofing: false
+      use_variable_names: false
+      snapshot: 
+      use_snapshot: false
+    - kms: kms
+      encryption_key: slz-vsi-volume-key
+      image: ibm-centos-7-9-minimal-amd64-11
+      image_name: CentOS 7.x - Minimal Install (amd64) [ibm-centos-7-9-minimal-amd64-11]
+      profile: cx2-4x8
+      name: workload-server
+      security_groups:
+      - workload-vsi
+      ssh_keys: ["slz-ssh-key"]
+      vpc: workload
+      vsi_per_subnet: 1
+      resource_group: workload-rg
+      override_vsi_name: 
+      user_data: 
+      network_interfaces: []
+      subnets:
+      - vsi-zone-1
+      - vsi-zone-2
+      - vsi-zone-3
+      volumes: []
+      subnet: ''
+      enable_floating_ip: false
+      primary_interface_ip_spoofing: false
+      use_variable_names: false
+      snapshot: 
+      use_snapshot: false
