@@ -203,7 +203,6 @@ const Atracker = (craig) => {
       name="iac-atracker"
       hideName
       noDeleteButton={true}
-      onDelete={craig.atracker.delete}
       useAddButton={false}
       tabPanel={{
         name: "Activity Tracker",

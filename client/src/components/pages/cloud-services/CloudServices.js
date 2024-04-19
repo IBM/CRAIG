@@ -257,7 +257,7 @@ class CloudServicesPage extends React.Component {
       // handle delete for non-array services
       let data = { ...this.props.craig[this.state.service] };
       data.enabled = false;
-      this.props.craig[this.state.service].save(data);
+      this.props.craig[this.state.service].save({ enabled: false });
       this.setState({
         serviceName: "",
         service: "",
@@ -715,6 +715,7 @@ class CloudServicesPage extends React.Component {
                         }
                         tabPanel={{ hideAbout: true }}
                         key={this.state.service + this.state.serviceName}
+                        noDeleteButton={this.state.serviceName === "atracker"}
                         onSave={this.onServiceSave}
                         onDelete={this.onServiceDelete}
                         type="subForm"

@@ -33,6 +33,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing Power VS Images to not correctly be update after being removed during validation
 - Fixed an issue in the Project form allowing users to create multiple workspaces for the same project
 - Fixed an issue causing the validation button in the top navigation bar to work inconsistently
+- Fixed an issue causing strange behavior when disabling Acitivity Tracer in the v2 GUI
 
 ## 1.15.0
 
