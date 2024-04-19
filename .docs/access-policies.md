@@ -15,10 +15,11 @@ The `access.sh` script automates the creation of 3 access groups which assign al
 
 ### Prerequisites
 
-- _To use this script, users must have the following type of access in your Cloud Account:_
-  - **_Account owner_**
-  - **_Administrator or editor on the IAM Access Groups account management service in the account_**
-  - **_Administrator or editor for the All Account Management services_**
+- _To use this script, users must be the Account Owner or have the following type of access in their Cloud Account:_
+  - **_Administrator or editor on the IAM Access Groups Account Management service in the account_**
+  - **_Administrator or editor on the IAM Account Management services in the account_**
+  - **_Administrator or editor on the All Identity and Access enabled services in the account_**
+  - **_Administrator or editor for the All Account Management services in the account_**
 
 - _Requires that the ibmcloud CLI be installed and a ibmcloud login has been performed prior to running the script (or run using the IBM Cloud Shell)._
 
