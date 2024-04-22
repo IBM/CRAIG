@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.15.2
+
+### Fixes
+
+- Fixed an issue causing incorrect spacing for the titles of VPCs on downloaded `craig.png` images
+
 ## 1.15.1
 
 ### Upgrade Notes

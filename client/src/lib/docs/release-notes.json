@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.15.2",
+    "features": [],
+    "fixes": [
+      "Fixed an issue causing incorrect spacing for the titles of VPCs on downloaded `craig.png` images"
+    ],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.15.1",
     "features": [
       "Environment prefix is now prepended to the beginning of Classic SSH Key names",
