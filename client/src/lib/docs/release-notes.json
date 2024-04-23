@@ -5,7 +5,9 @@
     "fixes": [
       "Fixed an issue causing incorrect spacing for the titles of VPCs on downloaded `craig.png` images"
     ],
-    "upgrade_notes": []
+    "upgrade_notes": [
+      "Existing Secrets Manager instances now require a Resource Group. Add your existing Resource Group to ensure Terraform has access to your Secrets Manager instance"
+    ]
   },
   {
     "version": "1.15.1",

@@ -93,7 +93,9 @@ function initSecretsManagerStore(store) {
         labelText: "Use Existing Instance",
       },
       name: nameField("secrets_manager"),
-      resource_group: resourceGroupsField(),
+      resource_group: resourceGroupsField(false, {
+        noHideWhen: true,
+      }),
       plan: {
         type: "select",
         default: "standard",

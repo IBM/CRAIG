@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## 1.15.2
 
+### Upgrade Notes
+
+- Existing Secrets Manager instances now require a Resource Group. Add your existing Resource Group to ensure Terraform has access to your Secrets Manager instance
+
 ### Fixes
 
 - Fixed an issue causing incorrect spacing for the titles of VPCs on downloaded `craig.png` images
