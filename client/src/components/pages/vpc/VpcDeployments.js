@@ -353,9 +353,6 @@ class VpcDeploymentsDiagramPage extends React.Component {
           ) : this.state.selectedItem === "load_balancers" &&
             craig.store.json.vsi.length === 0 ? (
             <NoVpcVsiTile />
-          ) : this.state.selectedItem === "vpn_servers" &&
-            craig.store.json.secrets_manager.length === 0 ? (
-            <NoSecretsManagerTile />
           ) : contains(["fortigate_vnf", "vsi"], this.state.selectedItem) &&
             craig.store.json.ssh_keys.length === 0 ? (
             <CraigEmptyResourceTile

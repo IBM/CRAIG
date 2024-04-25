@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Upgrade Notes
 
 - Existing Secrets Manager instances now require a Resource Group. Add your existing Resource Group to ensure Terraform has access to your Secrets Manager instance
+- When creating a VPN Server using the Certificate or Username and Password method, a Secrets Manager instance is no longer required
 
 ### Fixes
 
