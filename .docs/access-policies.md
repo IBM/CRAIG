@@ -98,6 +98,7 @@ The following steps list how to create an access group with these required acces
 
 | Service                            | Resources                          | Access          |
 |-                                   |-                                   |-                |
+| All Account Management services    | All                                | Viewer          |
 | Code Engine                        | All                                | Writer, Editor  |
 | Container Registry                 | All                                | Manager         |
 | Resource Group Only                | All resource groups in the account | Viewer, Editor  |
