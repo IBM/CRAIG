@@ -13,6 +13,10 @@ All notable changes to this project will be documented in this file.
 
 - Fixed an issue causing incorrect spacing for the titles of VPCs on downloaded `craig.png` images
 
+### Features
+
+- Added documentation for adding a VPN Server to the Power VS PoC template
+
 ## 1.15.1
 
 ### Upgrade Notes

@@ -1,7 +1,9 @@
 [
   {
     "version": "1.15.2",
-    "features": [],
+    "features": [
+      "Added documentation for adding a VPN Server to the Power VS PoC template"
+    ],
     "fixes": [
       "Fixed an issue causing incorrect spacing for the titles of VPCs on downloaded `craig.png` images"
     ],
