@@ -302,10 +302,10 @@ class ClassicDiagram extends React.Component {
             parentState={this.state}
             handleInputChange={this.handleInputChange}
           />
-          <div className="marginBottomSmall" />
+          <div className="marginBottomSmall emptyStatelessContainer" />
           {isNullOrEmptyString(this.state.modalService, true) ? (
             // need to pass html element
-            <></>
+            <div className="emptyStatelessContainer" />
           ) : (
             <CraigFormHeading
               name={`New ${titleCase(this.state.modalService)
@@ -318,7 +318,7 @@ class ClassicDiagram extends React.Component {
             />
           )}
           {isNullOrEmptyString(this.state.modalService, true) ? (
-            <></>
+            <div className="emptyStatelessContainer" />
           ) : this.state.modalService === "classic_gateways" &&
             this.props.craig.store.json.classic_ssh_keys.length === 0 ? (
             <CraigEmptyResourceTile
@@ -379,7 +379,7 @@ class ClassicDiagram extends React.Component {
             )}
             tfTabs={[
               {
-                name: "Classic Infrasctructure",
+                name: "Classic Infrastructure",
                 tf: classicInfraTf(craig.store.json) || "",
               },
               {

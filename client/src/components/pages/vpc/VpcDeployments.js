@@ -332,10 +332,10 @@ class VpcDeploymentsDiagramPage extends React.Component {
             parentState={this.state}
             handleInputChange={this.handleInputChange}
           />
-          <div className="marginBottomSmall" />
+          <div className="marginBottomSmall emptyStatelessContainer" />
           {noSelectedItem ? (
             // need to pass html element
-            <></>
+            <div className="emptyStatelessContainer" />
           ) : (
             <CraigFormHeading
               name={
@@ -349,7 +349,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
           )}
           {noSelectedItem ? (
             // need to pass html element
-            <></>
+            <div className="emptyStatelessContainer" />
           ) : this.state.selectedItem === "load_balancers" &&
             craig.store.json.vsi.length === 0 ? (
             <NoVpcVsiTile />
