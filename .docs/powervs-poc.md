@@ -115,6 +115,49 @@ There are multiple ways to manage volumes in Power Virtual Server:
 * To add volumes that will not be attached to a virtual server, click the "Add Resource" (plus) button on the Power VS workspace, choose "Power Volume", fill in the attributes and click Submit.
 * To remove volumes that are not attached to a virtual server, click on the volume's icon and click the delete button in the right panel.
 
+### VPC VPN Server - Client to Site VPN
+The VPC VPN Server used for client to site VPNs requires SSL/TLS certificates stored in a Secrets Manager instance. The Secrets Manager should be created outside of CRAIG and populated with the certificates before creating the VPN Server deployment in CRAIG.
+
+1. Create a Secrets Manager instance and either [order public certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-public-certificates&interface=ui
+), [create private certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-private-certificates&interface=ui
+), or [import certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-certificates&interface=ui).
+2. Choose VPC Deployments from the menu and create a new security group for the VPN Server.
+Create the security group in the `transit-rg` resource group.
+Add the following rules to the group:
+
+| Name            | Direction | CIDR      | Protocol | Port |
+| --------------- | --------- | --------- | -------- | ---- |
+| vpn-inbound-udp | inbound   | 0.0.0.0/0 | UDP      | 443  |
+| vpn-inbound-tcp | inbound   | 0.0.0.0/0 | TCP      | 443  |
+| vpn-outbound    | outbound  | 0.0.0.0/0 | ALL      | ALL  |
+
+3. Create a VPN Server deployment
+Set the VPN Server values using the following table as a guide.
+
+| Field                   | Value                                                                                                                                                                                                            |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Resource group          | transit-rg                                                                                                                                                                                                       |
+| VPC                     | transit                                                                                                                                                                                                          |
+| Subnets                 | vpn-zone-1                                                                                                                                                                                                       |
+| Security group          | security group created in step 3                                                                                                                                                                                 |
+| Authentication method   | Certificate                                                                                                                                                                                                      |
+| Certificate CRN         | The CRN of the Secrets Manager secret containing the certificate for the VPN Server.                                                                                                                             |
+| Client CA CRN           | The CRN of the Secrets Manager secret containing the certificate for the VPN client.                                                                                                                             |
+| Client CIDR Pool        | Specify a network CIDR that does not conflict with any on-premises network, the VPC network, or the Power VS network. The CIDR should also be a subnet of 10.0.0.0/8 to avoid additional security group changes. |
+| Port                    | 443                                                                                                                                                                                                              |
+| Protocol                | UDP                                                                                                                                                                                                              |
+| Enable split tunneling  | True is recommended                                                                                                                                                                                              |
+| Client idle timeout     | 600                                                                                                                                                                                                              |
+| Client DNS Server IPs   | Leave empty                                                                                                                                                                                                      |
+| Additional VPC Prefixes | Zone 1, add the CIDR specified in `Client CIDR Pool`                                                                                                                                                             |
+
+4. After the VPN server is created, click on the VPN server icon to add routes. Routes are added by clicking the plus icon at the bottom of the VPN Server settings. Add two routes:
+
+| Name    | Destination                                                             | Action    |
+| ------- | ----------------------------------------------------------------------- | --------- |
+| vpn-vsi | the VSI network CIDR (`10.10.0.0/28` by default in the template)        | Deliver   |
+| powervs | the Power VS network CIDR (`192.168.0.0/24` by default in the template) | Translate |
+
 ## Saving the configuration and deploying the resources
 
 The configuration can be downloaded by clicking the download button in the top right of the screen. This downloads a zip of a file named craig.json and Terraform artifacts. The craig.json can be imported back into CRAIG for continued editing.

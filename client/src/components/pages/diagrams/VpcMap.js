@@ -23,6 +23,8 @@ import { SubnetServiceMap } from "./SubnetServiceMap";
 export const VpcMap = (props) => {
   let craig = props.craig;
   let nullVpcResources = false;
+
+  // check items for null vpc
   [
     "fortigate_vnf",
     "vsi",
@@ -41,6 +43,9 @@ export const VpcMap = (props) => {
       nullVpcResources = true;
     }
   });
+
+  // if there are no vpcs, no vpcs are null, and the map is not static, show empty
+  // resource tile
   return craig.store.json.vpcs.length === 0 &&
     !nullVpcResources &&
     !props.static ? (
@@ -48,6 +53,7 @@ export const VpcMap = (props) => {
       name="VPCs"
       className="width580 marginTopHalfRem"
       customClick={
+        // add custom click for the V2 page
         window.location.pathname !== "/v2/vpc" ? (
           <>
             Add one from the{" "}
@@ -60,15 +66,18 @@ export const VpcMap = (props) => {
       }
     />
   ) : (
+    // init array with name / pgw for null resources
     (nullVpcResources && !props.noDeployments
       ? [{ name: null, public_gateways: [] }]
       : []
     )
-      .concat(craig.store.json.vpcs)
+      .concat(craig.store.json.vpcs) // add vpcs
       .map((vpc, calcVpcIndex) => {
         let vpcBoxClassName =
           "subForm marginBottomSmall marginRight1Rem " +
           (props.small ? " width300" : " width580");
+        // is invalid when no rg and not using data, no bucket options selected
+        // or the vpc has no name
         let isRed =
           (isNullOrEmptyString(vpc.resource_group, true) && !vpc.use_data) ||
           isNullOrEmptyString(vpc.bucket, true) ||
@@ -93,7 +102,11 @@ export const VpcMap = (props) => {
             static={props.static}
           >
             <div
-              className={props.static || !props.onTitleClick ? "" : "clicky"}
+              className={
+                (props.static || !props.onTitleClick ? "" : "clicky") +
+                // add margin to add spacing between vpc and child items
+                (props.static ? " marginBottomSmall" : "")
+              }
             >
               <CraigFormHeading
                 isRed={isRed}

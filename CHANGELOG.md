@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.15.2
+
+### Upgrade Notes
+
+- Existing Secrets Manager instances now require a Resource Group. Add your existing Resource Group to ensure Terraform has access to your Secrets Manager instance
+- When creating a VPN Server using the Certificate or Username and Password method, a Secrets Manager instance is no longer required
+
+### Fixes
+
+- Fixed an issue causing incorrect spacing for the titles of VPCs on downloaded `craig.png` images
+
+### Features
+
+- Added documentation for adding a VPN Server to the Power VS PoC template
+
 ## 1.15.1
 
 ### Upgrade Notes

@@ -22,16 +22,18 @@ describe("filter functions", () => {
     let craig;
     beforeEach(() => {
       craig = newState();
-      craig.store.json.classic_vlans[0] = {
-        name: "classic-priv-vlan",
-        datacenter: "dal10",
-        type: "PRIVATE",
-      };
-      craig.store.json.classic_vlans[1] = {
-        name: "classic-pub-vlan",
-        datacenter: "dal10",
-        type: "PUBLIC",
-      };
+      craig.store.json.classic_vlans = [
+        {
+          name: "classic-priv-vlan",
+          datacenter: "dal10",
+          type: "PRIVATE",
+        },
+        {
+          name: "classic-pub-vlan",
+          datacenter: "dal10",
+          type: "PUBLIC",
+        },
+      ];
     });
     it("should return a list of filtered classic gateways for a non-HADR gateway with a private vlan only", () => {
       craig.store.json.classic_gateways[0] = {
