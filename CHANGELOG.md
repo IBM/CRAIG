@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Existing Secrets Manager instances now require a Resource Group. Add your existing Resource Group to ensure Terraform has access to your Secrets Manager instance
 - When creating a VPN Server using the Certificate or Username and Password method, a Secrets Manager instance is no longer required
+- Power Edge Router is now supported for `lon06`, `osa21`, `sao04`, and `syd04
 
 ### Fixes
 
