@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.15.3",
+    "features": [],
+    "fixes": [
+      "Fixed an issue causing irregular spacing on the Power VS Instances and VTL forms",
+      "Fixed an issue causing Replication to not be enabled correctly on Power VS Storage pools"
+    ],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.15.2",
     "features": [
       "Added documentation for adding a VPN Server to the Power VS PoC template",

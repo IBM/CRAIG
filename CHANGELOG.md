@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.15.3
+
+### Fixes
+
+- Fixed an issue causing irregular spacing on the Power VS Instances and VTL forms
+- Fixed an issue causing Replication to not be enabled correctly on Power VS Storage pools
+
 ## 1.15.2
 
 ### Upgrade Notes
@@ -10,13 +17,13 @@ All notable changes to this project will be documented in this file.
 - When creating a VPN Server using the Certificate or Username and Password method, a Secrets Manager instance is no longer required
 - Power Edge Router is now supported for `lon06`, `osa21`, `sao04`, and `syd04
 
-### Fixes
-
-- Fixed an issue causing incorrect spacing for the titles of VPCs on downloaded `craig.png` images
-
 ### Features
 
 - Added documentation for adding a VPN Server to the Power VS PoC template
+
+### Fixes
+
+- Fixed an issue causing incorrect spacing for the titles of VPCs on downloaded `craig.png` images
 
 ## 1.15.1
 
