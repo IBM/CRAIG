@@ -909,6 +909,11 @@ const SccV2 = (craig) => {
               region: craig.scc_v2.region,
               resource_group: craig.scc_v2.resource_group,
             },
+            {
+              use_cos: craig.scc_v2.use_cos,
+              cos: craig.scc_v2.cos,
+              bucket: craig.scc_v2.bucket,
+            },
           ],
           subForms: [
             {

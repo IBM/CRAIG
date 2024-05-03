@@ -1,6 +1,13 @@
 const { varDotPrefix } = require("../constants");
-const { tfBlock, resourceRef, jsonToTfPrint, rgIdRef } = require("./utils");
-const { kebabCase } = require("lazy-z");
+const {
+  tfBlock,
+  resourceRef,
+  jsonToTfPrint,
+  rgIdRef,
+  cosRef,
+  bucketRef,
+} = require("./utils");
+const { kebabCase, getObjectFromArray, titleCase } = require("lazy-z");
 
 /**
  * create resource instance for scc
@@ -110,6 +117,48 @@ function formatScc2(scc_v2, config) {
       attachment.data
     );
   });
+  if (scc_v2.use_cos) {
+    tf += jsonToTfPrint(
+      "resource",
+      "ibm_iam_authorization_policy",
+      `scc_to_${scc_v2.cos}_object_storage_policy`,
+      {
+        source_service_name: "compliance",
+        description: `Allow Security and Compliance Center to access ${titleCase(scc_v2.cos)} Object Storage`,
+        target_service_name: "cloud-object-storage",
+        target_resource_instance_id:  cosRef(
+          scc_v2.cos,
+          "guid",
+          getObjectFromArray(config.object_storage, "name", scc_v2.cos)
+            .use_data
+        ),
+        roles: ["Writer"]
+      }
+    );
+    tf += jsonToTfPrint(
+      "resource",
+      "ibm_scc_instance_settings",
+      "scc_instance_settings",
+      {
+        instance_id: resourceRef("scc_instance", "guid"),
+        object_storage: [
+          {
+            instance_crn: cosRef(
+              scc_v2.cos,
+              "crn",
+              getObjectFromArray(config.object_storage, "name", scc_v2.cos)
+                .use_data
+            ),
+            bucket: bucketRef(scc_v2.cos, scc_v2.bucket),
+          },
+        ],
+        event_notifications: [],
+        depends_on: [
+          `\${ibm_iam_authorization_policy.scc_to_${scc_v2.cos}_object_storage_policy}`
+        ]
+      }
+    ).replace(/=\s\[\s+\]/g, "{}");
+  }
   return tfBlock("Security and Compliance Center", tf);
 }
 

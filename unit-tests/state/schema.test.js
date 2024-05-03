@@ -1617,6 +1617,20 @@ describe("automate schema generation", () => {
               default: null,
               groups: ["us-south", "us-east", "eu-de"],
             },
+            cos: {
+              default: null,
+              groups: "<calculated>",
+              type: "string",
+            },
+            bucket: {
+              default: null,
+              groups: "<calculated>",
+              type: "string",
+            },
+            use_cos: {
+              type: "boolean",
+              default: false,
+            },
             profile_attachments: {
               Array: {
                 name: { type: "string", default: null },
