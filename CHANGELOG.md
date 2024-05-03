@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## 1.15.3
 
+### Upgrade Notes
+
+- VPCs in Terraform code now always have `address_prefix_management` set to `manual`
+
 ### Features
 
 - Users can integrate Security and Compliance Center with Cloud Object storage from the `/forms/sccV2` page
