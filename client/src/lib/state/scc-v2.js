@@ -1,4 +1,10 @@
-const { transpose, snakeCase } = require("lazy-z");
+const {
+  transpose,
+  snakeCase,
+  splat,
+  isNullOrEmptyString,
+  getObjectFromArray,
+} = require("lazy-z");
 const {
   resourceGroupsField,
   shouldDisableComponentSave,
@@ -7,7 +13,11 @@ const {
   titleCaseRender,
 } = require("./utils");
 const { setUnfoundResourceGroup } = require("./store.utils");
-const { nameField } = require("./reusable-fields");
+const {
+  nameField,
+  hideWhenFieldFalse,
+  unconditionalInvalidText,
+} = require("./reusable-fields");
 
 /**
  * init scc v2 store
@@ -50,7 +60,7 @@ function initSccV2(store) {
       config.store.json.scc_v2.region = "";
     },
     shouldDisableSave: shouldDisableComponentSave(
-      ["resource_group", "region"],
+      ["resource_group", "region", "cos", "bucket"],
       "scc_v2"
     ),
     schema: {
@@ -72,6 +82,61 @@ function initSccV2(store) {
         invalid: fieldIsNullOrEmptyString("region"),
         invalidText: selectInvalidText("region"),
         groups: ["us-south", "us-east", "eu-de"],
+      },
+      use_cos: {
+        default: false,
+        size: "small",
+        type: "toggle",
+        labelText: "Integrate with Object Storage",
+        tooltip: {
+          content: "Store SCC scan results in an Object Storage bucket",
+        },
+      },
+      cos: {
+        default: "",
+        size: "small",
+        type: "select",
+        labelText: "Object Storage Instance",
+        hideWhen: hideWhenFieldFalse("use_cos"),
+        groups: function (stateData, componentProps) {
+          return splat(componentProps.craig.store.json.object_storage, "name");
+        },
+        invalidText: unconditionalInvalidText(
+          "Select an Object Storage instanace"
+        ),
+        invalid: function (stateData) {
+          return stateData.use_cos
+            ? isNullOrEmptyString(stateData.cos, true)
+            : false;
+        },
+      },
+      bucket: {
+        default: "",
+        size: "small",
+        type: "select",
+        hideWhen: hideWhenFieldFalse("use_cos"),
+        groups: function (stateData, componentProps) {
+          return isNullOrEmptyString(stateData.cos, true)
+            ? []
+            : splat(
+                getObjectFromArray(
+                  componentProps.craig.store.json.object_storage,
+                  "name",
+                  stateData.cos
+                ).buckets,
+                "name"
+              );
+        },
+        invalidText: function (stateData) {
+          return isNullOrEmptyString(stateData.cos, true)
+            ? "Select an Object Storage instance"
+            : "Select a storage bucket";
+        },
+        invalid: function (stateData) {
+          return stateData.use_cos
+            ? isNullOrEmptyString(stateData.bucket, true)
+            : false;
+        },
       },
     },
     subComponents: {

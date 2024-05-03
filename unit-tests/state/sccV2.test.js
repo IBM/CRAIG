@@ -75,6 +75,63 @@ describe("scc_v2", () => {
     });
   });
   describe("scc_v2.schema", () => {
+    it("should return correct groups for cos", () => {
+      assert.deepEqual(
+        craig.scc_v2.cos.groups({}, { craig: craig }),
+        ["atracker-cos", "cos"],
+        "it should return correct data"
+      );
+    });
+    it("should have correct invalid for cos", () => {
+      assert.isFalse(
+        craig.scc_v2.cos.invalid({}, { craig: craig }),
+        "it should be valid"
+      );
+      assert.isTrue(
+        craig.scc_v2.cos.invalid({ use_cos: true }, { craig: craig }),
+        "it should be valid"
+      );
+    });
+    it("should return correct groups for buckets", () => {
+      assert.deepEqual(
+        craig.scc_v2.bucket.groups({}, { craig: craig }),
+        [],
+        "it should return correct data"
+      );
+      assert.deepEqual(
+        craig.scc_v2.bucket.groups(
+          {
+            use_cos: true,
+            cos: "atracker-cos",
+          },
+          { craig: craig }
+        ),
+        ["atracker-bucket"],
+        "it should return correct data"
+      );
+    });
+    it("should have correct invalid for bucket", () => {
+      assert.isFalse(
+        craig.scc_v2.bucket.invalid({}, { craig: craig }),
+        "it should be valid"
+      );
+      assert.isTrue(
+        craig.scc_v2.bucket.invalid({ use_cos: true }, { craig: craig }),
+        "it should be valid"
+      );
+    });
+    it("should have correct invalid text for bucket", () => {
+      assert.deepEqual(
+        craig.scc_v2.bucket.invalidText({}, { craig: craig }),
+        "Select an Object Storage instance",
+        "it should have correct invalid text"
+      );
+      assert.deepEqual(
+        craig.scc_v2.bucket.invalidText({ cos: "frog" }, { craig: craig }),
+        "Select a storage bucket",
+        "it should have correct invalid text"
+      );
+    });
     it("should return correct name on render", () => {
       assert.deepEqual(
         craig.scc_v2.name.onRender(),

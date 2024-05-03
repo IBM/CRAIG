@@ -1251,7 +1251,7 @@ function powerStoragePoolSelect(isVolume) {
         stateData.pi_replication_enabled = false;
       }
 
-      return stateData[field];
+      return stateData[field].replace(/\s\(Replication.+/g, "");
     },
     apiEndpoint: function (stateData, componentProps) {
       return `/api/power/${stateData.zone}/storage-pools`;

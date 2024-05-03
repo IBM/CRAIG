@@ -2,6 +2,7 @@ import { Modal } from "@carbon/react";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { DynamicRender } from "./DynamicRender";
+import { contains } from "lazy-z";
 
 /**
  * Form Modal
@@ -74,14 +75,22 @@ class DynamicFormModal extends Component {
               React.Children.map(this.props.children, (child) => {
                 // this needs some cleanup
                 // clone react child
-                return React.cloneElement(child, {
-                  // add modal specific methods
-                  disableModal: this.disableModal,
-                  enableModal: this.enableModal,
-                  setRefUpstream: this.setRefUpstream,
-                  isModal: true,
-                  ref: this.modalForm,
-                });
+                // prevent invalid dom references from being passed to stateless components
+                if (
+                  child.props?.className &&
+                  contains(child.props.className, "emptyStatelessContainer")
+                ) {
+                  return "";
+                } else {
+                  return React.cloneElement(child, {
+                    // add modal specific methods
+                    disableModal: this.disableModal,
+                    enableModal: this.enableModal,
+                    setRefUpstream: this.setRefUpstream,
+                    isModal: true,
+                    ref: this.modalForm,
+                  });
+                }
               })}
           </Modal>
         }

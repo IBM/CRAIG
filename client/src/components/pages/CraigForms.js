@@ -1182,6 +1182,7 @@ function craigForms(craig) {
           heading: {
             name: "IP Interface Options",
             type: "subHeading",
+            className: "marginTop1Rem",
           },
           hideWhen: function (stateData) {
             return isNullOrEmptyString(stateData.workspace, true);
@@ -1300,6 +1301,11 @@ function craigForms(craig) {
           name: craig.scc_v2.name,
           region: craig.scc_v2.region,
           resource_group: craig.scc_v2.resource_group,
+        },
+        {
+          use_cos: craig.scc_v2.use_cos,
+          cos: craig.scc_v2.cos,
+          bucket: craig.scc_v2.bucket,
         },
       ],
       subForms: [
@@ -1732,6 +1738,7 @@ function craigForms(craig) {
           heading: {
             name: "IP Interface Options",
             type: "subHeading",
+            className: "marginTop1Rem",
           },
           hideWhen: function (stateData, componentProps) {
             return (

@@ -327,7 +327,7 @@ describe("power_volumes", () => {
     it("should not disable replication on input change when zone is replication enabled", () => {
       let data = {
         zone: "dal10",
-        pi_volume_pool: "General-Flash-53",
+        pi_volume_pool: "General-Flash-53 (Replication Enabled)",
         pi_replication_enabled: true,
       };
       let actualData = craig.power_volumes.pi_volume_pool.onInputChange(data);
@@ -591,6 +591,23 @@ describe("power_volumes", () => {
         craig.power_volumes.pi_replication_enabled.disabled(data, {})
       );
     });
+    it("should be false for when the storage pool is replication enabled and has additional text", () => {
+      let data = {
+        pi_volume_pool: "Tier1-Flash-8 (Replication Enabled)",
+        zone: "us-east",
+      };
+      assert.isFalse(
+        craig.power_volumes.pi_replication_enabled.disabled(data, {})
+      );
+    });
+    it("should be true for when no pool selected", () => {
+      let data = {
+        zone: "us-east",
+      };
+      assert.isTrue(
+        craig.power_volumes.pi_replication_enabled.disabled(data, {})
+      );
+    });
     it("should be true for when the storage pool is not replication enabled", () => {
       let data = {
         pi_volume_pool: "Tier1-Flash-1",
@@ -617,6 +634,7 @@ describe("power_volumes", () => {
         craig.power_volumes.pi_replication_enabled.disabled(data, {})
       );
     });
+
     it("should return correct JSON string from forceUpdateKey", () => {
       let data = {
         foo: "bar",

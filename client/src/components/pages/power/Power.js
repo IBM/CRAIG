@@ -271,10 +271,10 @@ class PowerDiagram extends React.Component {
             parentState={this.state}
             handleInputChange={this.handleInputChange}
           />
-          <div className="marginBottomSmall" />
+          <div className="marginBottomSmall emptyStatelessContainer" />
           {isNullOrEmptyString(this.state.modalService, true) ? (
             // need to pass html element
-            <></>
+            <div className="emptyStatelessContainer" />
           ) : (
             <CraigFormHeading
               name={`New ${
@@ -290,7 +290,7 @@ class PowerDiagram extends React.Component {
           )}
           {isNullOrEmptyString(this.state.modalService, true) ? (
             // need to pass html element
-            <></>
+            <div className="emptyStatelessContainer" />
           ) : craig.store.json.power[this.state.powerIndex]?.ssh_keys
               ?.length === 0 &&
             contains(["vtl", "power_instances"], this.state.modalService) ? (

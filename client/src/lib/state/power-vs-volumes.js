@@ -256,7 +256,10 @@ function initPowerVsVolumeStore(store) {
           }
           let replicationEnabledPools =
             replicationEnabledStoragePoolMap[stateData.zone] || [];
-          return !contains(replicationEnabledPools, pool);
+          return !contains(
+            replicationEnabledPools,
+            (pool || "").replace(/\s\(Replication.+/g, "")
+          );
         },
       },
       pi_volume_shareable: {

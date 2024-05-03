@@ -6,7 +6,7 @@ export const CraigFormHeading = (props) => {
   let icon = props.icon || "";
   return (
     <div
-      className={`displayFlex spaceBetween widthOneHundredPercent alignItemsCenter ${
+      className={`displayFlex spaceBetween widthOneHundredPercent alignItemsCenter emptyStatelessContainer ${
         props.className
       } ${props.noMarginBottom ? "marginBottomNone" : ""}`}
     >
@@ -60,7 +60,7 @@ export const CraigFormHeading = (props) => {
           );
         }}
       />
-      <div className="displayFlex">{props.buttons}</div>
+      <div className="displayFlex emptyStatelessContainer">{props.buttons}</div>
     </div>
   );
 };

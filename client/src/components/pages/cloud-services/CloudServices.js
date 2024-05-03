@@ -407,10 +407,10 @@ class CloudServicesPage extends React.Component {
             parentState={this.state}
             handleInputChange={this.handleInputChange}
           />
-          <div className="marginBottomSmall" />
+          <div className="marginBottomSmall emptyStatelessContainer" />
           {isNullOrEmptyString(this.state.modalService, true) ? (
             // need to pass html element
-            <></>
+            <div className="emptyStatelessContainer" />
           ) : (
             <CraigFormHeading
               name={`New ${titleCase(
@@ -441,7 +441,7 @@ class CloudServicesPage extends React.Component {
           )}
           {isNullOrEmptyString(this.state.modalService, true) ? (
             // need to pass html element
-            <></>
+            <div className="emptyStatelessContainer" />
           ) : (
             <DynamicForm
               className="formInSubForm"
@@ -632,7 +632,7 @@ class CloudServicesPage extends React.Component {
                           buttons={
                             rg === "No Resource Group" ? (
                               // hide button when resource group is null
-                              <></>
+                              <div className="emptyStatelessContainer" />
                             ) : (
                               <PrimaryButton
                                 type="add"

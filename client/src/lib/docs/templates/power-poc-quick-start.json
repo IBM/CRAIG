@@ -614,7 +614,10 @@
     "region": null,
     "account_id": "${var.account_id}",
     "profile_attachments": [],
-    "name": null
+    "name": null,
+    "use_cos": false,
+    "cos": null,
+    "bucket": null
   },
   "secrets_manager": [],
   "security_groups": [

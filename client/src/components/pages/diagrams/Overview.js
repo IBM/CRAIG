@@ -112,12 +112,12 @@ export class Overview extends React.Component {
             >
               <VpcMap craig={craig} static small={this.props.small}>
                 {this.props.small ? (
-                  <></>
+                  <div className="emptyStatelessContainer" />
                 ) : (
                   <RoutingTables craig={craig} static />
                 )}
                 {this.props.small ? (
-                  <></>
+                  <div className="emptyStatelessContainer" />
                 ) : (
                   <SecurityGroups craig={craig} static />
                 )}
@@ -173,7 +173,7 @@ export class Overview extends React.Component {
                     />
                   </PassThroughWrapper>
                   {this.props.small ? (
-                    <></>
+                    <div className="emptyStatelessContainer" />
                   ) : (
                     <PassThroughWrapper className="powerMapPassthrough">
                       <PowerVolumes static craig={craig} />
