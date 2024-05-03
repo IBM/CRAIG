@@ -8,7 +8,9 @@
       "Fixed an issue causing irregular spacing on the Power VS Instances and VTL forms",
       "Fixed an issue causing Replication to not be enabled correctly on Power VS Storage pools"
     ],
-    "upgrade_notes": []
+    "upgrade_notes": [
+      "VPCs in Terraform code now always have `address_prefix_management` set to `manual`"
+    ]
   },
   {
     "version": "1.15.2",

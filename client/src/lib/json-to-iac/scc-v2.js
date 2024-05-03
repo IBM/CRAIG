@@ -124,15 +124,16 @@ function formatScc2(scc_v2, config) {
       `scc_to_${scc_v2.cos}_object_storage_policy`,
       {
         source_service_name: "compliance",
-        description: `Allow Security and Compliance Center to access ${titleCase(scc_v2.cos)} Object Storage`,
+        description: `Allow Security and Compliance Center to access ${titleCase(
+          scc_v2.cos
+        )} Object Storage`,
         target_service_name: "cloud-object-storage",
-        target_resource_instance_id:  cosRef(
+        target_resource_instance_id: cosRef(
           scc_v2.cos,
           "guid",
-          getObjectFromArray(config.object_storage, "name", scc_v2.cos)
-            .use_data
+          getObjectFromArray(config.object_storage, "name", scc_v2.cos).use_data
         ),
-        roles: ["Writer"]
+        roles: ["Writer"],
       }
     );
     tf += jsonToTfPrint(
@@ -154,8 +155,8 @@ function formatScc2(scc_v2, config) {
         ],
         event_notifications: [],
         depends_on: [
-          `\${ibm_iam_authorization_policy.scc_to_${scc_v2.cos}_object_storage_policy}`
-        ]
+          `\${ibm_iam_authorization_policy.scc_to_${scc_v2.cos}_object_storage_policy}`,
+        ],
       }
     ).replace(/=\s\[\s+\]/g, "{}");
   }

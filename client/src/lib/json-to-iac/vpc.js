@@ -61,14 +61,12 @@ function ibmIsVpc(vpc, config, useVarRef) {
             : null,
           tags: getTags(config, useVarRef),
           no_sg_acl_rules: true,
+          address_prefix_management: "manual",
         },
   };
   if (!vpc.use_data) {
     if (vpc.classic_access) {
       data.data.classic_access = true;
-    }
-    if (vpc.manual_address_prefix_management) {
-      data.data.address_prefix_management = "manual";
     }
   }
   return data;
