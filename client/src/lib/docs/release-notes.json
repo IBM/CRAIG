@@ -1,5 +1,11 @@
 [
   {
+    "version": "1.15.4",
+    "features": [],
+    "fixes": [],
+    "upgrade_notes": ["Updated footer for CRAIG v2 UI"]
+  },
+  {
     "version": "1.15.3",
     "features": [
       "Users can integrate Security and Compliance Center with Cloud Object storage from the `/forms/sccV2` page"

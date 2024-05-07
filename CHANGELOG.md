@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.15.4
+
+### Upgrade Notes
+
+- Updated footer for CRAIG v2 UI
+
 ## 1.15.3
 
 ### Upgrade Notes
