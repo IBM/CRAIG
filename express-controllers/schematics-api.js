@@ -212,7 +212,7 @@ function schematicsRoutes(axios, controller) {
             reject("> Provided resource group not found.");
           }
 
-          console.log("> Creating resource group...");
+          console.log("> Creating schematics workspace...");
           let data = prettyJSON({
             name: workspaceName,
             resource_group: rgData.resources[0]["id"],
