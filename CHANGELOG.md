@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
 - Updated footer for CRAIG v2 UI
 - A LogDNA ingestion key is now created and output when LogDNA is enabled instead of a resource key
 
+### Fixes
+
+- Fixed an issue causing Power VS images from data to reference the invalid value `image_id` instead of the correct `id`
+
 ## 1.15.3
 
 ### Upgrade Notes

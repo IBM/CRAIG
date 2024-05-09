@@ -781,7 +781,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       let expectedData = `
 resource "ibm_pi_instance" "example_workspace_instance_test" {
   provider             = ibm.power_vs_dal12
-  pi_image_id          = data.ibm_pi_image.power_image_example_sles15_sp3_sap.image_id
+  pi_image_id          = data.ibm_pi_image.power_image_example_sles15_sp3_sap.id
   pi_key_pair_name     = data.ibm_pi_key.power_vs_ssh_key_keyname.pi_key_name
   pi_cloud_instance_id = data.ibm_resource_instance.power_vs_workspace_example.guid
   pi_instance_name     = "\${var.prefix}-test"

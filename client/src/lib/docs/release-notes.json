@@ -2,7 +2,9 @@
   {
     "version": "1.15.4",
     "features": [],
-    "fixes": [],
+    "fixes": [
+      "Fixed an issue causing Power VS images from data to reference the invalid value `image_id` instead of the correct `id`"
+    ],
     "upgrade_notes": [
       "Updated footer for CRAIG v2 UI",
       "A LogDNA ingestion key is now created and output when LogDNA is enabled instead of a resource key"
