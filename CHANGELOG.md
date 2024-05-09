@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Upgrade Notes
 
 - Updated footer for CRAIG v2 UI
+- A LogDNA ingestion key is now created and output when LogDNA is enabled instead of a resource key
 
 ## 1.15.3
 

@@ -710,7 +710,7 @@ output "cos_object_storage_bucket_workload_bucket_region_location" {
         ],
         load_balancers: [],
         logdna: {
-          enabled: false,
+          enabled: true,
           plan: "lite",
           endpoints: "private",
           platform_logs: false,
@@ -1258,6 +1258,17 @@ output "cos_object_storage_bucket_workload_bucket_bucket_name" {
 
 output "cos_object_storage_bucket_workload_bucket_region_location" {
   value = ibm_cos_bucket.cos_object_storage_workload_bucket_bucket.region_location
+}
+
+##############################################################################
+
+##############################################################################
+# Observability Outputs
+##############################################################################
+
+output "logging_ingestion_key" {
+  value     = logdna_key.logdna_ingestion_key.key
+  sensitive = true
 }
 
 ##############################################################################

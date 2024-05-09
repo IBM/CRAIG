@@ -294,18 +294,24 @@ function loggingMonitoringTf(config) {
   }
   if (config?.logdna?.enabled) {
     if (tf.length > 0) tf += "\n"; // if atracker add space
-    let logdnaTf = formatLogdnaInstance(config) + formatLogdnaKey(config);
+    let logdnaTf = formatLogdnaInstance(config);
     tf += tfBlock("LogDNA Instance", logdnaTf);
+    let logdnaProviderTf =
+      formatLogdnaProvider("logdna") +
+      jsonToTfPrint("resource", "logdna_key", "logdna_ingestion_key", {
+        provider: "${logdna.logdna}",
+        type: "ingestion",
+        name: "${var.prefix}-logdna-ingestion-key",
+      });
     if (config.logdna.archive) {
-      let logdnaProviderTf =
-        formatLogdnaProvider("logdna") + formatLogdnaArchive(config);
+      logdnaProviderTf += formatLogdnaArchive(config);
       // if atracker is enabled and has archive add code
       if (config?.atracker?.archive && config?.atracker.enabled) {
         logdnaProviderTf +=
           formatLogdnaProvider("atracker") + formatAtrackerArchive(config);
       }
-      tf += "\n" + tfBlock("LogDNA Resources", logdnaProviderTf);
     }
+    tf += "\n" + tfBlock("LogDNA Resources", logdnaProviderTf);
   }
   if (config?.sysdig?.enabled) {
     if (tf.length > 0) tf += "\n"; // if atracker or logdna add newline

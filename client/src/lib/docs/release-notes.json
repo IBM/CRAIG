@@ -3,7 +3,10 @@
     "version": "1.15.4",
     "features": [],
     "fixes": [],
-    "upgrade_notes": ["Updated footer for CRAIG v2 UI"]
+    "upgrade_notes": [
+      "Updated footer for CRAIG v2 UI",
+      "A LogDNA ingestion key is now created and output when LogDNA is enabled instead of a resource key"
+    ]
   },
   {
     "version": "1.15.3",
