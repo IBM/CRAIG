@@ -13,7 +13,8 @@
   {
     "version": "1.15.3",
     "features": [
-      "Users can integrate Security and Compliance Center with Cloud Object storage from the `/forms/sccV2` page"
+      "Users can integrate Security and Compliance Center with Cloud Object storage from the `/forms/sccV2` page",
+      "Power Edge Router is now supported for `tor01` and `us-south`"
     ],
     "fixes": [
       "Fixed an issue causing irregular spacing on the Power VS Instances and VTL forms",

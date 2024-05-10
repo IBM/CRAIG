@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Users can integrate Security and Compliance Center with Cloud Object storage from the `/forms/sccV2` page
+- Power Edge Router is now supported for `tor01` and `us-south`
 
 ### Fixes
 
