@@ -11,7 +11,6 @@ import {
   CraigToggleForm,
   DynamicFormModal,
   CraigFormHeading,
-  RenderForm,
   StatefulTabs,
 } from "../../forms/utils";
 import { disableSave, powerVsTf, propsMatchState } from "../../../lib";
@@ -27,9 +26,9 @@ import {
   NoPowerNetworkTile,
 } from "../../forms/dynamic-form";
 import { PowerVolumeTable } from "./PowerVolumeTable";
-import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { powerInstanceTf, powerVsVolumeTf } from "../../../lib/json-to-iac";
 import { DynamicFormSelect } from "../../forms/dynamic-form";
+import ScrollForm from "../diagrams/ScrollForm";
 
 class PowerDiagram extends React.Component {
   constructor(props) {
@@ -537,97 +536,78 @@ class PowerDiagram extends React.Component {
                     </div>
                     <div id="right-power">
                       {this.state.editing === true ? (
-                        <ScrollFormWrapper>
-                          <CraigFormHeading
-                            icon={RenderForm(this.getIcon(), {
-                              style: {
-                                marginRight: "0.5rem",
-                                marginTop: "0.4rem",
-                              },
-                            })}
-                            noMarginBottom
-                            name={`Editing Power ${
-                              this.state.selectedItem === "power"
-                                ? "Workspace"
-                                : this.state.selectedItem === "power_instances"
-                                ? "Instance"
-                                : this.state.selectedItem === "vtl"
-                                ? "FalconStor VTL"
-                                : "Volume"
-                            } ${
-                              craig.store.json[this.state.selectedItem][
-                                this.state.selectedIndex
-                              ].name
-                            }`}
-                          />
-                          <CraigToggleForm
-                            key={
-                              this.state.selectedItem + this.state.selectedIndex
-                            }
-                            tabPanel={{ hideAbout: true }}
-                            onSave={craig[this.state.selectedItem].save}
-                            onDelete={this.onItemDelete}
-                            hideChevron
-                            hideName
-                            hide={false}
-                            name={
-                              craig.store.json[this.state.selectedItem][
-                                this.state.selectedIndex
-                              ].name
-                            }
-                            submissionFieldName={this.state.selectedItem}
-                            innerFormProps={{
-                              form: forms[this.state.selectedItem],
-                              formName: contains(
-                                ["power_instances", "vtl"],
-                                this.state.selectedItem
-                              )
-                                ? "Power Instances"
-                                : undefined,
-                              craig: craig,
-                              data: craig.store.json[this.state.selectedItem][
-                                this.state.selectedIndex
-                              ],
-                              disableSave: disableSave,
-                              propsMatchState: propsMatchState,
-                              arrayParentName:
-                                craig.store.json.power[this.state.powerIndex],
-                            }}
-                          />
-                          <PowerVolumeTable
-                            craig={craig}
-                            parentState={this.state}
-                            parentProps={this.props}
-                            onClick={() => {
-                              this.setState({
-                                showInstanceVolumeModal: true,
-                                modalService: "power_volumes",
-                                selectWhenDone: {
-                                  selectedItem: "power_instances",
-                                  editing: true,
-                                  selectedIndex: this.state.selectedIndex,
-                                },
-                                overrideData: {
-                                  workspace:
-                                    craig.store.json[this.state.selectedItem][
-                                      this.state.selectedIndex
-                                    ].workspace,
-                                  zone: new revision(craig.store.json).child(
-                                    "power",
-                                    craig.store.json[this.state.selectedItem][
-                                      this.state.selectedIndex
-                                    ].workspace
-                                  ).data.zone,
-                                  attachments: [
-                                    craig.store.json[this.state.selectedItem][
-                                      this.state.selectedIndex
-                                    ].name,
-                                  ],
-                                },
-                              });
-                            }}
-                          />
-                        </ScrollFormWrapper>
+                        <ScrollForm
+                          craig={craig}
+                          selectedItem={this.state.selectedItem}
+                          selectedIndex={this.state.selectedIndex}
+                          overrideDelete={this.onItemDelete}
+                          composedName={`Editing Power ${
+                            this.state.selectedItem === "power"
+                              ? "Workspace"
+                              : this.state.selectedItem === "power_instances"
+                              ? "Instance"
+                              : this.state.selectedItem === "vtl"
+                              ? "FalconStor VTL"
+                              : "Volume"
+                          } ${
+                            craig.store.json[this.state.selectedItem][
+                              this.state.selectedIndex
+                            ].name
+                          }`}
+                          innerFormProps={{
+                            form: forms[this.state.selectedItem],
+                            formName: contains(
+                              ["power_instances", "vtl"],
+                              this.state.selectedItem
+                            )
+                              ? "Power Instances"
+                              : undefined,
+                            craig: craig,
+                            data: craig.store.json[this.state.selectedItem][
+                              this.state.selectedIndex
+                            ],
+                            disableSave: disableSave,
+                            propsMatchState: propsMatchState,
+                            arrayParentName:
+                              craig.store.json.power[this.state.powerIndex],
+                          }}
+                          icon={this.getIcon()}
+                          children={
+                            <PowerVolumeTable
+                              craig={craig}
+                              parentState={this.state}
+                              parentProps={this.props}
+                              onClick={() => {
+                                this.setState({
+                                  showInstanceVolumeModal: true,
+                                  modalService: "power_volumes",
+                                  selectWhenDone: {
+                                    selectedItem: "power_instances",
+                                    editing: true,
+                                    selectedIndex: this.state.selectedIndex,
+                                  },
+                                  overrideData: {
+                                    workspace:
+                                      craig.store.json[this.state.selectedItem][
+                                        this.state.selectedIndex
+                                      ].workspace,
+                                    zone: new revision(craig.store.json).child(
+                                      "power",
+                                      craig.store.json[this.state.selectedItem][
+                                        this.state.selectedIndex
+                                      ].workspace
+                                    ).data.zone,
+                                    attachments: [
+                                      craig.store.json[this.state.selectedItem][
+                                        this.state.selectedIndex
+                                      ].name,
+                                    ],
+                                  },
+                                });
+                              }}
+                            />
+                          }
+                        />
                       ) : (
                         ""
                       )}

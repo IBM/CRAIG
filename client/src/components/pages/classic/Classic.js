@@ -23,9 +23,7 @@ import {
   StatefulTabs,
   PrimaryButton,
   CraigFormHeading,
-  CraigToggleForm,
   DynamicFormModal,
-  RenderForm,
 } from "../../forms/utils";
 import {
   classicInfraTf,
@@ -38,10 +36,10 @@ import {
 import { ClassicGateways } from "../diagrams/ClassicGateways";
 import DynamicForm from "../../forms/DynamicForm";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
-import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { classicGatewayTf } from "../../../lib/json-to-iac/classic-gateway";
 import { DynamicFormSelect } from "../../forms/dynamic-form";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
+import ScrollForm from "../diagrams/ScrollForm";
 
 class ClassicDiagram extends React.Component {
   constructor(props) {
@@ -64,6 +62,7 @@ class ClassicDiagram extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.onItemDelete = this.onItemDelete.bind(this);
+    this.renderName = this.renderName.bind(this);
   }
 
   /**
@@ -236,6 +235,26 @@ class ClassicDiagram extends React.Component {
         selectedItem: "classic_ssh_keys",
       });
     }
+  }
+
+  renderName() {
+    return `Editing ${
+      this.state.selectedItem === "classic_security_groups"
+        ? "Classic Security Group"
+        : this.state.selectedItem === "classic_ssh_keys"
+        ? "Classic SSH Key"
+        : this.state.selectedItem === "classic_vlans"
+        ? "VLAN"
+        : this.state.selectedItem === "classic_bare_metal"
+        ? "Classic Bare Metal"
+        : this.state.selectedItem === "classic_vsi"
+        ? "Classic VSI"
+        : "Classic Gateway"
+    } ${
+      this.props.craig.store.json[this.state.selectedItem][
+        this.state.selectedIndex
+      ].name
+    }`;
   }
 
   render() {
@@ -516,62 +535,23 @@ class ClassicDiagram extends React.Component {
                           marginTop: "1rem",
                         }}
                       >
-                        <ScrollFormWrapper>
-                          <CraigFormHeading
-                            icon={RenderForm(this.getIcon(), {
-                              style: {
-                                marginRight: "0.5rem",
-                                marginTop: "0.4rem",
-                              },
-                            })}
-                            noMarginBottom
-                            name={`Editing ${
-                              this.state.selectedItem ===
-                              "classic_security_groups"
-                                ? "Classic Security Group"
-                                : this.state.selectedItem === "classic_ssh_keys"
-                                ? "Classic SSH Key"
-                                : this.state.selectedItem === "classic_vlans"
-                                ? "VLAN"
-                                : this.state.selectedItem ===
-                                  "classic_bare_metal"
-                                ? "Classic Bare Metal"
-                                : this.state.selectedItem === "classic_vsi"
-                                ? "Classic VSI"
-                                : "Classic Gateway"
-                            } ${
-                              craig.store.json[this.state.selectedItem][
-                                this.state.selectedIndex
-                              ].name
-                            }`}
-                          />
-                          <CraigToggleForm
-                            key={
-                              this.state.selectedItem + this.state.selectedIndex
-                            }
-                            tabPanel={{ hideAbout: true }}
-                            onSave={craig[this.state.selectedItem].save}
-                            onDelete={this.onItemDelete}
-                            hideChevron
-                            hideName
-                            hide={false}
-                            name={
-                              craig.store.json[this.state.selectedItem][
-                                this.state.selectedIndex
-                              ].name
-                            }
-                            submissionFieldName={this.state.selectedItem}
-                            innerFormProps={{
-                              form: forms[this.state.selectedItem],
-                              craig: craig,
-                              data: craig.store.json[this.state.selectedItem][
-                                this.state.selectedIndex
-                              ],
-                              disableSave: disableSave,
-                              propsMatchState: propsMatchState,
-                            }}
-                          />
-                        </ScrollFormWrapper>
+                        <ScrollForm
+                          craig={craig}
+                          selectedItem={this.state.selectedItem}
+                          selectedIndex={this.state.selectedIndex}
+                          overrideDelete={this.onItemDelete}
+                          icon={this.getIcon()}
+                          composedName={this.renderName()}
+                          innerFormProps={{
+                            form: forms[this.state.selectedItem],
+                            craig: craig,
+                            data: craig.store.json[this.state.selectedItem][
+                              this.state.selectedIndex
+                            ],
+                            disableSave: disableSave,
+                            propsMatchState: propsMatchState,
+                          }}
+                        />
                       </div>
                     ) : (
                       ""

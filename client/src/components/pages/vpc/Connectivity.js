@@ -12,17 +12,16 @@ import {
   PrimaryButton,
   CraigFormGroup,
   DynamicFormModal,
-  CraigToggleForm,
   StatefulTabs,
 } from "../../forms/utils";
 import { craigForms } from "../CraigForms";
 import { disableSave, propsMatchState, tgwTf } from "../../../lib";
 import DynamicForm from "../../forms/DynamicForm";
 import { isNullOrEmptyString } from "lazy-z";
-import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 import { cisTf } from "../../../lib/json-to-iac/cis";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
+import ScrollForm from "../diagrams/ScrollForm";
 
 class VpcConnectivityPage extends React.Component {
   constructor(props) {
@@ -296,48 +295,35 @@ class VpcConnectivityPage extends React.Component {
                   {this.state.editing === false ? (
                     ""
                   ) : (
-                    <ScrollFormWrapper>
-                      <CraigFormHeading
-                        noMarginBottom
-                        type="subHeading"
-                        icon={
-                          <IbmCloudTransitGateway className="diagramTitleIcon" />
-                        }
-                        name={`Editing ${
-                          this.state.selectedItem === "cis"
-                            ? "Cloud Internet Services"
-                            : "Transit Gateway"
-                        } ${
-                          craig.store.json[this.state.selectedItem][
-                            this.state.selectedIndex
-                          ].name
-                        }`}
-                      />
-                      <CraigToggleForm
-                        key={this.state.selectedIndex}
-                        tabPanel={{ hideAbout: true }}
-                        onSave={craig[this.state.selectedItem].save}
-                        onDelete={this.onItemDelete}
-                        hideChevron
-                        hideName
-                        hide={false}
-                        name={
-                          craig.store.json[this.state.selectedItem][
-                            this.state.selectedIndex
-                          ].name
-                        }
-                        submissionFieldName={this.state.selectedItem}
-                        innerFormProps={{
-                          form: forms[this.state.selectedItem],
-                          craig: craig,
-                          data: craig.store.json[this.state.selectedItem][
-                            this.state.selectedIndex
-                          ],
-                          disableSave: disableSave,
-                          propsMatchState: propsMatchState,
-                        }}
-                      />
-                    </ScrollFormWrapper>
+                    <ScrollForm
+                      craig={craig}
+                      composedName={`Editing ${
+                        this.state.selectedItem === "cis"
+                          ? "Cloud Internet Services"
+                          : "Transit Gateway"
+                      } ${
+                        craig.store.json[this.state.selectedItem][
+                          this.state.selectedIndex
+                        ].name
+                      }`}
+                      selectedItem={this.state.selectedItem}
+                      selectedIndex={this.state.selectedIndex}
+                      overrideDelete={this.onItemDelete}
+                      icon={
+                        this.state.selectedItem === "cis"
+                          ? IbmCloudInternetServices
+                          : IbmCloudTransitGateway
+                      }
+                      innerFormProps={{
+                        form: forms[this.state.selectedItem],
+                        craig: craig,
+                        data: craig.store.json[this.state.selectedItem][
+                          this.state.selectedIndex
+                        ],
+                        disableSave: disableSave,
+                        propsMatchState: propsMatchState,
+                      }}
+                    />
                   )}
                 </div>
               </div>

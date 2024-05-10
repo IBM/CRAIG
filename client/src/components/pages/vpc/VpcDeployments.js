@@ -2,7 +2,6 @@ import React from "react";
 import {
   PrimaryButton,
   CraigFormHeading,
-  RenderForm,
   StatefulTabs,
 } from "../../forms/utils";
 import {
@@ -40,7 +39,7 @@ import {
   snakeCase,
   titleCase,
 } from "lazy-z";
-import { CraigToggleForm, DynamicFormModal } from "../../forms/utils";
+import { DynamicFormModal } from "../../forms/utils";
 import DynamicForm from "../../forms/DynamicForm";
 import { craigForms } from "../CraigForms";
 import {
@@ -61,11 +60,11 @@ import { F5BigIp } from "../FormPages";
 import f5 from "../../../images/f5.png";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
 import { PassThroughHoverWrapper } from "../diagrams/PassthroughWrapper";
-import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import { fortigateTf } from "../../../lib/json-to-iac/fortigate";
 import { vpnServerTf } from "../../../lib/json-to-iac";
 import { DynamicFormSelect } from "../../forms/dynamic-form";
 import { CopyRuleForm } from "../../forms";
+import ScrollForm from "../diagrams/ScrollForm";
 
 function F5Icon() {
   return <img src={f5} className="vpcDeploymentIcon" />;
@@ -620,72 +619,30 @@ class VpcDeploymentsDiagramPage extends React.Component {
                     </VpcMap>
                   </div>
                   <div id="right-vpc-deployments">
-                    <ScrollFormWrapper>
-                      {this.state.editing &&
-                      this.state.selectedItem === "f5_vsi" ? (
-                        <div>
-                          <CraigFormHeading
-                            icon={<F5Icon />}
-                            name="Editing F5 Big IP Deployment"
-                          />
-                          <div className="subForm">{F5BigIp(craig, true)}</div>
-                        </div>
-                      ) : this.state.editing === true ? (
-                        <div>
-                          <CraigFormHeading
-                            icon={RenderForm(
-                              this.getIcon(this.state.selectedItem),
-                              {
-                                className: "vpcDeploymentIcon",
-                              }
-                            )}
-                            noMarginBottom
-                            name={`Editing ${
-                              this.state.selectedItem === "ssh_keys"
-                                ? "SSH Keys"
-                                : this.selectRenderValue()
-                            }${
-                              contains(
-                                ["security_groups", "ssh_keys"],
-                                this.state.selectedItem
-                              )
-                                ? ""
-                                : " Deployment"
-                            } ${
-                              craig.store.json[this.state.selectedItem][
-                                this.state.selectedIndex
-                              ].name
-                            }`}
-                          />
-                          <CraigToggleForm
-                            key={
-                              this.state.selectedItem +
-                              this.state.selectedIndex +
-                              this.state.vpcIndex
-                            }
-                            tabPanel={{ hideAbout: true }}
-                            onSave={craig[this.state.selectedItem].save}
-                            onDelete={this.onItemDelete}
-                            hideChevron
-                            hideName
-                            hide={false}
-                            name={
-                              craig.store.json[this.state.selectedItem][
-                                this.state.selectedIndex
-                              ].name
-                            }
-                            submissionFieldName={this.state.selectedItem}
-                            innerFormProps={{
-                              form: forms[this.state.selectedItem],
-                              craig: craig,
-                              data: this.getServiceData(),
-                              // need to be passed to render child forms
-                              disableSave: disableSave,
-                              propsMatchState: propsMatchState,
-                              vpc_name: this.vpcName(),
-                            }}
-                          />
-                          {this.state.selectedItem === "security_groups" &&
+                    {this.state.editing ? (
+                      <ScrollForm
+                        craig={craig}
+                        selectedItem={this.state.selectedItem}
+                        selectedIndex={this.state.selectedIndex}
+                        overrideDelete={this.onItemDelete}
+                        composedName={
+                          this.state.selectedItem === "f5_vsi"
+                            ? "Editing F5 Big IP Deployment"
+                            : this.state.selectedItem === "ssh_keys"
+                            ? "Editing SSH Keys"
+                            : "Editing " + this.selectRenderValue()
+                        }
+                        icon={this.getIcon(this.state.selectedItem)}
+                        innerFormProps={{
+                          form: forms[this.state.selectedItem],
+                          craig: craig,
+                          data: this.getServiceData(),
+                          disableSave: disableSave,
+                          propsMatchState: propsMatchState,
+                          vpc_name: this.vpcName(),
+                        }}
+                        children={
+                          this.state.selectedItem === "security_groups" &&
                           !craig.store.json[this.state.selectedItem][
                             this.state.selectedIndex
                           ].use_data ? (
@@ -697,12 +654,12 @@ class VpcDeploymentsDiagramPage extends React.Component {
                             />
                           ) : (
                             ""
-                          )}
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                    </ScrollFormWrapper>
+                          )
+                        }
+                      />
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </>
