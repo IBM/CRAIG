@@ -14,11 +14,12 @@ import {
   CloudServices,
 } from "@carbon/icons-react";
 import {
+  arraySplatIndex,
   azsort,
   contains,
   deepEqual,
+  getObjectFromArray,
   isNullOrEmptyString,
-  revision,
   snakeCase,
   titleCase,
 } from "lazy-z";
@@ -32,11 +33,9 @@ import {
 } from "../../../lib";
 import { ManageService } from "../diagrams/ManageService";
 import {
-  RenderForm,
   PrimaryButton,
   CraigFormHeading,
   CraigFormGroup,
-  CraigToggleForm,
   DynamicFormModal,
   StatefulTabs,
 } from "../../forms/utils";
@@ -45,7 +44,6 @@ import { craigForms } from "../CraigForms";
 import { getServices } from "../../../lib/forms/overview";
 import { docTabs } from "../diagrams/DocTabs";
 import HoverClassNameWrapper from "../diagrams/HoverClassNameWrapper";
-import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
 import {
   cosTf,
   dnsTf,
@@ -59,6 +57,7 @@ import {
 import { scc2Tf } from "../../../lib/json-to-iac/scc-v2";
 import { DynamicFormSelect } from "../../forms/dynamic-form";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
+import ScrollForm from "../diagrams/ScrollForm";
 
 const serviceFormMap = {
   resource_groups: {
@@ -123,6 +122,7 @@ class CloudServicesPage extends React.Component {
     this.onServiceSubmit = this.onServiceSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.onRequestSubmit = this.onRequestSubmit.bind(this);
+    this.getIndex = this.getIndex.bind(this);
   }
 
   /**
@@ -194,6 +194,19 @@ class CloudServicesPage extends React.Component {
         serviceName: serviceData.service.name,
       });
     }
+  }
+
+  getIndex() {
+    return contains(
+      ["logdna", "sysdig", "atracker", "scc_v2"],
+      this.state.service
+    )
+      ? 0
+      : arraySplatIndex(
+        this.props.craig.store.json[this.state.service],
+        "name",
+        this.state.serviceName
+      );
   }
 
   /**
@@ -691,57 +704,39 @@ class CloudServicesPage extends React.Component {
               </div>
               <div className="marginTop1Rem">
                 {this.state.service ? (
-                  <ScrollFormWrapper>
-                    <CraigFormHeading
-                      icon={RenderForm(
-                        serviceFormMap[this.state.service].icon,
-                        {
-                          className: "diagramTitleIcon",
-                        }
-                      )}
-                      name={
-                        "Editing " +
-                        (this.state.serviceName === "scc_v2"
-                          ? "Security & Compliance Center"
-                          : this.state.serviceName)
-                      }
-                    />
-                    <div>
-                      <CraigToggleForm
-                        name={
-                          this.state.serviceName === "scc_v2"
-                            ? "Security & Compliance Center"
-                            : this.state.serviceName
-                        }
-                        tabPanel={{ hideAbout: true }}
-                        key={this.state.service + this.state.serviceName}
-                        noDeleteButton={this.state.serviceName === "atracker"}
-                        onSave={this.onServiceSave}
-                        onDelete={this.onServiceDelete}
-                        type="subForm"
-                        hideChevron
-                        hide={false}
-                        hideName
-                        submissionFieldName={this.state.service}
-                        innerFormProps={{
-                          // these are required to populate children
-                          disableSave: disableSave,
-                          propsMatchState: propsMatchState,
-                          craig: craig,
-                          data: contains(
-                            ["logdna", "sysdig", "atracker", "scc_v2"],
-                            this.state.service
-                          )
-                            ? craig.store.json[this.state.service]
-                            : new revision(craig.store.json).child(
-                                this.state.service,
-                                this.state.serviceName
-                              ).data,
-                          form: forms[this.state.service],
-                        }}
-                      />
-                    </div>
-                  </ScrollFormWrapper>
+                  <ScrollForm
+                    craig={craig}
+                    icon={serviceFormMap[this.state.service].icon}
+                    selectedItem={this.state.service}
+                    selectedIndex={this.getIndex()}
+                    composedName={
+                      "Editing " +
+                      (this.state.serviceName === "scc_v2"
+                        ? "Security & Compliance Center"
+                        : titleCase(this.state.service) +
+                          " " +
+                          this.state.serviceName)
+                    }
+                    overrideSave={this.onServiceSave}
+                    overrideDelete={this.onServiceDelete}
+                    innerFormProps={{
+                      // these are required to populate children
+                      disableSave: disableSave,
+                      propsMatchState: propsMatchState,
+                      craig: craig,
+                      data: contains(
+                        ["logdna", "sysdig", "atracker", "scc_v2"],
+                        this.state.service
+                      )
+                        ? craig.store.json[this.state.service]
+                        : getObjectFromArray(
+                            craig.store.json[this.state.service],
+                            "name",
+                            this.state.serviceName
+                          ),
+                      form: forms[this.state.service],
+                    }}
+                  />
                 ) : (
                   ""
                 )}

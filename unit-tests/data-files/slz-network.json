@@ -538,14 +538,16 @@
       "service": "cos",
       "resource_group": "slz-management-rg",
       "security_groups": ["management-vpe-sg"],
-      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"]
+      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+      "name": "cos-vpe-gw"
     },
     {
       "vpc": "workload",
       "service": "cos",
       "resource_group": "slz-workload-rg",
       "security_groups": ["workload-vpe-sg"],
-      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"]
+      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+      "name": "cos-vpe-gw"
     }
   ],
   "security_groups": [

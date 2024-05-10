@@ -734,6 +734,8 @@ module.exports = {
     "syd04",
     "syd05",
     "tok04",
+    "tor01",
+    "us-south",
     "wdc06",
     "wdc07",
   ],

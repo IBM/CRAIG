@@ -25,7 +25,7 @@ import DynamicForm from "../../forms/DynamicForm";
 import "./vpc.css";
 import { craigForms } from "../CraigForms";
 import { AclMap, SubnetTierMap, VpcMap } from "../diagrams";
-import { ScrollFormWrapper } from "../diagrams/ScrollFormWrapper";
+import ScrollForm from "../diagrams/ScrollForm";
 
 class VpcDiagramPage extends React.Component {
   constructor(props) {
@@ -499,21 +499,10 @@ class VpcDiagramPage extends React.Component {
                   {this.state.editing === true &&
                   this.state.aclCreateModal === false &&
                   this.state.subnetTierCreateModal === false ? (
-                    <ScrollFormWrapper>
-                      <CraigFormHeading
-                        noMarginBottom
-                        type="subHeading"
-                        icon={
-                          this.state.subnetTierIndex > -1 ||
-                          this.state.subnetIndex > -1 ? (
-                            <IbmCloudSubnets className="diagramTitleIcon" />
-                          ) : this.state.aclIndex > -1 ? (
-                            <SubnetAclRules className="diagramTitleIcon" />
-                          ) : (
-                            <VirtualPrivateCloud className="diagramTitleIcon" />
-                          )
-                        }
-                        name={`Editing ${
+                    <>
+                      <ScrollForm
+                        craig={this.props.craig}
+                        composedName={`Editing ${
                           this.state.subnetIndex > -1
                             ? "Imported Subnet for "
                             : this.state.aclIndex > -1
@@ -524,83 +513,99 @@ class VpcDiagramPage extends React.Component {
                         } ${
                           craig.store.json.vpcs[this.state.vpcIndex].name
                         } VPC`}
-                      />
-                      <div>
-                        {this.state.subnetTierIndex > -1 ? (
-                          <DynamicSubnetTierForm
-                            vpcIndex={this.state.vpcIndex}
-                            subnetTierIndex={this.state.subnetTierIndex}
-                            craig={craig}
-                            onDelete={this.onSubnetTierDelete}
-                          />
-                        ) : this.state.aclIndex > -1 ? (
-                          <DynamicAclForm
-                            vpcIndex={this.state.vpcIndex}
-                            aclIndex={this.state.aclIndex}
-                            craig={craig}
-                            onDelete={this.onAclDelete}
-                          />
-                        ) : this.state.subnetIndex !== -1 ? (
-                          <CraigToggleForm
-                            key={this.state.vpcIndex}
-                            tabPanel={{
-                              hideAbout: true,
-                            }}
-                            onSave={craig.vpcs.subnets.save}
-                            onDelete={this.onImportedSubnetDelete}
-                            hide={false}
-                            hideChevron
-                            hideName
-                            submissionFieldName="subnets"
-                            name={
-                              craig.store.json.vpcs[this.state.vpcIndex]
-                                .subnets[this.state.subnetIndex].name +
-                              " [Imported]"
-                            }
-                            innerFormProps={{
-                              form: {
-                                groups: [
-                                  {
-                                    name: craig.vpcs.subnets.name,
+                        icon={
+                          this.state.subnetTierIndex > -1 ||
+                          this.state.subnetIndex > -1
+                            ? IbmCloudSubnets
+                            : this.state.aclIndex > -1
+                            ? SubnetAclRules
+                            : VirtualPrivateCloud
+                        }
+                        isVpcPage={true}
+                        children={
+                          <div>
+                            {this.state.subnetTierIndex > -1 ? (
+                              <DynamicSubnetTierForm
+                                vpcIndex={this.state.vpcIndex}
+                                subnetTierIndex={this.state.subnetTierIndex}
+                                craig={craig}
+                                onDelete={this.onSubnetTierDelete}
+                              />
+                            ) : this.state.aclIndex > -1 ? (
+                              <DynamicAclForm
+                                vpcIndex={this.state.vpcIndex}
+                                aclIndex={this.state.aclIndex}
+                                craig={craig}
+                                onDelete={this.onAclDelete}
+                              />
+                            ) : this.state.subnetIndex !== -1 ? (
+                              <CraigToggleForm
+                                key={this.state.vpcIndex}
+                                tabPanel={{
+                                  hideAbout: true,
+                                }}
+                                onSave={craig.vpcs.subnets.save}
+                                onDelete={this.onImportedSubnetDelete}
+                                hide={false}
+                                hideChevron
+                                hideName
+                                submissionFieldName="subnets"
+                                name={
+                                  craig.store.json.vpcs[this.state.vpcIndex]
+                                    .subnets[this.state.subnetIndex].name +
+                                  " [Imported]"
+                                }
+                                innerFormProps={{
+                                  form: {
+                                    groups: [
+                                      {
+                                        name: craig.vpcs.subnets.name,
+                                      },
+                                    ],
                                   },
-                                ],
-                              },
-                              vpc_name:
-                                craig.store.json.vpcs[this.state.vpcIndex].name,
-                              name: craig.store.json.vpcs[this.state.vpcIndex]
-                                .name,
-                              craig: craig,
-                              data: craig.store.json.vpcs[this.state.vpcIndex]
-                                .subnets[this.state.subnetIndex],
-                            }}
-                          />
-                        ) : this.state.vpcIndex !== -1 ? (
-                          <CraigToggleForm
-                            key={this.state.vpcIndex}
-                            tabPanel={{
-                              hideAbout: true,
-                            }}
-                            onSave={craig.vpcs.save}
-                            onDelete={this.onVpcDelete}
-                            hide={false}
-                            hideChevron
-                            hideName
-                            submissionFieldName="vpcs"
-                            name={
-                              craig.store.json.vpcs[this.state.vpcIndex].name +
-                              " VPC"
-                            }
-                            innerFormProps={{
-                              form: vpcFormData,
-                              craig: craig,
-                              data: craig.store.json.vpcs[this.state.vpcIndex],
-                            }}
-                          />
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                    </ScrollFormWrapper>
+                                  vpc_name:
+                                    craig.store.json.vpcs[this.state.vpcIndex]
+                                      .name,
+                                  name: craig.store.json.vpcs[
+                                    this.state.vpcIndex
+                                  ].name,
+                                  craig: craig,
+                                  data: craig.store.json.vpcs[
+                                    this.state.vpcIndex
+                                  ].subnets[this.state.subnetIndex],
+                                }}
+                              />
+                            ) : this.state.vpcIndex !== -1 ? (
+                              <CraigToggleForm
+                                key={this.state.vpcIndex}
+                                tabPanel={{
+                                  hideAbout: true,
+                                }}
+                                onSave={craig.vpcs.save}
+                                onDelete={this.onVpcDelete}
+                                hide={false}
+                                hideChevron
+                                hideName
+                                submissionFieldName="vpcs"
+                                name={
+                                  craig.store.json.vpcs[this.state.vpcIndex]
+                                    .name + " VPC"
+                                }
+                                innerFormProps={{
+                                  form: vpcFormData,
+                                  craig: craig,
+                                  data: craig.store.json.vpcs[
+                                    this.state.vpcIndex
+                                  ],
+                                }}
+                              />
+                            ) : (
+                              ""
+                            )}
+                          </div>
+                        }
+                      />
+                    </>
                   ) : (
                     ""
                   )}

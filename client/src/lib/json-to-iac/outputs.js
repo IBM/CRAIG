@@ -204,6 +204,26 @@ function outputsTf(config) {
       );
   });
 
+  if (config?.logdna?.enabled) {
+    tf +=
+      "\n" +
+      tfBlock(
+        "Observability Outputs",
+        "\n" +
+          jsonToTf(
+            JSON.stringify({
+              output: {
+                logging_ingestion_key: {
+                  value: "${logdna_key.logdna_ingestion_key.key}",
+                  sensitive: true,
+                },
+              },
+            })
+          ) +
+          "\n"
+      );
+  }
+
   return tf;
 }
 

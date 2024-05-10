@@ -55,7 +55,7 @@ import {
   getObjectFromArray,
   isBoolean,
 } from "lazy-z";
-import { CraigCodeMirror, Navigation, Footer } from ".";
+import { CraigCodeMirror, Navigation, Footer, BottomAbout } from ".";
 import PropTypes from "prop-types";
 import "./page-template.css";
 import { codeMirrorGetDisplay } from "../../lib";
@@ -327,6 +327,7 @@ const PageTemplate = (props) => {
           jsonInCodeMirror={props.jsonInCodeMirror}
         />
       </div>
+      <BottomAbout />
       {isResetState !== true && !contains(window.location.pathname, "/v2") && (
         <Footer
           toggleFooter={() => {

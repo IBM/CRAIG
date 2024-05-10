@@ -213,49 +213,51 @@ class LeftNav extends React.Component {
           {this.props.expanded && (
             <>
               {this.props.expanded && !isV2Page && (
-                <LeftNavItem
-                  key="V2"
-                  item={{
-                    path: "/v2/projects",
-                    icon: DrillThrough,
-                    title: "[New] Use Craig V2",
-                  }}
-                  expanded={this.props.expanded}
-                  new
-                />
+                <>
+                  <LeftNavItem
+                    key="V2"
+                    item={{
+                      path: "/v2/projects",
+                      icon: DrillThrough,
+                      title: "[New] Use Craig V2",
+                    }}
+                    expanded={this.props.expanded}
+                    new
+                  />
+                  <LeftNavItem
+                    item={{ path: "/docs/about", icon: Help, title: "About" }}
+                    key="About"
+                    expanded={this.props.expanded}
+                  />
+                  <LeftNavItem
+                    item={{
+                      path: "/docs/releaseNotes",
+                      icon: Bullhorn,
+                      title: "Release Notes",
+                    }}
+                    key="ReleaseNotes"
+                    expanded={this.props.expanded}
+                  />
+                  <LeftNavItem
+                    item={{
+                      path: "/docs/json",
+                      icon: JsonReference,
+                      title: "JSON Documentation",
+                    }}
+                    key="json-docs"
+                    expanded={this.props.expanded}
+                  />
+                  <LeftNavItem
+                    item={{
+                      path: "/docs/tutorial",
+                      icon: Compass,
+                      title: "Tutorial",
+                    }}
+                    key="tutorial"
+                    expanded={this.props.expanded}
+                  />
+                </>
               )}
-              <LeftNavItem
-                item={{ path: "/docs/about", icon: Help, title: "About" }}
-                key="About"
-                expanded={this.props.expanded}
-              />
-              <LeftNavItem
-                item={{
-                  path: "/docs/releaseNotes",
-                  icon: Bullhorn,
-                  title: "Release Notes",
-                }}
-                key="ReleaseNotes"
-                expanded={this.props.expanded}
-              />
-              <LeftNavItem
-                item={{
-                  path: "/docs/json",
-                  icon: JsonReference,
-                  title: "JSON Documentation",
-                }}
-                key="json-docs"
-                expanded={this.props.expanded}
-              />
-              <LeftNavItem
-                item={{
-                  path: "/docs/tutorial",
-                  icon: Compass,
-                  title: "Tutorial",
-                }}
-                key="tutorial"
-                expanded={this.props.expanded}
-              />
               {this.props.expanded && isV2Page && (
                 <LeftNavItem
                   key="V2"

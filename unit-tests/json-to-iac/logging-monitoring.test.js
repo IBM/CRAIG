@@ -474,16 +474,6 @@ resource "ibm_resource_instance" "logdna" {
   }
 }
 
-resource "ibm_resource_key" "logdna_key" {
-  name                 = "\${var.prefix}-logdna-key"
-  resource_instance_id = ibm_resource_instance.logdna.id
-  role                 = "Manager"
-  tags = [
-    "hello",
-    "world"
-  ]
-}
-
 ##############################################################################
 
 ##############################################################################
@@ -494,6 +484,12 @@ provider "logdna" {
   alias      = "logdna"
   servicekey = ibm_resource_key.logdna_key.credentials["service_key"]
   url        = "https://api.\${var.region}.logging.cloud.ibm.com"
+}
+
+resource "logdna_key" "logdna_ingestion_key" {
+  provider = logdna.logdna
+  type     = "ingestion"
+  name     = "\${var.prefix}-logdna-ingestion-key"
 }
 
 resource "logdna_archive" "logdna_archive" {
@@ -598,16 +594,6 @@ resource "ibm_resource_instance" "logdna" {
   }
 }
 
-resource "ibm_resource_key" "logdna_key" {
-  name                 = "\${var.prefix}-logdna-key"
-  resource_instance_id = ibm_resource_instance.logdna.id
-  role                 = "Manager"
-  tags = [
-    "hello",
-    "world"
-  ]
-}
-
 ##############################################################################
 
 ##############################################################################
@@ -618,6 +604,12 @@ provider "logdna" {
   alias      = "logdna"
   servicekey = ibm_resource_key.logdna_key.credentials["service_key"]
   url        = "https://api.\${var.region}.logging.cloud.ibm.com"
+}
+
+resource "logdna_key" "logdna_ingestion_key" {
+  provider = logdna.logdna
+  type     = "ingestion"
+  name     = "\${var.prefix}-logdna-ingestion-key"
 }
 
 resource "logdna_archive" "logdna_archive" {
@@ -691,14 +683,22 @@ resource "ibm_resource_instance" "logdna" {
   }
 }
 
-resource "ibm_resource_key" "logdna_key" {
-  name                 = "\${var.prefix}-logdna-key"
-  resource_instance_id = ibm_resource_instance.logdna.id
-  role                 = "Manager"
-  tags = [
-    "hello",
-    "world"
-  ]
+##############################################################################
+
+##############################################################################
+# LogDNA Resources
+##############################################################################
+
+provider "logdna" {
+  alias      = "logdna"
+  servicekey = ibm_resource_key.logdna_key.credentials["service_key"]
+  url        = "https://api.\${var.region}.logging.cloud.ibm.com"
+}
+
+resource "logdna_key" "logdna_ingestion_key" {
+  provider = logdna.logdna
+  type     = "ingestion"
+  name     = "\${var.prefix}-logdna-ingestion-key"
 }
 
 ##############################################################################
@@ -872,16 +872,6 @@ resource "ibm_resource_instance" "logdna" {
   }
 }
 
-resource "ibm_resource_key" "logdna_key" {
-  name                 = "\${var.prefix}-logdna-key"
-  resource_instance_id = ibm_resource_instance.logdna.id
-  role                 = "Manager"
-  tags = [
-    "hello",
-    "world"
-  ]
-}
-
 ##############################################################################
 
 ##############################################################################
@@ -892,6 +882,12 @@ provider "logdna" {
   alias      = "logdna"
   servicekey = ibm_resource_key.logdna_key.credentials["service_key"]
   url        = "https://api.\${var.region}.logging.cloud.ibm.com"
+}
+
+resource "logdna_key" "logdna_ingestion_key" {
+  provider = logdna.logdna
+  type     = "ingestion"
+  name     = "\${var.prefix}-logdna-ingestion-key"
 }
 
 resource "logdna_archive" "logdna_archive" {

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.15.4
+
+### Upgrade Notes
+
+- Updated footer for CRAIG v2 UI
+- A LogDNA ingestion key is now created and output when LogDNA is enabled instead of a resource key
+
+### Fixes
+
+- Fixed an issue causing Power VS images from data to reference the invalid value `image_id` instead of the correct `id`
+- Fixed an issue preventing Terraform from creating multiple VPEs in the same VPC
+
 ## 1.15.3
 
 ### Upgrade Notes
@@ -11,6 +23,7 @@ All notable changes to this project will be documented in this file.
 ### Features
 
 - Users can integrate Security and Compliance Center with Cloud Object storage from the `/forms/sccV2` page
+- Power Edge Router is now supported for `tor01` and `us-south`
 
 ### Fixes
 
