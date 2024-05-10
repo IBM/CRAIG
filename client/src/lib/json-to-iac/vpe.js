@@ -22,16 +22,16 @@ const serviceToEndpointMap = {
 
 /**
  * format reserved ip
- * @param {string} vpcName
+ * @param {object} vpe
  * @param {string} subnetName
  * @returns {string} terraform formatted code
  */
 
-function ibmIsSubnetReservedIp(vpcName, subnetName) {
+function ibmIsSubnetReservedIp(vpe, subnetName) {
   return {
-    name: `${vpcName} vpc ${subnetName} subnet vpe ip`,
+    name: `${vpe.vpc} vpc ${subnetName} subnet vpe ip ${vpe.name}`,
     data: {
-      subnet: `\${module.${snakeCase(vpcName)}_vpc.${snakeCase(
+      subnet: `\${module.${snakeCase(vpe.vpc)}_vpc.${snakeCase(
         subnetName
       )}_id}`,
     },
@@ -40,12 +40,12 @@ function ibmIsSubnetReservedIp(vpcName, subnetName) {
 
 /**
  * format reserved ip
- * @param {string} vpcName
+ * @param {object} vpe
  * @param {string} subnetName
  * @returns {string} terraform formatted code
  */
-function formatReservedIp(vpcName, subnetName) {
-  let ip = ibmIsSubnetReservedIp(vpcName, subnetName);
+function formatReservedIp(vpe, subnetName) {
+  let ip = ibmIsSubnetReservedIp(vpe, subnetName);
   return jsonToTfPrint(
     "resource",
     "ibm_is_subnet_reserved_ip",
@@ -139,7 +139,7 @@ function ibmIsVirtualEndpointGatewayIp(vpe, subnetName) {
       ),
       reserved_ip: tfRef(
         "ibm_is_subnet_reserved_ip",
-        `${vpe.vpc} vpc ${subnetName} subnet vpe ip`,
+        `${vpe.vpc} vpc ${subnetName} subnet vpe ip ${vpe.name}`,
         "reserved_ip"
       ),
     },
@@ -172,7 +172,7 @@ function vpeTf(config) {
   config.virtual_private_endpoints.forEach((vpe) => {
     let blockData = "";
     vpe.subnets.forEach(
-      (subnet) => (blockData += formatReservedIp(vpe.vpc, subnet))
+      (subnet) => (blockData += formatReservedIp(vpe, subnet))
     );
     blockData += fortmatVpeGateway(vpe, config);
     vpe.subnets.forEach(

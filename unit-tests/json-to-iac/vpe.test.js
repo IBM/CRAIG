@@ -10,9 +10,20 @@ const slzNetwork = require("../data-files/slz-network.json");
 describe("virtual private endpoints", () => {
   describe("formatReservedIp", () => {
     it("should format reserved ip", () => {
-      let actualData = formatReservedIp("management", "test", 1);
+      let actualData = formatReservedIp(
+        {
+          vpc: "management",
+          service: "cos",
+          resource_group: "slz-management-rg",
+          security_groups: [],
+          subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+          name: "cos-vpe-gw",
+        },
+        "test",
+        1
+      );
       let expectedData = `
-resource "ibm_is_subnet_reserved_ip" "management_vpc_test_subnet_vpe_ip" {
+resource "ibm_is_subnet_reserved_ip" "management_vpc_test_subnet_vpe_ip_cos_vpe_gw" {
   subnet = module.management_vpc.test_id
 }
 `;
@@ -196,13 +207,14 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
           resource_group: "slz-management-rg",
           security_groups: [],
           subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+          name: "cos-vpe-gw",
         },
         "vpe-zone-1"
       );
       let expectedData = `
 resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_cos_gw_vpe_zone_1_gateway_ip" {
   gateway     = ibm_is_virtual_endpoint_gateway.management_vpc_cos_vpe_gateway.id
-  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_1_subnet_vpe_ip.reserved_ip
+  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_1_subnet_vpe_ip_cos_vpe_gw.reserved_ip
 }
 `;
 
@@ -216,15 +228,15 @@ resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_cos_gw_vpe_zone_1_
 # Management VPE Resources
 ##############################################################################
 
-resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_1_subnet_vpe_ip" {
+resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_1_subnet_vpe_ip_cos_vpe_gw" {
   subnet = module.management_vpc.vpe_zone_1_id
 }
 
-resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_2_subnet_vpe_ip" {
+resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_2_subnet_vpe_ip_cos_vpe_gw" {
   subnet = module.management_vpc.vpe_zone_2_id
 }
 
-resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_3_subnet_vpe_ip" {
+resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_3_subnet_vpe_ip_cos_vpe_gw" {
   subnet = module.management_vpc.vpe_zone_3_id
 }
 
@@ -247,17 +259,17 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
 
 resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_cos_gw_vpe_zone_1_gateway_ip" {
   gateway     = ibm_is_virtual_endpoint_gateway.management_vpc_cos_vpe_gateway.id
-  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_1_subnet_vpe_ip.reserved_ip
+  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_1_subnet_vpe_ip_cos_vpe_gw.reserved_ip
 }
 
 resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_cos_gw_vpe_zone_2_gateway_ip" {
   gateway     = ibm_is_virtual_endpoint_gateway.management_vpc_cos_vpe_gateway.id
-  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_2_subnet_vpe_ip.reserved_ip
+  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_2_subnet_vpe_ip_cos_vpe_gw.reserved_ip
 }
 
 resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_cos_gw_vpe_zone_3_gateway_ip" {
   gateway     = ibm_is_virtual_endpoint_gateway.management_vpc_cos_vpe_gateway.id
-  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_3_subnet_vpe_ip.reserved_ip
+  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_3_subnet_vpe_ip_cos_vpe_gw.reserved_ip
 }
 
 ##############################################################################
@@ -266,15 +278,15 @@ resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_cos_gw_vpe_zone_3_
 # Workload VPE Resources
 ##############################################################################
 
-resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_1_subnet_vpe_ip" {
+resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_1_subnet_vpe_ip_cos_vpe_gw" {
   subnet = module.workload_vpc.vpe_zone_1_id
 }
 
-resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_2_subnet_vpe_ip" {
+resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_2_subnet_vpe_ip_cos_vpe_gw" {
   subnet = module.workload_vpc.vpe_zone_2_id
 }
 
-resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_3_subnet_vpe_ip" {
+resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_3_subnet_vpe_ip_cos_vpe_gw" {
   subnet = module.workload_vpc.vpe_zone_3_id
 }
 
@@ -297,17 +309,17 @@ resource "ibm_is_virtual_endpoint_gateway" "workload_vpc_cos_vpe_gateway" {
 
 resource "ibm_is_virtual_endpoint_gateway_ip" "workload_vpc_cos_gw_vpe_zone_1_gateway_ip" {
   gateway     = ibm_is_virtual_endpoint_gateway.workload_vpc_cos_vpe_gateway.id
-  reserved_ip = ibm_is_subnet_reserved_ip.workload_vpc_vpe_zone_1_subnet_vpe_ip.reserved_ip
+  reserved_ip = ibm_is_subnet_reserved_ip.workload_vpc_vpe_zone_1_subnet_vpe_ip_cos_vpe_gw.reserved_ip
 }
 
 resource "ibm_is_virtual_endpoint_gateway_ip" "workload_vpc_cos_gw_vpe_zone_2_gateway_ip" {
   gateway     = ibm_is_virtual_endpoint_gateway.workload_vpc_cos_vpe_gateway.id
-  reserved_ip = ibm_is_subnet_reserved_ip.workload_vpc_vpe_zone_2_subnet_vpe_ip.reserved_ip
+  reserved_ip = ibm_is_subnet_reserved_ip.workload_vpc_vpe_zone_2_subnet_vpe_ip_cos_vpe_gw.reserved_ip
 }
 
 resource "ibm_is_virtual_endpoint_gateway_ip" "workload_vpc_cos_gw_vpe_zone_3_gateway_ip" {
   gateway     = ibm_is_virtual_endpoint_gateway.workload_vpc_cos_vpe_gateway.id
-  reserved_ip = ibm_is_subnet_reserved_ip.workload_vpc_vpe_zone_3_subnet_vpe_ip.reserved_ip
+  reserved_ip = ibm_is_subnet_reserved_ip.workload_vpc_vpe_zone_3_subnet_vpe_ip_cos_vpe_gw.reserved_ip
 }
 
 ##############################################################################

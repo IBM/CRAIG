@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Fixes
 
 - Fixed an issue causing Power VS images from data to reference the invalid value `image_id` instead of the correct `id`
+- Fixed an issue preventing Terraform from creating multiple VPEs in the same VPC
 
 ## 1.15.3
 

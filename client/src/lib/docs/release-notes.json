@@ -3,7 +3,8 @@
     "version": "1.15.4",
     "features": [],
     "fixes": [
-      "Fixed an issue causing Power VS images from data to reference the invalid value `image_id` instead of the correct `id`"
+      "Fixed an issue causing Power VS images from data to reference the invalid value `image_id` instead of the correct `id`",
+      "Fixed an issue preventing Terraform from creating multiple VPEs in the same VPC"
     ],
     "upgrade_notes": [
       "Updated footer for CRAIG v2 UI",
