@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.15.5
+
+### Fixes
+
+- Fixed an issue causing images imported into an existing Power VS Workspace to have incorrect Terraform references
+- Fixed an issue causing Power VS Images to not reload when changing the name of an existing Power VS Workspace
+
 ## 1.15.4
 
 ### Upgrade Notes

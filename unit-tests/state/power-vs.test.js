@@ -514,7 +514,7 @@ describe("power-vs", () => {
             images: [{ name: "image" }],
             zone: "us-east",
           }),
-          '[{"name":"image"}]us-east',
+          '[{"name":"image"}]us-eastundefined',
           "it should return images array"
         );
       });

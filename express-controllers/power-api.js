@@ -1,4 +1,11 @@
-const { kebabCase, contains, snakeCase, titleCase, splat } = require("lazy-z");
+const {
+  kebabCase,
+  contains,
+  snakeCase,
+  titleCase,
+  splat,
+  splatContains,
+} = require("lazy-z");
 const powerImageMap = require("../client/src/lib/docs/power-image-map.json");
 const { powerStoragePoolRegionMap } = require("../client/src/lib/constants");
 
@@ -176,17 +183,24 @@ function powerRoutes(axios, controller) {
             };
             console.log("> Fetching Custom Images...");
             axios(requestConfig).then((imageResponse) => {
+              let existingImages = imageResponse.data.images.filter((image) => {
+                image.use_data = true;
+                return image;
+              });
               console.log(
                 `Success! Found ${imageResponse.data.images.length} custom images.`
               );
               console.log("Sending images...");
+
               res.send(
-                response.data.images.concat(
-                  imageResponse.data.images.filter((image) => {
-                    image.use_data = true;
-                    return image;
+                response.data.images
+                  .filter((image) => {
+                    // remove duplicate image names
+                    if (!splatContains(existingImages, "name", image.name)) {
+                      return image;
+                    }
                   })
-                )
+                  .concat(existingImages)
               );
             });
           }
