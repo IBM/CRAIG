@@ -294,7 +294,7 @@ function loggingMonitoringTf(config) {
   }
   if (config?.logdna?.enabled) {
     if (tf.length > 0) tf += "\n"; // if atracker add space
-    let logdnaTf = formatLogdnaInstance(config);
+    let logdnaTf = formatLogdnaInstance(config) + formatLogdnaKey(config);
     tf += tfBlock("LogDNA Instance", logdnaTf);
     let logdnaProviderTf =
       formatLogdnaProvider("logdna") +

@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.15.5",
+    "features": [],
+    "fixes": [
+      "Fixed an issue causing images imported into an existing Power VS Workspace to have incorrect Terraform references",
+      "Fixed an issue causing Power VS Images to not reload when changing the name of an existing Power VS Workspace",
+      "Fixed an issue causing the LogDNA provider to not be added to `versions.tf` when the instance is enabled"
+    ],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.15.4",
     "features": [],
     "fixes": [

@@ -474,6 +474,16 @@ resource "ibm_resource_instance" "logdna" {
   }
 }
 
+resource "ibm_resource_key" "logdna_key" {
+  name                 = "\${var.prefix}-logdna-key"
+  resource_instance_id = ibm_resource_instance.logdna.id
+  role                 = "Manager"
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+
 ##############################################################################
 
 ##############################################################################
@@ -594,6 +604,16 @@ resource "ibm_resource_instance" "logdna" {
   }
 }
 
+resource "ibm_resource_key" "logdna_key" {
+  name                 = "\${var.prefix}-logdna-key"
+  resource_instance_id = ibm_resource_instance.logdna.id
+  role                 = "Manager"
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+
 ##############################################################################
 
 ##############################################################################
@@ -681,6 +701,16 @@ resource "ibm_resource_instance" "logdna" {
   parameters = {
     default_receiver = true
   }
+}
+
+resource "ibm_resource_key" "logdna_key" {
+  name                 = "\${var.prefix}-logdna-key"
+  resource_instance_id = ibm_resource_instance.logdna.id
+  role                 = "Manager"
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 ##############################################################################
@@ -870,6 +900,16 @@ resource "ibm_resource_instance" "logdna" {
   parameters = {
     default_receiver = true
   }
+}
+
+resource "ibm_resource_key" "logdna_key" {
+  name                 = "\${var.prefix}-logdna-key"
+  resource_instance_id = ibm_resource_instance.logdna.id
+  role                 = "Manager"
+  tags = [
+    "hello",
+    "world"
+  ]
 }
 
 ##############################################################################

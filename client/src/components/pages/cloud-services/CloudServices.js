@@ -203,10 +203,10 @@ class CloudServicesPage extends React.Component {
     )
       ? 0
       : arraySplatIndex(
-        this.props.craig.store.json[this.state.service],
-        "name",
-        this.state.serviceName
-      );
+          this.props.craig.store.json[this.state.service],
+          "name",
+          this.state.serviceName
+        );
   }
 
   /**

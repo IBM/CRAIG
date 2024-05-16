@@ -64,7 +64,9 @@ function powerVsWorkspaceSchema() {
         );
       },
       forceUpdateKey: function (stateData) {
-        return JSON.stringify(stateData.images) + stateData.zone;
+        return (
+          JSON.stringify(stateData.images) + stateData.zone + stateData.name
+        );
       },
     },
   };
