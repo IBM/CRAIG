@@ -550,6 +550,142 @@ terraform {
         "it should return data"
       );
     });
+    it("should return correct observability.tf when logdna enabled but not atracker", () => {
+      let nw = { ...slzNetwork };
+      transpose(
+        {
+          logdna: {
+            enabled: true,
+            plan: "7-day",
+            endpoints: "private",
+            platform_logs: false,
+            resource_group: "service-rg",
+            cos: "savefiles",
+            bucket: "aix",
+            name: "logdna",
+            archive: false,
+          },
+          sysdig: {
+            enabled: true,
+            plan: "lite",
+            resource_group: "service-rg",
+            platform_logs: true,
+          },
+          atracker: {
+            enabled: false,
+            name: "atracker",
+            type: "cos",
+            target_name: "cos",
+            bucket: "atracker",
+            cos_key: "atracker-cos-key",
+            plan: "lite",
+            resource_group: "service-rg",
+            archive: true,
+            instance: true,
+          },
+        },
+        nw
+      );
+      let actualData = configToFilesJson(nw);
+      assert.deepEqual(
+        actualData["observability.tf"],
+        `##############################################################################
+# LogDNA Instance
+##############################################################################
+
+resource "ibm_resource_instance" "logdna" {
+  name              = "\${var.prefix}-logdna"
+  resource_group_id = ibm_resource_group.service_rg.id
+  service           = "logdna"
+  plan              = "7-day"
+  location          = var.region
+  service_endpoints = "private"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+}
+
+##############################################################################
+
+##############################################################################
+# LogDNA Resources
+##############################################################################
+
+provider "logdna" {
+  alias      = "logdna"
+  servicekey = ibm_resource_key.logdna_key.credentials["service_key"]
+  url        = "https://api.\${var.region}.logging.cloud.ibm.com"
+}
+
+resource "logdna_key" "logdna_ingestion_key" {
+  provider = logdna.logdna
+  type     = "ingestion"
+  name     = "\${var.prefix}-logdna-ingestion-key"
+}
+
+##############################################################################
+
+##############################################################################
+# Sysdig Instance
+##############################################################################
+
+resource "ibm_resource_instance" "sysdig" {
+  name              = "\${var.prefix}-sysdig"
+  resource_group_id = ibm_resource_group.service_rg.id
+  service           = "sysdig-monitor"
+  plan              = "lite"
+  location          = var.region
+  service_endpoints = "private"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  parameters = {
+    default_receiver = true
+  }
+}
+
+resource "ibm_resource_key" "sysdig_key" {
+  name                 = "\${var.prefix}-sysdig-key"
+  resource_instance_id = ibm_resource_instance.sysdig.id
+  role                 = "Manager"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+}
+
+##############################################################################
+`,
+        "it should return corer"
+      );
+      assert.deepEqual(
+        actualData["versions.tf"],
+        `##############################################################################
+# Terraform Providers
+##############################################################################
+
+terraform {
+  required_providers {
+    ibm = {
+      source  = "IBM-Cloud/ibm"
+      version = "~>1.63.0"
+    }
+    logdna = {
+      source                = "logdna/logdna"
+      version               = ">= 1.14.2"
+      configuration_aliases = [logdna.logdna]
+    }
+  }
+  required_version = ">=1.5"
+}
+
+##############################################################################
+`,
+        "it should return data"
+      );
+    });
     it("should return correct versions.tf with logdna archive but no atracker archive", () => {
       let nw = { ...slzNetwork };
       transpose(

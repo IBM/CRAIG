@@ -271,7 +271,7 @@ function configToFilesJson(config, apiMode, templateTarMode) {
       "resource_groups.tf": resourceGroupTf(config),
       "versions.tf": versionsTf.replace(
         /\$ADDITIONAL_PROVIDERS\n/g,
-        config?.logdna?.archive
+        config?.logdna?.enabled
           ? logdnaProviders.replace(
               /\$ALIASES/g,
               config?.atracker?.archive && config?.atracker?.enabled
