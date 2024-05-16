@@ -500,7 +500,8 @@ class Craig extends React.Component {
                         "imageID",
                         image.imageID || image.pi_image_id
                       ) &&
-                      !workspace.use_data
+                      !workspace.use_data &&
+                      workspace.zone === zone
                     ) {
                       invalidItems.power_images.push({
                         workspace: workspace.name,
@@ -512,7 +513,8 @@ class Craig extends React.Component {
                   workspace.imageNames.forEach((name) => {
                     if (
                       !splatContains(foundImages, "name", name) &&
-                      !workspace.use_data
+                      !workspace.use_data &&
+                      workspace.zone === zone
                     ) {
                       invalidItems.power_images.push({
                         workspace: workspace.name,
