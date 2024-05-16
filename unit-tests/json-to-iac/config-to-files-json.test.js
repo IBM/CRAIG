@@ -442,6 +442,16 @@ resource "ibm_resource_instance" "logdna" {
   }
 }
 
+resource "ibm_resource_key" "logdna_key" {
+  name                 = "\${var.prefix}-logdna-key"
+  resource_instance_id = ibm_resource_instance.logdna.id
+  role                 = "Manager"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+}
+
 ##############################################################################
 
 ##############################################################################
@@ -600,6 +610,15 @@ resource "ibm_resource_instance" "logdna" {
   plan              = "7-day"
   location          = var.region
   service_endpoints = "private"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+}
+
+resource "ibm_resource_key" "logdna_key" {
+  name                 = "\${var.prefix}-logdna-key"
+  resource_instance_id = ibm_resource_instance.logdna.id
   tags = [
     "slz",
     "landing-zone"
