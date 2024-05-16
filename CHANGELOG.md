@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing images imported into an existing Power VS Workspace to have incorrect Terraform references
 - Fixed an issue causing Power VS Images to not reload when changing the name of an existing Power VS Workspace
 - Fixed an issue causing the LogDNA provider to not be added to `versions.tf` when the instance is enabled
+- Fixed an issue incorrectly causing valid Power VS images to show as invalid on validation
 
 ## 1.15.4
 
