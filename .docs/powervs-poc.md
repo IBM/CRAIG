@@ -120,7 +120,7 @@ The VPC VPN Server used for client to site VPNs requires SSL/TLS certificates st
 
 1. Create a Secrets Manager instance and either [order public certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-public-certificates&interface=ui
 ), [create private certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-private-certificates&interface=ui
-), or [import certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-certificates&interface=ui).
+), or [import certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-certificates&interface=ui). Consult the [VPC client-to-site server authentication documentation](https://cloud.ibm.com/docs/vpc?topic=vpc-client-to-site-authentication) to ensure the certificate authorities and certificates are created using values that are compatible with the VPN server.
 2. Choose VPC Deployments from the menu and create a new security group for the VPN Server.
 Create the security group in the `transit-rg` resource group.
 Add the following rules to the group:
