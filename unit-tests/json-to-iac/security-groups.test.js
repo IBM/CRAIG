@@ -8,7 +8,7 @@ const slzNetwork = require("../data-files/slz-network.json");
 
 describe("security groups", () => {
   describe("formatSecurityGroup", () => {
-    it("should format a security group", () => {
+    it("should format a security group with vpc from data", () => {
       let actualData = formatSecurityGroup(
         {
           vpc: "management",
@@ -106,12 +106,18 @@ describe("security groups", () => {
               use_data: false,
             },
           ],
+          vpcs: [
+            {
+              name: "management",
+              use_data: true,
+            },
+          ],
         }
       );
       let expectedData = `
 resource "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
   name           = "\${var.prefix}-management-management-vpe-sg-sg"
-  vpc            = ibm_is_vpc.management_vpc.id
+  vpc            = data.ibm_is_vpc.management_vpc.id
   resource_group = var.slz_management_rg_id
   tags = [
     "hello",

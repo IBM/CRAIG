@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.15.6",
+    "features": [],
+    "fixes": [
+      "Fixed an issue causing Resource Groups assigned to Security Groups to not be correctly imported into VPC modules"
+    ],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.15.5",
     "features": [],
     "fixes": [

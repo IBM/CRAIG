@@ -4839,7 +4839,7 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
           "acl_customer_a_subnet_acl.tf":
             '##############################################################################\n# Customer A Subnet Acl ACL\n##############################################################################\n\nresource "ibm_is_network_acl" "customer_a_subnet_acl_acl" {\n  name           = "${var.prefix}-customer-a-subnet-acl-acl"\n  vpc            = data.ibm_is_vpc.customer_a_vpc.id\n  resource_group = var.craig_rg_id\n  tags = [\n    "hello",\n    "world"\n  ]\n  rules {\n    source      = "0.0.0.0"\n    action      = "allow"\n    destination = "0.0.0.0"\n    direction   = "inbound"\n    name        = "allow-all-inbound"\n  }\n  rules {\n    source      = "0.0.0.0"\n    action      = "allow"\n    destination = "0.0.0.0"\n    direction   = "outbound"\n    name        = "allow-all-outbound"\n  }\n}\n\n##############################################################################\n',
           "sg_vsi_sg.tf":
-            '##############################################################################\n# Security Group VSI Sg\n##############################################################################\n\nresource "ibm_is_security_group" "customer_a_vpc_vsi_sg_sg" {\n  name           = "${var.prefix}-customer-a-vsi-sg-sg"\n  vpc            = ibm_is_vpc.customer_a_vpc.id\n  resource_group = var.craig_rg_id\n  tags = [\n    "hello",\n    "world"\n  ]\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ssh" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  tcp {\n    port_min = 22\n    port_max = 22\n  }\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ping" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  icmp {\n    type = 8\n    code = 8\n  }\n}\n\n##############################################################################\n',
+            '##############################################################################\n# Security Group VSI Sg\n##############################################################################\n\nresource "ibm_is_security_group" "customer_a_vpc_vsi_sg_sg" {\n  name           = "${var.prefix}-customer-a-vsi-sg-sg"\n  vpc            = data.ibm_is_vpc.customer_a_vpc.id\n  resource_group = var.craig_rg_id\n  tags = [\n    "hello",\n    "world"\n  ]\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ssh" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  tcp {\n    port_min = 22\n    port_max = 22\n  }\n}\n\nresource "ibm_is_security_group_rule" "customer_a_vpc_vsi_sg_sg_rule_ping" {\n  group     = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n  remote    = "0.0.0.0"\n  direction = "inbound"\n  icmp {\n    type = 8\n    code = 8\n  }\n}\n\n##############################################################################\n',
           "outputs.tf":
             '##############################################################################\n# Customer AVPC Outputs\n##############################################################################\n\noutput "name" {\n  value = data.ibm_is_vpc.customer_a_vpc.name\n}\n\noutput "id" {\n  value = data.ibm_is_vpc.customer_a_vpc.id\n}\n\noutput "crn" {\n  value = data.ibm_is_vpc.customer_a_vpc.crn\n}\n\noutput "subnet_tier_zone_1_name" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.name\n}\n\noutput "subnet_tier_zone_1_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.id\n}\n\noutput "subnet_tier_zone_1_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_1.crn\n}\n\noutput "subnet_tier_zone_2_name" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.name\n}\n\noutput "subnet_tier_zone_2_id" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.id\n}\n\noutput "subnet_tier_zone_2_crn" {\n  value = ibm_is_subnet.customer_a_subnet_tier_zone_2.crn\n}\n\noutput "vsi_sg_name" {\n  value = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.name\n}\n\noutput "vsi_sg_id" {\n  value = ibm_is_security_group.customer_a_vpc_vsi_sg_sg.id\n}\n\n##############################################################################\n',
         },
@@ -5651,6 +5651,127 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
           '##############################################################################\n# Customer AVPC Module\n##############################################################################\n\nmodule "customer_a_vpc" {\n  source      = "./customer_a_vpc"\n  region      = var.region\n  prefix      = var.prefix\n  craig_rg_id = ibm_resource_group.craig_rg.id\n  tags = [\n    "hello",\n    "world"\n  ]\n}\n\n##############################################################################\n',
       };
       assert.deepEqual(actualData, expectedData, "should return correct data");
+    });
+    it("should return craig terraform for one vpc with only one data subnet and vpc from data and data rg", () => {
+      let actualData = {};
+      vpcModuleTf(actualData, {
+        _options: {
+          prefix: "iac",
+          region: "us-south",
+          tags: ["hello", "world"],
+          zones: 3,
+          endpoints: "private",
+          account_id: null,
+          fs_cloud: false,
+          enable_classic: false,
+          dynamic_subnets: true,
+          enable_power_vs: false,
+          craig_version: "1.15.6",
+          power_vs_zones: [],
+          power_vs_high_availability: false,
+          no_vpn_secrets_manager_auth: false,
+          power_vs_ha_zone_1: null,
+          power_vs_ha_zone_2: null,
+          manual_power_vsi_naming: false,
+          template: "Empty Project",
+        },
+        resource_groups: [
+          {
+            use_prefix: true,
+            name: "powervs-coe",
+            use_data: true,
+          },
+        ],
+        routing_tables: [],
+        scc: {
+          credential_description: null,
+          id: null,
+          passphrase: null,
+          name: "",
+          location: "us",
+          collector_description: null,
+          is_public: false,
+          scope_description: null,
+          enable: false,
+        },
+        secrets_manager: [],
+        security_groups: [
+          {
+            resource_group: "powervs-coe",
+            rules: [],
+            vpc: "smatzek",
+            subnets: [],
+            ssh_keys: [],
+            use_data: false,
+            name: "vpn-server",
+          },
+        ],
+        ssh_keys: [],
+        sysdig: {
+          enabled: false,
+          plan: "graduated-tier",
+          resource_group: null,
+          name: "sysdig",
+          platform_logs: false,
+        },
+        teleport_vsi: [],
+        transit_gateways: [],
+        virtual_private_endpoints: [],
+        vpcs: [
+          {
+            name: "smatzek",
+            resource_group: null,
+            classic_access: null,
+            manual_address_prefix_management: false,
+            default_network_acl_name: null,
+            default_security_group_name: null,
+            default_routing_table_name: null,
+            public_gateways: [],
+            acls: [],
+            subnetTiers: [],
+            use_data: true,
+            bucket: "$disabled",
+            publicGateways: [],
+            cos: null,
+            subnets: [],
+            address_prefixes: [],
+          },
+        ],
+        vpn_gateways: [],
+        vsi: [],
+        vtl: [],
+        classic_gateways: [],
+        cis: [],
+        scc_v2: {
+          enable: false,
+          resource_group: null,
+          region: "",
+          account_id: "${var.account_id}",
+          profile_attachments: [],
+        },
+        cis_glbs: [],
+        fortigate_vnf: [],
+        classic_security_groups: [],
+        classic_vsi: [],
+        classic_bare_metal: [],
+      });
+      let expectedData = {
+        "main.tf": `##############################################################################
+# Smatzek VPC Module
+##############################################################################
+
+module "smatzek_vpc" {
+  source         = "./smatzek_vpc"
+  region         = var.region
+  prefix         = var.prefix
+  powervs_coe_id = data.ibm_resource_group.powervs_coe.id\n  tags = [\n    "hello",\n    "world"\n  ]\n}\n\n##############################################################################
+`,
+      };
+      assert.deepEqual(
+        actualData["main.tf"],
+        expectedData["main.tf"],
+        "should return correct data"
+      );
     });
     it("should return craig terraform for edge network in module", () => {
       let actualData = {};
@@ -8428,8 +8549,39 @@ resource "ibm_is_subnet" "edge_vpn_2_zone_3" {
       let actualData = vpcModuleJson(
         {
           name: "test-case",
+          resource_group: null,
         },
         [],
+        {
+          _options: {
+            tags: [],
+          },
+        }
+      );
+      let expectedData = {
+        test_case_vpc: {
+          "//": {
+            metadata: { uniqueId: "test_case_vpc", path: "./test_case_vpc" },
+          },
+          source: "./test_case_vpc",
+          region: "${var.region}",
+          prefix: "${var.prefix}",
+          tags: [],
+        },
+      };
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correctly formatted module"
+      );
+    });
+    it("should return correct module for imported vpc with no rg", () => {
+      let actualData = vpcModuleJson(
+        {
+          name: "test-case",
+          resource_group: null,
+        },
+        [null],
         {
           _options: {
             tags: [],

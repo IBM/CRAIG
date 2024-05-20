@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.15.6
+
+### Fixes
+
+- Fixed an issue causing Resource Groups assigned to Security Groups to not be correctly imported into VPC modules
+
 ## 1.15.5
 
 ### Fixes

@@ -1120,6 +1120,11 @@ variable "edge_id" {
   type        = string
 }
 
+variable "slz_workload_rg_id" {
+  description = "ID for the resource group slz-workload-rg"
+  type        = string
+}
+
 ##############################################################################
 `,
           "it should return correct data"

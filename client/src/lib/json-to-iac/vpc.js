@@ -6,6 +6,7 @@ const {
   contains,
   revision,
   isEmpty,
+  distinct,
 } = require("lazy-z");
 const {
   rgIdRef,
@@ -524,10 +525,8 @@ function vpcModuleJson(vpc, rgs, config) {
     tags: config._options.tags,
   };
   rgs.forEach((rg) => {
-    moduleObject[vpcModule][snakeCase(rg) + "_id"] = rgIdRef(
-      vpc.resource_group,
-      config
-    );
+    if (rg)
+      moduleObject[vpcModule][snakeCase(rg) + "_id"] = rgIdRef(rg, config);
   });
   return moduleObject;
 }
@@ -621,12 +620,16 @@ function vpcModuleTf(files, config) {
         allRgs.push(subnet.resource_group);
       }
     });
+    config.security_groups.forEach((sg) => {
+      allRgs.push(sg.resource_group);
+    });
 
-    allRgs.forEach((rg) => {
-      variables[snakeCase(rg) + "_id"] = {
-        description: "ID for the resource group " + rg,
-        type: "${string}",
-      };
+    distinct(allRgs).forEach((rg) => {
+      if (rg)
+        variables[snakeCase(rg) + "_id"] = {
+          description: "ID for the resource group " + rg,
+          type: "${string}",
+        };
     });
 
     files[vpcModule] = {
