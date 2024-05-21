@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Fixes
 
 - Fixed an issue causing Resource Groups assigned to Security Groups to not be correctly imported into VPC modules
+- Fixed an issue preventing users from downloading Terraform code when using only existing VPCs and VPC Subnets
 
 ## 1.15.5
 

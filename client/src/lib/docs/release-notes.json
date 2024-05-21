@@ -3,7 +3,8 @@
     "version": "1.15.6",
     "features": [],
     "fixes": [
-      "Fixed an issue causing Resource Groups assigned to Security Groups to not be correctly imported into VPC modules"
+      "Fixed an issue causing Resource Groups assigned to Security Groups to not be correctly imported into VPC modules",
+      "Fixed an issue preventing users from downloading Terraform code when using only existing VPCs and VPC Subnets"
     ],
     "upgrade_notes": []
   },
