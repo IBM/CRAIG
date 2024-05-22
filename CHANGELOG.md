@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Fixed an issue causing Resource Groups assigned to Security Groups to not be correctly imported into VPC modules
 - Fixed an issue preventing users from downloading Terraform code when using only existing VPCs and VPC Subnets
+- Fixed an issue in the Power VS POC template where the LogDNA files were written to the AIX save files COS bucket
 
 ## 1.15.5
 

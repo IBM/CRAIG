@@ -99,8 +99,8 @@
     "endpoints": "private",
     "platform_logs": false,
     "resource_group": "service-rg",
-    "cos": "savefiles",
-    "bucket": "aix",
+    "cos": "a-tracker",
+    "bucket": "a-tracker",
     "name": "logdna",
     "archive": false
   },
