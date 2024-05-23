@@ -43,9 +43,12 @@ class DynamicFetchMultiSelect extends React.Component {
     this._isMounted = false;
   }
 
-  // Force re-fetch of images on zone change
+  // Force re-fetch of images on name or zone change
   componentDidUpdate(prevProps) {
-    if (prevProps.parentState.zone != this.props.parentState.zone) {
+    if (
+      prevProps.parentState.zone != this.props.parentState.zone ||
+      prevProps.parentState.name != this.props.parentState.name
+    ) {
       this._isMounted = false;
       this.setState({ data: ["Loading..."] }, () => {
         this.componentDidMount();

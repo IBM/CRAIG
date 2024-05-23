@@ -440,7 +440,7 @@ describe("power-vs", () => {
     });
   });
   describe("power.schema", () => {
-    describe("craig.power.name.helperText", () => {
+    describe("power.name.helperText", () => {
       it("should return correct helper text for name when use data", () => {
         assert.deepEqual(
           craig.power.name.helperText({ use_data: true, name: "name" }),
@@ -467,6 +467,27 @@ describe("power-vs", () => {
           "toad-power-workspace-frog",
           "it should return correct helper text"
         );
+      });
+    });
+    describe("power.name.onStateChange", () => {
+      it("should clear images when changing name of imported workspace", () => {
+        let data = { use_data: true };
+        let expectedData = {
+          use_data: true,
+          imageNames: [],
+          images: [],
+        };
+        craig.power.name.onStateChange(data);
+        assert.deepEqual(data, expectedData, "it should clear images");
+      });
+      it("should not clear images when changing name of CRAIG created workspace", () => {
+        let data = { use_data: false, imageNames: ["testImage"] };
+        let expectedData = {
+          use_data: false,
+          imageNames: ["testImage"],
+        };
+        craig.power.name.onStateChange(data);
+        assert.deepEqual(data, expectedData, "it should not clear images");
       });
     });
     describe("power.zone", () => {

@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Fixed an issue causing Cloud Services with missing values not to be highlighed red on the `/v2/services` page
 - The Power VS POC Template Activity Tracker COS instance now correctly uses a random suffix to ensure unique resource naming
 - Fixed an issue causing imported VPC Security Groups to fail on Terraform Plan
+- Power VS Images are now reset when changing zones or changing the name of an existing workspace
 
 ## 1.15.5
 
