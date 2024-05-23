@@ -51,7 +51,7 @@ function ibmIsVpnServer(server, craig) {
     certificate_crn: overrideCert || server.certificate_crn,
     client_authentication: [
       {
-        method: contains(["byo", "INSECURE"], server.method)
+        method: contains(["byo", "INSECURE", "both"], server.method)
           ? "certificate"
           : server.method,
       },
@@ -83,7 +83,7 @@ function ibmIsVpnServer(server, craig) {
   });
   if (
     server.method === "certificate" ||
-    contains(["byo", "INSECURE"], server.method)
+    contains(["byo", "INSECURE", "both"], server.method)
   ) {
     serverData.client_authentication[0].client_ca_crn =
       overrideCert && server.method === "certificate"
@@ -94,6 +94,14 @@ function ibmIsVpnServer(server, craig) {
   } else {
     serverData.client_authentication[0].identity_provider = "iam";
   }
+
+  if (server.method === "both") {
+    serverData.client_authentication.push({
+      method: "username",
+      identity_provider: "iam",
+    });
+  }
+
   return {
     name: snakeCase(`${server.vpc} vpn server ${server.name}`),
     data: serverData,

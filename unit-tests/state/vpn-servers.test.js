@@ -400,6 +400,11 @@ describe("vpn_servers", () => {
         "it should return correct method"
       );
       assert.deepEqual(
+        craig.vpn_servers.method.onRender({ method: "both" }),
+        "Username and Certificate",
+        "it should return correct method"
+      );
+      assert.deepEqual(
         craig.vpn_servers.method.onRender({ method: "byo" }),
         "Bring Your Own Certificate",
         "it should return correct method"
@@ -416,6 +421,13 @@ describe("vpn_servers", () => {
           method: "INSECURE - Developer Certificate",
         }),
         "INSECURE",
+        "it should return correct method"
+      );
+      assert.deepEqual(
+        craig.vpn_servers.method.onInputChange({
+          method: "Username and Certificate",
+        }),
+        "both",
         "it should return correct method"
       );
       assert.deepEqual(

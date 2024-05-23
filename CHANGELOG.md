@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## 1.15.6
 
+### Features
+
+- When creating a VPN Server, users can now have both certificate and username authentication by selecting the `Username and Certificate` authentication method
+
 ### Fixes
 
 - Fixed an issue causing Resource Groups assigned to Security Groups to not be correctly imported into VPC modules

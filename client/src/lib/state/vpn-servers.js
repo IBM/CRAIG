@@ -252,20 +252,25 @@ function initVpnState(store) {
           "Select an authentication method"
         ),
         groups: [
+          "Username and Certificate",
           "Certificate",
           "Username",
           "Bring Your Own Certificate",
           "INSECURE - Developer Certificate",
         ],
         onRender(stateData) {
-          return stateData.method === "INSECURE"
+          return stateData.method === "both"
+            ? "Username and Certificate"
+            : stateData.method === "INSECURE"
             ? "INSECURE - Developer Certificate"
             : stateData.method === "byo"
             ? "Bring Your Own Certificate"
             : titleCase(stateData.method);
         },
         onInputChange(stateData) {
-          return stateData.method === "INSECURE - Developer Certificate"
+          return stateData.method === "Username and Certificate"
+            ? "both"
+            : stateData.method === "INSECURE - Developer Certificate"
             ? "INSECURE"
             : stateData.method === "Bring Your Own Certificate"
             ? "byo"
