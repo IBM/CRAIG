@@ -195,7 +195,7 @@
       "kms": "kms",
       "secrets": [],
       "use_data": false,
-      "plan": "standard"
+      "plan": "trial"
     }
   ],
   "security_groups": [
@@ -509,8 +509,8 @@
   "vpn_servers": [
     {
       "name": "client-to-site",
-      "certificate_crn": "CHEATER",
-      "method": "certificate",
+      "certificate_crn": "",
+      "method": "INSECURE",
       "client_ca_crn": null,
       "client_ip_pool": "192.168.8.0/22",
       "enable_split_tunneling": false,
@@ -531,8 +531,6 @@
       "subnets": ["vpn-server-zone-1"],
       "additional_prefixes": ["192.168.8.0/22"],
       "zone": 1,
-      "bring_your_own_cert": false,
-      "DANGER_developer_certificate": true,
       "secrets_manager": "secrets-manager"
     }
   ],

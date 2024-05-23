@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## 1.15.6
 
+### Upgrade Notes
+
+- Updated the VPN as a Service template's default authentication method and changed the Secrets Manager to the Trial plan
+
 ### Features
 
 - When creating a VPN Server, users can now have both certificate and username authentication by selecting the `Username and Certificate` authentication method

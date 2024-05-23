@@ -9,7 +9,9 @@
       "Fixed an issue preventing users from downloading Terraform code when using only existing VPCs and VPC Subnets",
       "Fixed an issue in the Power VS POC template where the LogDNA files were written to the AIX save files COS bucket"
     ],
-    "upgrade_notes": []
+    "upgrade_notes": [
+      "Updated the VPN as a Service template's default authentication method and changed the Secrets Manager to the Trial plan"
+    ]
   },
   {
     "version": "1.15.5",
