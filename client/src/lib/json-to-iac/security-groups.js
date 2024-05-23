@@ -27,11 +27,6 @@ function ibmIsSecurityGroup(sg, config) {
     data: sg.use_data
       ? {
           name: sg.name,
-          vpc: vpcRef(sg.vpc).replace(
-            // if vpcs and use data replace opening with data.
-            "${",
-            "${data."
-          ),
         }
       : {
           name: kebabName([sg.vpc, sg.name, "sg"]),

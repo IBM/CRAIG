@@ -110,6 +110,7 @@ export const RgServiceMap = (props) => {
                     icon={serviceFormMap[service.type].icon}
                     className="pointerEventsNone"
                     small={props.small}
+                    craig={props.craig}
                   />
                 );
               })

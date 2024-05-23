@@ -356,7 +356,6 @@ resource "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
       let expectedData = `
 data "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
   name = "management-vpe-sg"
-  vpc  = data.ibm_is_vpc.management_vpc.id
 }
 `;
       assert.deepEqual(actualData, expectedData, "it should return correct tf");

@@ -7,7 +7,10 @@
     "fixes": [
       "Fixed an issue causing Resource Groups assigned to Security Groups to not be correctly imported into VPC modules",
       "Fixed an issue preventing users from downloading Terraform code when using only existing VPCs and VPC Subnets",
-      "Fixed an issue in the Power VS POC template where the LogDNA files were written to the AIX save files COS bucket"
+      "Fixed an issue in the Power VS POC template where the LogDNA files were written to the AIX save files COS bucket",
+      "Fixed an issue causing Cloud Services with missing values not to be highlighed red on the `/v2/services` page",
+      "The Power VS POC Template Activity Tracker COS instance now correctly uses a random suffix to ensure unique resource naming",
+      "Fixed an issue causing imported VPC Security Groups to fail on Terraform Plan"
     ],
     "upgrade_notes": [
       "Updated the VPN as a Service template's default authentication method and changed the Secrets Manager to the Trial plan"

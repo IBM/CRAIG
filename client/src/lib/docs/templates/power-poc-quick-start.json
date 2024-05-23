@@ -157,7 +157,7 @@
     },
     {
       "use_data": false,
-      "use_random_suffix": false,
+      "use_random_suffix": true,
       "name": "a-tracker",
       "resource_group": "service-rg",
       "plan": "standard",
@@ -168,7 +168,7 @@
           "storage_class": "standard",
           "kms_key": "atracker-key",
           "force_delete": false,
-          "use_random_suffix": false,
+          "use_random_suffix": true,
           "endpoint": null,
           "activity_tracking": false,
           "read_data_events": false,
@@ -185,7 +185,7 @@
           "name": "a-tracker-cos",
           "role": "Writer",
           "enable_hmac": false,
-          "use_random_suffix": false
+          "use_random_suffix": true
         }
       ]
     }
