@@ -10,13 +10,14 @@
     "dynamic_subnets": false,
     "enable_power_vs": true,
     "power_vs_zones": ["dal12", "dal10", "us-south"],
-    "craig_version": "1.12.0",
+    "craig_version": "1.15.6",
     "power_vs_high_availability": false,
     "no_vpn_secrets_manager_auth": false,
     "enable_classic": false,
     "power_vs_ha_zone_1": null,
     "power_vs_ha_zone_2": null,
-    "manual_power_vsi_naming": false
+    "manual_power_vsi_naming": false,
+    "template": "Power VS Oracle Single Instance"
   },
   "access_groups": [],
   "appid": [],
@@ -36,12 +37,19 @@
   },
   "cbr_rules": [],
   "cbr_zones": [],
+  "cis": [],
+  "cis_glbs": [],
+  "classic_bare_metal": [],
+  "classic_gateways": [],
+  "classic_security_groups": [],
   "classic_ssh_keys": [],
   "classic_vlans": [],
+  "classic_vsi": [],
   "clusters": [],
   "dns": [],
   "event_streams": [],
   "f5_vsi": [],
+  "fortigate_vnf": [],
   "iam_account_settings": {
     "enable": false,
     "mfa": null,
@@ -226,15 +234,15 @@
       "cloud_connections": [],
       "images": [
         {
-          "name": "7300-00-01",
+          "name": "7300-02-01",
           "workspace": "oracle-template",
           "zone": "dal12",
-          "pi_image_id": "2cf98f53-433d-4c7a-bc46-1f2dfcc04066",
+          "pi_image_id": "dd13124c-1212-4b25-a2aa-17dabc040eaa",
           "workspace_use_data": false
         }
       ],
       "attachments": [],
-      "imageNames": ["7300-00-01"],
+      "imageNames": ["7300-02-01"],
       "use_data": false
     }
   ],
@@ -242,7 +250,7 @@
     {
       "name": "oracle",
       "workspace": "oracle-template",
-      "image": "7300-00-01",
+      "image": "7300-02-01",
       "network": [
         {
           "name": "oracle-vlan",
@@ -274,7 +282,8 @@
       "pi_ibmi_rds_users": null,
       "pi_user_data": null,
       "pi_pin_policy": "none",
-      "pi_license_repository_capacity": null
+      "pi_license_repository_capacity": null,
+      "index": 0
     }
   ],
   "power_volumes": [
@@ -296,7 +305,8 @@
       "pi_affinity_instance": "oracle",
       "pi_volume_pool": null,
       "pi_affinity_volume": null,
-      "count": null
+      "count": null,
+      "index": 0
     },
     {
       "name": "oracle-db-2",
@@ -316,7 +326,8 @@
       "pi_affinity_instance": "oracle",
       "pi_volume_pool": null,
       "pi_affinity_volume": null,
-      "count": null
+      "count": null,
+      "index": 1
     }
   ],
   "resource_groups": [
@@ -352,6 +363,17 @@
     "is_public": false,
     "scope_description": null,
     "enable": false
+  },
+  "scc_v2": {
+    "enable": false,
+    "resource_group": null,
+    "region": null,
+    "account_id": "${var.account_id}",
+    "profile_attachments": [],
+    "name": null,
+    "use_cos": false,
+    "cos": null,
+    "bucket": null
   },
   "secrets_manager": [],
   "security_groups": [
@@ -1447,7 +1469,7 @@
     {
       "kms": "kms",
       "encryption_key": "vsi-volume-key",
-      "image": "ibm-ubuntu-22-04-1-minimal-amd64-1",
+      "image": "ibm-ubuntu-22-04-4-minimal-amd64-1",
       "profile": "cx2-4x8",
       "name": "management-server",
       "security_groups": ["management-vsi"],
@@ -1460,7 +1482,7 @@
       "user_data": null,
       "network_interfaces": [],
       "volumes": [],
-      "image_name": null,
+      "image_name": "Ubuntu Linux 22.04 LTS Jammy Jellyfish Minimal Install (amd64) [ibm-ubuntu-22-04-4-minimal-amd64-1]",
       "enable_floating_ip": false,
       "primary_interface_ip_spoofing": false,
       "use_variable_names": false,
@@ -1476,8 +1498,7 @@
     {
       "kms": "kms",
       "encryption_key": "vsi-volume-key",
-      "image": "ibm-ubuntu-22-04-3-minimal-amd64-1",
-      "image_name": "Ubuntu Linux 22.04 LTS Jammy Jellyfish Minimal Install (amd64) [ibm-ubuntu-22-04-3-minimal-amd64-1]",
+      "image": "ibm-ubuntu-22-04-4-minimal-amd64-1",
       "profile": "bx2-2x8",
       "name": "workload-server",
       "security_groups": ["workload-vpe"],
@@ -1490,6 +1511,7 @@
       "network_interfaces": [],
       "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
       "volumes": [],
+      "image_name": "Ubuntu Linux 22.04 LTS Jammy Jellyfish Minimal Install (amd64) [ibm-ubuntu-22-04-4-minimal-amd64-1]",
       "subnet": "",
       "enable_floating_ip": false,
       "primary_interface_ip_spoofing": false,
@@ -1499,5 +1521,6 @@
       "reserved_ips": [[""], [""], [""]],
       "enable_static_ips": false
     }
-  ]
+  ],
+  "vtl": []
 }

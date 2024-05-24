@@ -14,7 +14,8 @@
       "Power VS Images are now reset when changing zones or changing the name of an existing workspace"
     ],
     "upgrade_notes": [
-      "Updated the VPN as a Service template's default authentication method and changed the Secrets Manager to the Trial plan"
+      "Updated the VPN as a Service template's default authentication method and changed the Secrets Manager to the Trial plan",
+      "Updated AIX stock images and removed deprecated images for all templates with invalid image references"
     ]
   },
   {

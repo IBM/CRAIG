@@ -9,15 +9,16 @@
     "fs_cloud": false,
     "dynamic_subnets": false,
     "enable_power_vs": true,
-    "craig_version": "1.12.0",
     "power_vs_zones": ["dal12", "dal10", "us-south"],
+    "craig_version": "1.15.6",
     "advanced_subnets": true,
     "power_vs_high_availability": false,
     "no_vpn_secrets_manager_auth": false,
     "enable_classic": false,
     "power_vs_ha_zone_1": null,
     "power_vs_ha_zone_2": null,
-    "manual_power_vsi_naming": false
+    "manual_power_vsi_naming": false,
+    "template": "VPN as a Service"
   },
   "access_groups": [],
   "appid": [],
@@ -37,12 +38,19 @@
   },
   "cbr_rules": [],
   "cbr_zones": [],
+  "cis": [],
+  "cis_glbs": [],
+  "classic_bare_metal": [],
+  "classic_gateways": [],
+  "classic_security_groups": [],
   "classic_ssh_keys": [],
   "classic_vlans": [],
+  "classic_vsi": [],
   "clusters": [],
   "dns": [],
   "event_streams": [],
   "f5_vsi": [],
+  "fortigate_vnf": [],
   "iam_account_settings": {
     "enable": false,
     "mfa": null,
@@ -127,15 +135,15 @@
       "cloud_connections": [],
       "images": [
         {
-          "name": "7200-05-03",
+          "name": "7300-02-01",
           "workspace": "vpnaas",
           "zone": "dal12",
-          "pi_image_id": "ab5777c4-60ef-45a1-90aa-4a144dbe3104",
+          "pi_image_id": "dd13124c-1212-4b25-a2aa-17dabc040eaa",
           "workspace_use_data": false
         }
       ],
       "attachments": [],
-      "imageNames": ["7200-05-03"],
+      "imageNames": ["7300-02-01"],
       "use_data": false
     }
   ],
@@ -186,6 +194,17 @@
     "is_public": false,
     "scope_description": null,
     "enable": false
+  },
+  "scc_v2": {
+    "enable": false,
+    "resource_group": null,
+    "region": null,
+    "account_id": "${var.account_id}",
+    "profile_attachments": [],
+    "name": null,
+    "use_cos": false,
+    "cos": null,
+    "bucket": null
   },
   "secrets_manager": [
     {
@@ -509,7 +528,7 @@
   "vpn_servers": [
     {
       "name": "client-to-site",
-      "certificate_crn": "",
+      "certificate_crn": null,
       "method": "INSECURE",
       "client_ca_crn": null,
       "client_ip_pool": "192.168.8.0/22",
@@ -534,5 +553,6 @@
       "secrets_manager": "secrets-manager"
     }
   ],
-  "vsi": []
+  "vsi": [],
+  "vtl": []
 }

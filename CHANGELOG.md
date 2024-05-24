@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Upgrade Notes
 
 - Updated the VPN as a Service template's default authentication method and changed the Secrets Manager to the Trial plan
+- Updated AIX stock images and removed deprecated images for all templates with invalid image references
 
 ### Features
 

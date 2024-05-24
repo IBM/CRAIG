@@ -10,7 +10,7 @@
     "enable_power_vs": true,
     "enable_classic": false,
     "power_vs_zones": ["dal10"],
-    "craig_version": "1.14.1",
+    "craig_version": "1.15.6",
     "power_vs_high_availability": false,
     "template": "Power VS POC",
     "fs_cloud": false,
@@ -223,12 +223,12 @@
       "cloud_connections": [],
       "images": [
         {
-          "creationDate": "2023-03-07T11:21:01.000Z",
+          "creationDate": "2024-03-20T19:06:59.000Z",
           "description": "",
-          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/142d55ca-d24c-4114-a2f9-4174e96ed96e",
-          "imageID": "142d55ca-d24c-4114-a2f9-4174e96ed96e",
-          "lastUpdateDate": "2023-03-14T16:27:52.000Z",
-          "name": "7300-01-01",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/f557c9a5-c5e4-4b96-9e30-4e9589e9fad8",
+          "imageID": "f557c9a5-c5e4-4b96-9e30-4e9589e9fad8",
+          "lastUpdateDate": "2024-03-20T19:50:48.000Z",
+          "name": "7300-02-01",
           "specifications": {
             "architecture": "ppc64",
             "containerFormat": "bare",
@@ -239,7 +239,7 @@
             "operatingSystem": "aix"
           },
           "state": "active",
-          "storagePool": "Tier3-Flash-1",
+          "storagePool": "General-Flash-50",
           "storageType": "tier3",
           "workspace": "dal10",
           "zone": "dal10",
@@ -267,11 +267,11 @@
           "workspace": "dal10",
           "zone": "dal10",
           "workspace_use_data": false,
-          "depends_on": ["${ibm_pi_image.power_image_dal10_7300_01_01}"]
+          "depends_on": ["${ibm_pi_image.power_image_dal10_7300_02_01}"]
         }
       ],
       "attachments": [],
-      "imageNames": ["7300-01-01", "IBMi-75-03-2984-1"],
+      "imageNames": ["7300-02-01", "IBMi-75-03-2984-1"],
       "use_data": false
     }
   ],
@@ -279,7 +279,7 @@
     {
       "name": "aixtarget",
       "workspace": "dal10",
-      "image": "7300-01-01",
+      "image": "7300-02-01",
       "network": [
         {
           "name": "pvm",
