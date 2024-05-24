@@ -1926,7 +1926,7 @@ describe("automate schema generation", () => {
             method: {
               type: "string",
               default: null,
-              groups: ["certificate", "username", "byo", "INSECURE"],
+              groups: ["both", "certificate", "username", "byo", "INSECURE"],
             },
             certificate_crn: { type: "string", default: null },
             client_ca_crn: { type: "string", default: null },

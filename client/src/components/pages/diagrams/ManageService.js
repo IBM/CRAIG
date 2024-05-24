@@ -2,6 +2,7 @@ import { contains, titleCase } from "lazy-z";
 import React from "react";
 import PropTypes from "prop-types";
 import { RenderForm } from "../../forms";
+import { disableSave } from "../../../lib";
 
 export const ManageService = (props) => {
   return (
@@ -10,7 +11,14 @@ export const ManageService = (props) => {
         "manageService alignButtons" +
         (props.isSelected
           ? " serviceOpen"
-          : props.resourceGroup === "No Resource Group"
+          : disableSave(
+              props.service.overrideType || props.service.type,
+              props.service.data,
+              {
+                data: props.service.data,
+                craig: props.craig,
+              }
+            )
           ? " noRgService"
           : "") +
         " " +

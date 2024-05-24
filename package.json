@@ -1,6 +1,6 @@
 {
   "name": "craig",
-  "version": "1.15.5",
+  "version": "1.15.6",
   "description": "gui for generating ibm cloud infrastructure resources",
   "main": "index.js",
   "scripts": {

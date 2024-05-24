@@ -587,7 +587,9 @@ class CloudServicesPage extends React.Component {
                           service={{
                             type: "atracker",
                             name: "atracker",
+                            data: craig.store.json.atracker,
                           }}
+                          craig={craig}
                           onClick={this.onServiceIconClick}
                           isSelected={this.state.service === "atracker"}
                         />
@@ -688,6 +690,7 @@ class CloudServicesPage extends React.Component {
                                     resourceGroup={rg}
                                     service={service}
                                     icon={serviceFormMap[service.type].icon}
+                                    craig={craig}
                                     onClick={this.onServiceIconClick}
                                     isSelected={
                                       this.state.service === service.type &&

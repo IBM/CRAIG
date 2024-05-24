@@ -375,7 +375,6 @@ const validate = function (json) {
     // for each address prefix
     network.address_prefixes.forEach((prefix) => {
       nullVpcNameTest("Address Prefix", prefix, "name", "name");
-      validationTest("Address Prefix", prefix, "zone", "zone"); // mark zone required
     });
     // for each acl
     network.acls.forEach((acl) => {

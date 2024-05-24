@@ -28,6 +28,12 @@ function powerVsWorkspaceSchema() {
           ? stateData.name
           : `${componentProps.craig.store.json._options.prefix}-power-workspace-${stateData.name}`;
       },
+      onStateChange: function (stateData) {
+        if (stateData.use_data) {
+          stateData.imageNames = [];
+          stateData.images = [];
+        }
+      },
     }),
     resource_group: resourceGroupsField(),
     zone: {

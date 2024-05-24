@@ -120,7 +120,7 @@ The VPC VPN Server used for client to site VPNs requires SSL/TLS certificates st
 
 1. Create a Secrets Manager instance and either [order public certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-public-certificates&interface=ui
 ), [create private certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-private-certificates&interface=ui
-), or [import certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-certificates&interface=ui).
+), or [import certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-certificates&interface=ui). Consult the [VPC client-to-site server authentication documentation](https://cloud.ibm.com/docs/vpc?topic=vpc-client-to-site-authentication) to ensure the certificate authorities and certificates are created using values that are compatible with the VPN server.
 2. Choose VPC Deployments from the menu and create a new security group for the VPN Server.
 Create the security group in the `transit-rg` resource group.
 Add the following rules to the group:
@@ -140,7 +140,7 @@ Set the VPN Server values using the following table as a guide.
 | VPC                     | transit                                                                                                                                                                                                          |
 | Subnets                 | vpn-zone-1                                                                                                                                                                                                       |
 | Security group          | security group created in step 3                                                                                                                                                                                 |
-| Authentication method   | Certificate                                                                                                                                                                                                      |
+| Authentication method   | Username and Certificate                                                                                                                                                                                         |
 | Certificate CRN         | The CRN of the Secrets Manager secret containing the certificate for the VPN Server.                                                                                                                             |
 | Client CA CRN           | The CRN of the Secrets Manager secret containing the certificate for the VPN client.                                                                                                                             |
 | Client CIDR Pool        | Specify a network CIDR that does not conflict with any on-premises network, the VPC network, or the Power VS network. The CIDR should also be a subnet of 10.0.0.0/8 to avoid additional security group changes. |
@@ -199,3 +199,20 @@ Here are the list of fields and values to be used to setup on-prem VPN gateway:
 * Preshared Key: Shared between both VPNs to establish connection.
 * Peer CIDR: IBM VPC CIDRs + IBM PowerVS CIDRs to allow communication into IBM cloud environment via VPN.
 * IKE policy: IKEv2
+
+### Configuring VPC VPN Server - Client to Site VPN users
+
+If a VPC VPN Server was added to the configuration as documented with the `Username and Certificate` authentication mechanism, VPN users must have the correct access policies to log into the VPN.
+
+The following steps can be used to create an access group with the appropriate access policy and add VPN users:
+
+Create Access Group:
+  - Manage -> Access (IAM) -> Access Groups -> Create +
+  - Name the access group  _(i.e. VPN Users)_
+  - Add users and/or service IDs as needed
+  - Navigate to Access tab -> Assign access +
+  - Create an access policy with the following:
+
+| Service                            | Resources                          | Access          |
+|-                                   |-                                   |-                |
+| VPC Infrastructure Service   | All                                | Users of the VPN server need this role to connect to the VPN server          |

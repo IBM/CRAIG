@@ -11,7 +11,7 @@
     "dynamic_subnets": false,
     "enable_power_vs": true,
     "power_vs_zones": ["dal10"],
-    "craig_version": "1.12.0",
+    "craig_version": "1.15.6",
     "power_vs_high_availability": false,
     "template": "Power VS SAP Hana",
     "no_vpn_secrets_manager_auth": false,
@@ -52,9 +52,12 @@
   "cbr_zones": [],
   "cis": [],
   "cis_glbs": [],
+  "classic_bare_metal": [],
   "classic_gateways": [],
+  "classic_security_groups": [],
   "classic_ssh_keys": [],
   "classic_vlans": [],
+  "classic_vsi": [],
   "clusters": [],
   "dns": [],
   "event_streams": [],
@@ -281,53 +284,6 @@
       "cloud_connections": [],
       "images": [
         {
-          "creationDate": "2023-02-14T18:39:48.000Z",
-          "description": "",
-          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/a857bbbd-6fee-4bf7-816d-04fb4cdbf65e",
-          "imageID": "a857bbbd-6fee-4bf7-816d-04fb4cdbf65e",
-          "lastUpdateDate": "2023-02-14T22:29:20.000Z",
-          "name": "7100-05-09",
-          "specifications": {
-            "architecture": "ppc64",
-            "containerFormat": "bare",
-            "diskFormat": "raw",
-            "endianness": "big-endian",
-            "hypervisorType": "phyp",
-            "operatingSystem": "aix"
-          },
-          "state": "active",
-          "storagePool": "Tier3-Flash-1",
-          "storageType": "tier3",
-          "workspace": "secure-powervs",
-          "zone": "dal10",
-          "workspace_use_data": false
-        },
-        {
-          "creationDate": "2023-09-16T18:38:33.000Z",
-          "description": "",
-          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/69866375-0cec-4db9-93e9-a55c63c13d6e",
-          "imageID": "69866375-0cec-4db9-93e9-a55c63c13d6e",
-          "lastUpdateDate": "2023-09-16T21:38:22.000Z",
-          "name": "IBMi-71-11-2924-8",
-          "specifications": {
-            "architecture": "ppc64",
-            "containerFormat": "bare",
-            "diskFormat": "raw",
-            "endianness": "big-endian",
-            "hypervisorType": "phyp",
-            "operatingSystem": "ibmi"
-          },
-          "state": "active",
-          "storagePool": "Tier3-Flash-1",
-          "storageType": "tier3",
-          "workspace": "secure-powervs",
-          "zone": "dal10",
-          "workspace_use_data": false,
-          "depends_on": [
-            "${ibm_pi_image.power_image_secure_powervs_7100_05_09}"
-          ]
-        },
-        {
           "creationDate": "2024-01-30T12:46:02.000Z",
           "description": "",
           "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/70c5f204-38c8-469d-8561-c647222589c8",
@@ -348,10 +304,7 @@
           "storageType": "tier3",
           "workspace": "secure-powervs",
           "zone": "dal10",
-          "workspace_use_data": false,
-          "depends_on": [
-            "${ibm_pi_image.power_image_secure_powervs_ibmi_71_11_2924_8}"
-          ]
+          "workspace_use_data": false
         },
         {
           "creationDate": "2024-01-30T14:31:23.000Z",
@@ -926,8 +879,6 @@
       ],
       "attachments": [],
       "imageNames": [
-        "7100-05-09",
-        "IBMi-71-11-2924-8",
         "RHEL8-SP4-SAP-BYOL",
         "RHEL8-SP4-SAP-NETWEAVER-BYOL",
         "RHEL8-SP6",
@@ -2776,8 +2727,8 @@
                 "code": null
               },
               "tcp": {
-                "port_min": "22",
-                "port_max": "22",
+                "port_min": 22,
+                "port_max": 22,
                 "source_port_min": null,
                 "source_port_max": null
               },
@@ -2810,8 +2761,8 @@
               "tcp": {
                 "port_min": null,
                 "port_max": null,
-                "source_port_min": "22",
-                "source_port_max": "22"
+                "source_port_min": 22,
+                "source_port_max": 22
               },
               "udp": {
                 "port_min": null,

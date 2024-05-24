@@ -42,6 +42,7 @@ function getServices(craig, services) {
           serviceMap[rgName].push({
             name: service.name,
             type: resourceType,
+            data: service,
             overrideType:
               resourceType === "icd" ? "cloud_databases" : undefined,
           });
@@ -65,6 +66,7 @@ function getServices(craig, services) {
         serviceMap[serviceRg].push({
           name: observabilityService,
           type: observabilityService,
+          data: craig.store.json[observabilityService],
         });
     }
   });

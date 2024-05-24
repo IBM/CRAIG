@@ -529,6 +529,7 @@ function nameField(jsonField, options) {
     readOnly: options?.readOnly,
     tooltip: options?.tooltip,
     disabledText: options?.invalidText,
+    onStateChange: options?.onStateChange,
   };
 }
 

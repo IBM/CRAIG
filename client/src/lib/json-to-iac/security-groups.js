@@ -27,15 +27,15 @@ function ibmIsSecurityGroup(sg, config) {
     data: sg.use_data
       ? {
           name: sg.name,
-          vpc: vpcRef(sg.vpc).replace(
-            // if vpcs and use data replace opening with data.
-            "${",
-            "${data."
-          ),
         }
       : {
           name: kebabName([sg.vpc, sg.name, "sg"]),
-          vpc: vpcRef(sg.vpc),
+          vpc: vpcRef(sg.vpc).replace(
+            "${",
+            getObjectFromArray(config.vpcs, "name", sg.vpc).use_data
+              ? "${data."
+              : "${"
+          ),
           resource_group: `\${var.${snakeCase(sg.resource_group)}_id}`,
           tags: getTags(config),
         },
