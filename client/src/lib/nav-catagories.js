@@ -235,6 +235,24 @@ const navCatagories = [
         jsonField: "power",
       },
       {
+        title: "Power VS Shared Processor Pools",
+        path: "/form/powerSharedPools",
+        react_icon: "GroupObjects",
+        toTf: (config) => {
+          return powerInstanceTf(config) || "";
+        },
+        jsonField: "power_shared_processor_pools",
+      },
+      {
+        title: "Power VS Placement Groups",
+        path: "/form/powerPlacementGroups",
+        react_icon: "ScreenMapSet",
+        toTf: (config) => {
+          return powerInstanceTf(config) || "";
+        },
+        jsonField: "power_placement_groups",
+      },
+      {
         title: "Power VS Instances",
         path: "/form/powerInstances",
         react_icon: "IbmPowerVsInstance",

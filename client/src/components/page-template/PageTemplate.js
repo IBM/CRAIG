@@ -47,6 +47,8 @@ import {
   SecurityServices,
   InstanceClassic,
   IbmCloudBareMetalServer,
+  GroupObjects,
+  ScreenMapSet,
 } from "@carbon/icons-react";
 import f5 from "../../images/f5.png";
 import {
@@ -71,6 +73,8 @@ function F5Icon() {
 const releaseNotes = require("../../lib/docs/release-notes.json");
 const navCategories = require("../../lib/nav-catagories");
 const navIcons = {
+  ScreenMapSet: ScreenMapSet,
+  GroupObjects: GroupObjects,
   IbmCloudKeyProtect: IbmCloudKeyProtect,
   ObjectStorage: ObjectStorage,
   VirtualPrivateCloud: VirtualPrivateCloud,

@@ -916,7 +916,14 @@ function powerVsStorageOptions(isVolume, hideWhen) {
     size: "small",
     default: "",
     type: "select",
-    groups: ["None", "Storage Pool", "Affinity", "Anti-Affinity"],
+    groups: function (stateData) {
+      return contains(
+        ["None", undefined, null],
+        stateData?.pi_placement_group_id
+      )
+        ? ["None", "Storage Pool", "Affinity", "Anti-Affinity"]
+        : ["None", "Storage Pool"];
+    },
     /**
      * check to see if storage for a power vs instance or volume should be disabled
      * @param {*} stateData

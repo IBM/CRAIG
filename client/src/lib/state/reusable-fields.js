@@ -521,7 +521,9 @@ function nameField(jsonField, options) {
   return {
     default: "",
     invalid: options?.invalid ? options.invalid : invalidName(jsonField),
-    invalidText: invalidNameText(jsonField),
+    invalidText: options?.invalidText
+      ? options.invalidText
+      : invalidNameText(jsonField),
     helperText: options?.helperText ? options.helperText : nameHelperText,
     size: options?.size,
     hideWhen: options?.hideWhen,

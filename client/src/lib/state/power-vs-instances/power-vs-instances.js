@@ -122,6 +122,27 @@ function powerVsInstanceOnStoreUpdate(vtl) {
       ) {
         instance.pi_affinity_volume = null;
       }
+
+      if (
+        instance.pi_shared_processor_pool &&
+        !splatContains(
+          config.store.json.power_shared_processor_pools,
+          "name",
+          instance.pi_shared_processor_pool
+        )
+      ) {
+        instance.pi_shared_processor_pool = "None";
+      } else if (instance.pi_shared_processor_pool) {
+        config.store.json.power_shared_processor_pools.forEach((pool) => {
+          if (
+            instance.pi_shared_processor_pool === pool.name &&
+            pool.workspace !== instance.workspace &&
+            instance.workspace
+          ) {
+            instance.pi_shared_processor_pool = "None";
+          }
+        });
+      }
     });
   };
 }

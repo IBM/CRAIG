@@ -11,7 +11,7 @@
     "dynamic_subnets": false,
     "enable_power_vs": true,
     "power_vs_zones": ["dal12", "dal10", "us-south"],
-    "craig_version": "1.15.6",
+    "craig_version": "1.16.0",
     "power_vs_high_availability": false,
     "no_vpn_secrets_manager_auth": false,
     "power_vs_ha_zone_1": null,
@@ -315,7 +315,9 @@
       "pi_user_data": null,
       "pi_pin_policy": "none",
       "pi_license_repository_capacity": null,
-      "index": 0
+      "index": 0,
+      "pi_shared_processor_pool": "None",
+      "pi_placement_group_id": "None"
     },
     {
       "name": "oracle-2",
@@ -361,7 +363,9 @@
       "pi_user_data": null,
       "pi_pin_policy": "none",
       "pi_license_repository_capacity": null,
-      "index": 1
+      "index": 1,
+      "pi_shared_processor_pool": "None",
+      "pi_placement_group_id": "None"
     }
   ],
   "power_volumes": [

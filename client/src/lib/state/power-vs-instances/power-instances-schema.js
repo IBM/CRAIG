@@ -9,6 +9,7 @@ const {
   revision,
   splatContains,
   carve,
+  getObjectFromArray,
 } = require("lazy-z");
 const {
   fieldIsNullOrEmptyString,
@@ -90,9 +91,15 @@ function powerVsInstanceSchema(vtl) {
         align: "bottom-left",
         alignModal: "bottom-right",
         content:
-          "Select from a supported SAP profile. Enabling SAP will automatically provision needed Power VS Volumes",
+          "Select from a supported SAP profile. Enabling SAP will automatically provision needed Power VS Volumes. SAP instances cannot be used with Shared Processor Pools",
       },
       size: "small",
+      hideWhen: function (stateData) {
+        return !contains(
+          [null, "", "None"],
+          stateData.pi_shared_processor_pool
+        );
+      },
     },
     sap_profile: {
       hideWhen: hideWhenFieldFalse("sap"),
@@ -110,6 +117,9 @@ function powerVsInstanceSchema(vtl) {
         align: "bottom-right",
       },
       labelText: "SAP Instance Profile",
+      hideWhen: function (stateData) {
+        return !stateData.sap;
+      },
     },
     workspace: {
       type: "select",
@@ -286,11 +296,21 @@ function powerVsInstanceSchema(vtl) {
       default: "",
       invalid: fieldIsNullOrEmptyString("pi_sys_type"),
       invalidText: selectInvalidText("system type"),
-      groups: vtl ? ["s922", "e980"] : systemTypes,
+      groups: systemTypes,
+      disabled: function (stateData) {
+        return !contains(
+          [null, "", "None", undefined],
+          stateData.pi_shared_processor_pool
+        );
+      },
       hideWhen: function (stateData, componentProps) {
         return (
           isNullOrEmptyString(stateData.workspace, true) ||
-          hideWhenNoWorkspaceAndVtl(vtl)(stateData, componentProps)
+          hideWhenNoWorkspaceAndVtl(vtl)(stateData, componentProps) ||
+          !contains(
+            [null, "", "None", undefined],
+            stateData.pi_shared_processor_pool
+          )
         );
       },
     },
@@ -298,12 +318,52 @@ function powerVsInstanceSchema(vtl) {
       default: "",
       labelText: "Processor Type",
       invalid: fieldIsNullOrEmptyString("pi_proc_type"),
-      groups: ["Shared", "Capped", "Dedicated"],
+      groups: function (stateData) {
+        return contains(
+          [null, "", "None", undefined],
+          stateData.pi_shared_processor_pool
+        )
+          ? ["Shared", "Capped", "Dedicated"]
+          : ["Shared", "Capped"];
+      },
       size: "small",
       type: "select",
       onRender: titleCaseRender("pi_proc_type"),
       onInputChange: kebabCaseInput("pi_proc_type"),
       hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
+    },
+    pi_shared_processor_pool: {
+      default: "None",
+      type: "select",
+      groups: function (stateData, componentProps) {
+        return ["None"].concat(
+          splat(
+            componentProps.craig.store.json.power_shared_processor_pools.filter(
+              (instance) => {
+                if (instance.workspace === stateData.workspace) return instance;
+              }
+            ),
+            "name"
+          )
+        );
+      },
+      size: "small",
+      labelText: "Shared Processor Pool",
+      hideWhen: function (stateData) {
+        return stateData.sap;
+      },
+      onInputChange: function (stateData, targetName, componentProps) {
+        if (stateData.pi_shared_processor_pool !== "None") {
+          stateData.pi_sys_type = getObjectFromArray(
+            componentProps.craig.store.json.power_shared_processor_pools,
+            "name",
+            stateData.pi_shared_processor_pool
+          ).pi_shared_processor_pool_host_group;
+          stateData.sap = false;
+          stateData.sap_profile = null;
+        }
+        return stateData.pi_shared_processor_pool;
+      },
     },
     pi_processors: {
       labelText: "Processors",
@@ -477,6 +537,36 @@ function powerVsInstanceSchema(vtl) {
       size: "small",
       groups: ["OK", "WARNING"],
       default: "OK",
+    },
+    pi_placement_group_id: {
+      labelText: "Placement Group",
+      type: "select",
+      size: "small",
+      default: "None",
+      onStateChange: function (stateData) {
+        if (stateData.pi_placement_group_id !== "None") {
+          stateData.pi_anti_affinity_volume = null;
+          stateData.pi_anti_affinity_instance = null;
+          stateData.pi_affinity_policy = null;
+          stateData.pi_affinity_volume = null;
+          stateData.pi_affinity_instance = null;
+          stateData.storage_option = "None";
+        }
+      },
+      groups: function (stateData, componentProps) {
+        return ["None"].concat(
+          splat(
+            componentProps.craig.store.json.power_placement_groups.filter(
+              (group) => {
+                if (group.workspace === stateData.workspace) {
+                  return group;
+                }
+              }
+            ),
+            "name"
+          )
+        );
+      },
     },
   };
 }

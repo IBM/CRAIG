@@ -1034,3 +1034,21 @@ Disk Key Names       | The internal key names for the monthly Bare Metal server'
 - [Classic Bare Metal Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/compute_bare_metal)
 
 -----
+
+## Power Shared Processor Pools
+
+NYI
+
+### Related Links
+
+
+-----
+
+## Power Placement Groups
+
+NYI
+
+### Related Links
+
+
+-----

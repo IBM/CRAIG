@@ -98,6 +98,8 @@ function disableSave(field, stateData, componentProps, craig) {
     "classic_sg_rules",
     "classic_vsi",
     "classic_bare_metal",
+    "power_placement_groups",
+    "power_shared_processor_pools",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (contains(stateDisableSaveComponents, field) || isPowerSshKey) {

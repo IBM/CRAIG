@@ -686,10 +686,10 @@ describe("dynamic select", () => {
       );
     });
     it("should return correct list for other endpoints when mounted and loaded but selected and is vtl", () => {
-      let expectedData = ["", "s922", "e980"];
+      let expectedData = ["", "s922", "e980", "s1022"];
       let actualData = dynamicFetchSelectDataToGroups(
         {
-          data: ["frog", "toad", "s922", "e980"],
+          data: ["frog", "toad", "s922", "e980", "s1022"],
         },
         {
           name: "pi_sys_type",

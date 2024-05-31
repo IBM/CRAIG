@@ -63,6 +63,10 @@ const { initFortigateStore } = require("./fortigate.js");
 const { initClassicSecurityGroups } = require("./classic-security-groups.js");
 const { initClassicVsi } = require("./classic-vsi.js");
 const { initClassicBareMetalStore } = require("./classic-bare-metal.js");
+const {
+  initSharedProcessorPoolStore,
+} = require("./power-shared-processor-pools.js");
+const { initPlacementGroupStore } = require("./power-placement-groups.js");
 
 // fields not to add to craig json sub object
 const doNotRenderFields = [
@@ -198,6 +202,8 @@ const state = function (legacy) {
   initClassicSecurityGroups(store);
   initClassicVsi(store);
   initClassicBareMetalStore(store);
+  initSharedProcessorPoolStore(store);
+  initPlacementGroupStore(store);
 
   /**
    * hard set config dot json in state store

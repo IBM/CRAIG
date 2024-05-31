@@ -11,7 +11,7 @@
     "dynamic_subnets": false,
     "enable_power_vs": true,
     "power_vs_zones": ["dal10"],
-    "craig_version": "1.15.6",
+    "craig_version": "1.16.0",
     "power_vs_high_availability": false,
     "template": "Power VS SAP Hana",
     "no_vpn_secrets_manager_auth": false,
@@ -947,7 +947,9 @@
       "pi_ibmi_pha": false,
       "pi_ibmi_rds_users": null,
       "pi_pin_policy": "none",
-      "pi_license_repository_capacity": null
+      "pi_license_repository_capacity": null,
+      "pi_shared_processor_pool": "None",
+      "pi_placement_group_id": "None"
     },
     {
       "name": "sap-hana",
@@ -993,7 +995,9 @@
       "pi_ibmi_pha": false,
       "pi_ibmi_rds_users": null,
       "pi_pin_policy": "none",
-      "pi_license_repository_capacity": null
+      "pi_license_repository_capacity": null,
+      "pi_shared_processor_pool": "None",
+      "pi_placement_group_id": "None"
     },
     {
       "name": "sap-netweaver",
@@ -1039,7 +1043,9 @@
       "pi_ibmi_pha": false,
       "pi_ibmi_rds_users": null,
       "pi_pin_policy": "none",
-      "pi_license_repository_capacity": null
+      "pi_license_repository_capacity": null,
+      "pi_shared_processor_pool": "None",
+      "pi_placement_group_id": "None"
     }
   ],
   "power_volumes": [
