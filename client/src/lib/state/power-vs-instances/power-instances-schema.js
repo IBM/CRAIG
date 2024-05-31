@@ -286,7 +286,7 @@ function powerVsInstanceSchema(vtl) {
       default: "",
       invalid: fieldIsNullOrEmptyString("pi_sys_type"),
       invalidText: selectInvalidText("system type"),
-      groups: vtl ? ["s922", "e980"] : systemTypes,
+      groups: systemTypes,
       hideWhen: function (stateData, componentProps) {
         return (
           isNullOrEmptyString(stateData.workspace, true) ||

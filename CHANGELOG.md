@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.16.0
+
+### Features
+
+- FalconStor VTL now dynamically retrieves available machine types based on the zone selected
+
 ## 1.15.6
 
 ### Upgrade Notes

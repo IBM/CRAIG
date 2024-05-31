@@ -162,7 +162,7 @@ function dynamicFetchSelectDataToGroups(stateData, componentProps, isMounted) {
         componentProps.parentProps.formName === "VTL" &&
           componentProps.name === "pi_sys_type"
           ? (item) => {
-              if (contains(["", "s922", "e980"], item)) return item;
+              if (contains(["", "s1022", "s922", "e980"], item)) return item;
             }
           : (item) => {
               if (isFunction(componentProps.field.onRender)) {

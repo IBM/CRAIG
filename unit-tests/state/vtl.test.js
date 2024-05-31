@@ -1084,14 +1084,5 @@ describe("vtl", () => {
         );
       });
     });
-    describe("vtl.pi_sys_type", () => {
-      it("should return groups", () => {
-        assert.deepEqual(
-          craig.vtl.pi_sys_type.groups,
-          ["s922", "e980"],
-          "it should return groups"
-        );
-      });
-    });
   });
 });
