@@ -1370,6 +1370,11 @@ describe("automate schema generation", () => {
           Array: {
             name: { type: "string", default: null },
             sap: { type: "boolean", default: false },
+            pi_placement_group_id: {
+              type: "string",
+              groups: "<calculated>",
+              default: "None",
+            },
             sap_profile: {
               type: "string",
               default: null,
@@ -1447,10 +1452,15 @@ describe("automate schema generation", () => {
               type: "string",
               default: null,
             },
+            pi_shared_processor_pool: {
+              default: "None",
+              groups: "<calculated>",
+              type: "string",
+            },
             pi_proc_type: {
               type: "string",
               default: null,
-              groups: ["shared", "capped", "dedicated"],
+              groups: "<calculated>",
             },
             pi_processors: { type: "string", default: null },
             pi_memory: { type: "string", default: null },
@@ -1459,7 +1469,7 @@ describe("automate schema generation", () => {
             storage_option: {
               type: "string",
               default: null,
-              groups: ["None", "Storage Pool", "Affinity", "Anti-Affinity"],
+              groups: "<calculated>",
             },
             pi_storage_type: { type: "string", default: null },
             affinity_type: {
@@ -1517,7 +1527,7 @@ describe("automate schema generation", () => {
             storage_option: {
               type: "string",
               default: null,
-              groups: ["None", "Storage Pool", "Affinity", "Anti-Affinity"],
+              groups: "<calculated>",
             },
             pi_volume_type: { type: "string", default: null },
             affinity_type: {
@@ -2008,8 +2018,34 @@ describe("automate schema generation", () => {
             },
           },
         },
+        power_shared_processor_pools: {
+          Array: {
+            name: {
+              default: null,
+              type: "string",
+            },
+            pi_shared_processor_pool_host_group: {
+              default: null,
+              type: "string",
+            },
+            workspace: {
+              default: null,
+              groups: "<calculated>",
+              type: "string",
+            },
+            pi_shared_processor_pool_reserved_cores: {
+              default: null,
+              type: "string",
+            },
+          },
+        },
         vtl: {
           Array: {
+            pi_placement_group_id: {
+              type: "string",
+              groups: "<calculated>",
+              default: "None",
+            },
             name: { type: "string", default: null },
             sap: { type: "boolean", default: false },
             sap_profile: {
@@ -2089,10 +2125,15 @@ describe("automate schema generation", () => {
               type: "string",
               default: null,
             },
+            pi_shared_processor_pool: {
+              default: "None",
+              groups: "<calculated>",
+              type: "string",
+            },
             pi_proc_type: {
               type: "string",
               default: null,
-              groups: ["shared", "capped", "dedicated"],
+              groups: "<calculated>",
             },
             pi_processors: { type: "string", default: null },
             pi_memory: { type: "string", default: null },
@@ -2101,7 +2142,7 @@ describe("automate schema generation", () => {
             storage_option: {
               type: "string",
               default: null,
-              groups: ["None", "Storage Pool", "Affinity", "Anti-Affinity"],
+              groups: "<calculated>",
             },
             pi_storage_type: { type: "string", default: null },
             affinity_type: {
@@ -2144,6 +2185,24 @@ describe("automate schema generation", () => {
               type: "string",
               default: "OK",
               groups: ["OK", "WARNING"],
+            },
+          },
+        },
+        power_placement_groups: {
+          Array: {
+            name: {
+              default: null,
+              type: "string",
+            },
+            workspace: {
+              default: null,
+              groups: "<calculated>",
+              type: "string",
+            },
+            pi_placement_group_policy: {
+              default: null,
+              groups: ["affinity", "anti-affinity"],
+              type: "string",
             },
           },
         },

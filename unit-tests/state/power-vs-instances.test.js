@@ -1563,6 +1563,7 @@ describe("power_instances", () => {
         ],
         workspace: "toad",
         zone: "oops",
+        pi_shared_processor_pool: "egg",
       });
 
       assert.deepEqual(
@@ -1581,6 +1582,62 @@ describe("power_instances", () => {
             workspace: "toad",
             zone: null,
             pi_storage_type: null,
+            pi_shared_processor_pool: "None",
+          },
+        ],
+        "it should initialize data"
+      );
+    });
+    it("should update processor pool when no longer in existing workspace", () => {
+      craig.power_shared_processor_pools.create({
+        zone: "dal12",
+        workspace: "example",
+        name: "egg",
+        pi_shared_processor_pool_host_group: "s922",
+        pi_shared_processor_pool_reserved_cores: "2",
+      });
+      craig.power_shared_processor_pools.create({
+        zone: "dal10",
+        workspace: "example",
+        name: "frog",
+        pi_shared_processor_pool_host_group: "s922",
+        pi_shared_processor_pool_reserved_cores: "2",
+      });
+      craig.power_instances.create({
+        name: "toad",
+        image: "oops",
+        ssh_key: "oops",
+        network: [
+          {
+            name: "oops",
+            ip_address: "1.2.3.4",
+          },
+          {
+            name: "test-network",
+          },
+        ],
+        workspace: "toad",
+        zone: "oops",
+        pi_shared_processor_pool: "egg",
+      });
+
+      assert.deepEqual(
+        craig.store.json.power_instances,
+        [
+          {
+            name: "toad",
+            image: null,
+            ssh_key: null,
+            network: [
+              {
+                name: "test-network",
+              },
+            ],
+            primary_subnet: null,
+            workspace: "toad",
+            zone: null,
+            pi_storage_type: null,
+            pi_shared_processor_pool: "None",
           },
         ],
         "it should initialize data"
@@ -2335,11 +2392,27 @@ describe("power_instances", () => {
         assert.isTrue(actualData, "it should be true");
       });
     });
+    describe("power_instances.sap", () => {
+      it("should be hidden when processor pool selected", () => {
+        assert.isTrue(
+          craig.power_instances.sap.hideWhen({
+            pi_shared_processor_pool: "frog",
+          }),
+          "it should be hidden"
+        );
+      });
+    });
     describe("power_instances.sap_profile", () => {
       describe("power_instances.schema.sap_profile.hideWhen", () => {
         it("should be true when is not sap", () => {
           assert.isTrue(
             craig.power_instances.sap_profile.hideWhen({ sap: false }),
+            "it should be hidden"
+          );
+          assert.isTrue(
+            craig.power_instances.sap_profile.hideWhen({
+              pi_shared_processor_pool: "frog",
+            }),
             "it should be hidden"
           );
         });
@@ -2844,7 +2917,111 @@ describe("power_instances", () => {
         });
       });
     });
+    describe("power_instances.pi_shared_processor_pool", () => {
+      it("should return list of groups", () => {
+        assert.deepEqual(
+          craig.power_instances.pi_shared_processor_pool.groups(
+            {},
+            { craig: craig }
+          ),
+          ["None"],
+          "it should return correct array"
+        );
+        craig.power.create({
+          name: "example",
+          imageNames: ["7100-05-09"],
+          zone: "dal10",
+        });
+        craig.power_shared_processor_pools.create({
+          zone: "dal12",
+          workspace: "example",
+          name: "test",
+          pi_shared_processor_pool_host_group: "s922",
+          pi_shared_processor_pool_reserved_cores: "2",
+        });
+        craig.power_shared_processor_pools.create({
+          zone: "dal12",
+          workspace: "egg",
+          name: "test2",
+          pi_shared_processor_pool_host_group: "s922",
+          pi_shared_processor_pool_reserved_cores: "2",
+        });
+        assert.deepEqual(
+          craig.power_instances.pi_shared_processor_pool.groups(
+            {
+              workspace: "example",
+            },
+            { craig: craig }
+          ),
+          ["None", "test"],
+          "it should return correct array"
+        );
+      });
+      it("should be hidden when sap", () => {
+        assert.isTrue(
+          craig.power_instances.pi_shared_processor_pool.hideWhen({
+            sap: true,
+          }),
+          "it should be hidden"
+        );
+      });
+      it("should modify state data on input change", () => {
+        craig.power.create({
+          name: "example",
+          imageNames: ["7100-05-09"],
+          zone: "dal10",
+        });
+        craig.power_shared_processor_pools.create({
+          zone: "dal12",
+          workspace: "example",
+          name: "test",
+          pi_shared_processor_pool_host_group: "s922",
+          pi_shared_processor_pool_reserved_cores: "2",
+        });
+        assert.deepEqual(
+          craig.power_instances.pi_shared_processor_pool.onInputChange({
+            pi_shared_processor_pool: "None",
+          }),
+          "None",
+          "it should return correct data"
+        );
+        let actualData = {
+          pi_shared_processor_pool: "test",
+        };
+        craig.power_instances.pi_shared_processor_pool.onInputChange(
+          actualData,
+          "target",
+          { craig: craig }
+        );
+        assert.deepEqual(
+          actualData,
+          {
+            pi_shared_processor_pool: "test",
+            pi_sys_type: "s922",
+            sap: false,
+            sap_profile: null,
+          },
+          "it should return correct data"
+        );
+      });
+    });
     describe("power_instances.pi_proc_type", () => {
+      describe("power_instances.pi_proc_type.groups", () => {
+        it("should return default groups", () => {
+          assert.deepEqual(
+            craig.power_instances.pi_proc_type.groups({}),
+            ["Shared", "Capped", "Dedicated"],
+            "it should return groups"
+          );
+          assert.deepEqual(
+            craig.power_instances.pi_proc_type.groups({
+              pi_shared_processor_pool: "pool",
+            }),
+            ["Shared", "Capped"],
+            "it should return groups when using shared pool"
+          );
+        });
+      });
       describe("power_instances.pi_proc_type.onRender", () => {
         it("should return empty string on render if no selection", () => {
           assert.deepEqual(
@@ -3013,7 +3190,101 @@ describe("power_instances", () => {
         );
       });
     });
+    describe("power_instances.pi_placement_group_id", () => {
+      it("should correctly set value of storage option related fields on state change with placement group", () => {
+        let actualData = {
+          pi_placement_group_id: "frog",
+        };
+        craig.power_instances.pi_placement_group_id.onStateChange(actualData);
+        assert.deepEqual(
+          actualData,
+          {
+            pi_anti_affinity_volume: null,
+            pi_anti_affinity_instance: null,
+            pi_affinity_policy: null,
+            pi_affinity_volume: null,
+            pi_affinity_instance: null,
+            pi_placement_group_id: "frog",
+            storage_option: "None",
+          },
+          "it should modify data"
+        );
+      });
+      it("should correctly set value of storage option related fields on state change with None placement group", () => {
+        let actualData = {
+          pi_placement_group_id: "None",
+        };
+        craig.power_instances.pi_placement_group_id.onStateChange(actualData);
+        assert.deepEqual(
+          actualData,
+          {
+            pi_placement_group_id: "None",
+          },
+          "it should modify data"
+        );
+      });
+      it("should correctly generate groups", () => {
+        craig.power.create({
+          name: "example",
+          imageNames: ["7100-05-09"],
+          zone: "dal12",
+        });
+        craig.power.create({
+          name: "example2",
+          imageNames: ["7100-05-09"],
+          zone: "dal10",
+        });
+        craig.power_placement_groups.create({
+          zone: "dal12",
+          workspace: "example",
+          name: "test",
+          pi_placement_group_policy: "affinity",
+        });
+        craig.power_placement_groups.create({
+          zone: "dal10",
+          workspace: "example2",
+          name: "test2",
+          pi_placement_group_policy: "affinity",
+        });
+        assert.deepEqual(
+          craig.power_instances.pi_placement_group_id.groups(
+            {},
+            {
+              craig: craig,
+            }
+          ),
+          ["None"],
+          "it should return groups"
+        );
+        assert.deepEqual(
+          craig.power_instances.pi_placement_group_id.groups(
+            {
+              workspace: "example",
+            },
+            {
+              craig: craig,
+            }
+          ),
+          ["None", "test"],
+          "it should return groups"
+        );
+      });
+    });
     describe("power_instances.storage_option", () => {
+      it("should return correct groups for storage option", () => {
+        assert.deepEqual(
+          craig.power_instances.storage_option.groups({}),
+          ["None", "Storage Pool", "Affinity", "Anti-Affinity"],
+          "it should return correct groups"
+        );
+        assert.deepEqual(
+          craig.power_instances.storage_option.groups({
+            pi_placement_group_id: "frog",
+          }),
+          ["None", "Storage Pool"],
+          "it should return correct groups when using placement group"
+        );
+      });
       describe("power_instances.storage_option.onStateChange", () => {
         it("should set state when storage option is storage type", () => {
           let actualData = {
@@ -3105,6 +3376,14 @@ describe("power_instances", () => {
         }),
         "/api/power/frog/system_pools",
         "it should be equal"
+      );
+    });
+    it("should disable sys type when shared processor pool", () => {
+      assert.isTrue(
+        craig.power_instances.pi_sys_type.disabled({
+          pi_shared_processor_pool: "true",
+        }),
+        "it should be disabled"
       );
     });
     it("should hide sys type when no workspace", () => {

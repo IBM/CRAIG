@@ -957,5 +957,6 @@
   "fortigate_vnf": [],
   "classic_security_groups": [],
   "classic_vsi": [],
-  "classic_bare_metal": []
+  "classic_bare_metal": [],
+  "power_shared_processor_pools": []
 }

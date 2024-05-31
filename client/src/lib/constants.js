@@ -51,7 +51,10 @@ module.exports = {
           exp
             .group((exp) => exp.set("a-z0-9-").or().literal("\\").any())
             .anyNumber()
-            .set("a-z0-9");
+            .set("a-z0-9")
+            .or()
+            .literal("\\")
+            .any();
         })
         .anyNumber();
     })

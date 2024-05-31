@@ -3,6 +3,8 @@ const { formatPowerVsInstance } = require("../../client/src/lib/json-to-iac");
 const {
   powerInstanceTf,
   formatFalconStorInstance,
+  formatSharedProcessorPool,
+  formatPlacementGroup,
 } = require("../../client/src/lib/json-to-iac/power-vs-instances");
 
 describe("Power VS Instances", () => {
@@ -1259,6 +1261,7 @@ resource "ibm_pi_instance" "example_workspace_instance_frog" {
           pi_proc_type: "shared",
           pi_sys_type: "s922",
           pi_pin_policy: "none",
+          pi_shared_processor_pool: "None",
           pi_health_status: "WARNING",
           pi_storage_type: "tier1",
           pi_license_repository_capacity: 1,
@@ -1294,8 +1297,184 @@ resource "ibm_pi_instance" "example_falconstor_vtl_test" {
       });
     });
   });
+  describe("formatSharedProcessorPool", () => {
+    it("should return correct data", () => {
+      let actualData = formatSharedProcessorPool({
+        zone: "dal12",
+        workspace: "example",
+        name: "test",
+        pi_shared_processor_pool_host_group: "s922",
+        pi_shared_processor_pool_reserved_cores: "2",
+      });
+      let expectedData = `
+resource "ibm_pi_shared_processor_pool" "example_workspace_test_processor_pool" {
+  provider                                = ibm.power_vs_dal12
+  pi_cloud_instance_id                    = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_shared_processor_pool_host_group     = "s922"
+  pi_shared_processor_pool_reserved_cores = "2"
+  pi_shared_processor_pool_name           = "test"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct instance data"
+      );
+    });
+    it("should return correct data with existing workspace from data", () => {
+      let actualData = formatSharedProcessorPool(
+        {
+          zone: "dal12",
+          workspace: "example",
+          name: "test",
+          pi_shared_processor_pool_host_group: "s922",
+          pi_shared_processor_pool_reserved_cores: "2",
+        },
+        {
+          power: [
+            {
+              name: "example",
+              use_data: true,
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_pi_shared_processor_pool" "example_workspace_test_processor_pool" {
+  provider                                = ibm.power_vs_dal12
+  pi_cloud_instance_id                    = data.ibm_resource_instance.power_vs_workspace_example.guid
+  pi_shared_processor_pool_host_group     = "s922"
+  pi_shared_processor_pool_reserved_cores = "2"
+  pi_shared_processor_pool_name           = "test"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct instance data"
+      );
+    });
+    it("should return correct data with unfound workspace ref", () => {
+      let actualData = formatSharedProcessorPool(
+        {
+          zone: "dal12",
+          workspace: "example",
+          name: "test",
+          pi_shared_processor_pool_host_group: "s922",
+          pi_shared_processor_pool_reserved_cores: "2",
+        },
+        {
+          power: [
+            {
+              name: "sss",
+              use_data: true,
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_pi_shared_processor_pool" "example_workspace_test_processor_pool" {
+  provider                                = ibm.power_vs_dal12
+  pi_cloud_instance_id                    = ERROR: Unfound Ref
+  pi_shared_processor_pool_host_group     = "s922"
+  pi_shared_processor_pool_reserved_cores = "2"
+  pi_shared_processor_pool_name           = "test"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct instance data"
+      );
+    });
+  });
+  describe("formatSharedProcessorPool", () => {
+    it("should return correct data", () => {
+      let actualData = formatPlacementGroup({
+        zone: "dal12",
+        workspace: "example",
+        name: "test",
+        pi_shared_processor_pool_host_group: "s922",
+        pi_shared_processor_pool_reserved_cores: "2",
+      });
+      let expectedData = `
+resource "ibm_pi_placement_group" "example_workspace_test_placement_group" {
+  provider                = ibm.power_vs_dal12
+  pi_cloud_instance_id    = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_placement_group_name = "\${var.prefix}-test"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct instance data"
+      );
+    });
+    it("should return correct data with existing workspace from data", () => {
+      let actualData = formatPlacementGroup(
+        {
+          zone: "dal12",
+          workspace: "example",
+          name: "test",
+          pi_shared_processor_pool_host_group: "s922",
+          pi_shared_processor_pool_reserved_cores: "2",
+        },
+        {
+          power: [
+            {
+              name: "example",
+              use_data: true,
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_pi_placement_group" "example_workspace_test_placement_group" {
+  provider                = ibm.power_vs_dal12
+  pi_cloud_instance_id    = data.ibm_resource_instance.power_vs_workspace_example.guid
+  pi_placement_group_name = "\${var.prefix}-test"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct instance data"
+      );
+    });
+    it("should return correct data with unfound workspace ref", () => {
+      let actualData = formatPlacementGroup(
+        {
+          zone: "dal12",
+          workspace: "example",
+          name: "test",
+          pi_shared_processor_pool_host_group: "s922",
+          pi_shared_processor_pool_reserved_cores: "2",
+        },
+        {
+          power: [
+            {
+              name: "sss",
+              use_data: true,
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_pi_placement_group" "example_workspace_test_placement_group" {
+  provider                = ibm.power_vs_dal12
+  pi_cloud_instance_id    = ERROR: Unfound Ref
+  pi_placement_group_name = "\${var.prefix}-test"
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct instance data"
+      );
+    });
+  });
   describe("powerInstanceTf", () => {
-    it("should return power file", () => {
+    it("should return power file with shared processor pool", () => {
       let actualData = powerInstanceTf({
         power_instances: [
           {
@@ -1318,26 +1497,134 @@ resource "ibm_pi_instance" "example_falconstor_vtl_test" {
             pi_pin_policy: "none",
             pi_health_status: "WARNING",
             pi_storage_type: "tier1",
+            pi_shared_processor_pool: "test",
+          },
+        ],
+        power_shared_processor_pools: [
+          {
+            zone: "dal12",
+            workspace: "example",
+            name: "test",
+            pi_shared_processor_pool_host_group: "s922",
+            pi_shared_processor_pool_reserved_cores: "2",
           },
         ],
       });
       let expectedData = `##############################################################################
+# Test Processor Pool
+##############################################################################
+
+resource "ibm_pi_shared_processor_pool" "example_workspace_test_processor_pool" {
+  provider                                = ibm.power_vs_dal12
+  pi_cloud_instance_id                    = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_shared_processor_pool_host_group     = "s922"
+  pi_shared_processor_pool_reserved_cores = "2"
+  pi_shared_processor_pool_name           = "test"
+}
+
+##############################################################################
+
+##############################################################################
 # Test Power Instance
 ##############################################################################
 
 resource "ibm_pi_instance" "example_workspace_instance_test" {
-  provider             = ibm.power_vs_dal12
-  pi_image_id          = ibm_pi_image.power_image_example_sles15_sp3_sap.image_id
-  pi_key_pair_name     = ibm_pi_key.power_vs_ssh_key_keyname.pi_key_name
-  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_example.guid
-  pi_instance_name     = "\${var.prefix}-test"
-  pi_memory            = "4"
-  pi_processors        = "2"
-  pi_proc_type         = "shared"
-  pi_sys_type          = "s922"
-  pi_pin_policy        = "none"
-  pi_health_status     = "WARNING"
-  pi_storage_type      = "tier1"
+  provider                 = ibm.power_vs_dal12
+  pi_image_id              = ibm_pi_image.power_image_example_sles15_sp3_sap.image_id
+  pi_key_pair_name         = ibm_pi_key.power_vs_ssh_key_keyname.pi_key_name
+  pi_cloud_instance_id     = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_instance_name         = "\${var.prefix}-test"
+  pi_memory                = "4"
+  pi_processors            = "2"
+  pi_proc_type             = "shared"
+  pi_sys_type              = "s922"
+  pi_pin_policy            = "none"
+  pi_health_status         = "WARNING"
+  pi_storage_type          = "tier1"
+  pi_shared_processor_pool = ibm_pi_shared_processor_pool.example_workspace_test_processor_pool.shared_processor_pool_id
+  pi_network {
+    network_id = ibm_pi_network.power_network_example_dev_nw.network_id
+  }
+  timeouts {
+    create = "3h"
+  }
+}
+
+##############################################################################
+`;
+
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct instance data"
+      );
+    });
+    it("should return power file with placement group", () => {
+      let actualData = powerInstanceTf({
+        power_instances: [
+          {
+            zone: "dal12",
+            workspace: "example",
+            name: "test",
+            image: "SLES15-SP3-SAP",
+            ssh_key: "keyname",
+            network: [
+              {
+                name: "dev-nw",
+                ip_address: "",
+              },
+            ],
+            primary_subnet: "dev-nw",
+            pi_memory: "4",
+            pi_processors: "2",
+            pi_proc_type: "shared",
+            pi_sys_type: "s922",
+            pi_pin_policy: "none",
+            pi_health_status: "WARNING",
+            pi_storage_type: "tier1",
+            pi_placement_group_id: "test",
+          },
+        ],
+        power_placement_groups: [
+          {
+            zone: "dal12",
+            workspace: "example",
+            name: "test",
+            pi_placement_group_policy: "affinity",
+          },
+        ],
+      });
+      let expectedData = `##############################################################################
+# Test Placement Group
+##############################################################################
+
+resource "ibm_pi_placement_group" "example_workspace_test_placement_group" {
+  provider                  = ibm.power_vs_dal12
+  pi_cloud_instance_id      = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_placement_group_policy = "affinity"
+  pi_placement_group_name   = "\${var.prefix}-test"
+}
+
+##############################################################################
+
+##############################################################################
+# Test Power Instance
+##############################################################################
+
+resource "ibm_pi_instance" "example_workspace_instance_test" {
+  provider              = ibm.power_vs_dal12
+  pi_image_id           = ibm_pi_image.power_image_example_sles15_sp3_sap.image_id
+  pi_key_pair_name      = ibm_pi_key.power_vs_ssh_key_keyname.pi_key_name
+  pi_cloud_instance_id  = ibm_resource_instance.power_vs_workspace_example.guid
+  pi_instance_name      = "\${var.prefix}-test"
+  pi_memory             = "4"
+  pi_processors         = "2"
+  pi_proc_type          = "shared"
+  pi_sys_type           = "s922"
+  pi_pin_policy         = "none"
+  pi_health_status      = "WARNING"
+  pi_storage_type       = "tier1"
+  pi_placement_group_id = ibm_pi_placement_group.example_workspace_test_placement_group.placement_group_id
   pi_network {
     network_id = ibm_pi_network.power_network_example_dev_nw.network_id
   }

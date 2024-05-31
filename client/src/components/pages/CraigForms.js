@@ -1122,6 +1122,8 @@ function craigForms(craig) {
         {
           sap: craig.power_instances.sap,
           sap_profile: craig.power_instances.sap_profile,
+          pi_shared_processor_pool:
+            craig.power_instances.pi_shared_processor_pool,
         },
         {
           name: craig.power_instances.name,
@@ -1145,12 +1147,13 @@ function craigForms(craig) {
           pi_memory: craig.power_instances.pi_memory,
         },
         {
+          pi_health_status: craig.power_instances.pi_health_status,
+          pi_placement_group_id: craig.power_instances.pi_placement_group_id,
+        },
+        {
           pi_ibmi_css: craig.power_instances.pi_ibmi_css,
           pi_ibmi_pha: craig.power_instances.pi_ibmi_pha,
           pi_ibmi_rds_users: craig.power_instances.pi_ibmi_rds_users,
-        },
-        {
-          pi_health_status: craig.power_instances.pi_health_status,
         },
         {
           heading: {
@@ -1187,6 +1190,34 @@ function craigForms(craig) {
           hideWhen: function (stateData) {
             return isNullOrEmptyString(stateData.workspace, true);
           },
+        },
+      ],
+    },
+    power_placement_groups: {
+      groups: [
+        {
+          name: craig.power_placement_groups.name,
+          workspace: craig.power_placement_groups.workspace,
+        },
+        {
+          pi_placement_group_policy:
+            craig.power_placement_groups.pi_placement_group_policy,
+        },
+      ],
+    },
+    power_shared_processor_pools: {
+      groups: [
+        {
+          name: craig.power_shared_processor_pools.name,
+          workspace: craig.power_shared_processor_pools.workspace,
+        },
+        {
+          pi_shared_processor_pool_reserved_cores:
+            craig.power_shared_processor_pools
+              .pi_shared_processor_pool_reserved_cores,
+          pi_shared_processor_pool_host_group:
+            craig.power_shared_processor_pools
+              .pi_shared_processor_pool_host_group,
         },
       ],
     },

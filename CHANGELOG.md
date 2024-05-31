@@ -6,7 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 
+- Users can now create Power VS Shared Processor Pools from the `/form/powerSharedPools` page
+- Users can now create Power VS Placement Groups from the `/form/powerPlacemetGroups` page
 - FalconStor VTL now dynamically retrieves available machine types based on the zone selected
+
+### Fixes
+
+- Fixed an issue causing CIDR blocks and IP addressess ending in a number 200 or greater to be incorrectly flagged as invalid
 
 ## 1.15.6
 

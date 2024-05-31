@@ -283,7 +283,9 @@
       "pi_user_data": null,
       "pi_pin_policy": "none",
       "pi_license_repository_capacity": null,
-      "index": 0
+      "index": 0,
+      "pi_shared_processor_pool": "None",
+      "pi_placement_group_id": "None"
     }
   ],
   "power_volumes": [

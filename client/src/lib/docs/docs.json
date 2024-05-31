@@ -2536,5 +2536,21 @@
       ]
     ],
     "last_updated": "3/20/2024"
+  },
+  "power_shared_processor_pools": {
+    "content": [
+      {
+        "text": "NYI"
+      }
+    ],
+    "relatedLinks": []
+  },
+  "power_placement_groups": {
+    "content": [
+      {
+        "text": "NYI"
+      }
+    ],
+    "relatedLinks": []
   }
 }

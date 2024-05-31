@@ -830,6 +830,43 @@ const PowerVsInstances = (craig) => {
   });
 };
 
+const PowerVsPlacementGroups = (craig) => {
+  return formPageTemplate(craig, {
+    name: "Power VS Placement Groups",
+    addText: "Create a Group",
+    jsonField: "power_placement_groups",
+    overrideTile: !craig.store.json._options.enable_power_vs ? (
+      <NoPowerNetworkTile />
+    ) : craig.store.json.power.length === 0 ? (
+      <NoPowerWorkspaceTile />
+    ) : undefined,
+    hideFormTitleButton:
+      !craig.store.json._options.enable_power_vs ||
+      craig.store.json.power.length === 0,
+    formName: "Power VS PlacementGroups",
+  });
+};
+
+const PowerVsSharedPools = (craig) => {
+  return formPageTemplate(craig, {
+    name: "Power VS Shared Processor Pools",
+    addText: "Create a Pool",
+    jsonField: "power_shared_processor_pools",
+    overrideTile: !craig.store.json._options.enable_power_vs ? (
+      <NoPowerNetworkTile />
+    ) : craig.store.json.power.length === 0 ? (
+      <NoPowerWorkspaceTile />
+    ) : undefined,
+    hideFormTitleButton:
+      !craig.store.json._options.enable_power_vs ||
+      craig.store.json.power.length === 0,
+    formName: "Power VS Shared Processor Pools",
+    innerFormProps: {
+      powerStoragePoolMap: powerStoragePoolRegionMap,
+    },
+  });
+};
+
 const PowerVsVolumes = (craig) => {
   return formPageTemplate(craig, {
     name: "Power VS Storage Volumes",
@@ -1399,6 +1436,10 @@ export const NewFormPage = (props) => {
     return PowerInfraPage(craig);
   } else if (form === "powerInstances") {
     return PowerVsInstances(craig);
+  } else if (form === "powerPlacementGroups") {
+    return PowerVsPlacementGroups(craig);
+  } else if (form === "powerSharedPools") {
+    return PowerVsSharedPools(craig);
   } else if (form === "powerVolumes") {
     return PowerVsVolumes(craig);
   } else if (form === "resourceGroups") {

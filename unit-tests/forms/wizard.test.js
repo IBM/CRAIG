@@ -44,6 +44,7 @@ describe("setup wizard", () => {
       },
       access_groups: [],
       secrets_manager: [],
+      power_shared_processor_pools: [],
       f5_vsi: [],
       _options: {
         prefix: "wizard",
@@ -922,6 +923,7 @@ describe("setup wizard", () => {
       },
       cis_glbs: [],
       fortigate_vnf: [],
+      power_placement_groups: [],
     };
 
     assert.deepEqual(
@@ -1840,6 +1842,8 @@ describe("setup wizard", () => {
       },
       cis_glbs: [],
       fortigate_vnf: [],
+      power_shared_processor_pools: [],
+      power_placement_groups: [],
     };
 
     assert.deepEqual(
@@ -2351,6 +2355,8 @@ describe("setup wizard", () => {
       },
       cis_glbs: [],
       fortigate_vnf: [],
+      power_shared_processor_pools: [],
+      power_placement_groups: [],
     };
 
     assert.deepEqual(
@@ -2853,6 +2859,8 @@ describe("setup wizard", () => {
       },
       cis_glbs: [],
       fortigate_vnf: [],
+      power_shared_processor_pools: [],
+      power_placement_groups: [],
     };
 
     assert.deepEqual(
@@ -3431,6 +3439,8 @@ describe("setup wizard", () => {
       },
       cis_glbs: [],
       fortigate_vnf: [],
+      power_shared_processor_pools: [],
+      power_placement_groups: [],
     };
 
     assert.deepEqual(
@@ -3602,6 +3612,8 @@ describe("setup wizard", () => {
       },
       cis_glbs: [],
       fortigate_vnf: [],
+      power_shared_processor_pools: [],
+      power_placement_groups: [],
     };
 
     assert.deepEqual(
@@ -4173,6 +4185,8 @@ describe("setup wizard", () => {
       },
       cis_glbs: [],
       fortigate_vnf: [],
+      power_shared_processor_pools: [],
+      power_placement_groups: [],
     };
 
     assert.deepEqual(
@@ -4719,6 +4733,8 @@ describe("setup wizard", () => {
       },
       cis_glbs: [],
       fortigate_vnf: [],
+      power_shared_processor_pools: [],
+      power_placement_groups: [],
     };
     assert.deepEqual(
       actualData,
@@ -5268,6 +5284,8 @@ describe("setup wizard", () => {
       },
       cis_glbs: [],
       fortigate_vnf: [],
+      power_shared_processor_pools: [],
+      power_placement_groups: [],
     };
     assert.deepEqual(
       actualData,
@@ -5291,6 +5309,7 @@ describe("setup wizard", () => {
       wizardState.store.json
     );
     let expectedData = {
+      power_shared_processor_pools: [],
       iam_account_settings: {
         enable: false,
         mfa: null,
@@ -5761,6 +5780,8 @@ describe("setup wizard", () => {
       },
       cis_glbs: [],
       fortigate_vnf: [],
+      power_shared_processor_pools: [],
+      power_placement_groups: [],
     };
     assert.deepEqual(
       actualData,
@@ -6254,6 +6275,8 @@ describe("setup wizard", () => {
       },
       cis_glbs: [],
       fortigate_vnf: [],
+      power_shared_processor_pools: [],
+      power_placement_groups: [],
     };
     assert.deepEqual(
       actualData,
@@ -7570,6 +7593,8 @@ describe("setup wizard", () => {
       vtl: [],
       cis_glbs: [],
       fortigate_vnf: [],
+      power_shared_processor_pools: [],
+      power_placement_groups: [],
     };
     assert.deepEqual(
       actualData,
