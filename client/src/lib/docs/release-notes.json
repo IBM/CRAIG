@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.16.1",
+    "features": [
+      "Added documentation for Power VS Shared Processor Pools and Power VS Placement Groups"
+    ],
+    "fixes": [],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.16.0",
     "features": [
       "Users can now create Power VS Shared Processor Pools from the `/form/powerSharedPools` page",

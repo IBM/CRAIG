@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.16.1
+
+### Features
+
+- Added documentation for Power VS Shared Processor Pools and Power VS Placement Groups
+
 ## 1.16.0
 
 ### Features
