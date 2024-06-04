@@ -124,12 +124,12 @@ export const TransitGatewaysMap = (props) => {
             >
               {tgw.gre_tunnels.map((tunnel, tunnelIndex) => (
                 <DeploymentIcon
+                  small
                   key={tgw.name + "-connection-" + tunnelIndex}
-                  item={{
-                    name: tunnel.gateway,
-                  }}
+                  item={tunnel}
                   itemName="gre_tunnels"
                   icon={FirewallClassic}
+                  craig={props.craig}
                 />
               ))}
             </CraigFormGroup>

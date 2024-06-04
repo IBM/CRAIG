@@ -54,7 +54,7 @@ function prefixFiltersSchema() {
               "power"
             )
           : // else gre
-            splat(parentTgw.gre_tunnels, "gateway");
+            splat(parentTgw.gre_tunnels, "name");
       },
       invalid: fieldIsNullOrEmptyString("target"),
       invalidText: selectInvalidText("connection target"),

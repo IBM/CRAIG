@@ -237,7 +237,7 @@ describe("disableSave", () => {
   });
   describe("tgw", () => {
     describe("gre tunnels", () => {
-      it("should return true if no gateway", () => {
+      it("should return true if no local_tunnel_ip", () => {
         assert.isTrue(
           disableSave(
             "gre_tunnels",

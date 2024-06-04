@@ -706,7 +706,6 @@ describe("transit_gateways", () => {
             tgw: "transit-gateway",
             remote_bgp_asn: 12345,
             zone: 1,
-            gateway: "gw",
             local_tunnel_ip: "1.2.3.4",
             remote_tunnel_ip: "1.2.3.4",
           },
@@ -719,10 +718,10 @@ describe("transit_gateways", () => {
         assert.deepEqual(
           craig.store.json.transit_gateways[0].gre_tunnels[0],
           {
+            gateway: null,
             tgw: "transit-gateway",
             remote_bgp_asn: 12345,
             zone: 1,
-            gateway: null,
             local_tunnel_ip: "1.2.3.4",
             remote_tunnel_ip: "1.2.3.4",
           },
@@ -826,11 +825,30 @@ describe("transit_gateways", () => {
             gateway: "gw",
             local_tunnel_ip: "1.2.3.4",
             remote_tunnel_ip: "1.2.3.4",
+            name: "frog",
           },
           {
             arrayParentName: "transit-gateway",
             data: {
               gateway: "gw",
+            },
+          }
+        );
+        craig.transit_gateways.gre_tunnels.save(
+          {
+            tgw: "transit-gateway",
+            remote_bgp_asn: 12345,
+            zone: 2,
+            gateway: "gw",
+            local_tunnel_ip: "1.2.3.4",
+            remote_tunnel_ip: "1.2.3.4",
+            name: "frog",
+          },
+          {
+            arrayParentName: "transit-gateway",
+            data: {
+              gateway: "gw",
+              name: "frog",
             },
           }
         );
@@ -843,6 +861,7 @@ describe("transit_gateways", () => {
             gateway: "gw",
             local_tunnel_ip: "1.2.3.4",
             remote_tunnel_ip: "1.2.3.4",
+            name: "frog",
           },
           "it should create tunnel"
         );
@@ -892,6 +911,58 @@ describe("transit_gateways", () => {
             arrayParentName: "transit-gateway",
             data: {
               gateway: "gw",
+            },
+          }
+        );
+        assert.deepEqual(
+          craig.store.json.transit_gateways[0].gre_tunnels,
+          [],
+          "it should create tunnel"
+        );
+      });
+      it("should delete a gre tunnel with name", () => {
+        craig.classic_gateways.create({
+          name: "gw",
+          hostname: "gw-host",
+          datacenter: "dal10",
+          network_speed: "1000",
+          private_network_only: false,
+          tcp_monitoring: false,
+          redundant_network: true,
+          public_bandwidth: 5000,
+          memory: 64,
+          notes: "Notes",
+          ipv6_enabled: false,
+          package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
+          os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
+          process_key_name: "INTEL_XEON_4210_2_20",
+          private_vlan: "vsrx-private",
+          public_vlan: "vsrx-public",
+          ssh_key: "example-classic",
+          disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
+          hadr: false,
+        });
+        craig.transit_gateways.gre_tunnels.create(
+          {
+            tgw: "transit-gateway",
+            remote_bgp_asn: 12345,
+            zone: 1,
+            name: "gw",
+            local_tunnel_ip: "1.2.3.4",
+            remote_tunnel_ip: "1.2.3.4",
+          },
+          {
+            innerFormProps: {
+              arrayParentName: "transit-gateway",
+            },
+          }
+        );
+        craig.transit_gateways.gre_tunnels.delete(
+          {},
+          {
+            arrayParentName: "transit-gateway",
+            data: {
+              name: "gw",
             },
           }
         );
@@ -1001,96 +1072,6 @@ describe("transit_gateways", () => {
       });
     });
     describe("transit_gateways.gre_tunnels.schema", () => {
-      describe("transit_gateways.gre_tunnels.schema.gateway", () => {
-        describe("transit_gateways.gre_tunnels.schema.gateway.groups", () => {
-          it("should return groups", () => {
-            craig.classic_gateways.create({
-              name: "gw",
-              hostname: "gw-host",
-              datacenter: "dal10",
-              network_speed: "1000",
-              private_network_only: false,
-              tcp_monitoring: false,
-              redundant_network: true,
-              public_bandwidth: 5000,
-              memory: 64,
-              notes: "Notes",
-              ipv6_enabled: false,
-              package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
-              os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
-              process_key_name: "INTEL_XEON_4210_2_20",
-              private_vlan: "vsrx-private",
-              public_vlan: "vsrx-public",
-              ssh_key: "example-classic",
-              disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
-              hadr: false,
-            });
-            craig.transit_gateways.gre_tunnels.create(
-              {
-                tgw: "transit-gateway",
-                remote_bgp_asn: 12345,
-                zone: 1,
-                gateway: "gw",
-                local_tunnel_ip: "1.2.3.4",
-                remote_tunnel_ip: "1.2.3.4",
-              },
-              {
-                innerFormProps: {
-                  arrayParentName: "transit-gateway",
-                },
-              }
-            );
-            assert.deepEqual(
-              craig.transit_gateways.gre_tunnels.gateway.groups(
-                {},
-                {
-                  craig: craig,
-                  arrayParentName: "transit-gateway",
-                  data: { gateway: "gw" },
-                }
-              ),
-              ["gw"],
-              "it should return list of gateways"
-            );
-          });
-          it("should return groups and filter out gateways with a GRE tunnel to the current gateway", () => {
-            craig.classic_gateways.create({
-              name: "gw",
-              hostname: "gw-host",
-              datacenter: "dal10",
-              network_speed: "1000",
-              private_network_only: false,
-              tcp_monitoring: false,
-              redundant_network: true,
-              public_bandwidth: 5000,
-              memory: 64,
-              notes: "Notes",
-              ipv6_enabled: false,
-              package_key_name: "VIRTUAL_ROUTER_APPLIANCE_1_GPBS",
-              os_key_name: "OS_JUNIPER_VSRX_19_4_UP_TO_1GBPS_STANDARD_SRIOV",
-              process_key_name: "INTEL_XEON_4210_2_20",
-              private_vlan: "vsrx-private",
-              public_vlan: "vsrx-public",
-              ssh_key: "example-classic",
-              disk_key_names: ["HARD_DRIVE_2_00_TB_SATA_2"],
-              hadr: false,
-            });
-            craig.transit_gateways.create({
-              name: "global",
-              global: true,
-              connections: [],
-            });
-            assert.deepEqual(
-              craig.transit_gateways.gre_tunnels.gateway.groups(
-                {},
-                { craig: craig, arrayParentName: "transit-gateway" }
-              ),
-              ["gw"],
-              "it should return list of gateways with already attached gateways filtered out"
-            );
-          });
-        });
-      });
       describe("transit_gateways.gre_tunnels.schema.local_tunnel_ip", () => {
         describe("transit_gateways.gre_tunnels.schema.local_tunnel_ip.invalid", () => {
           it("should return true if not an ipv4 address", () => {

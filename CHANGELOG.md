@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## 1.16.1
 
+### Upgrade Notes
+
+- When creating a GRE Tunnel a Remote Gateway IP and Local Gateway IP must be entered in the GRE Tunnel Form to allow for Terraform to be generated successfully
+
 ### Features
 
 - Added documentation for Power VS Shared Processor Pools and Power VS Placement Groups
