@@ -1,5 +1,15 @@
 [
   {
+    "version": "1.16.1",
+    "features": [
+      "Added documentation for Power VS Shared Processor Pools and Power VS Placement Groups"
+    ],
+    "fixes": [],
+    "upgrade_notes": [
+      "When creating a GRE Tunnel a Remote Gateway IP and Local Gateway IP must be entered in the GRE Tunnel Form to allow for Terraform to be generated successfully"
+    ]
+  },
+  {
     "version": "1.16.0",
     "features": [
       "Users can now create Power VS Shared Processor Pools from the `/form/powerSharedPools` page",

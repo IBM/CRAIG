@@ -1432,17 +1432,10 @@ function craigForms(craig) {
           name: "GRE Tunnels",
           addText: "Create a GRE Tunnel",
           jsonField: "gre_tunnels",
-          toggleFormFieldName: "gateway",
-          hideFormTitleButton: function (stateData, componentProps) {
-            return (
-              !componentProps.craig.store.json._options.enable_classic ||
-              componentProps.craig.store.json.classic_gateways.length === 0
-            );
-          },
           form: {
             groups: [
               {
-                gateway: craig.transit_gateways.gre_tunnels.gateway,
+                name: craig.transit_gateways.gre_tunnels.name,
                 zone: craig.transit_gateways.gre_tunnels.zone,
               },
               {
@@ -1450,6 +1443,12 @@ function craigForms(craig) {
                   craig.transit_gateways.gre_tunnels.local_tunnel_ip,
                 remote_tunnel_ip:
                   craig.transit_gateways.gre_tunnels.remote_tunnel_ip,
+              },
+              {
+                local_gateway_ip:
+                  craig.transit_gateways.gre_tunnels.local_gateway_ip,
+                remote_gateway_ip:
+                  craig.transit_gateways.gre_tunnels.remote_gateway_ip,
               },
               {
                 remote_bgp_asn:

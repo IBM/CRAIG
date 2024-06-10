@@ -272,15 +272,25 @@ function greTunnelCreate(config, stateData, componentProps) {
  * @param {*} componentProps
  */
 function greTunnelSave(config, stateData, componentProps) {
-  new revision(config.store.json)
-    .child("transit_gateways", componentProps.arrayParentName)
-    // need to look up by gw since name is not added to gre connections
-    .updateChild(
+  let tgw = new revision(config.store.json).child(
+    "transit_gateways",
+    componentProps.arrayParentName
+  ).data;
+  if (componentProps.data.name) {
+    new revision(tgw).updateChild(
+      "gre_tunnels",
+      componentProps.data.name,
+      "name",
+      stateData
+    );
+  } else {
+    new revision(tgw).updateChild(
       "gre_tunnels",
       componentProps.data.gateway,
       "gateway",
       stateData
     );
+  }
 }
 
 /**
@@ -295,6 +305,11 @@ function greTunnelDelete(config, stateData, componentProps) {
       .child("transit_gateways", componentProps.arrayParentName)
       .child("gre_tunnels")
       .deleteArrChild(componentProps.data.gateway, "gateway");
+  } else if (componentProps.data.name) {
+    new revision(config.store.json)
+      .child("transit_gateways", componentProps.arrayParentName)
+      .child("gre_tunnels")
+      .deleteArrChild(componentProps.data.name, "name");
   } else {
     // use new revision here to allow for delete arr child
     new revision(config.store.json)
@@ -425,7 +440,14 @@ function initTransitGateway(store) {
         save: greTunnelSave,
         delete: greTunnelDelete,
         shouldDisableSave: shouldDisableComponentSave(
-          ["gateway", "remote_tunnel_ip", "local_tunnel_ip", "zone"],
+          [
+            "name",
+            "remote_tunnel_ip",
+            "local_tunnel_ip",
+            "zone",
+            "local_gateway_ip",
+            "remote_gateway_ip",
+          ],
           "transit_gateways",
           "gre_tunnels"
         ),

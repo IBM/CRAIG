@@ -5,42 +5,11 @@ const {
   invalidIpv4Address,
   invalidIpv4AddressText,
 } = require("../utils");
+const { nameField } = require("../reusable-fields");
 
 function greTunnelSchema() {
   return {
-    gateway: {
-      type: "select",
-      default: "",
-      invalid: fieldIsNullOrEmptyString("gateway"),
-      invalidText: selectInvalidText("gateway"),
-      groups: function (stateData, componentProps) {
-        let allGws = splat(
-          componentProps.craig.store.json.classic_gateways,
-          "name"
-        );
-        let tgwType = new revision(componentProps.craig.store.json).child(
-          "transit_gateways",
-          componentProps.arrayParentName
-        ).data.global;
-        let matchingConnections = [];
-        componentProps.craig.store.json.transit_gateways.forEach((gw) => {
-          if (gw.global === tgwType) {
-            gw.gre_tunnels.forEach((tunnel) => {
-              matchingConnections.push(tunnel.gateway);
-            });
-          }
-        });
-        return allGws
-          .filter((gw) => {
-            if (!contains(matchingConnections, gw)) {
-              return gw;
-            }
-          })
-          .concat(
-            componentProps.data?.gateway ? [componentProps.data.gateway] : []
-          );
-      },
-    },
+    name: nameField("gre_tunnels"),
     zone: {
       labelText: "VPC Zone",
       type: "select",
@@ -65,6 +34,20 @@ function greTunnelSchema() {
       labelText: "Remote Tunnel IP",
       placeholder: "X.X.X.X",
       invalid: invalidIpv4Address("remote_tunnel_ip"),
+      invalidText: invalidIpv4AddressText,
+    },
+    local_gateway_ip: {
+      default: "",
+      labelText: "Local Gateway IP",
+      placeholder: "X.X.X.X",
+      invalid: invalidIpv4Address("local_gateway_ip"),
+      invalidText: invalidIpv4AddressText,
+    },
+    remote_gateway_ip: {
+      default: "",
+      labelText: "Remote Gateway IP",
+      placeholder: "X.X.X.X",
+      invalid: invalidIpv4Address("remote_gateway_ip"),
       invalidText: invalidIpv4AddressText,
     },
     remote_bgp_asn: {

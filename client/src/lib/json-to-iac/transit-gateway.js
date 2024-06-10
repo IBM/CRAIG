@@ -73,8 +73,8 @@ function formatTgw(tgw, config) {
 function ibmTgConnection(connection, tgw) {
   let connectionName = connection.power
     ? connection.power
-    : connection.gateway
-    ? connection.gateway + " unbound gre"
+    : connection.gateway || connection.local_tunnel_ip
+    ? (connection.gateway || connection.name) + " unbound gre"
     : connection.crn
     ? connection.crn.replace(/.+vpc:/g, "")
     : connection.classic
@@ -103,19 +103,20 @@ function ibmTgConnection(connection, tgw) {
         "id",
         tgw.use_data
       ),
-      network_type: connection.gateway
-        ? "unbound_gre_tunnel"
-        : connection.power
-        ? "power_virtual_server"
-        : connection.classic
-        ? "classic"
-        : "vpc",
+      network_type:
+        connection.gateway || connection.local_tunnel_ip
+          ? "unbound_gre_tunnel"
+          : connection.power
+          ? "power_virtual_server"
+          : connection.classic
+          ? "classic"
+          : "vpc",
       name: connectionResourceName,
       network_id: networkId,
       timeouts: timeouts("30m", "", "30m"),
     },
   };
-  if (connection.gateway) {
+  if (connection.gateway || connection.local_tunnel_ip) {
     connectionData.data.base_network_type = "classic";
     connectionData.data.remote_bgp_asn = isNullOrEmptyString(
       connection.remote_bgp_asn,
@@ -125,11 +126,7 @@ function ibmTgConnection(connection, tgw) {
       : connection.remote_bgp_asn;
     connectionData.data.zone = "${var.region}-" + connection.zone;
     ["local_gateway_ip", "remote_gateway_ip"].forEach((field) => {
-      connectionData.data[
-        field
-      ] = `\${ibm_network_gateway.classic_gateway_${snakeCase(
-        connection.gateway
-      )}.${field === "local_gateway_ip" ? "private" : "public"}_ipv4_address}`;
+      connectionData.data[field] = connection[field];
     });
     connectionData.data.local_tunnel_ip = connection.local_tunnel_ip;
     connectionData.data.remote_tunnel_ip = connection.remote_tunnel_ip;

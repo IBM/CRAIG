@@ -98,10 +98,10 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
       "dns_records",
       "name"
     );
-  } else if (field === "prefix_filters") {
+  } else if (contains(["prefix_filters", "gre_tunnels"], field)) {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.transit_gateways,
-      "prefix_filters",
+      field,
       "name"
     );
   } else if (field === "appid_key") {

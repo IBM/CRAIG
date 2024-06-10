@@ -1037,18 +1037,40 @@ Disk Key Names       | The internal key names for the monthly Bare Metal server'
 
 ## Power Shared Processor Pools
 
-NYI
+A shared processor Pool (SPP) is a pool of processor capacity that is shared between a group of virtual server instances. Unlike a virtual server instance that has a dedicated and defined maximum amount of processing capacity, you can set the reserved cores in SPP that are guaranteed to be available at the pool level. To provision a Power Shared Processor Pool, first ensure that Power VS is enabled in the Options page, along with the zone(s) you would like to provision Power VS resources in. Then create a Power VS workspace which is required before creating a Power Shared Processor Pool.
+
+Refer to the following table for more information on Power Shared Processor Pool fields:
+
+Field          | Description
+---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Name           | Specify a Shared Processor Pool name that is unique within your cloud account. Use a name of minimum 2 characters and a maximum of 12 characters. Alphanumeric characters are not allowed.
+Workspace      | Specify the Power Workspace.
+System Type    | Specify the machine type. The machine type that you select determines the number of cores and memory that is available. For more information about machine types, see Hardware Specification documentation.
+Reserved Cores | The number of reserved cores based on resource availability and allocation. There is a core-to-vCPU ratio of 1:1 by default.
 
 ### Related Links
 
+- [Managing Shared Processor Pools](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-manage-SPP)
+- [IBM Power Hardware Specifications](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-about-virtual-server#hardware-specifications)
 
 -----
 
 ## Power Placement Groups
 
-NYI
+Power server placement groups provide you control over the host or server on which a new virtual machine (VM) is placed. By using server placement groups, you can build high availability within a data center. To provision a Power Placement Group, first ensure that Power VS is enabled in the Options page, along with the zone(s) you would like to provision Power VS resources in. Then create a Power VS workspace which is required before creating a Power Placement Group.
+
+You can create a maximum of 25 placement groups. If you need to create more than 25 placement groups, raise a support ticket to increase the maximum limit.
+
+Refer to the following table for more information on Power Server Placement Group fields:
+
+Field                  | Description
+-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Name                   | Specify a Placement Group name that is unique within your cloud account. Alphanumeric characters are not allowed.
+Workspace              | Specify the Power Workspace.
+Placement Group Policy | Specify an affinity or anti-affinity policy to each VM instance within a server placement group. When you set a placement group with an affinity policy, all VMs in that placement group are launched on the same server. When you set a placement group with an anti-affinity policy, all VMs in that placement group are launched on different servers.
 
 ### Related Links
 
+- [Managing Server Placement Groups](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-placement-groups)
 
 -----

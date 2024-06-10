@@ -11,7 +11,7 @@
     "dynamic_subnets": false,
     "enable_power_vs": true,
     "power_vs_zones": ["dal12", "dal10", "us-south"],
-    "craig_version": "1.16.0",
+    "craig_version": "1.16.1",
     "power_vs_high_availability": false,
     "no_vpn_secrets_manager_auth": false,
     "power_vs_ha_zone_1": null,

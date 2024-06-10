@@ -1757,10 +1757,9 @@ describe("automate schema generation", () => {
             classic: { type: "boolean", default: false },
             gre_tunnels: {
               Array: {
-                gateway: {
-                  type: "string",
+                name: {
                   default: null,
-                  groups: "<calculated>",
+                  type: "string",
                 },
                 zone: {
                   type: "string",
@@ -1769,6 +1768,8 @@ describe("automate schema generation", () => {
                 },
                 local_tunnel_ip: { type: "string", default: null },
                 remote_tunnel_ip: { type: "string", default: null },
+                local_gateway_ip: { type: "string", default: null },
+                remote_gateway_ip: { type: "string", default: null },
                 remote_bgp_asn: { type: "string", default: null },
               },
             },
