@@ -155,7 +155,7 @@ Set the VPN Server values using the following table as a guide.
 
 | Name    | Destination                                                             | Action    |
 | ------- | ----------------------------------------------------------------------- | --------- |
-| vpn-vsi | the VSI network CIDR (`10.10.0.0/28` by default in the template)        | Deliver   |
+| vpn-vsi | the VSI network CIDR (`10.10.0.0/26` by default in the template)        | Deliver   |
 | powervs | the Power VS network CIDR (`192.168.0.0/24` by default in the template) | Translate |
 
 ## Saving the configuration and deploying the resources

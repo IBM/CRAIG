@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.16.2
+
+### Features
+
+- Added the template for Power VS POC Classic to get started with using Power VS on IBM Cloud with a Classic Gateway Appliance
+
 ## 1.16.1
 
 ### Upgrade Notes

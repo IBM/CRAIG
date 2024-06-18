@@ -83,7 +83,7 @@ function ibmTgConnection(connection, tgw) {
   let connectionResourceName = kebabName(
     [connection.tgw]
       .concat(connection.power ? "power" : [])
-      .concat([connectionName, "hub-connection"])
+      .concat(connectionName)
   );
   let networkId = connection.power
     ? `\${ibm_resource_instance.power_vs_workspace_${snakeCase(

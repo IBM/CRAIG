@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.16.2",
+    "features": [
+      "Added the template for Power VS POC Classic to get started with using Power VS on IBM Cloud with a Classic Gateway Appliance"
+    ],
+    "fixes": [],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.16.1",
     "features": [
       "Added documentation for Power VS Shared Processor Pools and Power VS Placement Groups"
