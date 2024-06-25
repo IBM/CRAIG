@@ -290,13 +290,6 @@ class PowerDiagram extends React.Component {
           {isNullOrEmptyString(this.state.modalService, true) ? (
             // need to pass html element
             <div className="emptyStatelessContainer" />
-          ) : craig.store.json.power[this.state.powerIndex]?.ssh_keys
-              ?.length === 0 &&
-            contains(["vtl", "power_instances"], this.state.modalService) ? (
-            <CraigEmptyResourceTile
-              name="Power VS SSH keys. To enable creation of this resource, create an SSH key"
-              noClick
-            />
           ) : (
             <DynamicForm
               className="formInSubForm"

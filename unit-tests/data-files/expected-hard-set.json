@@ -18,12 +18,14 @@
     "platform_logs": false,
     "resource_group": "slz-service-rg",
     "cos": "atracker-cos",
-    "bucket": "atracker-bucket"
+    "bucket": "atracker-bucket",
+    "secrets_manager": null
   },
   "sysdig": {
     "enabled": true,
     "plan": "graduated-tier",
-    "resource_group": "slz-service-rg"
+    "resource_group": "slz-service-rg",
+    "secrets_manager": null
   },
   "resource_groups": [
     {

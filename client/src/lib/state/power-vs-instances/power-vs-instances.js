@@ -81,6 +81,10 @@ function powerVsInstanceOnStoreUpdate(vtl) {
         instance.network = newNetworks;
       }
 
+      if (instance.ssh_key === null) {
+        instance.ssh_key = "(None)";
+      }
+
       if (
         instance.storage_option === "Affinity" &&
         instance.pi_affinity_instance &&

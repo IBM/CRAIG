@@ -50,11 +50,14 @@ function powerVsInstanceData(instance, config) {
           instance.workspace
         )}_${snakeCase(instance.image)}.${imageUseData ? "id" : "image_id"}}`
       : "${ERROR: Unfound Ref}",
-    pi_key_pair_name: foundWorkspace
-      ? `\${${piKeyPairUseData}ibm_pi_key.power_vs_ssh_key_${snakeCase(
-          instance.ssh_key
-        )}.pi_key_name}`
-      : "${ERROR: Unfound Ref}",
+    pi_key_pair_name:
+      instance.ssh_key === "(None)" || !instance.ssh_key
+        ? undefined
+        : foundWorkspace
+        ? `\${${piKeyPairUseData}ibm_pi_key.power_vs_ssh_key_${snakeCase(
+            instance.ssh_key
+          )}.pi_key_name}`
+        : "${ERROR: Unfound Ref}",
     pi_cloud_instance_id: foundWorkspace
       ? powerVsWorkspaceRef(
           instance.workspace,

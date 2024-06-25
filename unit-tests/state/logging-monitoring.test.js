@@ -56,6 +56,7 @@ describe("observability", () => {
             resource_group: null,
             cos: null,
             bucket: null,
+            secrets_manager: null,
           },
           "it should set defaults"
         );
@@ -77,11 +78,14 @@ describe("observability", () => {
             cos: null,
             bucket: null,
             name: "aaa",
+            secrets_manager: null,
           },
           "it should set defaults"
         );
       });
       it("should update logdna on save with found bucket", () => {
+        craig.secrets_manager.create({ name: "frog" });
+        craig.sysdig.save({ secrets_manager: "frog" });
         craig.logdna.save({
           name: "aaa",
           bucket: "management-bucket",
@@ -97,6 +101,7 @@ describe("observability", () => {
             cos: "cos",
             bucket: "management-bucket",
             name: "aaa",
+            secrets_manager: "frog",
           },
           "it should set defaults"
         );
@@ -131,6 +136,7 @@ describe("observability", () => {
             enabled: false,
             plan: "",
             resource_group: null,
+            secrets_manager: null,
           },
           "it should set defaults"
         );
@@ -148,6 +154,29 @@ describe("observability", () => {
             plan: "graduated-tier",
             resource_group: "service-rg",
             name: "aaa",
+            secrets_manager: null,
+          },
+          "it should set defaults"
+        );
+      });
+      it("should update sysdig on save with logdna secrets manager", () => {
+        craig.secrets_manager.create({
+          name: "aaa",
+        });
+        craig.logdna.save({
+          secrets_manager: "aaa",
+        });
+        craig.sysdig.save({
+          name: "aaa",
+        });
+        assert.deepEqual(
+          craig.store.json.sysdig,
+          {
+            enabled: false,
+            plan: "graduated-tier",
+            resource_group: "service-rg",
+            name: "aaa",
+            secrets_manager: "aaa",
           },
           "it should set defaults"
         );
@@ -163,11 +192,59 @@ describe("observability", () => {
           "it should return"
         );
       });
+      it("should hide store secrets when no secrets manager", () => {
+        assert.isTrue(
+          craig.logdna.store_secrets.hideWhen({}, { craig: craig }),
+          "it should be hidden"
+        );
+        assert.isTrue(
+          craig.sysdig.store_secrets.hideWhen({}, { craig: craig }),
+          "it should be hidden"
+        );
+      });
+      it("should return correct secrets manager groups", () => {
+        assert.deepEqual(
+          craig.logdna.secrets_manager.groups({}, { craig: craig }),
+          [],
+          "it should return list of secrets manager"
+        );
+      });
+      it("should return correct text when no secrets manager selected", () => {
+        assert.deepEqual(
+          craig.logdna.secrets_manager.invalidText({}, { craig: craig }),
+          "No secrets manager instances",
+          "it should return list of secrets nabager"
+        );
+        craig.secrets_manager.create({ name: "frog" });
+        assert.deepEqual(
+          craig.logdna.secrets_manager.invalidText({}, { craig: craig }),
+          "Select a secrets manager",
+          "it should return list of secrets nabager"
+        );
+      });
+      it("should hide secrets manager when not storing secrets", () => {
+        assert.isTrue(
+          craig.sysdig.secrets_manager.hideWhen({}, { craig: craig }),
+          "it should be hidden"
+        );
+      });
       it("should return list of cos buckets", () => {
         assert.deepEqual(
           craig.logdna.bucket.groups({}, { craig: craig }),
           ["atracker-bucket", "management-bucket", "workload-bucket"],
           "it should return list of buckets"
+        );
+      });
+      it("should have valid secrets manager when store secrets is false and secrets manager is null", () => {
+        assert.isFalse(
+          craig.logdna.secrets_manager.invalid({}),
+          "it should be valid"
+        );
+      });
+      it("should not have valid secrets manager when store secrets is true and secrets manager is null", () => {
+        assert.isTrue(
+          craig.logdna.secrets_manager.invalid({ store_secrets: true }),
+          "it should not be valid"
         );
       });
       it("should return helper text for name", () => {

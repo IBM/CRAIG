@@ -124,7 +124,9 @@
     "platform_logs": false,
     "resource_group": "service-rg",
     "cos": "atracker-cos",
-    "bucket": "atracker-bucket"
+    "bucket": "atracker-bucket",
+    "secrets_manager": null,
+    "store_secrets": false
   },
   "object_storage": [
     {
@@ -2143,7 +2145,9 @@
     "plan": "graduated-tier",
     "resource_group": "service-rg",
     "name": "sysdig",
-    "platform_logs": false
+    "platform_logs": false,
+    "secrets_manager": null,
+    "store_secrets": false
   },
   "teleport_vsi": [],
   "transit_gateways": [

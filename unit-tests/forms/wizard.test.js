@@ -7573,11 +7573,13 @@ describe("setup wizard", () => {
         resource_group: "service-rg",
         cos: "atracker-cos",
         bucket: "atracker-bucket",
+        secrets_manager: null,
       },
       sysdig: {
         enabled: false,
         plan: "graduated-tier",
         resource_group: "service-rg",
+        secrets_manager: null,
       },
       icd: [],
       power: [],

@@ -1,9 +1,11 @@
+const { getObjectFromArray } = require("lazy-z");
 const {
   rgIdRef,
   bucketRef,
   cosRef,
   jsonToTfPrint,
   tfBlock,
+  tfRef,
 } = require("./utils");
 const { jsonToTf } = require("json-to-tf");
 
@@ -318,6 +320,73 @@ function loggingMonitoringTf(config) {
     let sysdigTf = formatSysdigInstance(config) + formatSysdigKey(config);
     tf += tfBlock("Sysdig Instance", sysdigTf);
   }
+
+  if (config?.logdna?.store_secrets || config?.sysdig?.store_secrets) {
+    let instance =
+      config?.logdna?.secrets_manager || config?.sysdig?.secrets_manager;
+    let secretsManager = instance
+      ? getObjectFromArray(config.secrets_manager, "name", instance)
+      : null;
+    let secretsManagerRef = instance
+      ? tfRef(
+          "ibm_resource_instance",
+          secretsManager.name + "_secrets_manager",
+          "guid",
+          secretsManager.use_data
+        )
+      : "${ERROR: Unfound Ref}";
+    tf +=
+      "\n" +
+      tfBlock(
+        "Observability Secrets",
+        jsonToTfPrint(
+          "resource",
+          "ibm_sm_secret_group",
+          "observability_secret_group",
+          {
+            instance_id: secretsManagerRef,
+            region: "${var.region}",
+            name: "${var.prefix}-observability-secret-group",
+            description:
+              "Secrets manager group to store the observability credentials",
+          }
+        ) +
+          (config.logdna.store_secrets
+            ? jsonToTfPrint(
+                "resource",
+                "ibm_sm_arbitrary_secret",
+                "logdna_ingestion_key",
+                {
+                  name: "${var.prefix}-logdna-ingestion-key",
+                  instance_id: secretsManagerRef,
+                  region: "${var.region}",
+                  description: "LogDNA ingestion key",
+                  payload: "${logdna_key.logdna_ingestion_key.key}",
+                  secret_group_id:
+                    "${ibm_sm_secret_group.observability_secret_group.secret_group_id}",
+                }
+              )
+            : "") +
+          (config.sysdig.store_secrets
+            ? jsonToTfPrint(
+                "resource",
+                "ibm_sm_arbitrary_secret",
+                "sysdig_access_key",
+                {
+                  name: "${var.prefix}-sysdig-access-key",
+                  instance_id: secretsManagerRef,
+                  region: "${var.region}",
+                  description: "Sysdig Access Key",
+                  payload:
+                    '${ibm_resource_key.sysdig_key.credentials["Sysdig Access Key"]}',
+                  secret_group_id:
+                    "${ibm_sm_secret_group.observability_secret_group.secret_group_id}",
+                }
+              )
+            : "")
+      );
+  }
+
   return tf;
 }
 

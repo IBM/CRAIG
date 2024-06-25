@@ -94,7 +94,9 @@
     "platform_logs": false,
     "resource_group": null,
     "cos": null,
-    "bucket": null
+    "bucket": null,
+    "secrets_manager": null,
+    "store_secrets": false
   },
   "object_storage": [
     {
@@ -282,7 +284,9 @@
     "plan": "graduated-tier",
     "resource_group": null,
     "name": "sysdig",
-    "platform_logs": false
+    "platform_logs": false,
+    "secrets_manager": null,
+    "store_secrets": false
   },
   "teleport_vsi": [],
   "transit_gateways": [
