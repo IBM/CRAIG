@@ -1,4 +1,4 @@
-const { getObjectFromArray, snakeCase, distinct } = require("lazy-z");
+const { getObjectFromArray, snakeCase, distinct, revision } = require("lazy-z");
 const {
   rgIdRef,
   getKmsInstanceData,
@@ -69,13 +69,17 @@ function ibmContainerVpcCluster(cluster, config) {
       },
     ],
   };
+
+  let vpcSubnets = new revision(config).child("vpcs", cluster.vpc).data.subnets;
   // add subnets
   cluster.subnets.forEach((subnet) => {
     clusterData.zones.push({
       name: composedZone(subnetZone(subnet), true),
-      subnet_id: `\${module.${snakeCase(cluster.vpc)}_vpc.${snakeCase(
-        subnet
-      )}_id}`,
+      subnet_id: `\${module.${snakeCase(cluster.vpc)}_vpc.${
+        (getObjectFromArray(vpcSubnets, "name", subnet).use_data
+          ? "import_"
+          : "subnet_") + snakeCase(subnet)
+      }_id}`,
     });
   });
 
@@ -111,6 +115,8 @@ function ibmContainerVpcCluster(cluster, config) {
  */
 function ibmContainerVpcWorkerPool(pool, config) {
   let poolCluster = getObjectFromArray(config.clusters, "name", pool.cluster);
+  let vpcSubnets = new revision(config).child("vpcs", poolCluster.vpc).data
+    .subnets;
   let data = {
     name: `${pool.vpc} vpc ${pool.cluster} cluster ${pool.name} pool`,
   };
@@ -134,9 +140,11 @@ function ibmContainerVpcWorkerPool(pool, config) {
   pool.subnets.forEach((subnet) => {
     poolData.zones.push({
       name: composedZone(subnetZone(subnet), true),
-      subnet_id: `\${module.${snakeCase(poolCluster.vpc)}_vpc.${snakeCase(
-        subnet
-      )}_id}`,
+      subnet_id: `\${module.${snakeCase(poolCluster.vpc)}_vpc.${
+        (getObjectFromArray(vpcSubnets, "name", subnet).use_data
+          ? "import_"
+          : "subnet_") + snakeCase(subnet)
+      }_id}`,
     });
   });
   data.data = poolData;

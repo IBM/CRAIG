@@ -4,21 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## 1.16.2
 
+### Upgrade Notes
+
+- Power VS SSH Keys are now optional for Power VS Instances and FalconStor VTL
+
 ### Features
 
 - Added the template for Power VS POC Classic to get started with using Power VS on IBM Cloud with a Classic Gateway Appliance
+- LogDNA and Sysdig keys can now be stored for later access in a Secrets Manager instance
+
+### Fixes
+
+- Fixed an issue causing Terraform to fail when using an existing VPC subnet with the same name as another resource
 
 ## 1.16.1
 
 ### Upgrade Notes
 
 - When creating a GRE Tunnel a Remote Gateway IP and Local Gateway IP must be entered in the GRE Tunnel Form to allow for Terraform to be generated successfully
-- Power VS SSH Keys are now optional for Power VS Instances and FalconStor VTL
 
 ### Features
 
 - Added documentation for Power VS Shared Processor Pools and Power VS Placement Groups
-- LogDNA and Sysdig keys can now be stored for later access in a Secrets Manager instance
 
 ## 1.16.0
 

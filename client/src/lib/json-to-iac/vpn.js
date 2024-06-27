@@ -6,7 +6,12 @@ const {
   jsonToTfPrint,
   tfRef,
 } = require("./utils");
-const { snakeCase, kebabCase } = require("lazy-z");
+const {
+  snakeCase,
+  kebabCase,
+  revision,
+  getObjectFromArray,
+} = require("lazy-z");
 const { formatAddressPrefix } = require("./vpc");
 
 /**
@@ -23,9 +28,14 @@ const { formatAddressPrefix } = require("./vpc");
  */
 
 function ibmIsVpnGateway(gw, config) {
+  let vpcSubnets = new revision(config).child("vpcs", gw.vpc).data.subnets;
   let gwData = {
     name: kebabName([gw.vpc, gw.name, "vpn-gw"]),
-    subnet: `\${module.${snakeCase(gw.vpc)}_vpc.${snakeCase(gw.subnet)}_id}`,
+    subnet: `\${module.${snakeCase(gw.vpc)}_vpc.${
+      (gw.subnet && getObjectFromArray(vpcSubnets, "name", gw.subnet).use_data
+        ? "import_"
+        : "subnet_") + snakeCase(gw.subnet)
+    }_id}`,
     resource_group: rgIdRef(gw.resource_group, config),
     mode: gw.policy_mode ? "policy" : undefined,
     tags: config._options.tags,

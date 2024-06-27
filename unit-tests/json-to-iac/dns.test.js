@@ -167,15 +167,35 @@ resource "ibm_dns_permitted_network" "test_dns_instance_test_dot_com_permitted_n
   });
   describe("formatDnsCustomResolver", () => {
     it("should create custom resolver", () => {
-      let actualData = formatDnsCustomResolver({
-        name: "dev-res",
-        instance: "test",
-        description: "new resolve",
-        high_availability: true,
-        enabled: true,
-        vpc: "management",
-        subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
-      });
+      let actualData = formatDnsCustomResolver(
+        {
+          name: "dev-res",
+          instance: "test",
+          description: "new resolve",
+          high_availability: true,
+          enabled: true,
+          vpc: "management",
+          subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+        },
+        {
+          vpcs: [
+            {
+              name: "management",
+              subnets: [
+                {
+                  name: "vsi-zone-1",
+                },
+                {
+                  name: "vsi-zone-2",
+                },
+                {
+                  name: "vsi-zone-3",
+                },
+              ],
+            },
+          ],
+        }
+      );
       let expectedData = `
 resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
   name              = "dev-res"
@@ -184,15 +204,15 @@ resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
   high_availability = true
   enabled           = true
   locations {
-    subnet_crn = module.management_vpc.vsi_zone_1_crn
+    subnet_crn = module.management_vpc.subnet_vsi_zone_1_crn
     enabled    = true
   }
   locations {
-    subnet_crn = module.management_vpc.vsi_zone_2_crn
+    subnet_crn = module.management_vpc.subnet_vsi_zone_2_crn
     enabled    = true
   }
   locations {
-    subnet_crn = module.management_vpc.vsi_zone_3_crn
+    subnet_crn = module.management_vpc.subnet_vsi_zone_3_crn
     enabled    = true
   }
 }
@@ -266,6 +286,23 @@ resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
             use_data: false,
           },
         ],
+        vpcs: [
+          {
+            name: "management",
+            subnets: [
+              {
+                use_data: true,
+                name: "vsi-zone-1",
+              },
+              {
+                name: "vsi-zone-2",
+              },
+              {
+                name: "vsi-zone-3",
+              },
+            ],
+          },
+        ],
       });
       let expectedData = `##############################################################################
 # Test DNS Service
@@ -320,15 +357,15 @@ resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {
   high_availability = true
   enabled           = true
   locations {
-    subnet_crn = module.management_vpc.vsi_zone_1_crn
+    subnet_crn = module.management_vpc.import_vsi_zone_1_crn
     enabled    = true
   }
   locations {
-    subnet_crn = module.management_vpc.vsi_zone_2_crn
+    subnet_crn = module.management_vpc.subnet_vsi_zone_2_crn
     enabled    = true
   }
   locations {
-    subnet_crn = module.management_vpc.vsi_zone_3_crn
+    subnet_crn = module.management_vpc.subnet_vsi_zone_3_crn
     enabled    = true
   }
 }

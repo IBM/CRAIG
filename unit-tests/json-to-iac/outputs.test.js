@@ -555,15 +555,15 @@ output "management_vpc_crn" {
 }
 
 output "management_vpc_subnet_vsi_zone_1_name" {
-  value = module.management_vpc.vsi_zone_1_name
+  value = module.management_vpc.subnet_vsi_zone_1_name
 }
 
 output "management_vpc_subnet_vsi_zone_1_id" {
-  value = module.management_vpc.vsi_zone_1_id
+  value = module.management_vpc.subnet_vsi_zone_1_id
 }
 
 output "management_vpc_subnet_vsi_zone_1_crn" {
-  value = module.management_vpc.vsi_zone_1_crn
+  value = module.management_vpc.subnet_vsi_zone_1_crn
 }
 
 output "management_vpc_security_group_management_vsi_name" {
@@ -1079,6 +1079,7 @@ output "cos_object_storage_bucket_workload_bucket_region_location" {
                 zone: 1,
                 public_gateway: false,
                 resource_group: "asset-development",
+                use_data: true,
               },
             ],
             address_prefixes: [
@@ -1191,15 +1192,15 @@ output "management_vpc_crn" {
 }
 
 output "management_vpc_subnet_vsi_zone_1_name" {
-  value = module.management_vpc.vsi_zone_1_name
+  value = module.management_vpc.import_vsi_zone_1_name
 }
 
 output "management_vpc_subnet_vsi_zone_1_id" {
-  value = module.management_vpc.vsi_zone_1_id
+  value = module.management_vpc.import_vsi_zone_1_id
 }
 
 output "management_vpc_subnet_vsi_zone_1_crn" {
-  value = module.management_vpc.vsi_zone_1_crn
+  value = module.management_vpc.import_vsi_zone_1_crn
 }
 
 output "management_vpc_security_group_management_vsi_name" {
@@ -2324,15 +2325,15 @@ output "management_vpc_crn" {
 }
 
 output "management_vpc_subnet_vsi_zone_1_name" {
-  value = module.management_vpc.vsi_zone_1_name
+  value = module.management_vpc.subnet_vsi_zone_1_name
 }
 
 output "management_vpc_subnet_vsi_zone_1_id" {
-  value = module.management_vpc.vsi_zone_1_id
+  value = module.management_vpc.subnet_vsi_zone_1_id
 }
 
 output "management_vpc_subnet_vsi_zone_1_crn" {
-  value = module.management_vpc.vsi_zone_1_crn
+  value = module.management_vpc.subnet_vsi_zone_1_crn
 }
 
 output "management_vpc_security_group_management_vsi_name" {
@@ -2362,15 +2363,15 @@ output "management2_vpc_crn" {
 }
 
 output "management2_vpc_subnet_vsi_zone_1_name" {
-  value = module.management2_vpc.vsi_zone_1_name
+  value = module.management2_vpc.subnet_vsi_zone_1_name
 }
 
 output "management2_vpc_subnet_vsi_zone_1_id" {
-  value = module.management2_vpc.vsi_zone_1_id
+  value = module.management2_vpc.subnet_vsi_zone_1_id
 }
 
 output "management2_vpc_subnet_vsi_zone_1_crn" {
-  value = module.management2_vpc.vsi_zone_1_crn
+  value = module.management2_vpc.subnet_vsi_zone_1_crn
 }
 
 ##############################################################################

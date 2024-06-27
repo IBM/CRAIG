@@ -84,6 +84,7 @@ describe("configToFilesJson", () => {
     });
     it("should return correct craig.json", () => {
       slzNetwork.clusters[0].opaque_secrets = [];
+      delete slzNetwork.vpcs[1].subnets[0].use_data;
       let actualData = configToFilesJson({ ...slzNetwork });
       assert.deepEqual(
         actualData["craig.json"],

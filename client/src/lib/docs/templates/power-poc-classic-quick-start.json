@@ -102,7 +102,9 @@
     "cos": "a-tracker",
     "bucket": "a-tracker",
     "name": "logdna",
-    "archive": false
+    "archive": false,
+    "secrets_manager": null,
+    "store_secrets": false
   },
   "object_storage": [
     {
@@ -713,7 +715,9 @@
     "plan": "graduated-tier",
     "resource_group": "service-rg",
     "name": "sysdig",
-    "platform_logs": false
+    "platform_logs": false,
+    "secrets_manager": null,
+    "store_secrets": false
   },
   "teleport_vsi": [],
   "transit_gateways": [
