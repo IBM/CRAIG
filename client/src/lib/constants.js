@@ -1039,7 +1039,7 @@ module.exports = {
       template: powerVsPocClassicQuickStart,
       name: "Power VS POC for Classic Integration",
       patternDocText:
-        "This template initializes an environment with one VPC and a Power VS workspace with AIX and IBM i images preselected to get started with using Power VS on IBM Cloud alongside a pre-existing Class Gateway Appliance.",
+        "This template initializes an environment with one VPC and a Power VS workspace with AIX and IBM i images preselected to get started with using Power VS on IBM Cloud alongside a pre-existing Classic Gateway Appliance.",
       includes: [
         "Three resource groups designated for the Power Virtual Server Workspace, auxiliary resources, and cloud services",
         "A VPC and an example Virtual Server instance deployment in the VPC",
