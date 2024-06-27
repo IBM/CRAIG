@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 - Added the template for Power VS POC Classic to get started with using Power VS on IBM Cloud with a Classic Gateway Appliance
 - LogDNA and Sysdig keys can now be stored for later access in a Secrets Manager instance
+- Power Edge Router is now supported for `us-east` (WDC04)
 
 ### Fixes
 

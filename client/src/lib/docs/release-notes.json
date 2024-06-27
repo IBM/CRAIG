@@ -3,7 +3,8 @@
     "version": "1.16.2",
     "features": [
       "Added the template for Power VS POC Classic to get started with using Power VS on IBM Cloud with a Classic Gateway Appliance",
-      "LogDNA and Sysdig keys can now be stored for later access in a Secrets Manager instance"
+      "LogDNA and Sysdig keys can now be stored for later access in a Secrets Manager instance",
+      "Power Edge Router is now supported for `us-east` (WDC04)"
     ],
     "fixes": [
       "Fixed an issue causing Terraform to fail when using an existing VPC subnet with the same name as another resource"
