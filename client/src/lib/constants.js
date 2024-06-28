@@ -727,8 +727,8 @@ module.exports = {
   edgeRouterEnabledZones: [
     "dal10",
     "dal12",
-    "eu-de-1", // FRA04
-    "eu-de-2", // FRA05
+    "eu-de-1",
+    "eu-de-2",
     "lon06",
     "mad02",
     "mad04",
@@ -739,8 +739,7 @@ module.exports = {
     "syd05",
     "tok04",
     "tor01",
-    "us-east", // WDC04
-    "us-south", // DAL13
+    "us-south",
     "wdc06",
     "wdc07",
   ],
