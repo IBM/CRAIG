@@ -742,6 +742,7 @@ module.exports = {
     "us-south",
     "wdc06",
     "wdc07",
+    "us-east",
   ],
   cosPlans: [
     "standard",

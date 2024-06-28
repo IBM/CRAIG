@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Upgrade Notes
 
 - Power VS SSH Keys are now optional for Power VS Instances and FalconStor VTL
+- Power VS Region `us-east` now supports Power Edge Router (PER)
 
 ### Features
 

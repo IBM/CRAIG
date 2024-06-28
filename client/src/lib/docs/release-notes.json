@@ -9,7 +9,8 @@
       "Fixed an issue causing Terraform to fail when using an existing VPC subnet with the same name as another resource"
     ],
     "upgrade_notes": [
-      "Power VS SSH Keys are now optional for Power VS Instances and FalconStor VTL"
+      "Power VS SSH Keys are now optional for Power VS Instances and FalconStor VTL",
+      "Power VS Region `us-east` now supports Power Edge Router (PER)"
     ]
   },
   {
