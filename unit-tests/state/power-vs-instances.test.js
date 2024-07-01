@@ -36,7 +36,7 @@ describe("power_instances", () => {
           {
             name: "frog",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -58,7 +58,7 @@ describe("power_instances", () => {
           {
             name: "frog",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -193,7 +193,7 @@ describe("power_instances", () => {
       craig.power_instances.create({
         name: "toad",
         image: null,
-        ssh_key: null,
+        ssh_key: "(None)",
         network: [],
         workspace: null,
         zone: null,
@@ -214,7 +214,7 @@ describe("power_instances", () => {
           {
             name: "frog",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -256,7 +256,7 @@ describe("power_instances", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -420,7 +420,7 @@ describe("power_instances", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -591,7 +591,7 @@ describe("power_instances", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -772,7 +772,7 @@ describe("power_instances", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             workspace: "toad",
             sap: true,
@@ -950,7 +950,7 @@ describe("power_instances", () => {
             primary_subnet: null,
             storage_option: "Affinity",
             pi_affinity_volume: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             image: null,
           },
           {
@@ -962,7 +962,7 @@ describe("power_instances", () => {
             primary_subnet: null,
             storage_option: "Anti-Affinity",
             pi_anti_affinity_volume: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             image: null,
           },
         ],
@@ -1011,7 +1011,7 @@ describe("power_instances", () => {
             primary_subnet: null,
             storage_option: "Affinity",
             pi_affinity_instance: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             image: null,
           },
           {
@@ -1023,7 +1023,7 @@ describe("power_instances", () => {
             primary_subnet: null,
             storage_option: "Anti-Affinity",
             pi_anti_affinity_instance: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             image: null,
           },
         ],
@@ -1182,7 +1182,7 @@ describe("power_instances", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -1392,7 +1392,7 @@ describe("power_instances", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -1423,7 +1423,7 @@ describe("power_instances", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -1454,7 +1454,7 @@ describe("power_instances", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: "toad",
@@ -1489,7 +1489,7 @@ describe("power_instances", () => {
           {
             name: "toad",
             image: "7100-05-09",
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [
               {
                 name: "test-network",
@@ -1572,7 +1572,7 @@ describe("power_instances", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [
               {
                 name: "test-network",
@@ -1627,7 +1627,7 @@ describe("power_instances", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [
               {
                 name: "test-network",
@@ -2504,30 +2504,8 @@ describe("power_instances", () => {
               { workspace: "toad" },
               { craig: craig }
             ),
-            [],
+            ["(None)"],
             "it should return list of networks"
-          );
-        });
-      });
-      describe("power_instance.ssh_key.invalidText", () => {
-        it("should return invalidText when no workspace", () => {
-          assert.deepEqual(
-            craig.power_instances.ssh_key.invalidText(
-              { workspace: "" },
-              { craig: craig }
-            ),
-            "Select a workspace",
-            "it should return list of workspaces"
-          );
-        });
-        it("should return invalidText when no workspace", () => {
-          assert.deepEqual(
-            craig.power_instances.ssh_key.invalidText(
-              { workspace: "a" },
-              { craig: craig }
-            ),
-            "Select an SSH Key",
-            "it should return list of workspaces"
           );
         });
       });

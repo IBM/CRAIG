@@ -9,6 +9,7 @@ const {
   kebabCase,
   azsort,
   isNullOrEmptyString,
+  revision,
 } = require("lazy-z");
 const {
   rgIdRef,
@@ -60,6 +61,7 @@ function ibmIsInstance(vsi, config) {
   let allSgIds = [],
     allSshKeyIds = [],
     networkInterfaces = [];
+  let vpcSubnets = new revision(config).child("vpcs", vsi.vpc).data.subnets;
   let data = {
     name: vsi.index
       ? `${vsi.vpc} vpc ${vsi.name} vsi ${zone} ${vsi.index}`
@@ -81,9 +83,11 @@ function ibmIsInstance(vsi, config) {
     tags: config._options.tags,
     primary_network_interface: [
       {
-        subnet: `\${module.${snakeCase(vsi.vpc)}_vpc.${snakeCase(
-          vsi.subnet
-        )}_id}`,
+        subnet: `\${module.${snakeCase(vsi.vpc)}_vpc.${
+          (getObjectFromArray(vpcSubnets, "name", vsi.subnet)?.use_data
+            ? "import_"
+            : "subnet_") + snakeCase(vsi.subnet)
+        }_id}`,
       },
     ],
     boot_volume: [
@@ -107,7 +111,11 @@ function ibmIsInstance(vsi, config) {
   if (vsi.network_interfaces) {
     vsi.network_interfaces.forEach((intf) => {
       let nwInterface = {
-        subnet: `\${module.${vsi.vpc}_vpc.${snakeCase(intf.subnet)}_id}`,
+        subnet: `\${module.${vsi.vpc}_vpc.${
+          (getObjectFromArray(vpcSubnets, "name", intf.subnet)?.use_data
+            ? "import_"
+            : "subnet_") + snakeCase(intf.subnet)
+        }_id}`,
         allow_ip_spoofing: true,
         security_groups: [],
       };
@@ -221,13 +229,18 @@ function ibmIsVolume(vsi, config) {
 function formatVsi(vsi, config) {
   let data = ibmIsInstance(vsi, config);
   let tf = "";
+  let vpcSubnets = new revision(config).child("vpcs", vsi.vpc).data.subnets;
   if (vsi.reserved_ip) {
     tf += jsonToTfPrint(
       "resource",
       "ibm_is_subnet_reserved_ip",
       data.name + "_reserved_ip",
       {
-        subnet: `\${module.${vsi.vpc}_vpc.${snakeCase(vsi.subnet)}_id}`,
+        subnet: `\${module.${vsi.vpc}_vpc.${
+          (getObjectFromArray(vpcSubnets, "name", vsi.subnet).use_data
+            ? "import_"
+            : "subnet_") + snakeCase(vsi.subnet)
+        }_id}`,
         name: kebabCase(data.data.name + "-reserved-ip"),
         address: vsi.reserved_ip,
       }
@@ -405,6 +418,8 @@ function ibmIsLb(deployment, config) {
     },
     name: `${deployment.name} load balancer`,
   };
+  let vpcSubnets = new revision(config).child("vpcs", deployment.vpc).data
+    .subnets;
   deployment.security_groups.forEach((group) => {
     data.data.security_groups.push(
       `\${module.${snakeCase(deployment.vpc)}_vpc.${snakeCase(group)}_id}`
@@ -412,7 +427,11 @@ function ibmIsLb(deployment, config) {
   });
   deployment.subnets.forEach((subnet) => {
     data.data.subnets.push(
-      `\${module.${snakeCase(deployment.vpc)}_vpc.${snakeCase(subnet)}_id}`
+      `\${module.${snakeCase(deployment.vpc)}_vpc.${
+        (getObjectFromArray(vpcSubnets, "name", subnet)?.use_data
+          ? "import_"
+          : "subnet_") + snakeCase(subnet)
+      }_id}`
     );
   });
   return data;

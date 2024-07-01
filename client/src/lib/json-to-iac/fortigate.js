@@ -1,4 +1,4 @@
-const { snakeCase, getObjectFromArray } = require("lazy-z");
+const { snakeCase, getObjectFromArray, revision } = require("lazy-z");
 const {
   jsonToTfPrint,
   kebabName,
@@ -22,6 +22,7 @@ function formatFortigate(gw, config) {
   let securityGroups = gw.security_groups.map((sg) => {
     return `\${module.${snakeCase(gw.vpc)}_vpc.${snakeCase(sg)}_id}`;
   });
+  let vpcSubnets = new revision(config).child("vpcs", gw.vpc).data.subnets;
   return (
     jsonToTfPrint("data", "template_file", `${gw.name} vnf userdata`, {
       template: `\${<<TEMPLATE
@@ -72,18 +73,24 @@ end
         primary_network_interface: [
           {
             name: kebabName([gw.name, "port1"], randomSuffix),
-            subnet: `\${module.${snakeCase(gw.vpc)}_vpc.${snakeCase(
-              gw.primary_subnet
-            )}_id}`,
+            subnet: `\${module.${snakeCase(gw.vpc)}_vpc.${
+              (getObjectFromArray(vpcSubnets, "name", gw.primary_subnet)
+                ?.use_data
+                ? "import_"
+                : "subnet_") + snakeCase(gw.primary_subnet)
+            }_id}`,
             security_groups: securityGroups,
           },
         ],
         network_interfaces: [
           {
             name: kebabName([gw.name, "port2"], randomSuffix),
-            subnet: `\${module.${snakeCase(gw.vpc)}_vpc.${snakeCase(
-              gw.secondary_subnet
-            )}_id}`,
+            subnet: `\${module.${snakeCase(gw.vpc)}_vpc.${
+              (getObjectFromArray(vpcSubnets, "name", gw.secondary_subnet)
+                ?.use_data
+                ? "import_"
+                : "subnet_") + snakeCase(gw.secondary_subnet)
+            }_id}`,
             security_groups: securityGroups,
           },
         ],

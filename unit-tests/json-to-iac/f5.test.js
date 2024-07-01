@@ -1552,7 +1552,7 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.edge_vpc.f5_management_zone_1_id
+    subnet = module.edge_vpc.subnet_f5_management_zone_1_id
     security_groups = [
       module.edge_vpc.f5_management_sg_id
     ]
@@ -1561,21 +1561,21 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
   }
   network_interfaces {
-    subnet            = module.edge_vpc.f5_bastion_zone_1_id
+    subnet            = module.edge_vpc.subnet_f5_bastion_zone_1_id
     allow_ip_spoofing = true
     security_groups = [
       module.edge_vpc.f5_bastion_sg_id
     ]
   }
   network_interfaces {
-    subnet            = module.edge_vpc.f5_external_zone_1_id
+    subnet            = module.edge_vpc.subnet_f5_external_zone_1_id
     allow_ip_spoofing = true
     security_groups = [
       module.edge_vpc.f5_external_sg_id
     ]
   }
   network_interfaces {
-    subnet            = module.edge_vpc.f5_workload_zone_1_id
+    subnet            = module.edge_vpc.subnet_f5_workload_zone_1_id
     allow_ip_spoofing = true
     security_groups = [
       module.edge_vpc.f5_workload_sg_id
@@ -4208,7 +4208,7 @@ resource "ibm_is_instance" "f5_zone_1" {
     "world"
   ]
   primary_network_interface {
-    subnet = module.edge_vpc.f5_management_zone_1_id
+    subnet = module.edge_vpc.subnet_f5_management_zone_1_id
     security_groups = [
       module.edge_vpc.f5_management_sg_id
     ]
@@ -4217,14 +4217,14 @@ resource "ibm_is_instance" "f5_zone_1" {
     encryption = ibm_kms_key.kms_vsi_volume_key_key.crn
   }
   network_interfaces {
-    subnet            = module.edge_vpc.f5_bastion_zone_1_id
+    subnet            = module.edge_vpc.subnet_f5_bastion_zone_1_id
     allow_ip_spoofing = true
     security_groups = [
       module.edge_vpc.f5_bastion_sg_id
     ]
   }
   network_interfaces {
-    subnet            = module.edge_vpc.f5_external_zone_1_id
+    subnet            = module.edge_vpc.subnet_f5_external_zone_1_id
     allow_ip_spoofing = true
     security_groups = [
       module.edge_vpc.f5_external_sg_id
@@ -4279,7 +4279,7 @@ resource "ibm_is_instance" "f5_zone_2" {
     "world"
   ]
   primary_network_interface {
-    subnet = module.edge_vpc.f5_management_zone_2_id
+    subnet = module.edge_vpc.subnet_f5_management_zone_2_id
     security_groups = [
       module.edge_vpc.f5_management_sg_id
     ]
@@ -4288,14 +4288,14 @@ resource "ibm_is_instance" "f5_zone_2" {
     encryption = ibm_kms_key.kms_vsi_volume_key_key.crn
   }
   network_interfaces {
-    subnet            = module.edge_vpc.f5_bastion_zone_2_id
+    subnet            = module.edge_vpc.subnet_f5_bastion_zone_2_id
     allow_ip_spoofing = true
     security_groups = [
       module.edge_vpc.f5_bastion_sg_id
     ]
   }
   network_interfaces {
-    subnet            = module.edge_vpc.f5_external_zone_2_id
+    subnet            = module.edge_vpc.subnet_f5_external_zone_2_id
     allow_ip_spoofing = true
     security_groups = [
       module.edge_vpc.f5_external_sg_id
@@ -4350,7 +4350,7 @@ resource "ibm_is_instance" "f5_zone_3" {
     "world"
   ]
   primary_network_interface {
-    subnet = module.edge_vpc.f5_management_zone_3_id
+    subnet = module.edge_vpc.subnet_f5_management_zone_3_id
     security_groups = [
       module.edge_vpc.f5_management_sg_id
     ]
@@ -4359,14 +4359,14 @@ resource "ibm_is_instance" "f5_zone_3" {
     encryption = ibm_kms_key.kms_vsi_volume_key_key.crn
   }
   network_interfaces {
-    subnet            = module.edge_vpc.f5_bastion_zone_3_id
+    subnet            = module.edge_vpc.subnet_f5_bastion_zone_3_id
     allow_ip_spoofing = true
     security_groups = [
       module.edge_vpc.f5_bastion_sg_id
     ]
   }
   network_interfaces {
-    subnet            = module.edge_vpc.f5_external_zone_3_id
+    subnet            = module.edge_vpc.subnet_f5_external_zone_3_id
     allow_ip_spoofing = true
     security_groups = [
       module.edge_vpc.f5_external_sg_id

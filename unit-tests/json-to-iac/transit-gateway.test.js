@@ -78,7 +78,7 @@ data "ibm_tg_gateway" "data_transit_gateway" {
 resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "\${var.prefix}-transit-gateway-management-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-management"
   network_id   = module.management_vpc.crn
   timeouts {
     create = "30m"
@@ -117,7 +117,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
 resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
   gateway      = data.ibm_tg_gateway.data_transit_gateway.id
   network_type = "vpc"
-  name         = "\${var.prefix}-transit-gateway-management-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-management"
   network_id   = module.management_vpc.crn
   timeouts {
     create = "30m"
@@ -154,7 +154,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
 resource "ibm_tg_connection" "transit_gateway_to_aaaa_aaaaaaaa_aaaa_aaaa_aaaa_aaaaaaaaaaaa_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "\${var.prefix}-transit-gateway-aaaa-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-aaaa-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
   network_id   = "crn:v1:bluemix:public:is:us-south:a/aaaaaaa::vpc:aaaa-aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
   timeouts {
     create = "30m"
@@ -187,7 +187,7 @@ resource "ibm_tg_connection" "transit_gateway_to_aaaa_aaaaaaaa_aaaa_aaaa_aaaa_aa
 resource "ibm_tg_connection" "transit_gateway_to_power_workspace_dev_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "power_virtual_server"
-  name         = "\${var.prefix}-transit-gateway-power-dev-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-power-dev"
   network_id   = ibm_resource_instance.power_vs_workspace_dev.resource_crn
   timeouts {
     create = "30m"
@@ -225,7 +225,7 @@ resource "ibm_tg_connection" "transit_gateway_to_power_workspace_dev_connection"
 resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
   gateway           = ibm_tg_gateway.transit_gateway.id
   network_type      = "unbound_gre_tunnel"
-  name              = "\${var.prefix}-transit-gateway-gw-unbound-gre-hub-connection"
+  name              = "\${var.prefix}-transit-gateway-gw-unbound-gre"
   base_network_type = "classic"
   remote_bgp_asn    = 12345
   zone              = "\${var.region}-1"
@@ -267,7 +267,7 @@ resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
 resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
   gateway           = ibm_tg_gateway.transit_gateway.id
   network_type      = "unbound_gre_tunnel"
-  name              = "\${var.prefix}-transit-gateway-gw-unbound-gre-hub-connection"
+  name              = "\${var.prefix}-transit-gateway-gw-unbound-gre"
   base_network_type = "classic"
   zone              = "\${var.region}-1"
   local_tunnel_ip   = "1.2.3.4"
@@ -308,7 +308,7 @@ resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
 resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
   gateway           = ibm_tg_gateway.transit_gateway.id
   network_type      = "unbound_gre_tunnel"
-  name              = "\${var.prefix}-transit-gateway-gw-unbound-gre-hub-connection"
+  name              = "\${var.prefix}-transit-gateway-gw-unbound-gre"
   base_network_type = "classic"
   zone              = "\${var.region}-1"
   local_tunnel_ip   = "1.2.3.4"
@@ -346,7 +346,7 @@ resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
 resource "ibm_tg_connection" "transit_gateway_to_classic_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "classic"
-  name         = "\${var.prefix}-transit-gateway-classic-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-classic"
   timeouts {
     create = "30m"
     delete = "30m"
@@ -498,7 +498,7 @@ resource "ibm_tg_gateway" "transit_gateway" {
 resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "\${var.prefix}-transit-gateway-management-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-management"
   network_id   = module.management_vpc.crn
   timeouts {
     create = "30m"
@@ -509,7 +509,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
 resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "\${var.prefix}-transit-gateway-workload-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-workload"
   network_id   = module.workload_vpc.crn
   timeouts {
     create = "30m"
@@ -578,7 +578,7 @@ resource "ibm_tg_gateway" "transit_gateway" {
 resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "\${var.prefix}-transit-gateway-management-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-management"
   network_id   = module.management_vpc.crn
   timeouts {
     create = "30m"
@@ -589,7 +589,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
 resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "\${var.prefix}-transit-gateway-workload-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-workload"
   network_id   = module.workload_vpc.crn
   timeouts {
     create = "30m"
@@ -692,7 +692,7 @@ resource "ibm_tg_gateway" "transit_gateway" {
 resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "\${var.prefix}-transit-gateway-management-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-management"
   network_id   = module.management_vpc.crn
   timeouts {
     create = "30m"
@@ -703,7 +703,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
 resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
   gateway      = ibm_tg_gateway.transit_gateway.id
   network_type = "vpc"
-  name         = "\${var.prefix}-transit-gateway-workload-hub-connection"
+  name         = "\${var.prefix}-transit-gateway-workload"
   network_id   = module.workload_vpc.crn
   timeouts {
     create = "30m"
@@ -714,7 +714,7 @@ resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
 resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
   gateway           = ibm_tg_gateway.transit_gateway.id
   network_type      = "unbound_gre_tunnel"
-  name              = "\${var.prefix}-transit-gateway-gw-unbound-gre-hub-connection"
+  name              = "\${var.prefix}-transit-gateway-gw-unbound-gre"
   base_network_type = "classic"
   remote_bgp_asn    = 12345
   zone              = "\${var.region}-1"
@@ -746,7 +746,7 @@ resource "ibm_tg_gateway" "m" {
 resource "ibm_tg_connection" "m_to_management_connection" {
   gateway      = ibm_tg_gateway.m.id
   network_type = "vpc"
-  name         = "\${var.prefix}-m-management-hub-connection"
+  name         = "\${var.prefix}-m-management"
   network_id   = module.management_vpc.crn
   timeouts {
     create = "30m"

@@ -9,7 +9,7 @@ const {
   getTags,
   jsonToTfPrint,
 } = require("./utils");
-const { snakeCase } = require("lazy-z");
+const { snakeCase, revision, getObjectFromArray } = require("lazy-z");
 
 const serviceToEndpointMap = {
   kms: "crn:v1:bluemix:public:kms:$REGION:::endpoint:private.$REGION.kms.cloud.ibm.com",
@@ -24,16 +24,17 @@ const serviceToEndpointMap = {
  * format reserved ip
  * @param {object} vpe
  * @param {string} subnetName
+ * @param {boolean=} useData true if using data
  * @returns {string} terraform formatted code
  */
 
-function ibmIsSubnetReservedIp(vpe, subnetName) {
+function ibmIsSubnetReservedIp(vpe, subnetName, useData) {
   return {
     name: `${vpe.vpc} vpc ${subnetName} subnet vpe ip ${vpe.name}`,
     data: {
-      subnet: `\${module.${snakeCase(vpe.vpc)}_vpc.${snakeCase(
-        subnetName
-      )}_id}`,
+      subnet: `\${module.${snakeCase(vpe.vpc)}_vpc.${
+        (useData ? "import_" : "subnet_") + snakeCase(subnetName)
+      }_id}`,
     },
   };
 }
@@ -42,10 +43,11 @@ function ibmIsSubnetReservedIp(vpe, subnetName) {
  * format reserved ip
  * @param {object} vpe
  * @param {string} subnetName
+ * @param {boolean=} useData true if using data
  * @returns {string} terraform formatted code
  */
-function formatReservedIp(vpe, subnetName) {
-  let ip = ibmIsSubnetReservedIp(vpe, subnetName);
+function formatReservedIp(vpe, subnetName, useData) {
+  let ip = ibmIsSubnetReservedIp(vpe, subnetName, useData);
   return jsonToTfPrint(
     "resource",
     "ibm_is_subnet_reserved_ip",
@@ -171,9 +173,15 @@ function vpeTf(config) {
   let tf = "";
   config.virtual_private_endpoints.forEach((vpe) => {
     let blockData = "";
-    vpe.subnets.forEach(
-      (subnet) => (blockData += formatReservedIp(vpe, subnet))
-    );
+    let vpeVpcSubnets = new revision(config).child("vpcs", vpe.vpc).data
+      .subnets;
+    vpe.subnets.forEach((subnet) => {
+      blockData += formatReservedIp(
+        vpe,
+        subnet,
+        getObjectFromArray(vpeVpcSubnets, "name", subnet).use_data
+      );
+    });
     blockData += fortmatVpeGateway(vpe, config);
     vpe.subnets.forEach(
       (subnet) => (blockData += fortmatVpeGatewayIp(vpe, subnet))

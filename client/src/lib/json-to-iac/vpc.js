@@ -547,17 +547,27 @@ function vpcModuleOutputs(vpc, securityGroups) {
     };
   });
   vpc.subnets.forEach((subnet) => {
-    outputs[snakeCase(subnet.name) + `_name`] = {
+    outputs[
+      (subnet.use_data ? "import_" : "subnet_") +
+        snakeCase(subnet.name) +
+        `_name`
+    ] = {
       value: `\${${subnet.use_data ? "data." : ""}ibm_is_subnet.${snakeCase(
         `${subnet.vpc}-${subnet.name}`
       )}.name}`,
     };
-    outputs[snakeCase(subnet.name) + `_id`] = {
+    outputs[
+      (subnet.use_data ? "import_" : "subnet_") + snakeCase(subnet.name) + `_id`
+    ] = {
       value: `\${${subnet.use_data ? "data." : ""}ibm_is_subnet.${snakeCase(
         `${subnet.vpc}-${subnet.name}`
       )}.id}`,
     };
-    outputs[snakeCase(subnet.name) + `_crn`] = {
+    outputs[
+      (subnet.use_data ? "import_" : "subnet_") +
+        snakeCase(subnet.name) +
+        `_crn`
+    ] = {
       value: `\${${subnet.use_data ? "data." : ""}ibm_is_subnet.${snakeCase(
         `${subnet.vpc}-${subnet.name}`
       )}.crn}`,

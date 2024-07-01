@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.16.2
+
+### Upgrade Notes
+
+- Power VS SSH Keys are now optional for Power VS Instances and FalconStor VTL
+- Power VS Region `us-east` now supports Power Edge Router (PER)
+
+### Features
+
+- Added the template for Power VS POC Classic to get started with using Power VS on IBM Cloud with a Classic Gateway Appliance
+- LogDNA and Sysdig keys can now be stored for later access in a Secrets Manager instance
+
+### Fixes
+
+- Fixed an issue causing Terraform to fail when using an existing VPC subnet with the same name as another resource
+
 ## 1.16.1
 
 ### Upgrade Notes

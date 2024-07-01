@@ -1202,6 +1202,15 @@ describe("automate schema generation", () => {
         },
         logdna: {
           object: {
+            secrets_manager: {
+              default: null,
+              groups: "<calculated>",
+              type: "string",
+            },
+            store_secrets: {
+              default: false,
+              type: "boolean",
+            },
             name: { type: "string", default: "logdna" },
             enabled: { type: "boolean", default: false },
             plan: {
@@ -1446,7 +1455,11 @@ describe("automate schema generation", () => {
               default: null,
               groups: "<calculated>",
             },
-            ssh_key: { type: "string", default: null, groups: "<calculated>" },
+            ssh_key: {
+              type: "string",
+              default: "(None)",
+              groups: "<calculated>",
+            },
             image: { type: "string", default: null, groups: "<calculated>" },
             pi_sys_type: {
               type: "string",
@@ -1738,6 +1751,15 @@ describe("automate schema generation", () => {
             },
             plan: { type: "string", default: null, groups: ["graduated-tier"] },
             platform_logs: { type: "boolean", default: false },
+            secrets_manager: {
+              default: null,
+              groups: "<calculated>",
+              type: "string",
+            },
+            store_secrets: {
+              default: false,
+              type: "boolean",
+            },
           },
         },
         transit_gateways: {
@@ -2120,7 +2142,11 @@ describe("automate schema generation", () => {
               default: null,
               groups: "<calculated>",
             },
-            ssh_key: { type: "string", default: null, groups: "<calculated>" },
+            ssh_key: {
+              type: "string",
+              default: "(None)",
+              groups: "<calculated>",
+            },
             image: { type: "string", default: null, groups: "<calculated>" },
             pi_sys_type: {
               type: "string",

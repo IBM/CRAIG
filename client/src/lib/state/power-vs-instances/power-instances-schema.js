@@ -244,21 +244,22 @@ function powerVsInstanceSchema(vtl) {
       hideWhen: hideWhenNoWorkspaceAndVtl(vtl),
     },
     ssh_key: {
+      optional: true,
       labelText: "SSH Key",
       type: "select",
-      default: "",
-      invalid: fieldIsNullOrEmptyString("ssh_key"),
-      invalidText: powerVsInstanceInvalidText("an SSH Key"),
+      default: "(None)",
       groups: function (stateData, componentProps) {
         if (isNullOrEmptyString(stateData.workspace)) {
           return [];
         } else {
-          return splat(
-            new revision(componentProps.craig.store.json).child(
-              "power",
-              stateData.workspace
-            ).data.ssh_keys,
-            "name"
+          return ["(None)"].concat(
+            splat(
+              new revision(componentProps.craig.store.json).child(
+                "power",
+                stateData.workspace
+              ).data.ssh_keys,
+              "name"
+            )
           );
         }
       },

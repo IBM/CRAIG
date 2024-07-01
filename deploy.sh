@@ -139,7 +139,7 @@ create_resources() {
   fi
 
   # create/check Code Engine project and select it
-  if ! ibmcloud ce project list | grep $PROJECT_NAME > /dev/null; then
+  if ! ibmcloud ce project list | grep "^$PROJECT_NAME\s" > /dev/null; then
     echo "No Code Engine project named $PROJECT_NAME creating one..."
     ibmcloud ce project create -n $PROJECT_NAME || fatal "An error occurred creating the IBM Code Engine project"
   fi

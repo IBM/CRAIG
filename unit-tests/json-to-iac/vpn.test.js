@@ -17,7 +17,7 @@ describe("vpn gateways", () => {
       let expectedData = `
 resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
   name           = "\${var.prefix}-management-management-vpn-gw"
-  subnet         = module.management_vpc.vpn_zone_1_id
+  subnet         = module.management_vpc.subnet_vpn_zone_1_id
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
     "slz",
@@ -35,7 +35,38 @@ resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
         "it should return correct data"
       );
     });
-
+    it("should create tf code for vpn gateway with imported subnet", () => {
+      slzNetwork.vpcs[0].subnets[1].use_data = true;
+      let actualData = formatVpn(
+        {
+          name: "management",
+          resource_group: "slz-management-rg",
+          subnet: "vpn-zone-1",
+          vpc: "management",
+        },
+        slzNetwork
+      );
+      let expectedData = `
+resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
+  name           = "\${var.prefix}-management-management-vpn-gw"
+  subnet         = module.management_vpc.import_vpn_zone_1_id
+  resource_group = ibm_resource_group.slz_management_rg.id
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  timeouts {
+    delete = "1h"
+  }
+}
+`;
+      delete slzNetwork.vpcs[0].subnets[1].use_data;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
     it("should create tf code for vpn gateway with policy", () => {
       let actualData = formatVpn(
         {
@@ -50,7 +81,7 @@ resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
       let expectedData = `
 resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
   name           = "\${var.prefix}-management-management-vpn-gw"
-  subnet         = module.management_vpc.vpn_zone_1_id
+  subnet         = module.management_vpc.subnet_vpn_zone_1_id
   resource_group = ibm_resource_group.slz_management_rg.id
   mode           = "policy"
   tags = [
@@ -82,7 +113,7 @@ resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
 
 resource "ibm_is_vpn_gateway" "management_management_gateway_vpn_gw" {
   name           = "\${var.prefix}-management-management-gateway-vpn-gw"
-  subnet         = module.management_vpc.vpn_zone_1_id
+  subnet         = module.management_vpc.subnet_vpn_zone_1_id
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
     "slz",
@@ -128,7 +159,7 @@ resource "ibm_is_vpc_address_prefix" "management_management_gateway_on_prem_127_
 
 resource "ibm_is_vpn_gateway" "management_management_gateway_vpn_gw" {
   name           = "\${var.prefix}-management-management-gateway-vpn-gw"
-  subnet         = module.management_vpc.vpn_zone_1_id
+  subnet         = module.management_vpc.subnet_vpn_zone_1_id
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
     "slz",
@@ -180,7 +211,7 @@ resource "ibm_is_vpc_address_prefix" "management_management_gateway_on_prem_127_
 
 resource "ibm_is_vpn_gateway" "management_management_gateway_vpn_gw" {
   name           = "\${var.prefix}-management-management-gateway-vpn-gw"
-  subnet         = module.management_vpc._id
+  subnet         = module.management_vpc.subnet__id
   resource_group = ibm_resource_group.slz_management_rg.id
   tags = [
     "slz",

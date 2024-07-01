@@ -26,9 +26,10 @@ function outputsTf(config) {
         outputs[
           snakeCase(vpc.name + " vpc subnet " + subnet.name + " " + field)
         ] = {
-          value: `\${module.${snakeCase(vpc.name + " vpc")}.${snakeCase(
-            subnet.name + " " + field
-          )}}`,
+          value: `\${module.${snakeCase(vpc.name + " vpc")}.${
+            (subnet.use_data ? "import_" : "subnet_") +
+            snakeCase(subnet.name + " " + field)
+          }}`,
         };
       });
     });

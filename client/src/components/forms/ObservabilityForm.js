@@ -54,6 +54,10 @@ const ObservabilityForm = (props) => {
                       archive: craig.logdna.archive,
                       platform_logs: craig.logdna.platform_logs,
                     },
+                    {
+                      store_secrets: craig.logdna.store_secrets,
+                      secrets_manager: craig.logdna.secrets_manager,
+                    },
                   ],
                 },
               }}
@@ -91,6 +95,10 @@ const ObservabilityForm = (props) => {
                     {
                       plan: craig.sysdig.plan,
                       platform_logs: craig.sysdig.platform_logs,
+                    },
+                    {
+                      store_secrets: craig.sysdig.store_secrets,
+                      secrets_manager: craig.sysdig.secrets_manager,
                     },
                   ],
                 },

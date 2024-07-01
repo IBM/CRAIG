@@ -1,6 +1,11 @@
-const { splatContains, transpose, titleCase } = require("lazy-z");
+const {
+  splatContains,
+  transpose,
+  titleCase,
+  splat,
+  isNullOrEmptyString,
+} = require("lazy-z");
 const { setUnfoundResourceGroup } = require("./store.utils");
-const { getCosFromBucket } = require("../forms/utils");
 const {
   shouldDisableComponentSave,
   fieldIsNullOrEmptyStringEnabled,
@@ -44,6 +49,26 @@ function logdnaOnStoreUpdate(config) {
     config.updateUnfound("cosBuckets", config.store.json.logdna, "bucket");
   }
   setUnfoundResourceGroup(config, config.store.json.logdna);
+  // remove unfound secrets manager
+  ["logdna", "sysdig"].forEach((resource) => {
+    if (
+      !splatContains(
+        config.store.json.secrets_manager,
+        "name",
+        config.store.json[resource].secrets_manager
+      )
+    ) {
+      config.store.json[resource].secrets_manager = null;
+    }
+  });
+  // set secrets manager for observability
+  if (config.store.json.logdna.secrets_manager) {
+    config.store.json.sysdig.secrets_manager =
+      config.store.json.logdna.secrets_manager;
+  } else if (config.store.json.sysdig.secrets_manager) {
+    config.store.json.logdna.secrets_manager =
+      config.store.json.sysdig.secrets_manager;
+  }
 }
 
 /**
@@ -100,6 +125,46 @@ function sysdigOnStoreUpdate(config) {
 }
 
 /**
+ * return true when no secrets manager
+ * @param {*} stateData
+ * @param {*} componentProps
+ * @returns {boolean} true when no secrets manager
+ */
+function noSecretsManager(stateData, componentProps) {
+  return (
+    componentProps.craig.store.json.secrets_manager.length < 1 &&
+    stateData.store_secrets !== true
+  );
+}
+
+/**
+ * shortcut to create secrets manager dropdown
+ * @returns {object} secrets manager select object
+ */
+function observabilitySecretsManager() {
+  return {
+    type: "select",
+    size: "small",
+    groups: function (stateData, componentProps) {
+      return splat(componentProps.craig.store.json.secrets_manager, "name");
+    },
+    hideWhen: function (stateData, componentProps) {
+      return !stateData.store_secrets;
+    },
+    invalidText: function (stateData, componentProps) {
+      return noSecretsManager(stateData, componentProps)
+        ? "No secrets manager instances"
+        : "Select a secrets manager";
+    },
+    invalid: function (stateData) {
+      return stateData.store_secrets !== true
+        ? false
+        : isNullOrEmptyString(stateData.secrets_manager, true);
+    },
+  };
+}
+
+/**
  * intialize LogDna store
  * @param {*} store
  */
@@ -109,7 +174,7 @@ function initLogDna(store) {
     onStoreUpdate: logdnaOnStoreUpdate,
     save: logdnaSave,
     shouldDisableSave: shouldDisableComponentSave(
-      ["plan", "resource_group", "bucket"],
+      ["plan", "resource_group", "bucket", "secrets_manager"],
       "logdna"
     ),
     schema: {
@@ -173,6 +238,14 @@ function initLogDna(store) {
         labelText: "(Optional) Platform Logging",
         size: "small",
       },
+      store_secrets: {
+        type: "toggle",
+        default: false,
+        labelText: "Store Key in Secrets Manager",
+        size: "small",
+        hideWhen: noSecretsManager,
+      },
+      secrets_manager: observabilitySecretsManager(),
     },
   });
 }
@@ -187,7 +260,7 @@ function initSysDig(store) {
     onStoreUpdate: sysdigOnStoreUpdate,
     save: sysdigSave,
     shouldDisableSave: shouldDisableComponentSave(
-      ["resource_group", "plan"],
+      ["resource_group", "plan", "secrets_manager"],
       "sysdig"
     ),
     schema: {
@@ -228,6 +301,13 @@ function initSysDig(store) {
         default: false,
         labelText: "(Optional) Platform Logging",
       },
+      store_secrets: {
+        type: "toggle",
+        default: false,
+        labelText: "Store Key in Secrets Manager",
+        hideWhen: noSecretsManager,
+      },
+      secrets_manager: observabilitySecretsManager(),
     },
   });
 }

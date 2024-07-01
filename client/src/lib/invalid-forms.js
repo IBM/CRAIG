@@ -27,6 +27,7 @@ const subComponents = {
   cis_glbs: ["origins", "glbs", "health_checks"],
   object_storage: ["buckets", "keys"],
   vpn_gateways: ["connections"],
+  transit_gateways: ["gre_tunnels", "prefix_filters"],
 };
 
 /**

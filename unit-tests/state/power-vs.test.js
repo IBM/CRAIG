@@ -826,7 +826,7 @@ describe("power-vs", () => {
       craig.power.create({
         name: "power-vs",
         resource_group: "default",
-        zone: "us-east",
+        zone: "fake-1",
         images: [{ name: "7100-05-09", workspace: "toad" }],
       });
       craig.power.network.create(
@@ -841,7 +841,7 @@ describe("power-vs", () => {
           {
             name: "test-network",
             workspace: "power-vs",
-            zone: "us-east",
+            zone: null,
             workspace_use_data: false,
             pi_network_mtu: "",
           },
@@ -854,7 +854,7 @@ describe("power-vs", () => {
           {
             connections: [],
             workspace: "power-vs",
-            zone: "us-east",
+            zone: null,
             network: "test-network",
           },
         ],
@@ -875,7 +875,7 @@ describe("power-vs", () => {
           {
             name: "new-network-name",
             workspace: "power-vs",
-            zone: "us-east",
+            zone: null,
             workspace_use_data: false,
             pi_network_mtu: "2000",
           },
@@ -888,7 +888,7 @@ describe("power-vs", () => {
           {
             connections: [],
             workspace: "power-vs",
-            zone: "us-east",
+            zone: null,
             network: "new-network-name",
             workspace_use_data: false,
           },
@@ -911,7 +911,7 @@ describe("power-vs", () => {
           {
             name: "new-network-name",
             workspace: "power-vs",
-            zone: "us-east",
+            zone: null,
             workspace_use_data: false,
             pi_network_mtu: "9000",
             pi_network_jumbo: true,
@@ -934,7 +934,7 @@ describe("power-vs", () => {
           {
             name: "test-network",
             workspace: "power-vs",
-            zone: "us-east",
+            zone: null,
             workspace_use_data: false,
             pi_network_mtu: "",
           },
@@ -947,7 +947,7 @@ describe("power-vs", () => {
           {
             connections: [],
             workspace: "power-vs",
-            zone: "us-east",
+            zone: null,
             network: "test-network",
             workspace_use_data: false,
           },
@@ -1193,7 +1193,7 @@ describe("power-vs", () => {
       craig.power.create({
         name: "power-vs",
         resource_group: "default",
-        zone: "us-east",
+        zone: "fake-1",
         images: [{ name: "7100-05-09", workspace: "power-vs" }],
       });
       craig.power.cloud_connections.create(
@@ -1208,7 +1208,7 @@ describe("power-vs", () => {
           {
             name: "test-network",
             workspace: "power-vs",
-            zone: "us-east",
+            zone: null,
             workspace_use_data: false,
           },
         ],
@@ -1229,7 +1229,7 @@ describe("power-vs", () => {
           {
             name: "new-network-name",
             workspace: "power-vs",
-            zone: "us-east",
+            zone: null,
             workspace_use_data: false,
           },
         ],
@@ -1314,7 +1314,7 @@ describe("power-vs", () => {
       craig.power.create({
         name: "power-vs",
         resource_group: "default",
-        zone: "us-east",
+        zone: "fake-1",
         images: [{ name: "7100-05-09", workspace: "power-vs" }],
       });
       craig.power.network.create(
@@ -1344,7 +1344,7 @@ describe("power-vs", () => {
           {
             network: "test-network",
             workspace: "power-vs",
-            zone: "us-east",
+            zone: null,
             connections: ["test-network"],
             workspace_use_data: false,
           },
@@ -1358,7 +1358,7 @@ describe("power-vs", () => {
         craig.power.create({
           name: "power-vs",
           resource_group: "default",
-          zone: "us-east",
+          zone: "fake-1",
           images: [{ name: "7100-05-09", workspace: "power-vs" }],
         });
         craig.power.cloud_connections.create(

@@ -9,6 +9,7 @@ const powerVsQuickStart = require("./docs/templates/quick-start-power.json");
 const oracleSi = require("./docs/templates/oracle-si.json");
 const vpnaas = require("./docs/templates/vpn-as-a-service.json");
 const powerVsPocQuickStart = require("./docs/templates/power-poc-quick-start.json");
+const powerVsPocClassicQuickStart = require("./docs/templates/power-poc-classic-quick-start.json");
 const { azsort } = require("lazy-z");
 
 module.exports = {
@@ -741,6 +742,7 @@ module.exports = {
     "us-south",
     "wdc06",
     "wdc07",
+    "us-east",
   ],
   cosPlans: [
     "standard",
@@ -1021,7 +1023,7 @@ module.exports = {
       template: powerVsPocQuickStart,
       name: "Power VS POC",
       patternDocText:
-        "This template initializes an environment with one VPC and a Power VS workspace with 2 VSIs to get started with using Power VS on IBM Cloud,",
+        "This template initializes an environment with one VPC and a Power VS workspace with 2 VSIs to get started with using Power VS on IBM Cloud.",
       includes: [
         "Three resource groups designated for the Power Virtual Server Workspace, auxiliary resources, and cloud services",
         "A VPC and 2 example Virtual Server instances deployment in the VPC",
@@ -1031,6 +1033,22 @@ module.exports = {
         "A Key Protect Service and Encryption keys",
         "Object storage instances for flow logs and Activity Tracker",
         "A Power VS workspace with AIX and IBM i Power Virtual Server instances",
+      ],
+    },
+    "Power VS POC Classic": {
+      template: powerVsPocClassicQuickStart,
+      name: "Power VS POC for Classic Integration",
+      patternDocText:
+        "This template initializes an environment with one VPC and a Power VS workspace with AIX and IBM i images preselected to get started with using Power VS on IBM Cloud alongside a pre-existing Classic Gateway Appliance.",
+      includes: [
+        "Three resource groups designated for the Power Virtual Server Workspace, auxiliary resources, and cloud services",
+        "A VPC and an example Virtual Server instance deployment in the VPC",
+        "A Virtual Private Endpoint for Cloud Object storage in the VPC",
+        "A public gateway and a Transit gateway with an unbound GRE tunnel for connectivity to a Classic Gateway Appliance",
+        "A VPC flow log collector, Activity Tracker, Cloud Monitoring and Log Analysis",
+        "A Key Protect Service and Encryption keys",
+        "Object storage instances for flow logs and Activity Tracker",
+        "A Power VS workspace with all stock AIX and IBM i images available for use",
       ],
     },
     "VPN as a Service": {

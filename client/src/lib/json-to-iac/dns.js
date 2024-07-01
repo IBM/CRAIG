@@ -7,7 +7,7 @@ const {
   tfBlock,
   tfDone,
 } = require("./utils");
-const { snakeCase } = require("lazy-z");
+const { snakeCase, revision, getObjectFromArray } = require("lazy-z");
 
 /**
  * create dns service instance
@@ -239,7 +239,7 @@ function formatDnsPermittedNetwork(nw) {
  * @returns {Object} terraform
  */
 
-function ibmDnsCustomResolver(resolver) {
+function ibmDnsCustomResolver(resolver, config) {
   let data = {
     name: `${resolver.instance} dns instance resolver ${resolver.name}`,
     data: {
@@ -255,11 +255,15 @@ function ibmDnsCustomResolver(resolver) {
       locations: [],
     },
   };
+  let vpcSubnets = new revision(config).child("vpcs", resolver.vpc).data
+    .subnets;
   resolver.subnets.forEach((subnet) => {
     data.data.locations.push({
-      subnet_crn: `\${module.${snakeCase(resolver.vpc)}_vpc.${snakeCase(
-        subnet
-      )}_crn}`,
+      subnet_crn: `\${module.${snakeCase(resolver.vpc)}_vpc.${
+        (getObjectFromArray(vpcSubnets, "name", subnet)?.use_data
+          ? "import_"
+          : "subnet_") + snakeCase(subnet)
+      }_crn}`,
       enabled: true,
     });
   });
@@ -279,8 +283,8 @@ function ibmDnsCustomResolver(resolver) {
  * @param {booolean} resolver.locations.enabled
  * @returns {string} terraform
  */
-function formatDnsCustomResolver(resolver) {
-  let data = ibmDnsCustomResolver(resolver);
+function formatDnsCustomResolver(resolver, config) {
+  let data = ibmDnsCustomResolver(resolver, config);
   return jsonToTfPrint(
     "resource",
     "ibm_dns_custom_resolver",
@@ -319,7 +323,7 @@ function dnsTf(config) {
     if (dns.custom_resolvers.length > 0) {
       let resolverTf = "";
       dns.custom_resolvers.forEach((resolver) => {
-        resolverTf += formatDnsCustomResolver(resolver);
+        resolverTf += formatDnsCustomResolver(resolver, config);
       });
       tf += tfBlock(dns.name + " DNS custom resolvers", resolverTf);
       tf += "\n";

@@ -316,6 +316,7 @@ describe("overview", () => {
                 resource_group: "service-rg",
                 cos: "atracker-cos",
                 bucket: "atracker-bucket",
+                secrets_manager: null,
               },
             },
           ],
@@ -414,6 +415,7 @@ describe("overview", () => {
                 resource_group: null,
                 cos: "atracker-cos",
                 bucket: "atracker-bucket",
+                secrets_manager: null,
               },
             },
           ],
@@ -590,6 +592,7 @@ describe("overview", () => {
                 resource_group: null,
                 cos: "atracker-cos",
                 bucket: "atracker-bucket",
+                secrets_manager: null,
               },
             },
             {
@@ -782,6 +785,7 @@ describe("overview", () => {
                 resource_group: null,
                 cos: "atracker-cos",
                 bucket: "atracker-bucket",
+                secrets_manager: null,
               },
             },
             {

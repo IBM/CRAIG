@@ -15,3 +15,5 @@ The PoC environments are customizable templates in CRAIG. See the [CRAIG getting
 These are the recommended PoC environments. Follow the links to get documentation on how to build these environments.
 
 * [Power VS PoC](./powervs-poc.md) provides network communication and data migration between a client on-premises location and IBM Power Virtual Server.
+
+* [Power VS PoC Classic](./powervs-poc-classic.md) provides network communication and data migration between a pre-existing Classic Gateway Appliance and IBM Power Virtual Server.

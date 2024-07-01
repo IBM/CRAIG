@@ -42,7 +42,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -62,6 +62,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       );
     });
     it("should correctly format vsi with ip spoofing", () => {
+      slzNetwork.vpcs[0].subnets[2].use_data = true;
       let actualData = formatVsi(
         {
           kms: "slz-kms",
@@ -75,11 +76,21 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
           vpc: "management",
           index: 1,
           resource_group: "slz-management-rg",
-          network_interfaces: [],
+          network_interfaces: [
+            {
+              subnet: "vsi-zone-2",
+              security_groups: ["management-vpe-sg"],
+            },
+            {
+              subnet: "vsi-zone-3",
+              security_groups: ["management-vpe-sg"],
+            },
+          ],
           primary_interface_ip_spoofing: true,
         },
         slzNetwork
       );
+      delete slzNetwork.vpcs[0].subnets[2].use_data;
       let expectedData = `
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
@@ -93,7 +104,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet            = module.management_vpc.vsi_zone_1_id
+    subnet            = module.management_vpc.subnet_vsi_zone_1_id
     allow_ip_spoofing = true
     security_groups = [
       module.management_vpc.management_vpe_sg_id
@@ -101,6 +112,20 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   }
   boot_volume {
     encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  network_interfaces {
+    subnet            = module.management_vpc.import_vsi_zone_2_id
+    allow_ip_spoofing = true
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+  }
+  network_interfaces {
+    subnet            = module.management_vpc.subnet_vsi_zone_3_id
+    allow_ip_spoofing = true
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
   }
   keys = [
     ibm_is_ssh_key.slz_ssh_key.id
@@ -147,7 +172,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -210,7 +235,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -288,7 +313,7 @@ resource "ibm_is_instance" "management_server" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -357,7 +382,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id,
       module.management_vpc.management_vpe_sg2_id
@@ -399,7 +424,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       );
       let expectedData = `
 resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_1_1_reserved_ip" {
-  subnet  = module.management_vpc.vsi_zone_1_id
+  subnet  = module.management_vpc.subnet_vsi_zone_1_id
   name    = "\${var.prefix}-management-management-server-vsi-zone-1-1-reserved-ip"
   address = "1.2.3.4"
 }
@@ -416,7 +441,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -432,6 +457,68 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
   ]
 }
 `;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should correctly format vsi with reserved ip and imported subnet", () => {
+      slzNetwork.vpcs[0].subnets[0].use_data = true;
+      let actualData = formatVsi(
+        {
+          kms: "slz-kms",
+          encryption_key: "slz-vsi-volume-key",
+          image: "ibm-ubuntu-22-04-1-minimal-amd64-1",
+          profile: "cx2-4x8",
+          name: "management-server",
+          security_groups: ["management-vpe-sg"],
+          ssh_keys: ["slz-ssh-key"],
+          subnet: "vsi-zone-1",
+          vpc: "management",
+          index: 1,
+          resource_group: "slz-management-rg",
+          network_interfaces: [],
+          reserved_ip: "1.2.3.4",
+        },
+        slzNetwork
+      );
+      let expectedData = `
+resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_1_1_reserved_ip" {
+  subnet  = module.management_vpc.import_vsi_zone_1_id
+  name    = "\${var.prefix}-management-management-server-vsi-zone-1-1-reserved-ip"
+  address = "1.2.3.4"
+}
+
+resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
+  name           = "\${var.prefix}-management-management-server-vsi-zone-1-1"
+  image          = data.ibm_is_image.ibm_ubuntu_22_04_1_minimal_amd64_1.id
+  profile        = "cx2-4x8"
+  resource_group = ibm_resource_group.slz_management_rg.id
+  vpc            = module.management_vpc.id
+  zone           = "\${var.region}-1"
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  primary_network_interface {
+    subnet = module.management_vpc.import_vsi_zone_1_id
+    security_groups = [
+      module.management_vpc.management_vpe_sg_id
+    ]
+    primary_ip {
+      reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_management_server_vsi_1_1_reserved_ip.reserved_ip
+    }
+  }
+  boot_volume {
+    encryption = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.crn
+  }
+  keys = [
+    ibm_is_ssh_key.slz_ssh_key.id
+  ]
+}
+`;
+      delete slzNetwork.vpcs[0].subnets[0].use_data;
       assert.deepEqual(
         actualData,
         expectedData,
@@ -459,7 +546,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       );
       let expectedData = `
 resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_1_1_reserved_ip" {
-  subnet  = module.management_vpc.vsi_zone_1_id
+  subnet  = module.management_vpc.subnet_vsi_zone_1_id
   name    = "\${var.prefix}-management-management-server-vsi-zone-1-1-reserved-ip"
   address = "1.2.3.4"
 }
@@ -476,7 +563,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -554,6 +641,22 @@ data "ibm_is_image" "error_unfound_ref" {
           connection_limit: 2,
         },
         {
+          vpcs: [
+            {
+              name: "management",
+              subnets: [
+                {
+                  name: "vsi-zone-1",
+                },
+                {
+                  name: "vsi-zone-2",
+                },
+                {
+                  name: "vsi-zone-3",
+                },
+              ],
+            },
+          ],
           _options: {
             tags: ["hello", "world"],
             prefix: "iac",
@@ -606,9 +709,9 @@ resource "ibm_is_lb" "lb_1_load_balancer" {
     module.management_vpc.management_vpe_sg_id
   ]
   subnets = [
-    module.management_vpc.vsi_zone_1_id,
-    module.management_vpc.vsi_zone_2_id,
-    module.management_vpc.vsi_zone_3_id
+    module.management_vpc.subnet_vsi_zone_1_id,
+    module.management_vpc.subnet_vsi_zone_2_id,
+    module.management_vpc.subnet_vsi_zone_3_id
   ]
 }` +
         `
@@ -719,6 +822,22 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
           connection_limit: 2,
         },
         {
+          vpcs: [
+            {
+              name: "management",
+              subnets: [
+                {
+                  name: "vsi-zone-1",
+                },
+                {
+                  name: "vsi-zone-2",
+                },
+                {
+                  name: "vsi-zone-3",
+                },
+              ],
+            },
+          ],
           _options: {
             tags: ["hello", "world"],
             prefix: "iac",
@@ -771,9 +890,9 @@ resource "ibm_is_lb" "lb_1_load_balancer" {
     module.management_vpc.management_vpe_sg_id
   ]
   subnets = [
-    module.management_vpc.vsi_zone_1_id,
-    module.management_vpc.vsi_zone_2_id,
-    module.management_vpc.vsi_zone_3_id
+    module.management_vpc.subnet_vsi_zone_1_id,
+    module.management_vpc.subnet_vsi_zone_2_id,
+    module.management_vpc.subnet_vsi_zone_3_id
   ]
 }` +
         `
@@ -883,6 +1002,22 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
           connection_limit: 2,
         },
         {
+          vpcs: [
+            {
+              name: "management",
+              subnets: [
+                {
+                  name: "vsi-zone-1",
+                },
+                {
+                  name: "vsi-zone-2",
+                },
+                {
+                  name: "vsi-zone-3",
+                },
+              ],
+            },
+          ],
           _options: {
             tags: ["hello", "world"],
             prefix: "iac",
@@ -935,9 +1070,9 @@ resource "ibm_is_lb" "lb_1_load_balancer" {
     module.management_vpc.management_vpe_sg_id
   ]
   subnets = [
-    module.management_vpc.vsi_zone_1_id,
-    module.management_vpc.vsi_zone_2_id,
-    module.management_vpc.vsi_zone_3_id
+    module.management_vpc.subnet_vsi_zone_1_id,
+    module.management_vpc.subnet_vsi_zone_2_id,
+    module.management_vpc.subnet_vsi_zone_3_id
   ]
 }` +
         `
@@ -1086,6 +1221,23 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
             connection_limit: "",
           },
         ],
+        vpcs: [
+          {
+            name: "management",
+            subnets: [
+              {
+                use_data: true,
+                name: "vsi-zone-1",
+              },
+              {
+                name: "vsi-zone-2",
+              },
+              {
+                name: "vsi-zone-3",
+              },
+            ],
+          },
+        ],
       });
       let expectedData =
         `##############################################################################
@@ -1104,9 +1256,9 @@ resource "ibm_is_lb" "lb_1_load_balancer" {
     module.management_vpc.management_vpe_sg_id
   ]
   subnets = [
-    module.management_vpc.vsi_zone_1_id,
-    module.management_vpc.vsi_zone_2_id,
-    module.management_vpc.vsi_zone_3_id
+    module.management_vpc.import_vsi_zone_1_id,
+    module.management_vpc.subnet_vsi_zone_2_id,
+    module.management_vpc.subnet_vsi_zone_3_id
   ]
 }` +
         `
@@ -1225,7 +1377,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1250,7 +1402,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_2" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1275,7 +1427,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_2_id
+    subnet = module.management_vpc.subnet_vsi_zone_2_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1300,7 +1452,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_2" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_2_id
+    subnet = module.management_vpc.subnet_vsi_zone_2_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1325,7 +1477,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_3_id
+    subnet = module.management_vpc.subnet_vsi_zone_3_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1350,7 +1502,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_3_id
+    subnet = module.management_vpc.subnet_vsi_zone_3_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1402,7 +1554,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1427,7 +1579,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_2" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1452,7 +1604,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_2_id
+    subnet = module.management_vpc.subnet_vsi_zone_2_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1477,7 +1629,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_2" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_2_id
+    subnet = module.management_vpc.subnet_vsi_zone_2_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1502,7 +1654,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_3_id
+    subnet = module.management_vpc.subnet_vsi_zone_3_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1527,7 +1679,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_3_id
+    subnet = module.management_vpc.subnet_vsi_zone_3_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1595,7 +1747,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1619,7 +1771,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_2" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1643,7 +1795,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_2_id
+    subnet = module.management_vpc.subnet_vsi_zone_2_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1667,7 +1819,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_2" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_2_id
+    subnet = module.management_vpc.subnet_vsi_zone_2_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1691,7 +1843,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_3_id
+    subnet = module.management_vpc.subnet_vsi_zone_3_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1715,7 +1867,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_3_id
+    subnet = module.management_vpc.subnet_vsi_zone_3_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1772,7 +1924,7 @@ data "ibm_is_image" "ibm_ubuntu_22_04_1_minimal_amd64_1" {
 ##############################################################################
 
 resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_1_1_reserved_ip" {
-  subnet  = module.management_vpc.vsi_zone_1_id
+  subnet  = module.management_vpc.subnet_vsi_zone_1_id
   name    = "\${var.prefix}-management-management-server-vsi-zone-1-1-reserved-ip"
   address = "1.2.3.4"
 }
@@ -1789,7 +1941,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1806,7 +1958,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
 }
 
 resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_2_1_reserved_ip" {
-  subnet  = module.management_vpc.vsi_zone_2_id
+  subnet  = module.management_vpc.subnet_vsi_zone_2_id
   name    = "\${var.prefix}-management-management-server-vsi-zone-2-1-reserved-ip"
   address = "5.6.7.8"
 }
@@ -1823,7 +1975,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_2_id
+    subnet = module.management_vpc.subnet_vsi_zone_2_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1840,7 +1992,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
 }
 
 resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_3_1_reserved_ip" {
-  subnet  = module.management_vpc.vsi_zone_3_id
+  subnet  = module.management_vpc.subnet_vsi_zone_3_id
   name    = "\${var.prefix}-management-management-server-vsi-zone-3-1-reserved-ip"
   address = "9.10.11.12"
 }
@@ -1857,7 +2009,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_3_id
+    subnet = module.management_vpc.subnet_vsi_zone_3_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1927,7 +2079,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1952,7 +2104,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_2_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_2_id
+    subnet = module.management_vpc.subnet_vsi_zone_2_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -1977,7 +2129,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_3_id
+    subnet = module.management_vpc.subnet_vsi_zone_3_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -2032,7 +2184,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.management_vpc.vsi_zone_1_id
+    subnet = module.management_vpc.subnet_vsi_zone_1_id
     security_groups = [
       module.management_vpc.management_vpe_sg_id
     ]
@@ -2129,7 +2281,7 @@ resource "ibm_is_instance" "workload_vpc_ase_vsi_1_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.workload_vpc.ase_zone_1_id
+    subnet = module.workload_vpc.subnet_ase_zone_1_id
     security_groups = [
       module.workload_vpc.customer_vsi_sg_id
     ]
@@ -2164,7 +2316,7 @@ resource "ibm_is_instance" "workload_vpc_ase_vsi_2_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.workload_vpc.ase_zone_2_id
+    subnet = module.workload_vpc.subnet_ase_zone_2_id
     security_groups = [
       module.workload_vpc.customer_vsi_sg_id
     ]
@@ -2199,7 +2351,7 @@ resource "ibm_is_instance" "workload_vpc_ase_vsi_3_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.workload_vpc.dr_zone_3_id
+    subnet = module.workload_vpc.subnet_dr_zone_3_id
     security_groups = [
       module.workload_vpc.customer_vsi_sg_id
     ]
@@ -2234,7 +2386,7 @@ resource "ibm_is_instance" "workload_vpc_ase_vsi_3_1" {
     "landing-zone"
   ]
   primary_network_interface {
-    subnet = module.workload_vpc.fm_zone_3_id
+    subnet = module.workload_vpc.subnet_fm_zone_3_id
     security_groups = [
       module.workload_vpc.customer_vsi_sg_id
     ]

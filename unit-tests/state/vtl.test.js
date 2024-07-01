@@ -33,7 +33,7 @@ describe("vtl", () => {
           {
             name: "frog",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -55,7 +55,7 @@ describe("vtl", () => {
           {
             name: "frog",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -187,7 +187,7 @@ describe("vtl", () => {
       craig.vtl.create({
         name: "toad",
         image: null,
-        ssh_key: null,
+        ssh_key: "(None)",
         network: [],
         workspace: null,
         zone: null,
@@ -208,7 +208,7 @@ describe("vtl", () => {
           {
             name: "frog",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -250,7 +250,7 @@ describe("vtl", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -300,7 +300,7 @@ describe("vtl", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -350,7 +350,7 @@ describe("vtl", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -532,7 +532,7 @@ describe("vtl", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             workspace: "toad",
             sap: true,
@@ -691,7 +691,7 @@ describe("vtl", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -798,7 +798,7 @@ describe("vtl", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -834,7 +834,7 @@ describe("vtl", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: null,
@@ -870,7 +870,7 @@ describe("vtl", () => {
           {
             name: "toad",
             image: null,
-            ssh_key: null,
+            ssh_key: "(None)",
             network: [],
             primary_subnet: null,
             workspace: "toad",

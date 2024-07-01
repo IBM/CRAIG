@@ -6,6 +6,7 @@ const {
   contains,
   splatContains,
   revision,
+  getObjectFromArray,
 } = require("lazy-z");
 const { rgIdRef, tfBlock, jsonToTfPrint, kebabName } = require("./utils");
 const { formatAddressPrefix } = require("./vpc");
@@ -71,9 +72,15 @@ function ibmIsVpnServer(server, craig) {
     subnets: [],
     security_groups: [],
   };
+  let serverVpcSubnets = new revision(craig).child("vpcs", server.vpc).data
+    .subnets;
   server.subnets.forEach((subnet) => {
     serverData["subnets"].push(
-      `\${module.${snakeCase(server.vpc)}_vpc.${snakeCase(subnet)}_id}`
+      `\${module.${snakeCase(server.vpc)}_vpc.${
+        (getObjectFromArray(serverVpcSubnets, "name", subnet)?.use_data
+          ? "import_"
+          : "subnet_") + snakeCase(subnet)
+      }_id}`
     );
   });
   server.security_groups.forEach((group) => {
