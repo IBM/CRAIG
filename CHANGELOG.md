@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.16.3
+
+### Features
+
+- LogDNA and Sysdig platform logs and metrics are now enabled in the Power VS PoC templates
+
 ## 1.16.2
 
 ### Upgrade Notes

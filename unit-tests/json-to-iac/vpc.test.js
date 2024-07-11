@@ -5666,7 +5666,7 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
           enable_classic: false,
           dynamic_subnets: true,
           enable_power_vs: false,
-          craig_version: "1.16.2",
+          craig_version: "1.16.3",
           power_vs_zones: [],
           power_vs_high_availability: false,
           no_vpn_secrets_manager_auth: false,

@@ -65,6 +65,12 @@ If you are using an on-premises network CIDR outside of the `10.0.0.0/8` range y
 ### Activity Tracker
 By default the template will create an IBM Cloud Activity Tracker in the us-south region. Since only one activity tracker is allowed per region in an account the project will fail to deploy if the account already has an Activity Tracker instance in the region. If the target account already has an Activity Tracker instance the project must be modified to not create an instance. Navigate to the the Activity Tracker by choosing `Cloud Services` from the left navigation bar and click on the `Activity Tracker` icon. Set `Create Activity Tracker Instance` to `False` and click the Save button.
 
+### IBM Log Analysis Platform Logs
+By default the template will create an IBM Log Analysis in the selected region with platform logs enabled. Since only one IBM Log Analysis instance with platform logs enabled is allowed per region, the project will fail to deploy if the region already has an IBM Log Analysis instance with plaform logs enabled. If the selected region already has an instance with platform logs enabled, the instance in the template can either be removed, or modified to not have platform logs enabled. The Log Analysis instance can be found by choosing `Cloud Services` from the left navigation bar and clicking on the `LogDNA` icon.
+
+### IBM Cloud Monitoring Platform Metrics
+By default the template will create an IBM Cloud Monitoring in the selected region with platform metrics enabled. Since only one IBM Cloud Monitoring instance with platform metrics enabled is allowed per region, the project will fail to deploy if the region already has an IBM Cloud Monitoring instance with plaform metrics enabled. If the selected region already has an instance with platform metrics enabled, the instance in the template can either be removed, or modified to not have platform metrics enabled. The Clodu Monitoring instance can be found by choosing `Cloud Services` from the left navigation bar and clicking on the `Sysdig` icon.
+
 ## Additional customization
 At this point the project should be ready to deploy. However, additional customizations to the default template resources can be done in CRAIG. The following list of resources are commonly customized before deployment.
 
