@@ -122,7 +122,7 @@ class StatefulTabs extends React.Component {
                   ) : this.props.about ? (
                     this.props.about
                   ) : (
-                    ""
+                    <></>
                   )}
                 </TabPanel>
                 {this.props.tfTabs ? (
@@ -136,7 +136,7 @@ class StatefulTabs extends React.Component {
                     />
                   </TabPanel>
                 ) : (
-                  ""
+                  <></>
                 )}
               </TabPanels>
             )}
