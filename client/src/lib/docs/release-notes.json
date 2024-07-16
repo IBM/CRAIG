@@ -2,6 +2,7 @@
   {
     "version": "1.16.3",
     "features": [
+      "Users can now add Logging and Monitoring agents to VPC Clusters",
       "LogDNA and Sysdig platform logs and metrics are now enabled in the Power VS PoC templates"
     ],
     "fixes": [],

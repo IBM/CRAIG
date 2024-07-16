@@ -220,6 +220,33 @@ function clusterTf(config) {
       blockData += formatWorkerPool(pool, config);
     });
     tf += tfBlock(cluster.name + " Cluster", blockData) + "\n";
+    let clusterAddonsTf = "";
+    ["logging", "monitoring"].forEach((field) => {
+      if (cluster[field])
+        clusterAddonsTf += jsonToTfPrint(
+          "resource",
+          `ibm_ob_${field}`,
+          `${cluster.name} cluster ${field}`,
+          {
+            cluster: `\${ibm_container_vpc_cluster.${snakeCase(
+              cluster.vpc
+            )}_vpc_${snakeCase(cluster.name)}_cluster.id}`,
+            instance_id: `\${ibm_resource_instance.${
+              field === "logging" ? "logdna" : "sysdig"
+            }.guid}`,
+            depends_on: [
+              field === "logging"
+                ? "${logdna_key.logdna_ingestion_key}"
+                : "${ibm_resource_key.sysdig_key}",
+            ],
+          }
+        );
+    });
+
+    if (clusterAddonsTf.length > 0) {
+      tf += tfBlock(cluster.name + "Cluster Add Ons", clusterAddonsTf);
+    }
+
     if (cluster.opaque_secrets) {
       cluster.opaque_secrets.forEach((secret) => {
         let ingressData =

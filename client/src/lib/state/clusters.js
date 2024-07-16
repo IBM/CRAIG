@@ -89,6 +89,15 @@ function clusterOnStoreUpdate(config) {
     if (!cluster.worker_pools) {
       cluster.worker_pools = [];
     }
+
+    if (config.store.json?.logdna?.enabled !== true) {
+      cluster.logging = false;
+    }
+
+    if (config.store.json?.sysdig?.enabled !== true) {
+      cluster.monitoring = false;
+    }
+
     // update vpc
     if (hasUnfoundVpc(config, cluster)) {
       cluster.vpc = null;
@@ -442,6 +451,32 @@ function initClusterStore(store) {
         labelText: "Private Endpoint",
         tooltip: {
           content: "Use private service endpoint for Encryption Key",
+        },
+      },
+      logging: {
+        size: "small",
+        default: false,
+        type: "toggle",
+        labelText: "Enable Logging Agents",
+        tooltip: {
+          content:
+            "To enable logging agents, a LogDNA instance must be created",
+        },
+        disabled: function (stateData, componentProps) {
+          return componentProps.craig.store.json?.logdna?.enabled !== true;
+        },
+      },
+      monitoring: {
+        size: "small",
+        default: false,
+        type: "toggle",
+        labelText: "Enable Monitoring Agents",
+        tooltip: {
+          content:
+            "To enable monitoring agents, a Sysdig instance must be created",
+        },
+        disabled: function (stateData, componentProps) {
+          return componentProps.craig.store.json?.sysdig?.enabled !== true;
         },
       },
     },

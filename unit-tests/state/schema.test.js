@@ -848,6 +848,14 @@ describe("automate schema generation", () => {
             },
             kube_version: { type: "string", default: null },
             private_endpoint: { type: "boolean", default: false },
+            logging: {
+              default: false,
+              type: "boolean",
+            },
+            monitoring: {
+              default: false,
+              type: "boolean",
+            },
             worker_pools: {
               Array: {
                 name: { type: "string", default: null },
