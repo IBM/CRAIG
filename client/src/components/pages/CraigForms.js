@@ -578,6 +578,10 @@ function craigForms(craig) {
           encryption_key: craig.clusters.encryption_key,
           private_endpoint: craig.clusters.private_endpoint,
         },
+        {
+          logging: craig.clusters.logging,
+          monitoring: craig.clusters.monitoring,
+        },
       ],
       subForms: [
         {
