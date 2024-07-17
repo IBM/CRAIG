@@ -99,6 +99,8 @@ class Wizard extends React.Component {
       let powerHaMap = {
         mad02: "eu-de-1",
         mad04: "eu-de-2",
+        syd04: "syd05",
+        tok04: "osa21",
         "us-east": "us-south",
         wdc06: "dal12",
         wdc07: "dal10",
@@ -471,15 +473,22 @@ class Wizard extends React.Component {
                 invalid={isEmpty(this.state.power_vs_zones)}
                 invalidText="Select an Availability Zone"
               >
-                {["", "mad02", "mad04", "us-east", "wdc06", "wdc07"].map(
-                  (value) => (
-                    <SelectItem
-                      key={`ha_power_zone_site_1-${value}`}
-                      text={value}
-                      value={value}
-                    />
-                  )
-                )}
+                {[
+                  "",
+                  "mad02",
+                  "mad04",
+                  "syd04",
+                  "tok04",
+                  "us-east",
+                  "wdc06",
+                  "wdc07",
+                ].map((value) => (
+                  <SelectItem
+                    key={`ha_power_zone_site_1-${value}`}
+                    text={value}
+                    value={value}
+                  />
+                ))}
               </Select>
               <Select
                 className="fieldWidth leftTextAlign"
@@ -489,15 +498,22 @@ class Wizard extends React.Component {
                 value={this.state.power_vs_zones[1] || ""}
                 readOnly
               >
-                {["", "eu-de-1", "eu-de-2", "us-south", "dal10", "dal12"].map(
-                  (value) => (
-                    <SelectItem
-                      key={`ha_power_zone_site_2-${value}`}
-                      text={value}
-                      value={value}
-                    />
-                  )
-                )}
+                {[
+                  "",
+                  "eu-de-1",
+                  "eu-de-2",
+                  "osa21",
+                  "syd05",
+                  "us-south",
+                  "dal10",
+                  "dal12",
+                ].map((value) => (
+                  <SelectItem
+                    key={`ha_power_zone_site_2-${value}`}
+                    text={value}
+                    value={value}
+                  />
+                ))}
               </Select>
             </CraigFormGroup>
           )}

@@ -37,6 +37,8 @@ const powerVsZones = [
 const powerHaMap = {
   mad02: "eu-de-1",
   mad04: "eu-de-2",
+  syd04: "syd05",
+  tok04: "osa21",
   "us-east": "us-south",
   wdc06: "dal12",
   wdc07: "dal10",
@@ -315,7 +317,15 @@ function initOptions(store) {
         type: "select",
         labelText: "Power VS Site 1",
         hideWhen: hideWhenNotPowerHa,
-        groups: ["mad02", "mad04", "us-east", "wdc06", "wdc07"],
+        groups: [
+          "mad02",
+          "mad04",
+          "syd04",
+          "tok04",
+          "us-east",
+          "wdc06",
+          "wdc07",
+        ],
         onRender: function (stateData) {
           return stateData.power_vs_zones[0] || "";
         },
@@ -338,7 +348,15 @@ function initOptions(store) {
         type: "select",
         labelText: "Power VS Site 2",
         hideWhen: hideWhenNotPowerHa,
-        groups: ["eu-de-1", "eu-de-2", "us-south", "dal10", "dal12"],
+        groups: [
+          "eu-de-1",
+          "eu-de-2",
+          "osa21",
+          "syd05",
+          "us-south",
+          "dal10",
+          "dal12",
+        ],
         onRender: function (stateData) {
           return stateData.power_vs_zones[1] || "";
         },

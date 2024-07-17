@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Users can now add Logging and Monitoring agents to VPC Clusters
 - LogDNA and Sysdig platform logs and metrics are now enabled in the Power VS PoC templates
+- Power VS High Availability is now supported for `tok04`, `osa21`, `syd04`, and `syd05`
 
 ## 1.16.2
 
