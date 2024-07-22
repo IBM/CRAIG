@@ -31,7 +31,7 @@ describe("vpn server", () => {
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
-  certificate_crn        = "xyz"
+  certificate_crn        = var.management_vpn_server_abc_certificate_crn
   client_idle_timeout    = 2000
   client_ip_pool         = "xyz"
   enable_split_tunneling = true
@@ -41,7 +41,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
   resource_group         = ibm_resource_group.slz_management_rg.id
   client_authentication {
     method        = "certificate"
-    client_ca_crn = "hij"
+    client_ca_crn = var.management_vpn_server_abc_client_ca_crn
   }
   client_dns_server_ips = [
     "optional"
@@ -80,7 +80,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
-  certificate_crn        = "xyz"
+  certificate_crn        = var.management_vpn_server_abc_certificate_crn
   client_idle_timeout    = 2000
   client_ip_pool         = "xyz"
   enable_split_tunneling = true
@@ -90,7 +90,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
   resource_group         = ibm_resource_group.slz_management_rg.id
   client_authentication {
     method        = "certificate"
-    client_ca_crn = "hij"
+    client_ca_crn = var.management_vpn_server_abc_client_ca_crn
   }
   client_dns_server_ips = [
     "optional"
@@ -130,7 +130,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
-  certificate_crn        = "xyz"
+  certificate_crn        = var.management_vpn_server_abc_certificate_crn
   client_idle_timeout    = 2000
   client_ip_pool         = "xyz"
   enable_split_tunneling = true
@@ -140,7 +140,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
   resource_group         = ibm_resource_group.slz_management_rg.id
   client_authentication {
     method        = "certificate"
-    client_ca_crn = "hij"
+    client_ca_crn = var.management_vpn_server_abc_client_ca_crn
   }
   client_dns_server_ips = [
     "optional"
@@ -178,7 +178,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
-  certificate_crn        = "xyz"
+  certificate_crn        = var.management_vpn_server_abc_certificate_crn
   client_idle_timeout    = 2000
   client_ip_pool         = "xyz"
   enable_split_tunneling = true
@@ -187,7 +187,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
   resource_group         = ibm_resource_group.slz_management_rg.id
   client_authentication {
     method        = "certificate"
-    client_ca_crn = "hij"
+    client_ca_crn = var.management_vpn_server_abc_client_ca_crn
   }
   client_dns_server_ips = [
     "optional"
@@ -226,7 +226,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
-  certificate_crn        = "xyz"
+  certificate_crn        = var.management_vpn_server_abc_certificate_crn
   client_idle_timeout    = 2000
   client_ip_pool         = "xyz"
   enable_split_tunneling = true
@@ -274,7 +274,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
-  certificate_crn        = "xyz"
+  certificate_crn        = var.management_vpn_server_abc_certificate_crn
   client_ip_pool         = "xyz"
   enable_split_tunneling = true
   name                   = "\${var.prefix}-management-abc-server"
@@ -320,7 +320,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
-  certificate_crn        = "xyz"
+  certificate_crn        = var.management_vpn_server_abc_certificate_crn
   client_idle_timeout    = 2000
   client_ip_pool         = "xyz"
   enable_split_tunneling = true
@@ -330,7 +330,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
   resource_group         = ibm_resource_group.slz_management_rg.id
   client_authentication {
     method        = "certificate"
-    client_ca_crn = "hij"
+    client_ca_crn = var.management_vpn_server_abc_client_ca_crn
   }
   client_authentication {
     method            = "username"
@@ -1161,7 +1161,7 @@ resource "ibm_iam_authorization_policy" "vpn_to_secrets_manager_policy" {
 }
 
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
-  certificate_crn        = "xyz"
+  certificate_crn        = var.management_vpn_server_abc_certificate_crn
   client_ip_pool         = "xyz"
   enable_split_tunneling = true
   name                   = "\${var.prefix}-management-abc-server"
@@ -1647,7 +1647,7 @@ resource "ibm_is_vpc_address_prefix" "management_vpn_abc_on_prem_127_0_0_1_5_pre
 ##############################################################################
 
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
-  certificate_crn        = "xyz"
+  certificate_crn        = var.management_vpn_server_abc_certificate_crn
   client_ip_pool         = "xyz"
   enable_split_tunneling = true
   name                   = "\${var.prefix}-management-abc-server"

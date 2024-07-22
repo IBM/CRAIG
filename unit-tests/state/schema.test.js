@@ -1985,8 +1985,6 @@ describe("automate schema generation", () => {
               default: null,
               groups: ["both", "certificate", "username", "byo", "INSECURE"],
             },
-            certificate_crn: { type: "string", default: null },
-            client_ca_crn: { type: "string", default: null },
             secrets_manager: {
               type: "string",
               default: null,

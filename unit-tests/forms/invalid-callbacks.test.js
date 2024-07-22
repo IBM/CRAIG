@@ -50,6 +50,9 @@ describe("invalid callbacks", () => {
     });
   });
   describe("invalidCrnList", () => {
+    it("should return false when undefined", () => {
+      assert.isFalse(invalidCrnList(undefined));
+    });
     it("should return true when invalid crn in list", () => {
       assert.isTrue(
         invalidCrnList([

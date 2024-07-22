@@ -38,17 +38,6 @@ const {
 const { nameField } = require("./reusable-fields");
 
 /**
- * invalid crn text
- * @param {*} stateData
- * @returns {Function} text function
- */
-function invalidCrnText(stateData) {
-  return invalidCrns(stateData)
-    ? "Enter a valid comma separated list of CRNs"
-    : "";
-}
-
-/**
  * initialize vpn servers in store
  * @param {lazyZstate} config
  * @param {object} config.store
@@ -203,7 +192,6 @@ function initVpnState(store) {
         "client_ip_pool",
         "port",
         "client_idle_timeout",
-        "certificate_crn",
         "client_dns_server_ips",
         "subnets",
         "additional_prefixes",
@@ -276,39 +264,6 @@ function initVpnState(store) {
             ? "byo"
             : snakeCase(stateData.method);
         },
-      },
-      certificate_crn: {
-        size: "small",
-        default: "",
-        labelText: "Certificate CRN",
-        tooltip: {
-          content:
-            "Secrets Manager certificate unique identifier for VPN server",
-          align: "top-left",
-        },
-        invalid: function (stateData) {
-          return contains(["byo", "INSECURE"], stateData.method)
-            ? false
-            : invalidCrnList([stateData.certificate_crn]);
-        },
-        invalidText: invalidCrnText,
-        hideWhen: hideWhenByoOrInsecure,
-      },
-      client_ca_crn: {
-        default: "",
-        size: "small",
-        labelText: "Client CA CRN",
-        invalid: function (stateData) {
-          return stateData.method === "certificate"
-            ? invalidCrnList([stateData.client_ca_crn])
-            : false;
-        },
-        invalidText: invalidCrnText,
-        tooltip: {
-          content: "Client Secrets Manager Certificate CRN",
-          align: "top-left",
-        },
-        hideWhen: hideWhenByoOrInsecure,
       },
       secrets_manager: {
         type: "select",

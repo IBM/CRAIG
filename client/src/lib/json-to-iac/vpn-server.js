@@ -49,7 +49,11 @@ function ibmIsVpnServer(server, craig) {
 
   // vpn server data
   let serverData = {
-    certificate_crn: overrideCert || server.certificate_crn,
+    certificate_crn:
+      overrideCert ||
+      `\${var.${snakeCase(
+        `${server.vpc} vpn server ${server.name} certificate_crn`
+      )}}`,
     client_authentication: [
       {
         method: contains(["byo", "INSECURE", "both"], server.method)
@@ -97,7 +101,9 @@ function ibmIsVpnServer(server, craig) {
         ? overrideCert.replace(/imported(?=\w+\.crn)/, "client_ca_imported")
         : overrideCert
         ? overrideCert.replace(/imported(?=\w+\.crn)/, "client_ca_imported")
-        : server.client_ca_crn;
+        : `\${var.${snakeCase(
+            `${server.vpc} vpn server ${server.name} client_ca_crn`
+          )}}`;
   } else {
     serverData.client_authentication[0].identity_provider = "iam";
   }
