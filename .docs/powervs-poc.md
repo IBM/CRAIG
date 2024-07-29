@@ -121,12 +121,8 @@ There are multiple ways to manage volumes in Power Virtual Server:
 * To remove volumes that are not attached to a virtual server, click on the volume's icon and click the delete button in the right panel.
 
 ### VPC VPN Server - Client to Site VPN
-The VPC VPN Server used for client to site VPNs requires SSL/TLS certificates stored in a Secrets Manager instance. The Secrets Manager should be created outside of CRAIG and populated with the certificates before creating the VPN Server deployment in CRAIG.
 
-1. Create a Secrets Manager instance and either [order public certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-public-certificates&interface=ui
-), [create private certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-private-certificates&interface=ui
-), or [import certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-certificates&interface=ui). Consult the [VPC client-to-site server authentication documentation](https://cloud.ibm.com/docs/vpc?topic=vpc-client-to-site-authentication) to ensure the certificate authorities and certificates are created using values that are compatible with the VPN server.
-2. Choose VPC Deployments from the menu and create a new security group for the VPN Server.
+1. Choose VPC Deployments from the menu and create a new security group for the VPN Server.
 Create the security group in the `transit-rg` resource group.
 Add the following rules to the group:
 
@@ -136,7 +132,7 @@ Add the following rules to the group:
 | vpn-inbound-tcp | inbound   | 0.0.0.0/0 | TCP      | 443  |
 | vpn-outbound    | outbound  | 0.0.0.0/0 | ALL      | ALL  |
 
-3. Create a VPN Server deployment
+2. Create a VPN Server deployment
 Set the VPN Server values using the following table as a guide.
 
 | Field                   | Value                                                                                                                                                                                                            |
@@ -146,8 +142,6 @@ Set the VPN Server values using the following table as a guide.
 | Subnets                 | vpn-zone-1                                                                                                                                                                                                       |
 | Security group          | security group created in step 3                                                                                                                                                                                 |
 | Authentication method   | Username and Certificate                                                                                                                                                                                         |
-| Certificate CRN         | The CRN of the Secrets Manager secret containing the certificate for the VPN Server.                                                                                                                             |
-| Client CA CRN           | The CRN of the Secrets Manager secret containing the certificate for the VPN client.                                                                                                                             |
 | Client CIDR Pool        | Specify a network CIDR that does not conflict with any on-premises network, the VPC network, or the Power VS network. The prefix length must be between 9 and 22 inclusive. The CIDR should also be a subnet of `10.0.0.0/8` to avoid additional security group and routing table changes. For example `10.60.0.0/22` does not conflict with the default VPC, Power VS, or on-premises networks in the template. | 
 | Port                    | 443                                                                                                                                                                                                              |
 | Protocol                | UDP                                                                                                                                                                                                              |
@@ -156,7 +150,7 @@ Set the VPN Server values using the following table as a guide.
 | Client DNS Server IPs   | Leave empty                                                                                                                                                                                                      |
 | Additional VPC Prefixes | Zone 1, add the CIDR specified in `Client CIDR Pool`                                                                                                                                                             |
 
-4. After the VPN server is created, click on the VPN server icon to add routes. Routes are added by clicking the plus icon at the bottom of the VPN Server settings. Add two routes:
+3. After the VPN server is created, click on the VPN server icon to add routes. Routes are added by clicking the plus icon at the bottom of the VPN Server settings. Add two routes:
 
 | Name    | Destination                                                             | Action    |
 | ------- | ----------------------------------------------------------------------- | --------- |
@@ -171,10 +165,23 @@ The project resources can be provisioned in the cloud using either IBM Cloud Sch
 
 Resources can also be provisioned using a local Terraform install. The downloaded zip contains the `main.tf` and other Terraform files needed to provision the resources.
 
+### Certificates for VPN Server
+
+If you added a VPC VPN server to the project, you must have SSL/TLS certificates stored in a Secrets Manager instance. The VPC VPN Server used for client to site VPNs requires SSL/TLS certificates stored in a Secrets Manager instance. The Secrets Manager should be created outside of CRAIG and populated with the certificates as these certificate CRNs will be required inputs at deployment time.
+
+> Create a Secrets Manager instance and either [order public certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-public-certificates&interface=ui
+), [create private certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-private-certificates&interface=ui
+), or [import certificates](https://cloud.ibm.com/docs/secrets-manager?topic=secrets-manager-certificates&interface=ui). Consult the [VPC client-to-site server authentication documentation](https://cloud.ibm.com/docs/vpc?topic=vpc-client-to-site-authentication) to ensure the certificate authorities and certificates are created using values that are compatible with the VPN server.
+
 ### Inputs Required at Deployment Time
 >**Note:** The following input fields (Terraform values) must be set in IBM Schematics or Terraform at Generate Plan / Apply Plan time.
->* `ibmcloud_api_key`: The IBM Cloud platform API key that will be used to deploy the project resources. See [Access Policies](access-policies.md) for access policies and account settings required for creating and managing resources created in CRAIG projects.
->* `dal10gw_on_prem_connection_preshared_key`: This is the preshared key for the VPN Gateway connection (site-to-site VPN). The variable name will be different if you change the name of the VPN gateway or the connection. This variable will also not be present if the VPN Gateway is removed from the project.
+
+| Field                                       | Description                                                                                                                                                                                                      |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ibmcloud_api_key`                          | The IBM Cloud platform API key that will be used to deploy the project resources. See [Access Policies](access-policies.md) for access policies and account settings required for creating and managing resources created in CRAIG projects.                                                                                                                                                                                                        |
+| `dal10gw_on_prem_connection_preshared_key`  | This is the preshared key for the VPN Gateway connection (site-to-site VPN). The variable name will be different if you change the name of the VPN gateway or the connection. This variable will also not be present if the VPN Gateway is removed from the project.                                                                                                                                                                                                         |
+| `*_certificate_crn`                           | The CRN of the Secrets Manager secret containing the certificate for the VPN Server if a Client to Site VPN is being deployed _(variable exists only if a VPN server was added)._                                                                                                                                                                                                                |
+| `*_client_ca_crn`                             | The CRN of the Secrets Manager secret containing the certificate for the VPN client if a Client to Site VPN is being deployed _(variable exists only if a VPN server was added)._                                                                                                                                                                                                                |
 
 ### Cost estimation
 IBM Cloud Schematics provides a cost estimation for the project resources after running the `Generate Plan` step. See [the Schematics Integration document](./schematics-how-to.md) for more information.

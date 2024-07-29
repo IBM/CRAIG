@@ -375,7 +375,7 @@ describe("transit_gateways", () => {
             {
               connections: [
                 {
-                  tgw: "tranist-gateway",
+                  tgw: "transit-gateway",
                   vpc: "management",
                 },
               ],
