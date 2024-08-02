@@ -166,7 +166,7 @@ class VpcConnectivityPage extends React.Component {
                 >
                   {craig.store.json.transit_gateways.length === 0 ? (
                     <CraigEmptyResourceTile
-                      name="Tranist Gateways"
+                      name="Transit Gateways"
                       className="width580 marginTopHalfRem"
                     />
                   ) : (

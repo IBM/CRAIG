@@ -17,6 +17,8 @@ const defaultManagementCluster = {
   subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
   update_all_workers: false,
   vpc: "management",
+  logging: false,
+  monitoring: false,
   worker_pools: [
     {
       entitlement: "cloud_pak",
@@ -124,6 +126,8 @@ describe("clusters", () => {
       assert.deepEqual(
         craig.store.json.clusters[1],
         {
+          logging: false,
+          monitoring: false,
           cos: "cos",
           entitlement: "cloud_pak",
           kube_type: "openshift",
@@ -207,6 +211,8 @@ describe("clusters", () => {
       assert.deepEqual(
         craig.store.json.clusters[1],
         {
+          logging: false,
+          monitoring: false,
           cos: "cos",
           entitlement: "cloud_pak",
           kube_type: "openshift",
@@ -570,6 +576,40 @@ describe("clusters", () => {
         ),
         `/api/cluster/us-south/flavors`,
         "it should return api endpoint"
+      );
+    });
+    it("should disable logging integration when logdna is not enabled", () => {
+      assert.isTrue(
+        craig.clusters.logging.disabled(
+          {},
+          {
+            craig: {
+              store: {
+                json: {
+                  logdna: {},
+                },
+              },
+            },
+          }
+        ),
+        "it should be disabled"
+      );
+    });
+    it("should disable monitoring integration when sysdig is not enabled", () => {
+      assert.isTrue(
+        craig.clusters.monitoring.disabled(
+          {},
+          {
+            craig: {
+              store: {
+                json: {
+                  sysdig: {},
+                },
+              },
+            },
+          }
+        ),
+        "it should be disabled"
       );
     });
   });

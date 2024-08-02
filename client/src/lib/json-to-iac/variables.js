@@ -237,6 +237,31 @@ function variablesDotTf(config, useF5, templateTarMode) {
             sensitive: "${true}",
           };
         });
+      } else {
+        variables[
+          snakeCase(`${server.vpc} vpn server ${server.name} certificate crn`)
+        ] = {
+          description: `${titleCase(server.vpc)} VPN Server ${titleCase(
+            server.name
+          )} Certificate CRN`,
+          type: "${string}",
+          default: server.certificate_crn,
+        };
+
+        if (
+          (server.DANGER_developer_certificate ||
+            server.method === "INSECURE") === false
+        ) {
+          variables[
+            snakeCase(`${server.vpc} vpn server ${server.name} client ca crn`)
+          ] = {
+            description: `${titleCase(server.vpc)} VPN Server ${titleCase(
+              server.name
+            )} Client CA CRN`,
+            type: "${string}",
+            default: server.client_ca_crn,
+          };
+        }
       }
     });
   }

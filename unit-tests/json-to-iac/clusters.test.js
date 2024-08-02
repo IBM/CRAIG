@@ -2929,6 +2929,10 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
     });
   });
   describe("clusterTf", () => {
+    afterEach(() => {
+      delete slzNetwork.clusters[0].logging;
+      delete slzNetwork.clusters[0].monitoring;
+    });
     it("should return cluster terraform", () => {
       let actualData = clusterTf(slzNetwork);
       let expectedData = `##############################################################################
@@ -2995,6 +2999,106 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
     name      = "\${var.region}-3"
     subnet_id = module.workload_vpc.subnet_vsi_zone_3_id
   }
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
+    it("should return cluster terraform with logging and monitoring integration", () => {
+      slzNetwork.clusters[0].logging = true;
+      slzNetwork.clusters[0].monitoring = true;
+      let actualData = clusterTf(slzNetwork);
+      let expectedData = `##############################################################################
+# Workload Cluster
+##############################################################################
+
+resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+  name                            = "\${var.prefix}-workload-cluster"
+  vpc_id                          = module.workload_vpc.id
+  resource_group_id               = ibm_resource_group.slz_workload_rg.id
+  flavor                          = "bx2.16x64"
+  worker_count                    = 2
+  kube_version                    = "default"
+  wait_till                       = "IngressReady"
+  disable_public_service_endpoint = false
+  entitlement                     = "cloud_pak"
+  cos_instance_crn                = ibm_resource_instance.cos_object_storage.crn
+  update_all_workers              = null
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  zones {
+    name      = "\${var.region}-1"
+    subnet_id = module.workload_vpc.subnet_vsi_zone_1_id
+  }
+  zones {
+    name      = "\${var.region}-2"
+    subnet_id = module.workload_vpc.subnet_vsi_zone_2_id
+  }
+  zones {
+    name      = "\${var.region}-3"
+    subnet_id = module.workload_vpc.subnet_vsi_zone_3_id
+  }
+  timeouts {
+    create = "3h"
+    update = "3h"
+    delete = "2h"
+  }
+  kms_config {
+    crk_id           = ibm_kms_key.slz_kms_slz_vsi_volume_key_key.key_id
+    instance_id      = ibm_resource_instance.slz_kms.guid
+    private_endpoint = false
+  }
+}
+
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+  worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
+  vpc_id            = module.workload_vpc.id
+  resource_group_id = ibm_resource_group.slz_workload_rg.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  flavor            = "bx2.16x64"
+  worker_count      = 2
+  entitlement       = "cloud_pak"
+  zones {
+    name      = "\${var.region}-1"
+    subnet_id = module.workload_vpc.subnet_vsi_zone_1_id
+  }
+  zones {
+    name      = "\${var.region}-2"
+    subnet_id = module.workload_vpc.subnet_vsi_zone_2_id
+  }
+  zones {
+    name      = "\${var.region}-3"
+    subnet_id = module.workload_vpc.subnet_vsi_zone_3_id
+  }
+}
+
+##############################################################################
+
+##############################################################################
+# Workload Cluster Add Ons
+##############################################################################
+
+resource "ibm_ob_logging" "workload_cluster_logging" {
+  cluster     = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  instance_id = ibm_resource_instance.logdna.guid
+  depends_on = [
+    logdna_key.logdna_ingestion_key
+  ]
+}
+
+resource "ibm_ob_monitoring" "workload_cluster_monitoring" {
+  cluster     = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  instance_id = ibm_resource_instance.sysdig.guid
+  depends_on = [
+    ibm_resource_key.sysdig_key
+  ]
 }
 
 ##############################################################################

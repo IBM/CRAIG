@@ -218,6 +218,18 @@ variable "secrets_manager_imported_cert_data" {
   sensitive   = true
 }
 
+variable "management_vpn_server_vpn_server_certificate_crn" {
+  description = "Management VPN Server Vpn Server Certificate CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
+variable "management_vpn_server_vpn_server_client_ca_crn" {
+  description = "Management VPN Server Vpn Server Client CA CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
 ##############################################################################
 `,
         "it should return correct variables"
@@ -1190,6 +1202,16 @@ variable "tmos_admin_password" {
   type        = string
   sensitive   = true
   default     = "Goodpassword1234!"
+}
+
+variable "management_vpn_server_vpn_server_certificate_crn" {
+  description = "Management VPN Server Vpn Server Certificate CRN"
+  type        = string
+}
+
+variable "management_vpn_server_vpn_server_client_ca_crn" {
+  description = "Management VPN Server Vpn Server Client CA CRN"
+  type        = string
 }
 
 ##############################################################################

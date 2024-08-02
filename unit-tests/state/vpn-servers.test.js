@@ -295,42 +295,6 @@ describe("vpn_servers", () => {
     });
   });
   describe("vpn_servers schema", () => {
-    it("should return empty string when not invalid", () => {
-      assert.deepEqual(
-        craig.vpn_servers.certificate_crn.invalidText({
-          crns: undefined,
-        }),
-        "",
-        "it should return correct message"
-      );
-    });
-    it("should return empty string when invalid", () => {
-      assert.deepEqual(
-        craig.vpn_servers.certificate_crn.invalidText({
-          crns: ["aaa"],
-        }),
-        "Enter a valid comma separated list of CRNs",
-        "it should return correct message"
-      );
-    });
-    it("should return empty string when not invalid", () => {
-      assert.deepEqual(
-        craig.vpn_servers.certificate_crn.invalidText({
-          crns: undefined,
-        }),
-        "",
-        "it should return correct message"
-      );
-    });
-    it("should return empty string when invalid", () => {
-      assert.deepEqual(
-        craig.vpn_servers.certificate_crn.invalidText({
-          crns: ["aaa"],
-        }),
-        "Enter a valid comma separated list of CRNs",
-        "it should return correct message"
-      );
-    });
     it("should return protocol on render", () => {
       assert.deepEqual(
         craig.vpn_servers.protocol.onRender({ protocol: "tcp" }),
@@ -441,33 +405,6 @@ describe("vpn_servers", () => {
         craig.vpn_servers.method.onInputChange({ method: "Username" }),
         "username",
         "it should return correct method"
-      );
-    });
-    it("should hide certificate crn when type is byo", () => {
-      assert.isTrue(
-        craig.vpn_servers.certificate_crn.hideWhen({ method: "byo" }),
-        "it should be hidden"
-      );
-    });
-    it("should not have invalid certificate_crn when method is byo", () => {
-      assert.isFalse(
-        craig.vpn_servers.certificate_crn.invalid({ method: "byo" }),
-        "it should be valid"
-      );
-    });
-    it("should not have invalid client_ca_crn when method is not certificate", () => {
-      assert.isFalse(
-        craig.vpn_servers.client_ca_crn.invalid({ method: "byo" }),
-        "it should not be invalid"
-      );
-    });
-    it("should have invalid client_ca_crn when method is certificate and crn invalid", () => {
-      assert.isTrue(
-        craig.vpn_servers.client_ca_crn.invalid({
-          method: "certificate",
-          client_ca_crn: "aaa",
-        }),
-        "it should be invalid"
       );
     });
     it("should not have invalid secrets manager when method is certificate", () => {

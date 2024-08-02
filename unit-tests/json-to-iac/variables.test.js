@@ -50,6 +50,79 @@ variable "management_gateway_connection_1_preshared_key" {
   sensitive   = true
 }
 
+variable "management_vpn_server_vpn_server_certificate_crn" {
+  description = "Management VPN Server Vpn Server Certificate CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
+variable "management_vpn_server_vpn_server_client_ca_crn" {
+  description = "Management VPN Server Vpn Server Client CA CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
+##############################################################################
+`;
+    assert.deepEqual(
+      actualData,
+      expectedData,
+      "it should return correct variables"
+    );
+  });
+  it("should return correct variable values for vpn server with danger developer certificate", () => {
+    let slzNetwork = { ...require("../data-files/slz-network.json") };
+    slzNetwork.vpn_servers[0].DANGER_developer_certificate = true;
+    slzNetwork.vpn_gateways[0].connections = [
+      {
+        vpn: "management-gateway",
+        name: "connection-1",
+        local_cidrs: ["10.10.10.10/24"],
+        peer_cidrs: ["10.10.20.10/24"],
+      },
+    ];
+    let actualData = variablesDotTf(slzNetwork, false);
+    let expectedData = `##############################################################################
+# Variables
+##############################################################################
+
+variable "ibmcloud_api_key" {
+  description = "The IBM Cloud platform API key needed to deploy IAM enabled resources."
+  type        = string
+  sensitive   = true
+}
+
+variable "region" {
+  description = "IBM Cloud Region where resources will be provisioned"
+  type        = string
+  default     = "us-south"
+}
+
+variable "prefix" {
+  description = "Name prefix that will be prepended to named resources"
+  type        = string
+  default     = "slz"
+}
+
+variable "slz_ssh_key_public_key" {
+  description = "Public SSH Key Value for Slz SSH Key"
+  type        = string
+  sensitive   = true
+  default     = "public-key"
+}
+
+variable "management_gateway_connection_1_preshared_key" {
+  description = "Preshared key for VPN Gateway management-gateway connection connection-1"
+  type        = string
+  sensitive   = true
+}
+
+variable "management_vpn_server_vpn_server_certificate_crn" {
+  description = "Management VPN Server Vpn Server Certificate CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
 ##############################################################################
 `;
     assert.deepEqual(
@@ -60,6 +133,7 @@ variable "management_gateway_connection_1_preshared_key" {
   });
   it("should return correct variable values for cluster ingress secrets manager secrets", () => {
     let slzNetwork = { ...require("../data-files/slz-network.json") };
+    slzNetwork.vpn_servers[0].DANGER_developer_certificate = undefined;
     slzNetwork.vpn_gateways[0].connections = undefined;
     slzNetwork.clusters[0].opaque_secrets = [
       {
@@ -131,6 +205,18 @@ variable "secrets_manager_example_secret_password" {
   type        = string
   sensitive   = true
   default     = "1VeryGoodPasword?"
+}
+
+variable "management_vpn_server_vpn_server_certificate_crn" {
+  description = "Management VPN Server Vpn Server Certificate CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
+variable "management_vpn_server_vpn_server_client_ca_crn" {
+  description = "Management VPN Server Vpn Server Client CA CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
 }
 
 ##############################################################################
@@ -220,6 +306,18 @@ variable "classic_example_classic_public_key" {
   default     = "1234"
 }
 
+variable "management_vpn_server_vpn_server_certificate_crn" {
+  description = "Management VPN Server Vpn Server Certificate CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
+variable "management_vpn_server_vpn_server_client_ca_crn" {
+  description = "Management VPN Server Vpn Server Client CA CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
 ##############################################################################
 `;
     assert.deepEqual(
@@ -305,6 +403,18 @@ variable "classic_example_classic_public_key" {
   type        = string
 }
 
+variable "management_vpn_server_vpn_server_certificate_crn" {
+  description = "Management VPN Server Vpn Server Certificate CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
+variable "management_vpn_server_vpn_server_client_ca_crn" {
+  description = "Management VPN Server Vpn Server Client CA CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
 ##############################################################################
 `;
     assert.deepEqual(
@@ -366,6 +476,18 @@ variable "secrets_manager_example_secret_password" {
   type        = string
   sensitive   = true
   default     = "1VeryGoodPasword?"
+}
+
+variable "management_vpn_server_vpn_server_certificate_crn" {
+  description = "Management VPN Server Vpn Server Certificate CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
+variable "management_vpn_server_vpn_server_client_ca_crn" {
+  description = "Management VPN Server Vpn Server Client CA CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
 }
 
 ##############################################################################
@@ -513,6 +635,18 @@ variable "power_oracle_template_power_ssh_key" {
   default     = ""
 }
 
+variable "management_vpn_server_vpn_server_certificate_crn" {
+  description = "Management VPN Server Vpn Server Certificate CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
+variable "management_vpn_server_vpn_server_client_ca_crn" {
+  description = "Management VPN Server Vpn Server Client CA CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
 ##############################################################################
 `;
     assert.deepEqual(
@@ -654,6 +788,18 @@ variable "secrets_manager_example_secret_password" {
 variable "power_oracle_template_power_ssh_key" {
   description = "Oracle template power ssh public key value"
   type        = string
+}
+
+variable "management_vpn_server_vpn_server_certificate_crn" {
+  description = "Management VPN Server Vpn Server Certificate CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
+variable "management_vpn_server_vpn_server_client_ca_crn" {
+  description = "Management VPN Server Vpn Server Client CA CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
 }
 
 ##############################################################################
@@ -905,6 +1051,18 @@ variable "secrets_manager_example_secret_password" {
   type        = string
   sensitive   = true
   default     = "1VeryGoodPasword?"
+}
+
+variable "management_vpn_server_vpn_server_certificate_crn" {
+  description = "Management VPN Server Vpn Server Certificate CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
+variable "management_vpn_server_vpn_server_client_ca_crn" {
+  description = "Management VPN Server Vpn Server Client CA CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
 }
 
 ##############################################################################
@@ -1669,6 +1827,18 @@ variable "management_vpc_vsi_deployment_management_server_vsi_zone_3_subnet_serv
   description = "Override name for management-server server. VPC: management Subnet: vsi-zone-3"
   type        = string
   default     = "slz-management-management-server-server-vsi-zone-3-2"
+}
+
+variable "management_vpn_server_vpn_server_certificate_crn" {
+  description = "Management VPN Server Vpn Server Certificate CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
+}
+
+variable "management_vpn_server_vpn_server_client_ca_crn" {
+  description = "Management VPN Server Vpn Server Client CA CRN"
+  type        = string
+  default     = "crn:v1:bluemix:public:cloudcerts:us-south:a/efe5afc483594adaa8325e2b4d1290df:86f62739-f3a8-42ac-abea-f23255965983:certificate:00406b5615f95dba9bf7c2ab52bb3083"
 }
 
 ##############################################################################

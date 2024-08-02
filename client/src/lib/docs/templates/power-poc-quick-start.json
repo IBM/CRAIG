@@ -97,7 +97,7 @@
     "enabled": true,
     "plan": "7-day",
     "endpoints": "private",
-    "platform_logs": false,
+    "platform_logs": true,
     "resource_group": "service-rg",
     "cos": "a-tracker",
     "bucket": "a-tracker",
@@ -359,6 +359,8 @@
       "pi_placement_group_id": "None"
     }
   ],
+  "power_placement_groups": [],
+  "power_shared_processor_pools": [],
   "power_volumes": [
     {
       "name": "aixtgtvols1",
@@ -825,7 +827,7 @@
     "plan": "graduated-tier",
     "resource_group": "service-rg",
     "name": "sysdig",
-    "platform_logs": false,
+    "platform_logs": true,
     "secrets_manager": null,
     "store_secrets": false
   },
@@ -1065,8 +1067,8 @@
     {
       "kms": "kms",
       "encryption_key": "key",
-      "image": "ibm-redhat-9-4-minimal-amd64-1",
-      "image_name": "Red Hat Enterprise Linux 9.x - Minimal Install (amd64) [ibm-redhat-9-4-minimal-amd64-1]",
+      "image": "ibm-redhat-9-4-minimal-amd64-2",
+      "image_name": "Red Hat Enterprise Linux 9.x - Minimal Install (amd64) [ibm-redhat-9-4-minimal-amd64-2]",
       "profile": "bx2-4x16",
       "name": "example-deployment",
       "security_groups": ["transit-vsi"],

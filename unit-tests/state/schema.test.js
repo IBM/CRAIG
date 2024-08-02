@@ -252,12 +252,28 @@ describe("automate schema generation", () => {
             power_vs_ha_zone_1: {
               type: "string",
               default: null,
-              groups: ["mad02", "mad04", "us-east", "wdc06", "wdc07"],
+              groups: [
+                "mad02",
+                "mad04",
+                "syd04",
+                "tok04",
+                "us-east",
+                "wdc06",
+                "wdc07",
+              ],
             },
             power_vs_ha_zone_2: {
               type: "string",
               default: null,
-              groups: ["eu-de-1", "eu-de-2", "us-south", "dal10", "dal12"],
+              groups: [
+                "eu-de-1",
+                "eu-de-2",
+                "osa21",
+                "syd05",
+                "us-south",
+                "dal10",
+                "dal12",
+              ],
             },
             power_vs_zones: { type: "Array", default: [] },
             enable_classic: { type: "boolean", default: false },
@@ -848,6 +864,14 @@ describe("automate schema generation", () => {
             },
             kube_version: { type: "string", default: null },
             private_endpoint: { type: "boolean", default: false },
+            logging: {
+              default: false,
+              type: "boolean",
+            },
+            monitoring: {
+              default: false,
+              type: "boolean",
+            },
             worker_pools: {
               Array: {
                 name: { type: "string", default: null },
@@ -1961,8 +1985,6 @@ describe("automate schema generation", () => {
               default: null,
               groups: ["both", "certificate", "username", "byo", "INSECURE"],
             },
-            certificate_crn: { type: "string", default: null },
-            client_ca_crn: { type: "string", default: null },
             secrets_manager: {
               type: "string",
               default: null,

@@ -578,6 +578,10 @@ function craigForms(craig) {
           encryption_key: craig.clusters.encryption_key,
           private_endpoint: craig.clusters.private_endpoint,
         },
+        {
+          logging: craig.clusters.logging,
+          monitoring: craig.clusters.monitoring,
+        },
       ],
       subForms: [
         {
@@ -1617,9 +1621,7 @@ function craigForms(craig) {
           method: craig.vpn_servers.method,
         },
         {
-          certificate_crn: craig.vpn_servers.certificate_crn,
           secrets_manager: craig.vpn_servers.secrets_manager,
-          client_ca_crn: craig.vpn_servers.client_ca_crn,
           client_ip_pool: craig.vpn_servers.client_ip_pool,
         },
         {

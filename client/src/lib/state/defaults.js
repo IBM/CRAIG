@@ -903,6 +903,8 @@ function newDefaultWorkloadCluster() {
     subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
     update_all_workers: false,
     vpc: "workload",
+    logging: false,
+    monitoring: false,
     worker_pools: [
       {
         entitlement: "cloud_pak",

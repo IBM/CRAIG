@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.16.3
+
+### Upgrade Notes
+
+- Existing VPN Server Certificate CRNs are added as the default to the new certificate variables
+
+### Features
+
+- Users can now add Logging and Monitoring agents to VPC Clusters
+- LogDNA and Sysdig platform logs and metrics are now enabled in the Power VS PoC templates
+- Power VS High Availability is now supported for `tok04`, `osa21`, `syd04`, and `syd05`
+- Certificate CRN values for VPN Servers are now stored as Terraform variables and are no longer manditory fields for a VPN Server. These values will need to be added at Terraform runtime
+
 ## 1.16.2
 
 ### Upgrade Notes
