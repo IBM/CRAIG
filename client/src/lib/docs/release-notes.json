@@ -4,7 +4,9 @@
     "features": [
       "Power VS Workspace connections are no longer removed from Transit Gateways when updating the Workspace's region"
     ],
-    "fixes": [],
+    "fixes": [
+      "Fixed an issue causing generate-env.sh to incorrectly set values for Power VS regions"
+    ],
     "upgrade_notes": []
   },
   {
