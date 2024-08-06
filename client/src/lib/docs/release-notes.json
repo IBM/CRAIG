@@ -1,5 +1,13 @@
 [
   {
+    "version": "1.16.4",
+    "features": [
+      "Power VS Workspace connections are no longer removed from Transit Gateways when updating the Workspace's region"
+    ],
+    "fixes": [],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.16.3",
     "features": [
       "Users can now add Logging and Monitoring agents to VPC Clusters",

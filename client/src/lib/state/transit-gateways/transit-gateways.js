@@ -70,16 +70,6 @@ function transitGatewayOnStoreUpdate(config) {
       ) {
         // remove if workspace deleted
         carve(gateway.connections, "power", connection.power);
-      } else if (
-        connection.power &&
-        !contains(
-          edgeRouterEnabledZones,
-          getObjectFromArray(config.store.json.power, "name", connection.power)
-            .zone
-        )
-      ) {
-        // remove if workspace changed into non PER enabled zone
-        carve(gateway.connections, "power", connection.power);
       }
     });
     if (!gateway.prefix_filters) {
