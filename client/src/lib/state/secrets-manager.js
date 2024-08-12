@@ -1,5 +1,10 @@
 const { nameField } = require("./reusable-fields");
-const { setUnfoundResourceGroup } = require("./store.utils");
+const {
+  setUnfoundResourceGroup,
+  pushToChildFieldModal,
+  updateSubChild,
+  deleteSubChild,
+} = require("./store.utils");
 const {
   setKmsFromKeyOnStoreUpdate,
   shouldDisableComponentSave,
@@ -25,6 +30,13 @@ function secretsManagerOnStoreUpdate(config) {
     setKmsFromKeyOnStoreUpdate(secretsManager, config);
     if (!secretsManager.secrets) {
       secretsManager.secrets = [];
+    }
+    if (!secretsManager.secrets_groups) {
+      secretsManager.secrets_groups = [];
+    } else {
+      secretsManager.secrets_groups.forEach((group) => {
+        group.secrets_manager = secretsManager.name;
+      });
     }
   });
 }
@@ -119,6 +131,26 @@ function initSecretsManagerStore(store) {
           alignModal: "right",
         },
       },
+      add_k8s_authorization: {
+        type: "toggle",
+        default: false,
+        labelText: "Add Kubernetes Authorization",
+        tooltip: {
+          content:
+            "Add an authorization to allow Kubernetes clusters to read from this Secrets Manager instance",
+        },
+        hideWhen: hideWhenUseData,
+      },
+      add_cis_authorization: {
+        type: "toggle",
+        default: false,
+        labelText: "Add CIS Authorization",
+        tooltip: {
+          content:
+            "Add an authorization to allow IBM Cloud Internet Services to read from this Secrets Manager instance",
+        },
+        hideWhen: hideWhenUseData,
+      },
       encryption_key: {
         type: "select",
         default: "",
@@ -126,6 +158,44 @@ function initSecretsManagerStore(store) {
         invalidText: selectInvalidText("encryption key"),
         groups: encryptionKeyGroups,
         hideWhen: hideWhenUseData,
+      },
+    },
+    subComponents: {
+      secrets_groups: {
+        create: function (config, stateData, componentProps) {
+          pushToChildFieldModal(
+            config,
+            "secrets_manager",
+            "secrets_groups",
+            stateData,
+            componentProps
+          );
+        },
+        save: function (config, stateData, componentProps) {
+          updateSubChild(
+            config,
+            "secrets_manager",
+            "secrets_groups",
+            stateData,
+            componentProps
+          );
+        },
+        delete: function (config, stateData, componentProps) {
+          deleteSubChild(
+            config,
+            "secrets_manager",
+            "secrets_groups",
+            componentProps
+          );
+        },
+        shouldDisableSave: shouldDisableComponentSave(
+          ["name"],
+          "secrets_manager",
+          "secrets_groups"
+        ),
+        schema: {
+          name: nameField("secrets_groups"),
+        },
       },
     },
   });

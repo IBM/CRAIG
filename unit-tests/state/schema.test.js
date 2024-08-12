@@ -1718,6 +1718,22 @@ describe("automate schema generation", () => {
               default: null,
               groups: "<calculated>",
             },
+            add_cis_authorization: {
+              default: false,
+              type: "boolean",
+            },
+            add_k8s_authorization: {
+              default: false,
+              type: "boolean",
+            },
+            secrets_groups: {
+              Array: {
+                name: {
+                  default: null,
+                  type: "string",
+                },
+              },
+            },
           },
         },
         security_groups: {

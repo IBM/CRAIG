@@ -42,16 +42,19 @@ function ibmIamAuthorizationPolicySecretsManager(kmsName, config) {
 /**
  * format auth for kubernetes to secrets manager
  * @param {Object} secretsManager secrets manager object
+ * @param {boolean} source true if source is secrets manager
  * @returns {object} terraform code
  */
-function ibmIamAuthorizationPolicyK8sToSecretsManager(secretsManager) {
+function ibmIamAuthorizationPolicyK8sToSecretsManager(secretsManager, source) {
   return {
     name: `secrets manager ${secretsManager.name} to containers policy`,
     data: {
       target_service_name: "secrets-manager",
       roles: ["Manager"],
       description: `Allow Secets Manager instance ${secretsManager.name} to encrypt kubernetes service`,
-      target_resource_instance_id: `\${ibm_resource_instance.${snakeCase(
+      [source
+        ? "source_resource_instance_id"
+        : "target_resource_instance_id"]: `\${ibm_resource_instance.${snakeCase(
         secretsManager.name
       )}_secrets_manager.guid}`,
       source_service_name: "containers-kubernetes",
@@ -70,6 +73,28 @@ function formatK8sToSecretsManagerAuth(secretsManager) {
     "resource",
     "ibm_iam_authorization_policy",
     data.name,
+    data.data
+  );
+}
+
+/**
+ * format auth for CIS to secrets manager
+ * @param {Object} secretsManager secrets manager object
+ * @returns {object} terraform code
+ */
+function formatCisToSecretsManagerAuth(secretsManager) {
+  let data = ibmIamAuthorizationPolicyK8sToSecretsManager(secretsManager, true);
+  data.data.description = data.data.description.replace(
+    "encrypt kubernetes",
+    "access CIS"
+  );
+  data.data.target_service_name = "internet-svcs";
+  data.data.source_service_name = "secrets-manager";
+  data.name.replace("containers", "cis");
+  return jsonToTfPrint(
+    "resource",
+    "ibm_iam_authorization_policy",
+    data.name.replace("containers", "cloud_internet_services"),
     data.data
   );
 }
@@ -196,6 +221,11 @@ function ibmSmKvSecret(secret) {
       )}_secrets_manager.guid}`,
       region: varDotRegion,
       description: secret.description,
+      secret_group_id: secret.secrets_group
+        ? `\${ibm_sm_secret_group.${snakeCase(
+            secret.secrets_manager
+          )}_group_${snakeCase(secret.secrets_group)}.secret_group_id}`
+        : undefined,
     },
   };
   if (secret.type === "imported") {
@@ -405,18 +435,32 @@ function secretsManagerTf(config) {
   if (totalKmsInstances !== 0) {
     tf += tfBlock("Key Management Authorizations", kmstf) + "\n";
   }
-  let secretsManagerData = "";
-  config.secrets_manager.forEach((instance) => {
+  config.secrets_manager.forEach((instance, index) => {
+    let secretsManagerData = "";
     secretsManagerData += formatSecretsManagerInstance(instance, config);
+    if (instance.add_k8s_authorization) {
+      secretsManagerData += formatK8sToSecretsManagerAuth(instance);
+    }
+    if (instance.add_cis_authorization) {
+      secretsManagerData += formatCisToSecretsManagerAuth(instance);
+    }
+
+    if (instance.secrets_groups) {
+      instance.secrets_groups.forEach((group) => {
+        secretsManagerData += formatSecretsManagerSecretGroup(group);
+      });
+    }
     if (instance.secrets) {
       instance.secrets.forEach((secret) => {
         secretsManagerData += formatSecretsManagerSecret(secret, config);
       });
     }
+    tf +=
+      tfBlock(instance.name + " Secrets Manager", secretsManagerData) +
+      (index !== config.secrets_manager.length - 1 ? "\n" : "");
   });
-  if (secretsManagerData.length > 0)
-    tf += tfBlock("Secrets Manager Instances", secretsManagerData);
-  return tf;
+
+  return tf.length === 0 ? "" : tf;
 }
 
 module.exports = {

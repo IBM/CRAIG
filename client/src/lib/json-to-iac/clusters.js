@@ -1,4 +1,11 @@
-const { getObjectFromArray, snakeCase, distinct, revision } = require("lazy-z");
+const {
+  getObjectFromArray,
+  snakeCase,
+  distinct,
+  revision,
+  splatContains,
+  isEmpty,
+} = require("lazy-z");
 const {
   rgIdRef,
   getKmsInstanceData,
@@ -204,12 +211,19 @@ function clusterTf(config) {
   let secretsManagerAuthTf = "";
   // for each secrets manager instance create an authorization
   distinct(secretsManagerAuth).forEach((secretsManager) => {
-    secretsManagerAuthTf += formatK8sToSecretsManagerAuth({
-      name: secretsManager,
-    });
+    if (
+      // if no secrets manager is passed this is mostly for existing unit tests
+      isEmpty(config.secrets_manager) ||
+      // if secrets manager does not already have k8s authorization
+      getObjectFromArray(config.secrets_manager, "name", secretsManager)
+        ?.add_k8s_authorization !== true
+    )
+      secretsManagerAuthTf += formatK8sToSecretsManagerAuth({
+        name: secretsManager,
+      });
   });
   // add code to beginning of clusters.tf if secrets manager instances are found
-  if (secretsManagerAuth.length > 0)
+  if (secretsManagerAuthTf.length > 0)
     tf +=
       tfBlock("Secrets Manager Authorizations", secretsManagerAuthTf) + "\n";
 

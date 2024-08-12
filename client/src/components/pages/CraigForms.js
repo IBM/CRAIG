@@ -1330,6 +1330,24 @@ function craigForms(craig) {
           plan: craig.secrets_manager.plan,
           encryption_key: craig.secrets_manager.encryption_key,
         },
+        {
+          add_k8s_authorization: craig.secrets_manager.add_k8s_authorization,
+          add_cis_authorization: craig.secrets_manager.add_cis_authorization,
+        },
+      ],
+      subForms: [
+        {
+          name: "Secrets Groups",
+          addText: "Add a Secrets Group",
+          jsonField: "secrets_groups",
+          form: {
+            groups: [
+              {
+                name: craig.secrets_manager.secrets_groups.name,
+              },
+            ],
+          },
+        },
       ],
     },
     scc_v2: {

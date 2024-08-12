@@ -216,7 +216,10 @@
       "kms": "kms",
       "secrets": [],
       "use_data": false,
-      "plan": "trial"
+      "plan": "trial",
+      "add_k8s_authorization": false,
+      "add_cis_authorization": false,
+      "secrets_groups": []
     }
   ],
   "security_groups": [

@@ -134,12 +134,19 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
       "opaque_secrets",
       "name"
     );
-  } else if (field === "secrets_group") {
+  } else if (contains(["secrets_group", "secrets_groups"], field)) {
     componentProps.craig.store.json.clusters.forEach((cluster) => {
       cluster.opaque_secrets.forEach((secret) => {
         allOtherNames.push(secret.secrets_group);
       });
     });
+    componentProps.craig.store.json?.secrets_manager?.forEach(
+      (secretsManager) => {
+        secretsManager.secrets_groups.forEach((group) => {
+          allOtherNames.push(group.name);
+        });
+      }
+    );
   } else if (
     field === "arbitrary_secret_name" ||
     field === "username_password_secret_name"
