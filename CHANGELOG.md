@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Power VS Workspace connections are no longer removed from Transit Gateways when updating the Workspace's region
 - Users can now create Secrets Groups from the Secrets Manager page
 - Users can now add authorizations for Kubernetes and CIS to Secrets Manager from the Secrets Manager Page
+- Users can now attach Power VS Volumes to FalconStor VTL instances
 
 ### Fixes
 

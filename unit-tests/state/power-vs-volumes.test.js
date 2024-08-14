@@ -424,17 +424,35 @@ describe("power_volumes", () => {
       );
     });
     it("should return the correct groups data for attachments when sharable", () => {
+      craig.store.json._options.power_vs_zones = ["dal10"];
+      craig.power.create({
+        name: "example",
+        imageNames: ["7100-05-09"],
+        zone: "dal10",
+      });
+      craig.vtl.create({
+        name: "frog",
+        zone: "dal10",
+        workspace: "example",
+        network: [],
+      });
+      craig.vtl.create({
+        name: "toad",
+        zone: "dal10",
+        network: [],
+      });
       assert.deepEqual(
         craig.power_volumes.attachments.groups(
           {
             pi_volume_shareable: true,
             attachments: "hi",
+            workspace: "example",
           },
           {
             craig: craig,
           }
         ),
-        [],
+        ["frog (VTL)"],
         "it should return array"
       );
     });
