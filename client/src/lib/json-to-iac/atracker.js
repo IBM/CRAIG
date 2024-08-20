@@ -130,7 +130,9 @@ function atrackerTf(config) {
   if (config.atracker.add_route) {
     str += formatAtrackerRoute(config);
   }
-  return config.atracker.enabled ? tfBlock("Atracker Resources", str) : "";
+  return config.atracker.enabled && !config?.cloud_logs?.enabled
+    ? tfBlock("Atracker Resources", str)
+    : "";
 }
 
 module.exports = {

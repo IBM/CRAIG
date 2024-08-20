@@ -1524,5 +1524,90 @@ resource "ibm_resource_key" "sysdig_key" {
         "it should return correct terraform"
       );
     });
+    it("should return empty string when cloud logs enabled", () => {
+      let actualData = loggingMonitoringTf({
+        _options: {
+          tags: ["hello", "world"],
+          endpoints: "private",
+        },
+        resource_groups: [
+          {
+            name: "service-rg",
+            use_data: false,
+            prefix: true,
+          },
+        ],
+        logdna: {
+          enabled: true,
+          plan: "lite",
+          platform_logs: true,
+          resource_group: "service-rg",
+          role: "Manager",
+          bucket: "atracker",
+          cos: "cos",
+          bucket_endpoint: "private",
+          archive: true,
+        },
+        sysdig: {
+          enabled: true,
+          plan: "lite",
+          resource_group: "service-rg",
+          platform_logs: true,
+        },
+        atracker: {
+          enabled: true,
+          name: "atracker",
+          type: "cos",
+          target_name: "cos",
+          bucket: "atracker",
+          cos_key: "atracker-cos-key",
+          plan: "lite",
+          resource_group: "service-rg",
+          archive: true,
+          instance: true,
+        },
+        cloud_logs: {
+          enabled: true,
+        },
+      });
+      let expectedData = `##############################################################################
+# Sysdig Instance
+##############################################################################
+
+resource "ibm_resource_instance" "sysdig" {
+  name              = "\${var.prefix}-sysdig"
+  resource_group_id = ibm_resource_group.service_rg.id
+  service           = "sysdig-monitor"
+  plan              = "lite"
+  location          = var.region
+  service_endpoints = "private"
+  tags = [
+    "hello",
+    "world"
+  ]
+  parameters = {
+    default_receiver = true
+  }
+}
+
+resource "ibm_resource_key" "sysdig_key" {
+  name                 = "\${var.prefix}-sysdig-key"
+  resource_instance_id = ibm_resource_instance.sysdig.id
+  role                 = "Manager"
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+
+##############################################################################
+`;
+
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct terraform"
+      );
+    });
   });
 });

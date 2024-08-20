@@ -194,7 +194,16 @@ const {
 } = require("./classic-security-group");
 const { classicVsiTf } = require("./classic-vsi");
 const { classicBareMetalTf } = require("./classic-bare-metal");
+const {
+  formatCloudLogs,
+  formatCosToCloudLogsAuth,
+  cloudLogsTf,
+} = require("./cloud-logs");
+
 module.exports = {
+  cloudLogsTf,
+  formatCosToCloudLogsAuth,
+  formatCloudLogs,
   classicVsiTf,
   classicBareMetalTf,
   classicSecurityGroupTf,

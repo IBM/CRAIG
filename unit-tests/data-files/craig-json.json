@@ -958,5 +958,12 @@
   "classic_security_groups": [],
   "classic_vsi": [],
   "classic_bare_metal": [],
-  "power_shared_processor_pools": []
+  "power_shared_processor_pools": [],
+  "cloud_logs": {
+    "enabled": false,
+    "cos": null,
+    "logs_bucket": null,
+    "metrics_bucket": null,
+    "resource_group": null
+  }
 }

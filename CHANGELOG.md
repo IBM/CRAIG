@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Users can now create Secrets Groups from the Secrets Manager page
 - Users can now add authorizations for Kubernetes and CIS to Secrets Manager from the Secrets Manager Page
 - Users can now attach Power VS Volumes to FalconStor VTL instances
+- Users can now enable Cloud Logs from the Cloud Logs page /forms/logs. Please note that enabling this feature will prevent Activity Tracker and LogDNA code from being generated. Cloud Logs will replace these services
 
 ### Fixes
 

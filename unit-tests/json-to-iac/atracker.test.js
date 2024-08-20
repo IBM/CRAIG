@@ -217,7 +217,6 @@ resource "ibm_atracker_target" "atracker_cos_target" {
         "it should return correct data"
       );
     });
-
     it("should return empty string when not enabled", () => {
       let actualData = atrackerTf({
         atracker: {
@@ -229,6 +228,29 @@ resource "ibm_atracker_target" "atracker_cos_target" {
           cos_key: "atracker-cos-key",
           add_route: false,
           locations: ["us-south", "global"],
+        },
+      });
+      let expectedData = "";
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should create correct terraform"
+      );
+    });
+    it("should return empty string when cloud logs enabled", () => {
+      let actualData = atrackerTf({
+        atracker: {
+          enabled: true,
+          name: "atracker",
+          type: "cos",
+          target_name: "cos",
+          bucket: "atracker",
+          cos_key: "atracker-cos-key",
+          add_route: false,
+          locations: ["us-south", "global"],
+        },
+        cloud_logs: {
+          enabled: true,
         },
       });
       let expectedData = "";

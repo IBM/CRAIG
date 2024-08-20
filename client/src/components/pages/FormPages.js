@@ -323,6 +323,51 @@ const CloudDatabasePage = (craig) => {
   });
 };
 
+const CloudLogs = (craig) => {
+  console.log(craig.store.json);
+  return (
+    <CraigToggleForm
+      craig={craig}
+      about={RenderDocs("cloud_logs", craig.store.json._options.template)()}
+      name="Cloud Logs"
+      hideName
+      noDeleteButton={true}
+      useAddButton={false}
+      tabPanel={{
+        name: "Cloud Logs",
+      }}
+      onShowToggle={() => {}}
+      submissionFieldName="cloud_logs"
+      onSave={craig.cloud_logs.save}
+      innerFormProps={{
+        craig: craig,
+        data: craig.store.json.cloud_logs,
+        disableSave: disableSave,
+        form: {
+          jsonField: "cloud_logs",
+          disableSave: disableSave,
+          groups: [
+            {
+              enabled: craig.cloud_logs.enabled,
+            },
+            {
+              name: craig.cloud_logs.name,
+              resource_group: craig.cloud_logs.resource_group,
+            },
+            {
+              cos: craig.cloud_logs.cos,
+            },
+            {
+              logs_bucket: craig.cloud_logs.logs_bucket,
+              metrics_bucket: craig.cloud_logs.metrics_bucket,
+            },
+          ],
+        },
+      }}
+    />
+  );
+};
+
 const ClusterPage = (craig) => {
   return formPageTemplate(craig, {
     name: "Clusters",
@@ -1412,6 +1457,8 @@ export const NewFormPage = (props) => {
     return ClassicVlanPage(craig);
   } else if (form === "icd") {
     return CloudDatabasePage(craig);
+  } else if (form === "logs") {
+    return CloudLogs(craig);
   } else if (form === "clusters") {
     return ClusterPage(craig);
   } else if (form === "dns") {

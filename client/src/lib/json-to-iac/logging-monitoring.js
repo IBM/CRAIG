@@ -290,11 +290,15 @@ function formatAtrackerKey(config) {
 function loggingMonitoringTf(config) {
   let tf = "";
   // if atracker is enabled and an instance will be created create instance and key
-  if (config?.atracker?.enabled && config?.atracker?.instance) {
+  if (
+    config?.atracker?.enabled &&
+    config?.atracker?.instance &&
+    !config?.cloud_logs?.enabled
+  ) {
     let atrackerTf = formatAtrackerInstance(config) + formatAtrackerKey(config);
     tf += tfBlock("Atracker Instance", atrackerTf);
   }
-  if (config?.logdna?.enabled) {
+  if (config?.logdna?.enabled && !config?.cloud_logs?.enabled) {
     if (tf.length > 0) tf += "\n"; // if atracker add space
     let logdnaTf = formatLogdnaInstance(config) + formatLogdnaKey(config);
     tf += tfBlock("LogDNA Instance", logdnaTf);

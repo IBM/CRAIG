@@ -101,6 +101,7 @@ function disableSave(field, stateData, componentProps, craig) {
     "power_placement_groups",
     "power_shared_processor_pools",
     "secrets_groups",
+    "cloud_logs",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (contains(stateDisableSaveComponents, field) || isPowerSshKey) {
@@ -190,7 +191,7 @@ function invalidCidrBlock(value) {
  */
 function forceShowForm(stateData, componentProps) {
   let openForm = false;
-  if (componentProps.innerFormProps?.data.enable === false) {
+  if (componentProps.innerFormProps?.data?.enable === false) {
     return openForm;
   }
 

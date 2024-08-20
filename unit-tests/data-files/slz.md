@@ -1074,3 +1074,12 @@ Placement Group Policy | Specify an affinity or anti-affinity policy to each VM 
 - [Managing Server Placement Groups](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-placement-groups)
 
 -----
+
+## Cloud Logs
+
+NYI
+
+### Related Links
+
+
+-----

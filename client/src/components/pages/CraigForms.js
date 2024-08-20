@@ -885,6 +885,24 @@ function craigForms(craig) {
         },
       ],
     },
+    cloud_logs: {
+      groups: [
+        {
+          enabled: craig.cloud_logs.enabled,
+        },
+        {
+          name: craig.cloud_logs.name,
+          resource_group: craig.cloud_logs.resource_group,
+        },
+        {
+          cos: craig.cloud_logs.cos,
+        },
+        {
+          logs_bucket: craig.cloud_logs.logs_bucket,
+          metrics_bucket: craig.cloud_logs.metrics_bucket,
+        },
+      ],
+    },
     logdna: {
       groups: [
         {

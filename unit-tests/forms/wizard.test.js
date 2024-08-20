@@ -924,6 +924,13 @@ describe("setup wizard", () => {
       cis_glbs: [],
       fortigate_vnf: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -1844,6 +1851,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -2357,6 +2371,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -2861,6 +2882,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -3441,6 +3469,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -3614,6 +3649,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -4187,6 +4229,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -4735,6 +4784,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
     assert.deepEqual(
       actualData,
@@ -5286,6 +5342,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
     assert.deepEqual(
       actualData,
@@ -5782,6 +5845,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
     assert.deepEqual(
       actualData,
@@ -5806,6 +5876,13 @@ describe("setup wizard", () => {
       wizardState.store.json
     );
     let expectedData = {
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
       iam_account_settings: {
         enable: false,
         mfa: null,
@@ -6375,6 +6452,13 @@ describe("setup wizard", () => {
           ],
         },
       ],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
       object_storage: [
         {
           buckets: [

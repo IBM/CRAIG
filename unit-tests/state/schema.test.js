@@ -2271,6 +2271,38 @@ describe("automate schema generation", () => {
             },
           },
         },
+        cloud_logs: {
+          object: {
+            cos: {
+              default: "(Disabled)",
+              groups: "<calculated>",
+              type: "string",
+            },
+            enabled: {
+              default: false,
+              type: "boolean",
+            },
+            logs_bucket: {
+              default: "(Disabled)",
+              groups: "<calculated>",
+              type: "string",
+            },
+            metrics_bucket: {
+              default: "(Disabled)",
+              groups: "<calculated>",
+              type: "string",
+            },
+            name: {
+              default: "cloud-logs",
+              type: "string",
+            },
+            resource_group: {
+              default: null,
+              groups: "<calculated>",
+              type: "string",
+            },
+          },
+        },
       };
       let actualData = craig.buildSchema();
       assert.deepEqual(actualData, expectedData, "it should create a schema");
