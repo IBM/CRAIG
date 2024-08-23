@@ -38,6 +38,7 @@ const { outputsTf } = require("./outputs");
 const { classicSecurityGroupTf } = require("./classic-security-group");
 const { classicVsiTf } = require("./classic-vsi");
 const { classicBareMetalTf } = require("./classic-bare-metal");
+const { cloudLogsTf } = require("./cloud-logs");
 const apacheLicense = `                                 Apache License
 Version 2.0, January 2004
 http://www.apache.org/licenses/
@@ -323,6 +324,7 @@ function configToFilesJson(config, apiMode, templateTarMode) {
       "classic_security_groups.tf": classicSecurityGroupTf(config),
       "classic_vsi.tf": classicVsiTf(config),
       "classic_bare_metal.tf": classicBareMetalTf(config),
+      "cloud_logs.tf": cloudLogsTf(config),
     };
     vpcModuleTf(files, config);
     return files;

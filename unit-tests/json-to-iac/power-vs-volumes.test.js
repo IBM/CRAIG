@@ -883,7 +883,7 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume_2_to_instance_2_inst
             pi_affinity_instance: "tier0vm",
             pi_replication_enabled: false,
             pi_volume_shareable: false,
-            attachments: ["tier0vm"],
+            attachments: ["tier0vm", "vtl1 (VTL)"],
             pi_affinity_policy: "affinity",
           },
           {
@@ -961,7 +961,38 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume_2_to_instance_2_inst
         vsi: [],
         classic_ssh_keys: [],
         classic_vlans: [],
-        vtl: [],
+        vtl: [
+          {
+            sap: false,
+            sap_profile: null,
+            name: "vtl1",
+            workspace: "smatzek-storage-test",
+            network: [
+              {
+                name: "test-net",
+                ip_address: "",
+              },
+            ],
+            ssh_key: "smatzek",
+            image: "7300-00-01",
+            pi_sys_type: "s922",
+            pi_proc_type: "shared",
+            pi_processors: ".25",
+            pi_memory: "4",
+            pi_storage_pool_affinity: false,
+            pi_storage_type: "tier0",
+            storage_option: "None",
+            pi_storage_pool: null,
+            affinity_type: null,
+            pi_affinity_volume: null,
+            pi_anti_affinity_volume: null,
+            pi_anti_affinity_instance: null,
+            pi_affinity_instance: null,
+            pi_user_data: null,
+            pi_affinity_policy: null,
+            zone: "dal10",
+          },
+        ],
         classic_gateways: [],
         cis: [],
         scc_v2: {
@@ -1003,6 +1034,22 @@ resource "ibm_pi_volume_attach" "smatzek_storage_test_attach_tier3vol_to_tier0vm
   }
 }
 
+resource "ibm_pi_volume_attach" "smatzek_storage_test_attach_tier3vol_to_vtl1_vtl_instance" {
+  provider             = ibm.power_vs_dal10
+  pi_cloud_instance_id = ibm_resource_instance.power_vs_workspace_smatzek_storage_test.guid
+  pi_volume_id         = ibm_pi_volume.smatzek_storage_test_volume_tier3vol.volume_id
+  pi_instance_id       = ibm_pi_instance.smatzek_storage_test_falconstor_vtl_vtl1.instance_id
+  lifecycle {
+    ignore_changes = [
+      pi_cloud_instance_id,
+      pi_volume_id
+    ]
+  }
+  depends_on = [
+    ibm_pi_volume_attach.smatzek_storage_test_attach_tier3vol_to_tier0vm_instance
+  ]
+}
+
 ##############################################################################
 
 ##############################################################################
@@ -1033,7 +1080,7 @@ resource "ibm_pi_volume_attach" "smatzek_storage_test_attach_tier1vol_to_tier0vm
     ]
   }
   depends_on = [
-    ibm_pi_volume_attach.smatzek_storage_test_attach_tier3vol_to_tier0vm_instance
+    ibm_pi_volume_attach.smatzek_storage_test_attach_tier3vol_to_vtl1_vtl_instance
   ]
 }
 

@@ -1,5 +1,19 @@
 [
   {
+    "version": "1.16.4",
+    "features": [
+      "Power VS Workspace connections are no longer removed from Transit Gateways when updating the Workspace's region",
+      "Users can now create Secrets Groups from the Secrets Manager page",
+      "Users can now add authorizations for Kubernetes and CIS to Secrets Manager from the Secrets Manager Page",
+      "Users can now attach Power VS Volumes to FalconStor VTL instances",
+      "Users can now enable Cloud Logs from the Cloud Logs page /forms/logs. Please note that enabling this feature will prevent Activity Tracker and LogDNA code from being generated. Cloud Logs will replace these services"
+    ],
+    "fixes": [
+      "Fixed an issue causing generate-env.sh to incorrectly set values for Power VS regions"
+    ],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.16.3",
     "features": [
       "Users can now add Logging and Monitoring agents to VPC Clusters",

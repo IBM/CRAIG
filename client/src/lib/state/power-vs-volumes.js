@@ -53,7 +53,16 @@ function powerVsVolumesOnStoreUpdate(config) {
       let newAttachments = [];
       volume.attachments.forEach((attachment) => {
         if (
-          splatContains(config.store.json.power_instances, "name", attachment)
+          splatContains(
+            config.store.json.power_instances,
+            "name",
+            attachment
+          ) ||
+          splatContains(
+            config.store.json.vtl,
+            "name",
+            attachment.replace(/\s\(VTL\)/g, "")
+          )
         ) {
           newAttachments.push(attachment);
         }
@@ -295,7 +304,9 @@ function initPowerVsVolumeStore(store) {
           return false;
         },
         groups: function (stateData, componentProps) {
-          return (stateData.pi_volume_shareable ? [] : [""]).concat(
+          let instanceNames = (
+            stateData.pi_volume_shareable ? [] : [""]
+          ).concat(
             splat(
               componentProps.craig.store.json.power_instances.filter(
                 (instance) => {
@@ -307,6 +318,20 @@ function initPowerVsVolumeStore(store) {
               "name"
             )
           );
+          let vtlNames = splat(
+            componentProps.craig.store.json.vtl.filter((instance) => {
+              if (instance.workspace === stateData.workspace) {
+                return instance;
+              }
+            }),
+            "name"
+          );
+
+          vtlNames.forEach((name, index) => {
+            vtlNames[index] = name + " (VTL)";
+          });
+
+          return instanceNames.concat(vtlNames);
         },
       },
       count: {

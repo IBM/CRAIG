@@ -1718,6 +1718,22 @@ describe("automate schema generation", () => {
               default: null,
               groups: "<calculated>",
             },
+            add_cis_authorization: {
+              default: false,
+              type: "boolean",
+            },
+            add_k8s_authorization: {
+              default: false,
+              type: "boolean",
+            },
+            secrets_groups: {
+              Array: {
+                name: {
+                  default: null,
+                  type: "string",
+                },
+              },
+            },
           },
         },
         security_groups: {
@@ -2251,6 +2267,38 @@ describe("automate schema generation", () => {
             pi_placement_group_policy: {
               default: null,
               groups: ["affinity", "anti-affinity"],
+              type: "string",
+            },
+          },
+        },
+        cloud_logs: {
+          object: {
+            cos: {
+              default: "(Disabled)",
+              groups: "<calculated>",
+              type: "string",
+            },
+            enabled: {
+              default: false,
+              type: "boolean",
+            },
+            logs_bucket: {
+              default: "(Disabled)",
+              groups: "<calculated>",
+              type: "string",
+            },
+            metrics_bucket: {
+              default: "(Disabled)",
+              groups: "<calculated>",
+              type: "string",
+            },
+            name: {
+              default: "cloud-logs",
+              type: "string",
+            },
+            resource_group: {
+              default: null,
+              groups: "<calculated>",
               type: "string",
             },
           },

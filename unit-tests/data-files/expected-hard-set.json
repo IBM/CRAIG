@@ -1110,5 +1110,12 @@
   "classic_vsi": [],
   "classic_bare_metal": [],
   "power_shared_processor_pools": [],
-  "power_placement_groups": []
+  "power_placement_groups": [],
+  "cloud_logs": {
+    "enabled": false,
+    "cos": null,
+    "logs_bucket": null,
+    "metrics_bucket": null,
+    "resource_group": null
+  }
 }

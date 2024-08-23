@@ -137,6 +137,9 @@ const {
   classicSecurityGroupTf,
   classicVsiTf,
   classicBareMetalTf,
+  formatCloudLogs,
+  formatCosToCloudLogsAuth,
+  cloudLogsTf,
 } = require("./json-to-iac");
 const releaseNotes = require("./docs/release-notes.json");
 const docs = require("./docs/docs.json");
@@ -154,6 +157,9 @@ const {
 } = require("./components");
 
 module.exports = {
+  cloudLogsTf,
+  formatCosToCloudLogsAuth,
+  formatCloudLogs,
   dynamicPasswordInputProps,
   dynamicToolTipWrapperProps,
   dynamicCraigFormGroupsProps,

@@ -67,6 +67,7 @@ const {
   initSharedProcessorPoolStore,
 } = require("./power-shared-processor-pools.js");
 const { initPlacementGroupStore } = require("./power-placement-groups.js");
+const { initCloudLogs } = require("./cloud-logs.js");
 
 // fields not to add to craig json sub object
 const doNotRenderFields = [
@@ -204,6 +205,7 @@ const state = function (legacy) {
   initClassicBareMetalStore(store);
   initSharedProcessorPoolStore(store);
   initPlacementGroupStore(store);
+  initCloudLogs(store);
 
   /**
    * hard set config dot json in state store

@@ -50,7 +50,7 @@ workspaces=$(ibmcloud pi ws list --json | jq -r '.Payload.workspaces[]? | "\(.na
 while IFS=, read name region id;
 do
     echo "# Workspace: ${name}" >> $outputfile
-    region_upper=$(echo ${region} | tr '[:lower:]' '[:upper:]')
+    region_upper=$(echo ${region} | tr '[:lower:]' '[:upper:]' |  tr '-' '_')
     echo "POWER_WORKSPACE_${region_upper}=$id" >> $outputfile
     echo "" >> $outputfile
 

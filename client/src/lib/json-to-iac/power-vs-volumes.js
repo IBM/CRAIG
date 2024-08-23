@@ -114,9 +114,15 @@ function formatPowerVsVolumeAttachment(
     pi_volume_id: `\${ibm_pi_volume.${snakeCase(
       volume.workspace + " volume " + volume.name
     )}${count ? "_" + count : ""}.volume_id}`,
-    pi_instance_id: `\${ibm_pi_instance.${snakeCase(
-      `${volume.workspace}_workspace_instance_${instance}`
-    )}.instance_id}`,
+    pi_instance_id: contains(instance, "VTL")
+      ? `\${ibm_pi_instance.${snakeCase(
+          volume.workspace +
+            " falconstor vtl " +
+            instance.replace(/\s\(VTL\)/, "")
+        )}.instance_id}`
+      : `\${ibm_pi_instance.${snakeCase(
+          `${volume.workspace}_workspace_instance_${instance}`
+        )}.instance_id}`,
     lifecycle: [
       {
         ignore_changes: ["${pi_cloud_instance_id}", "${pi_volume_id}"],
@@ -131,7 +137,10 @@ function formatPowerVsVolumeAttachment(
     "ibm_pi_volume_attach",
     `${volume.workspace} attach ${
       volume.name + (count ? "-" + count : "")
-    } to ${instance} instance`,
+    } to ${
+      instance.replace(/\s\(VTL\)/, "") +
+      (contains(instance, "(") ? "_vtl" : "")
+    } instance`,
     volumeData
   );
 }
@@ -158,7 +167,7 @@ function powerVsVolumeTf(config) {
         lastAttachmentAddress = `\${ibm_pi_volume_attach.${snakeCase(
           `${volume.workspace} attach ${volume.name}${
             count ? "_" + (i + 1) : ""
-          } to ${instance} instance`
+          } to ${instance.replace(/\s\(VTL\)/, "_vtl")} instance`
         )}}`;
       }
     });

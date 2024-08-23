@@ -88,7 +88,7 @@ describe("transit_gateways", () => {
         "it should only have correct connections"
       );
     });
-    it("should remove a connection when a power vs workspace is not in an edge enabled zone", () => {
+    it("should not remove tgw connections to power workspaces in non-PER enabled zones", () => {
       craig.store.json._options.power_vs_zones = ["dal10", "dal12"];
       craig.power.create({
         name: "toad",
@@ -126,6 +126,7 @@ describe("transit_gateways", () => {
         [
           { tgw: "transit-gateway", vpc: "management" },
           { tgw: "transit-gateway", vpc: "workload" },
+          { tgw: "transit-gateway", power: "toad" },
         ],
         "it should only have correct connections"
       );

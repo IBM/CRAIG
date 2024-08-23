@@ -58,7 +58,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.16.3",
+        craig_version: "1.16.4",
         power_vs_high_availability: false,
         no_vpn_secrets_manager_auth: false,
       },
@@ -924,6 +924,13 @@ describe("setup wizard", () => {
       cis_glbs: [],
       fortigate_vnf: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -977,7 +984,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.16.3",
+        craig_version: "1.16.4",
         power_vs_high_availability: false,
         no_vpn_secrets_manager_auth: false,
       },
@@ -1844,6 +1851,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -1896,7 +1910,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.16.3",
+        craig_version: "1.16.4",
         power_vs_high_availability: false,
         no_vpn_secrets_manager_auth: false,
       },
@@ -2357,6 +2371,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -2409,7 +2430,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.16.3",
+        craig_version: "1.16.4",
         power_vs_high_availability: false,
         no_vpn_secrets_manager_auth: false,
       },
@@ -2861,6 +2882,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -2913,7 +2941,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.16.3",
+        craig_version: "1.16.4",
         power_vs_high_availability: false,
         no_vpn_secrets_manager_auth: false,
       },
@@ -3441,6 +3469,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -3494,7 +3529,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.16.3",
+        craig_version: "1.16.4",
         no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
@@ -3614,6 +3649,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -3666,7 +3708,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.16.3",
+        craig_version: "1.16.4",
         power_vs_high_availability: false,
         no_vpn_secrets_manager_auth: false,
       },
@@ -4187,6 +4229,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
 
     assert.deepEqual(
@@ -4239,7 +4288,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.16.3",
+        craig_version: "1.16.4",
         power_vs_high_availability: false,
         no_vpn_secrets_manager_auth: false,
       },
@@ -4735,6 +4784,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
     assert.deepEqual(
       actualData,
@@ -4786,7 +4842,7 @@ describe("setup wizard", () => {
         enable_power_vs: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.16.3",
+        craig_version: "1.16.4",
         power_vs_high_availability: false,
         no_vpn_secrets_manager_auth: false,
       },
@@ -5286,6 +5342,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
     assert.deepEqual(
       actualData,
@@ -5339,7 +5402,7 @@ describe("setup wizard", () => {
         enable_classic: false,
         enable_classic: false,
         power_vs_zones: [],
-        craig_version: "1.16.3",
+        craig_version: "1.16.4",
         no_vpn_secrets_manager_auth: false,
       },
       resource_groups: [
@@ -5782,6 +5845,13 @@ describe("setup wizard", () => {
       fortigate_vnf: [],
       power_shared_processor_pools: [],
       power_placement_groups: [],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
     };
     assert.deepEqual(
       actualData,
@@ -5806,6 +5876,13 @@ describe("setup wizard", () => {
       wizardState.store.json
     );
     let expectedData = {
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
       iam_account_settings: {
         enable: false,
         mfa: null,
@@ -5833,7 +5910,7 @@ describe("setup wizard", () => {
         enable_power_vs: true,
         enable_classic: false,
         power_vs_zones: ["dal10"],
-        craig_version: "1.16.3",
+        craig_version: "1.16.4",
         power_vs_high_availability: false,
         no_vpn_secrets_manager_auth: false,
       },
@@ -6337,7 +6414,7 @@ describe("setup wizard", () => {
         enable_power_vs: true,
         enable_classic: false,
         power_vs_zones: ["dal10"],
-        craig_version: "1.16.3",
+        craig_version: "1.16.4",
         power_vs_high_availability: false,
         no_vpn_secrets_manager_auth: false,
       },
@@ -6375,6 +6452,13 @@ describe("setup wizard", () => {
           ],
         },
       ],
+      cloud_logs: {
+        enabled: false,
+        cos: null,
+        logs_bucket: null,
+        metrics_bucket: null,
+        resource_group: null,
+      },
       object_storage: [
         {
           buckets: [

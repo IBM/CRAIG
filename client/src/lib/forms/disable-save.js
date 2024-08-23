@@ -100,6 +100,8 @@ function disableSave(field, stateData, componentProps, craig) {
     "classic_bare_metal",
     "power_placement_groups",
     "power_shared_processor_pools",
+    "secrets_groups",
+    "cloud_logs",
   ];
   let isPowerSshKey = field === "ssh_keys" && componentProps.arrayParentName;
   if (contains(stateDisableSaveComponents, field) || isPowerSshKey) {
@@ -164,6 +166,8 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.vpn_gateways.connections
         : field === "classic_sg_rules"
         ? componentProps.craig.classic_security_groups.classic_sg_rules
+        : field === "secrets_groups"
+        ? componentProps.craig.secrets_manager.secrets_groups
         : componentProps.craig[field]
     ).shouldDisableSave(stateData, componentProps);
   } else return false;
@@ -187,7 +191,7 @@ function invalidCidrBlock(value) {
  */
 function forceShowForm(stateData, componentProps) {
   let openForm = false;
-  if (componentProps.innerFormProps?.data.enable === false) {
+  if (componentProps.innerFormProps?.data?.enable === false) {
     return openForm;
   }
 

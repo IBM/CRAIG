@@ -32,6 +32,7 @@ const {
   classicSecurityGroupTf,
   classicVsiTf,
   classicBareMetalTf,
+  cloudLogsTf,
 } = require("./json-to-iac");
 const { cisTf } = require("./json-to-iac/cis");
 const { classicGatewayTf } = require("./json-to-iac/classic-gateway");
@@ -116,6 +117,13 @@ const navCatagories = [
         react_icon: "IbmDb2",
         toTf: icdTf,
         jsonField: "icd",
+      },
+      {
+        title: "Cloud Logs",
+        path: "/form/logs",
+        react_icon: "IbmCloudLogging",
+        toTf: cloudLogsTf,
+        jsonField: "cloud_logs",
       },
     ],
   },
