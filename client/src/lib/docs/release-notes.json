@@ -1,5 +1,14 @@
 [
   {
+    "version": "1.16.5",
+    "features": [
+      "Users can now create SSL certificates in Secrets Manager using the Certificates subform",
+      "Users can now disable the Facebook, Google, and SAML logins for an App ID instance from the App ID page"
+    ],
+    "fixes": [],
+    "upgrade_notes": []
+  },
+  {
     "version": "1.16.4",
     "features": [
       "Power VS Workspace connections are no longer removed from Transit Gateways when updating the Workspace's region",

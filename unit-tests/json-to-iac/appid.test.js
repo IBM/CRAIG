@@ -253,6 +253,101 @@ resource "ibm_resource_instance" "test_appid" {
         "it should return correct data"
       );
     });
+    it("should format appid with disabled idps", () => {
+      let actualData = formatAppId(
+        {
+          name: "test-appid",
+          use_data: false,
+          resource_group: "slz-service-rg",
+          kms: "kms",
+          encryption_key: "key",
+          disable_facebook: true,
+          disable_google: true,
+          disable_saml: true,
+        },
+        {
+          _options: {
+            prefix: "iac",
+            tags: ["hello", "world"],
+            region: "us-south",
+          },
+          resource_groups: [
+            {
+              use_prefix: false,
+              name: "slz-service-rg",
+              use_data: false,
+            },
+            {
+              use_prefix: false,
+              name: "slz-management-rg",
+              use_data: false,
+            },
+            {
+              use_prefix: false,
+              name: "slz-workload-rg",
+              use_data: false,
+            },
+          ],
+          key_management: [
+            {
+              name: "kms",
+              service: "kms",
+              resource_group: "slz-service-rg",
+              authorize_vpc_reader_role: true,
+              use_data: false,
+              use_hs_crypto: false,
+              keys: [
+                {
+                  name: "key",
+                  root_key: true,
+                  key_ring: "test",
+                  force_delete: true,
+                  rotation: 12,
+                  dual_auth_delete: true,
+                },
+              ],
+            },
+          ],
+        }
+      );
+      let expectedData = `
+resource "ibm_resource_instance" "test_appid" {
+  name              = "\${var.prefix}-test-appid"
+  resource_group_id = ibm_resource_group.slz_service_rg.id
+  service           = "appid"
+  plan              = "graduated-tier"
+  location          = var.region
+  parameters = {
+    kms_info = "{\\"id\\": \\"\${ibm_resource_instance.kms.guid}\\"}"
+    tek_id   = ibm_kms_key.kms_key_key.crn
+  }
+  tags = [
+    "hello",
+    "world"
+  ]
+}
+
+resource "ibm_appid_idp_facebook" "test_appid_facebook" {
+  tenant_id = ibm_resource_instance.test_appid.guid
+  is_active = false
+}
+
+resource "ibm_appid_idp_google" "test_appid_google" {
+  tenant_id = ibm_resource_instance.test_appid.guid
+  is_active = false
+}
+
+resource "ibm_appid_idp_saml" "test_appid_saml" {
+  tenant_id = ibm_resource_instance.test_appid.guid
+  is_active = false
+}
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should return correct data"
+      );
+    });
   });
   describe("formatAppIdRedirectUrls", () => {
     it("should format appid urls", () => {

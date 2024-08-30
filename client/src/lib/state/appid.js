@@ -137,6 +137,24 @@ function initAppIdStore(store) {
         groups: encryptionKeyGroups,
         size: "small",
       },
+      disable_facebook: {
+        size: "small",
+        type: "toggle",
+        default: false,
+        labelText: "Disable Facebook Login",
+      },
+      disable_google: {
+        size: "small",
+        type: "toggle",
+        default: false,
+        labelText: "Disable Google Login",
+      },
+      disable_saml: {
+        size: "small",
+        type: "toggle",
+        default: false,
+        labelText: "Disable SAML Login",
+      },
     },
     subComponents: {
       keys: {

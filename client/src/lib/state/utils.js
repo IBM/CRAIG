@@ -786,10 +786,10 @@ function encryptionKeyGroups(stateData, componentProps) {
  */
 function ipCidrListTextArea(field, options) {
   return {
-    tooltip: options.tooltip || undefined,
+    tooltip: options?.tooltip || undefined,
     default: [],
     type: "textArea",
-    labelText: options.labelText || "Additional Address Prefixes",
+    labelText: options?.labelText || "Additional Address Prefixes",
     placeholder: "X.X.X.X/X, X.X.X.X/X, ...",
     invalid: function (stateData, componentProps) {
       if (componentProps?.arrayParentName) {

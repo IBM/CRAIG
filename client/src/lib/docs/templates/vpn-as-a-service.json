@@ -219,7 +219,8 @@
       "plan": "trial",
       "add_k8s_authorization": false,
       "add_cis_authorization": false,
-      "secrets_groups": []
+      "secrets_groups": [],
+      "certificates": []
     }
   ],
   "security_groups": [

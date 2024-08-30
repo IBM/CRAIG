@@ -370,6 +370,18 @@ describe("automate schema generation", () => {
               default: null,
               groups: "<calculated>",
             },
+            disable_facebook: {
+              default: false,
+              type: "boolean",
+            },
+            disable_google: {
+              default: false,
+              type: "boolean",
+            },
+            disable_saml: {
+              default: false,
+              type: "boolean",
+            },
             keys: { Array: { name: { type: "string", default: null } } },
           },
         },
@@ -1730,6 +1742,65 @@ describe("automate schema generation", () => {
               Array: {
                 name: {
                   default: null,
+                  type: "string",
+                },
+              },
+            },
+            certificates: {
+              Array: {
+                name: { type: "string", default: null },
+                type: {
+                  type: "string",
+                  default: null,
+                  groups: ["root_ca", "intermediate_ca", "template", "private"],
+                },
+                common_name: { type: "string", default: null },
+                max_ttl: { type: "string", default: null },
+                secrets_group: {
+                  type: "string",
+                  default: null,
+                  groups: "<calculated>",
+                },
+                country: { type: "string", default: null },
+                organization: { type: "string", default: null },
+                key_bits: {
+                  type: "string",
+                  default: null,
+                  groups: ["2048", "4096"],
+                },
+                description: { type: "string", default: null },
+                issuer: {
+                  type: "string",
+                  default: null,
+                  groups: "<calculated>",
+                },
+                server_flag: { type: "boolean", default: false },
+                client_flag: { type: "boolean", default: false },
+                allow_subdomains: { type: "boolean", default: false },
+                key_usage: { type: "Array", default: [] },
+                ext_key_usage: { type: "Array", default: [] },
+                allowed_domains: { type: "Array", default: [] },
+                certificate_authority: {
+                  type: "string",
+                  default: null,
+                  groups: "<calculated>",
+                },
+                certificate_template: {
+                  type: "string",
+                  default: null,
+                  groups: "<calculated>",
+                },
+                ttl: { type: "string", default: null },
+                auto_rotate: { type: "boolean", default: false },
+                unit: {
+                  type: "string",
+                  default: null,
+                  groups: ["day", "month", "year"],
+                },
+                interval: { type: "string", default: null },
+                signing_method: {
+                  default: null,
+                  groups: ["internal", "external"],
                   type: "string",
                 },
               },

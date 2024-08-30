@@ -1463,7 +1463,6 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
         "it should have the correct terraform code"
       );
     });
-
     it("should create the correct terraform code with a secret", () => {
       let actualData = secretsManagerTf({
         _options: {
@@ -1716,6 +1715,682 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
   tags = [
     "hello",
     "world"
+  ]
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should have the correct terraform code"
+      );
+    });
+    it("should create the correct terraform code with ssl certificates", () => {
+      let actualData = secretsManagerTf({
+        _options: {
+          region: "us-south",
+          tags: ["hello", "world"],
+          prefix: "iac",
+        },
+        resource_groups: [
+          {
+            use_data: false,
+            name: "slz-service-rg",
+          },
+        ],
+        key_management: [
+          {
+            name: "kms",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            use_hs_crypto: false,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                endpoint: "private",
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+        ],
+        secrets_manager: [
+          {
+            name: "secrets-manager",
+            resource_group: "slz-service-rg",
+            kms: "kms",
+            encryption_key: "key",
+            secrets: [
+              {
+                name: "cos-secret",
+                secrets_manager: "secrets-manager",
+                credentials: "cos-bind-key",
+                credential_instance: "cos",
+                credential_type: "cos",
+                description: "Credentials for COS instance",
+                secrets_group: "group",
+              },
+            ],
+            certificates: [
+              {
+                type: "root_ca",
+                name: "root-ca",
+                common_name: "root.ca.com",
+                max_ttl: "365d",
+                secrets_manager: "secrets-manager",
+                secrets_group: "group",
+                country: "US",
+                organization: "IBM",
+                key_bits: "4096",
+                description: "cert",
+                description: null,
+              },
+              {
+                type: "root_ca",
+                name: "no-group",
+                common_name: "root.ca.com",
+                max_ttl: "365d",
+                secrets_manager: "secrets-manager",
+                country: "US",
+                organization: "IBM",
+                key_bits: "4096",
+                description: "cert",
+              },
+              {
+                type: "intermediate_ca",
+                name: "inter-ca",
+                secrets_manager: "secrets-manager",
+                secrets_group: "group",
+                common_name: "inter.ca.com",
+                issuer: "root-ca",
+                country: "US",
+                organization: "IBM",
+                signing_method: "internal",
+                key_bits: "4096",
+                max_ttl: "365d",
+                description: "cert",
+              },
+              {
+                type: "template",
+                name: "cert-sign-template",
+                secrets_manager: "secrets-manager",
+                secrets_group: "group",
+                country: "US",
+                organization: "IBM",
+                key_bits: "4096",
+                max_ttl: "8760h",
+                server_flag: true,
+                client_flag: false,
+                allow_subdomains: true,
+                key_usage: ["CertSign"],
+                ext_key_usage: ["ServerAuth"],
+                allowed_domains: ["frog.test.com"],
+                certificate_authority: "inter-ca",
+                description: "cert",
+              },
+              {
+                type: "private",
+                name: "private-cert",
+                secrets_manager: "secrets-manager",
+                secrets_group: "group",
+                description: "cert",
+                certificate_template: "cert-sign-template",
+                ttl: "364d",
+                common_name: "private.cert.com",
+                auto_rotate: true,
+                interval: "180",
+                unit: "day",
+              },
+            ],
+            add_k8s_authorization: true,
+            add_cis_authorization: true,
+            secrets_groups: [
+              {
+                name: "group",
+                secrets_manager: "secrets-manager",
+              },
+            ],
+          },
+        ],
+      });
+      let expectedData = `##############################################################################
+# Key Management Authorizations
+##############################################################################
+
+resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
+  source_service_name         = "secrets-manager"
+  description                 = "Allow Secets Manager instance to read from KMS instance"
+  target_service_name         = "kms"
+  target_resource_instance_id = ibm_resource_instance.kms.guid
+  roles = [
+    "Reader"
+  ]
+}
+
+##############################################################################
+
+##############################################################################
+# Secrets Manager Secrets Manager
+##############################################################################
+
+resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
+  name              = "\${var.prefix}-secrets-manager"
+  location          = var.region
+  plan              = "standard"
+  service           = "secrets-manager"
+  resource_group_id = ibm_resource_group.slz_service_rg.id
+  parameters = {
+    kms_key = ibm_kms_key.kms_key_key.crn
+  }
+  timeouts {
+    create = "1h"
+    delete = "1h"
+  }
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_iam_authorization_policy.secrets_manager_to_kms_kms_policy
+  ]
+}
+
+resource "ibm_iam_authorization_policy" "secrets_manager_secrets_manager_to_containers_policy" {
+  target_service_name         = "secrets-manager"
+  description                 = "Allow Secets Manager instance secrets-manager to encrypt kubernetes service"
+  target_resource_instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  source_service_name         = "containers-kubernetes"
+  roles = [
+    "Manager"
+  ]
+}
+
+resource "ibm_iam_authorization_policy" "secrets_manager_secrets_manager_to_cloud_internet_services_policy" {
+  target_service_name         = "internet-svcs"
+  description                 = "Allow Secets Manager instance secrets-manager to access CIS service"
+  source_resource_instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  source_service_name         = "secrets-manager"
+  roles = [
+    "Manager"
+  ]
+}
+
+resource "ibm_sm_secret_group" "secrets_manager_group_group" {
+  name        = "\${var.prefix}-secrets-manager-group"
+  instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region      = var.region
+}
+
+resource "ibm_sm_kv_secret" "secrets_manager_cos_secret" {
+  name            = "\${var.prefix}-secrets-manager-cos-secret"
+  instance_id     = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region          = var.region
+  description     = "Credentials for COS instance"
+  secret_group_id = ibm_sm_secret_group.secrets_manager_group_group.secret_group_id
+  data = {
+    credentials = ibm_resource_key.cos_object_storage_key_cos_bind_key.credentials
+  }
+}
+
+resource "ibm_sm_private_certificate_configuration_root_ca" "secrets_manager_secrets_manager_root_ca_configuration_root_ca" {
+  instance_id     = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  name            = "\${var.prefix}-root-ca"
+  region          = var.region
+  common_name     = "root.ca.com"
+  secret_group_id = ibm_sm_secret_group.secrets_manager_group_group.secret_group_id
+  max_ttl         = "365d"
+  key_bits        = 4096
+  country = [
+    "US"
+  ]
+  organization = [
+    "IBM"
+  ]
+}
+
+resource "ibm_sm_private_certificate_configuration_root_ca" "secrets_manager_secrets_manager_root_ca_configuration_no_group" {
+  instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  name        = "\${var.prefix}-no-group"
+  region      = var.region
+  common_name = "root.ca.com"
+  description = "cert"
+  max_ttl     = "365d"
+  key_bits    = 4096
+  country = [
+    "US"
+  ]
+  organization = [
+    "IBM"
+  ]
+}
+
+resource "ibm_sm_private_certificate_configuration_intermediate_ca" "secrets_manager_secrets_manager_intermediate_ca_configuration_inter_ca" {
+  instance_id     = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  name            = "\${var.prefix}-inter-ca"
+  region          = var.region
+  common_name     = "inter.ca.com"
+  description     = "cert"
+  secret_group_id = ibm_sm_secret_group.secrets_manager_group_group.secret_group_id
+  max_ttl         = "365d"
+  key_bits        = 4096
+  signing_method  = "internal"
+  issuer          = ibm_sm_private_certificate_configuration_root_ca.secrets_manager_secrets_manager_root_ca_configuration_root_ca.name
+  country = [
+    "US"
+  ]
+  organization = [
+    "IBM"
+  ]
+  depends_on = [
+    ibm_sm_private_certificate_configuration_root_ca.secrets_manager_secrets_manager_root_ca_configuration_root_ca
+  ]
+}
+
+resource "ibm_sm_private_certificate_configuration_template" "secrets_manager_secrets_manager_template_configuration_cert_sign_template" {
+  instance_id           = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  name                  = "\${var.prefix}-cert-sign-template"
+  region                = var.region
+  description           = "cert"
+  secret_group_id       = ibm_sm_secret_group.secrets_manager_group_group.secret_group_id
+  max_ttl               = "8760h"
+  key_bits              = 4096
+  server_flag           = true
+  allow_subdomains      = true
+  certificate_authority = ibm_sm_private_certificate_configuration_intermediate_ca.secrets_manager_secrets_manager_intermediate_ca_configuration_inter_ca.name
+  country = [
+    "US"
+  ]
+  organization = [
+    "IBM"
+  ]
+  allowed_domains = [
+    "frog.test.com"
+  ]
+  key_usage = [
+    "CertSign"
+  ]
+  ext_key_usage = [
+    "ServerAuth"
+  ]
+  depends_on = [
+    ibm_sm_private_certificate_configuration_intermediate_ca.secrets_manager_secrets_manager_intermediate_ca_configuration_inter_ca
+  ]
+}
+
+resource "ibm_sm_private_certificate" "secrets_manager_secrets_manager_private_certificate_private_cert" {
+  instance_id          = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  name                 = "\${var.prefix}-private-cert"
+  region               = var.region
+  common_name          = "private.cert.com"
+  description          = "cert"
+  secret_group_id      = ibm_sm_secret_group.secrets_manager_group_group.secret_group_id
+  ttl                  = "364d"
+  certificate_template = ibm_sm_private_certificate_configuration_template.secrets_manager_secrets_manager_template_configuration_cert_sign_template.name
+  rotation {
+    auto_rotate = true
+    interval    = "180"
+    unit        = "day"
+  }
+  depends_on = [
+    ibm_sm_private_certificate_configuration_template.secrets_manager_secrets_manager_template_configuration_cert_sign_template
+  ]
+}
+
+##############################################################################
+`;
+      assert.deepEqual(
+        actualData,
+        expectedData,
+        "it should have the correct terraform code"
+      );
+    });
+    it("should create the correct terraform code with ssl certificates from state", () => {
+      let actualData = secretsManagerTf({
+        _options: {
+          region: "us-south",
+          tags: ["hello", "world"],
+          prefix: "iac",
+        },
+        resource_groups: [
+          {
+            use_data: false,
+            name: "slz-service-rg",
+          },
+        ],
+        key_management: [
+          {
+            name: "kms",
+            service: "kms",
+            resource_group: "slz-service-rg",
+            authorize_vpc_reader_role: true,
+            use_data: false,
+            use_hs_crypto: false,
+            keys: [
+              {
+                name: "key",
+                root_key: true,
+                key_ring: "test",
+                force_delete: true,
+                endpoint: "private",
+                rotation: 12,
+                dual_auth_delete: true,
+              },
+            ],
+          },
+        ],
+        secrets_manager: [
+          {
+            name: "secrets-manager",
+            resource_group: "slz-service-rg",
+            kms: "kms",
+            encryption_key: "key",
+            secrets: [
+              {
+                name: "cos-secret",
+                secrets_manager: "secrets-manager",
+                credentials: "cos-bind-key",
+                credential_instance: "cos",
+                credential_type: "cos",
+                description: "Credentials for COS instance",
+                secrets_group: "group",
+              },
+            ],
+            certificates: [
+              {
+                type: "root_ca",
+                name: "root-ca",
+                common_name: "root.ca.com",
+                max_ttl: "365d",
+                secrets_manager: "secrets-manager",
+                secrets_group: "group",
+                country: "US",
+                organization: "IBM",
+                key_bits: "4096",
+                description: "cert",
+              },
+              {
+                type: "root_ca",
+                name: "no-group",
+                common_name: "root.ca.com",
+                max_ttl: "365d",
+                secrets_manager: "secrets-manager",
+                country: "US",
+                organization: "IBM",
+                key_bits: "4096",
+                description: "cert",
+              },
+
+              {
+                type: "intermediate_ca",
+                name: "inter-ca",
+                secrets_manager: "secrets-manager",
+                secrets_group: "group",
+                common_name: "inter.ca.com",
+                issuer: "root-ca",
+                country: "US",
+                organization: "IBM",
+                signing_method: "internal",
+                key_bits: "4096",
+                max_ttl: "365d",
+                description: "cert",
+                ttl: null,
+                certificate_authority: null,
+                certificate_template: null,
+                key_usage: [],
+                ext_key_usage: [],
+                allowed_domains: [],
+                unit: null,
+                interval: null,
+                server_flag: false,
+                client_flag: false,
+                allow_subdomains: false,
+              },
+              {
+                type: "template",
+                name: "cert-sign-template",
+                secrets_manager: "secrets-manager",
+                secrets_group: "group",
+                country: "US",
+                organization: "IBM",
+                key_bits: "4096",
+                max_ttl: "8760h",
+                server_flag: true,
+                client_flag: true,
+                allow_subdomains: true,
+                allowed_domains: ["frog.test.com"],
+                ext_key_usage: ["ServerAuth"],
+                key_usage: ["CertSign"],
+                certificate_authority: "inter-ca",
+                description: "cert",
+                ttl: null,
+                issuer: null,
+                certificate_template: null,
+                unit: null,
+                interval: null,
+              },
+              {
+                type: "private",
+                name: "private-cert",
+                secrets_manager: "secrets-manager",
+                secrets_group: null,
+                description: "cert",
+                certificate_template: "cert-sign-template",
+                ttl: "364d",
+                common_name: "private.cert.com",
+                auto_rotate: true,
+                interval: "180",
+                unit: "day",
+                max_ttl: null,
+                country: null,
+                organization: null,
+                issuer: null,
+                certificate_authority: null,
+                key_usage: [],
+                ext_key_usage: [],
+                allowed_domains: [],
+                server_flag: false,
+                client_flag: false,
+                allow_subdomains: false,
+              },
+            ],
+            add_k8s_authorization: true,
+            add_cis_authorization: true,
+            secrets_groups: [
+              {
+                name: "group",
+                secrets_manager: "secrets-manager",
+              },
+            ],
+          },
+        ],
+      });
+      let expectedData = `##############################################################################
+# Key Management Authorizations
+##############################################################################
+
+resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
+  source_service_name         = "secrets-manager"
+  description                 = "Allow Secets Manager instance to read from KMS instance"
+  target_service_name         = "kms"
+  target_resource_instance_id = ibm_resource_instance.kms.guid
+  roles = [
+    "Reader"
+  ]
+}
+
+##############################################################################
+
+##############################################################################
+# Secrets Manager Secrets Manager
+##############################################################################
+
+resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
+  name              = "\${var.prefix}-secrets-manager"
+  location          = var.region
+  plan              = "standard"
+  service           = "secrets-manager"
+  resource_group_id = ibm_resource_group.slz_service_rg.id
+  parameters = {
+    kms_key = ibm_kms_key.kms_key_key.crn
+  }
+  timeouts {
+    create = "1h"
+    delete = "1h"
+  }
+  tags = [
+    "hello",
+    "world"
+  ]
+  depends_on = [
+    ibm_iam_authorization_policy.secrets_manager_to_kms_kms_policy
+  ]
+}
+
+resource "ibm_iam_authorization_policy" "secrets_manager_secrets_manager_to_containers_policy" {
+  target_service_name         = "secrets-manager"
+  description                 = "Allow Secets Manager instance secrets-manager to encrypt kubernetes service"
+  target_resource_instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  source_service_name         = "containers-kubernetes"
+  roles = [
+    "Manager"
+  ]
+}
+
+resource "ibm_iam_authorization_policy" "secrets_manager_secrets_manager_to_cloud_internet_services_policy" {
+  target_service_name         = "internet-svcs"
+  description                 = "Allow Secets Manager instance secrets-manager to access CIS service"
+  source_resource_instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  source_service_name         = "secrets-manager"
+  roles = [
+    "Manager"
+  ]
+}
+
+resource "ibm_sm_secret_group" "secrets_manager_group_group" {
+  name        = "\${var.prefix}-secrets-manager-group"
+  instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region      = var.region
+}
+
+resource "ibm_sm_kv_secret" "secrets_manager_cos_secret" {
+  name            = "\${var.prefix}-secrets-manager-cos-secret"
+  instance_id     = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  region          = var.region
+  description     = "Credentials for COS instance"
+  secret_group_id = ibm_sm_secret_group.secrets_manager_group_group.secret_group_id
+  data = {
+    credentials = ibm_resource_key.cos_object_storage_key_cos_bind_key.credentials
+  }
+}
+
+resource "ibm_sm_private_certificate_configuration_root_ca" "secrets_manager_secrets_manager_root_ca_configuration_root_ca" {
+  instance_id     = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  name            = "\${var.prefix}-root-ca"
+  region          = var.region
+  common_name     = "root.ca.com"
+  description     = "cert"
+  secret_group_id = ibm_sm_secret_group.secrets_manager_group_group.secret_group_id
+  max_ttl         = "365d"
+  key_bits        = 4096
+  country = [
+    "US"
+  ]
+  organization = [
+    "IBM"
+  ]
+}
+
+resource "ibm_sm_private_certificate_configuration_root_ca" "secrets_manager_secrets_manager_root_ca_configuration_no_group" {
+  instance_id = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  name        = "\${var.prefix}-no-group"
+  region      = var.region
+  common_name = "root.ca.com"
+  description = "cert"
+  max_ttl     = "365d"
+  key_bits    = 4096
+  country = [
+    "US"
+  ]
+  organization = [
+    "IBM"
+  ]
+}
+
+resource "ibm_sm_private_certificate_configuration_intermediate_ca" "secrets_manager_secrets_manager_intermediate_ca_configuration_inter_ca" {
+  instance_id     = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  name            = "\${var.prefix}-inter-ca"
+  region          = var.region
+  common_name     = "inter.ca.com"
+  description     = "cert"
+  secret_group_id = ibm_sm_secret_group.secrets_manager_group_group.secret_group_id
+  max_ttl         = "365d"
+  key_bits        = 4096
+  signing_method  = "internal"
+  issuer          = ibm_sm_private_certificate_configuration_root_ca.secrets_manager_secrets_manager_root_ca_configuration_root_ca.name
+  country = [
+    "US"
+  ]
+  organization = [
+    "IBM"
+  ]
+  depends_on = [
+    ibm_sm_private_certificate_configuration_root_ca.secrets_manager_secrets_manager_root_ca_configuration_root_ca
+  ]
+}
+
+resource "ibm_sm_private_certificate_configuration_template" "secrets_manager_secrets_manager_template_configuration_cert_sign_template" {
+  instance_id           = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  name                  = "\${var.prefix}-cert-sign-template"
+  region                = var.region
+  description           = "cert"
+  secret_group_id       = ibm_sm_secret_group.secrets_manager_group_group.secret_group_id
+  max_ttl               = "8760h"
+  key_bits              = 4096
+  client_flag           = true
+  server_flag           = true
+  allow_subdomains      = true
+  certificate_authority = ibm_sm_private_certificate_configuration_intermediate_ca.secrets_manager_secrets_manager_intermediate_ca_configuration_inter_ca.name
+  country = [
+    "US"
+  ]
+  organization = [
+    "IBM"
+  ]
+  allowed_domains = [
+    "frog.test.com"
+  ]
+  key_usage = [
+    "CertSign"
+  ]
+  ext_key_usage = [
+    "ServerAuth"
+  ]
+  depends_on = [
+    ibm_sm_private_certificate_configuration_intermediate_ca.secrets_manager_secrets_manager_intermediate_ca_configuration_inter_ca
+  ]
+}
+
+resource "ibm_sm_private_certificate" "secrets_manager_secrets_manager_private_certificate_private_cert" {
+  instance_id          = ibm_resource_instance.secrets_manager_secrets_manager.guid
+  name                 = "\${var.prefix}-private-cert"
+  region               = var.region
+  common_name          = "private.cert.com"
+  description          = "cert"
+  ttl                  = "364d"
+  certificate_template = ibm_sm_private_certificate_configuration_template.secrets_manager_secrets_manager_template_configuration_cert_sign_template.name
+  rotation {
+    auto_rotate = true
+    interval    = "180"
+    unit        = "day"
+  }
+  depends_on = [
+    ibm_sm_private_certificate_configuration_template.secrets_manager_secrets_manager_template_configuration_cert_sign_template
   ]
 }
 
