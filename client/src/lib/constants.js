@@ -10,6 +10,7 @@ const oracleSi = require("./docs/templates/oracle-si.json");
 const vpnaas = require("./docs/templates/vpn-as-a-service.json");
 const powerVsPocQuickStart = require("./docs/templates/power-poc-quick-start.json");
 const powerVsPocClassicQuickStart = require("./docs/templates/power-poc-classic-quick-start.json");
+const vtlQuickStart = require("./docs/templates/vtl-quick-start.json");
 const { azsort } = require("lazy-z");
 
 module.exports = {
@@ -1049,6 +1050,25 @@ module.exports = {
         "A Key Protect Service and Encryption keys",
         "Object storage instances for flow logs and Activity Tracker",
         "A Power VS workspace with all stock AIX and IBM i images available for use",
+      ],
+    },
+    "Power VS FalconStor VTL Quickstart": {
+      template: vtlQuickStart,
+      name: "Power VS FalconStor VTL Quickstart",
+      patternDocText:
+        "This template initializes an environment with one VPC and a Power VS workspace with 3 VSIs and a FalconStor VTL to get started with a Power VS Migration on IBM Cloud.",
+      includes: [
+        "Three resource groups designated for the Power Virtual Server Workspace, auxiliary resources, and cloud services",
+        "A VPC and an example Virtual Server instance deployment in the VPC",
+        "A StorSight Virtual Server instance deployment in the VPC",
+        "A Virtual Private Endpoint for Cloud Object storage in the VPC",
+        "A public gateway, a Transit gateway, and a VPC VPN Gateway",
+        "A VPC flow log collector, Activity Tracker, Cloud Monitoring and Log Analysis",
+        "A Key Protect Service and Encryption keys",
+        "Object storage instances for flow logs and Activity Tracker",
+        "A Power VS workspace with three Power Networks for regular network traffic, iSCSI backup network traffic, and replication network traffic",
+        "An IBM i Power Virtual Server instance attached to the regular and iSCSI backup networks",
+        "One FalconStor VTL instance attached to all three power networks with 3 Power Storage Volumes needed for deployment",
       ],
     },
     "VPN as a Service": {

@@ -1,0 +1,1064 @@
+{
+  "_options": {
+    "prefix": "vtl",
+    "region": "us-south",
+    "tags": ["poc"],
+    "zones": 1,
+    "endpoints": "public",
+    "account_id": null,
+    "dynamic_subnets": false,
+    "enable_power_vs": true,
+    "enable_classic": false,
+    "power_vs_zones": ["dal10"],
+    "craig_version": "1.16.4",
+    "power_vs_high_availability": false,
+    "template": "Power VS FalconStor VTL Quickstart",
+    "fs_cloud": false,
+    "power_vs_ha_zone_1": null,
+    "power_vs_ha_zone_2": null,
+    "no_vpn_secrets_manager_auth": false,
+    "manual_power_vsi_naming": false
+  },
+  "access_groups": [],
+  "appid": [],
+  "atracker": {
+    "enabled": true,
+    "type": "cos",
+    "name": "atracker",
+    "target_name": "a-tracker",
+    "bucket": "a-tracker",
+    "add_route": true,
+    "cos_key": "a-tracker-cos",
+    "locations": ["global", "us-south"],
+    "instance": true,
+    "plan": "lite",
+    "resource_group": "service-rg",
+    "archive": false
+  },
+  "cbr_rules": [],
+  "cbr_zones": [],
+  "cis": [],
+  "cis_glbs": [],
+  "classic_bare_metal": [],
+  "classic_gateways": [],
+  "classic_security_groups": [],
+  "classic_ssh_keys": [],
+  "classic_vlans": [],
+  "classic_vsi": [],
+  "cloud_logs": {
+    "enabled": false,
+    "cos": "(Disabled)",
+    "logs_bucket": "(Disabled)",
+    "metrics_bucket": "(Disabled)",
+    "resource_group": null,
+    "name": "cloud-logs"
+  },
+  "clusters": [],
+  "dns": [],
+  "event_streams": [],
+  "f5_vsi": [],
+  "fortigate_vnf": [],
+  "iam_account_settings": {
+    "enable": false,
+    "mfa": null,
+    "allowed_ip_addresses": null,
+    "include_history": false,
+    "if_match": null,
+    "max_sessions_per_identity": null,
+    "restrict_create_service_id": null,
+    "restrict_create_platform_apikey": null,
+    "session_expiration_in_seconds": null,
+    "session_invalidation_in_seconds": null
+  },
+  "icd": [],
+  "key_management": [
+    {
+      "name": "kms",
+      "resource_group": "service-rg",
+      "use_hs_crypto": false,
+      "authorize_vpc_reader_role": true,
+      "use_data": false,
+      "keys": [
+        {
+          "key_ring": "ring",
+          "name": "key",
+          "root_key": true,
+          "force_delete": true,
+          "endpoint": "public",
+          "rotation": 1,
+          "dual_auth_delete": false
+        },
+        {
+          "key_ring": "ring",
+          "name": "atracker-key",
+          "root_key": true,
+          "force_delete": true,
+          "endpoint": "public",
+          "rotation": 1,
+          "dual_auth_delete": false
+        }
+      ]
+    }
+  ],
+  "load_balancers": [],
+  "logdna": {
+    "enabled": true,
+    "plan": "7-day",
+    "endpoints": "private",
+    "platform_logs": true,
+    "resource_group": "service-rg",
+    "cos": "a-tracker",
+    "bucket": "a-tracker",
+    "name": "logdna",
+    "archive": false,
+    "secrets_manager": null,
+    "store_secrets": false
+  },
+  "object_storage": [
+    {
+      "name": "savefiles",
+      "use_data": false,
+      "resource_group": "service-rg",
+      "plan": "standard",
+      "use_random_suffix": true,
+      "kms": "kms",
+      "buckets": [
+        {
+          "force_delete": false,
+          "name": "ibm-i",
+          "storage_class": "smart",
+          "kms_key": null,
+          "endpoint": "public",
+          "use_random_suffix": true,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
+        },
+        {
+          "name": "vtl-repo",
+          "storage_class": "smart",
+          "kms_key": null,
+          "force_delete": false,
+          "activity_tracking": false,
+          "metrics_monitoring": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "className": "",
+          "request_metrics_enabled": false,
+          "usage_metrics_enabled": false,
+          "metrics_monitoring_crn": null,
+          "use_random_suffix": true,
+          "endpoint": null
+        }
+      ],
+      "keys": [
+        {
+          "name": "power",
+          "role": "Writer",
+          "enable_hmac": true,
+          "use_random_suffix": true
+        },
+        {
+          "name": "vtl",
+          "role": "Object Writer",
+          "enable_hmac": true,
+          "use_random_suffix": true
+        }
+      ]
+    },
+    {
+      "use_data": false,
+      "use_random_suffix": true,
+      "name": "a-tracker",
+      "resource_group": "service-rg",
+      "plan": "standard",
+      "kms": "kms",
+      "buckets": [
+        {
+          "name": "a-tracker",
+          "storage_class": "standard",
+          "kms_key": "atracker-key",
+          "force_delete": false,
+          "use_random_suffix": true,
+          "endpoint": null,
+          "activity_tracking": false,
+          "read_data_events": false,
+          "write_data_events": false,
+          "activity_tracking_crn": null,
+          "metrics_monitoring": false,
+          "usage_metrics_enabled": false,
+          "request_metrics_enabled": false,
+          "metrics_monitoring_crn": null
+        }
+      ],
+      "keys": [
+        {
+          "name": "a-tracker-cos",
+          "role": "Writer",
+          "enable_hmac": false,
+          "use_random_suffix": true
+        }
+      ]
+    }
+  ],
+  "power": [
+    {
+      "name": "dal10",
+      "resource_group": "power-rg",
+      "zone": "dal10",
+      "ssh_keys": [
+        {
+          "name": "powervs-ssh-key",
+          "public_key": null,
+          "use_data": false,
+          "resource_group": "power-rg",
+          "workspace": "dal10",
+          "zone": "dal10",
+          "workspace_use_data": false
+        }
+      ],
+      "network": [
+        {
+          "name": "pvm",
+          "pi_network_type": "vlan",
+          "pi_cidr": "10.20.0.0/26",
+          "pi_dns": ["127.0.0.1"],
+          "workspace": "dal10",
+          "zone": "dal10",
+          "workspace_use_data": false,
+          "use_data": false,
+          "pi_network_mtu": "9000",
+          "pi_network_jumbo": false
+        },
+        {
+          "workspace_use_data": false,
+          "name": "iscsi-backup-network",
+          "use_data": false,
+          "pi_network_type": "vlan",
+          "pi_cidr": "10.30.0.0/26",
+          "pi_dns": ["127.0.0.1"],
+          "pi_network_mtu": "9000",
+          "workspace": "dal10",
+          "zone": "dal10",
+          "depends_on": ["${ibm_pi_network.power_network_dal10_pvm}"],
+          "pi_network_jumbo": false
+        },
+        {
+          "workspace_use_data": false,
+          "name": "replication-network",
+          "use_data": false,
+          "pi_network_type": "vlan",
+          "pi_cidr": "10.50.0.0/26",
+          "pi_dns": ["127.0.0.1"],
+          "pi_network_mtu": "9000",
+          "workspace": "dal10",
+          "zone": "dal10",
+          "depends_on": [
+            "${ibm_pi_network.power_network_dal10_iscsi_backup_network}"
+          ],
+          "pi_network_jumbo": false
+        }
+      ],
+      "cloud_connections": [],
+      "images": [
+        {
+          "creationDate": "2024-05-01T01:15:53.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/994160b2-7894-4d9e-a5d8-01d4b1003f1b",
+          "imageID": "994160b2-7894-4d9e-a5d8-01d4b1003f1b",
+          "lastUpdateDate": "2024-05-01T08:19:00.000Z",
+          "name": "IBMi-72-09-2984-10",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "big-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock",
+            "operatingSystem": "ibmi"
+          },
+          "state": "active",
+          "storagePool": "General-Flash-50",
+          "storageType": "tier3",
+          "workspace": "dal10",
+          "zone": "dal10",
+          "workspace_use_data": false
+        },
+        {
+          "creationDate": "2024-03-14T17:47:36.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/fa44408d-295d-4333-b10a-2639b4d89fd8",
+          "imageID": "fa44408d-295d-4333-b10a-2639b4d89fd8",
+          "lastUpdateDate": "2024-03-14T17:54:25.000Z",
+          "name": "IBMi-73-13-2984-3",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "big-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock",
+            "operatingSystem": "ibmi"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "dal10",
+          "zone": "dal10",
+          "workspace_use_data": false,
+          "depends_on": ["${ibm_pi_image.power_image_dal10_ibmi_72_09_2984_10}"]
+        },
+        {
+          "creationDate": "2024-03-14T22:04:39.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/dbe020f4-e867-43f5-8d48-9ad30ab3634b",
+          "imageID": "dbe020f4-e867-43f5-8d48-9ad30ab3634b",
+          "lastUpdateDate": "2024-03-15T00:22:00.000Z",
+          "name": "IBMi-74-09-2984-1",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "big-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock",
+            "operatingSystem": "ibmi"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "dal10",
+          "zone": "dal10",
+          "workspace_use_data": false,
+          "depends_on": ["${ibm_pi_image.power_image_dal10_ibmi_73_13_2984_3}"]
+        },
+        {
+          "creationDate": "2024-03-15T02:12:46.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/7302c4ef-115c-4089-a395-abda4ecf70eb",
+          "imageID": "7302c4ef-115c-4089-a395-abda4ecf70eb",
+          "lastUpdateDate": "2024-03-15T03:48:44.000Z",
+          "name": "IBMi-75-03-2984-1",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "big-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock",
+            "operatingSystem": "ibmi"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "dal10",
+          "zone": "dal10",
+          "workspace_use_data": false,
+          "depends_on": ["${ibm_pi_image.power_image_dal10_ibmi_74_09_2984_1}"]
+        },
+        {
+          "creationDate": "2023-12-20T20:31:47.000Z",
+          "description": "",
+          "href": "/pcloud/v1/cloud-instances/d839ff9f75e2465a81707aa69ee9a9b7/stock-images/7eebb91d-1122-41d2-b324-abcd31ae89c2",
+          "imageID": "7eebb91d-1122-41d2-b324-abcd31ae89c2",
+          "lastUpdateDate": "2023-12-20T22:18:26.000Z",
+          "name": "VTL-FalconStor-11_13_001",
+          "specifications": {
+            "architecture": "ppc64",
+            "containerFormat": "bare",
+            "diskFormat": "raw",
+            "endianness": "little-endian",
+            "hypervisorType": "phyp",
+            "imageType": "stock-vtl",
+            "operatingSystem": "vtl"
+          },
+          "state": "active",
+          "storagePool": "Tier3-Flash-1",
+          "storageType": "tier3",
+          "workspace": "dal10",
+          "zone": "dal10",
+          "workspace_use_data": false,
+          "depends_on": ["${ibm_pi_image.power_image_dal10_rhel9_sp2}"]
+        }
+      ],
+      "attachments": [],
+      "imageNames": [
+        "IBMi-75-03-2984-1",
+        "VTL-FalconStor-11_13_001",
+        "IBMi-74-09-2984-1",
+        "IBMi-73-13-2984-3",
+        "IBMi-72-09-2984-10"
+      ],
+      "use_data": false
+    }
+  ],
+  "power_instances": [
+    {
+      "sap": false,
+      "sap_profile": null,
+      "name": "ibmitarget",
+      "workspace": "dal10",
+      "network": [
+        {
+          "name": "pvm",
+          "ip_address": ""
+        },
+        {
+          "name": "iscsi-backup-network",
+          "ip_address": ""
+        }
+      ],
+      "ssh_key": "powervs-ssh-key",
+      "image": "IBMi-75-03-2984-1",
+      "pi_sys_type": "s922",
+      "pi_proc_type": "shared",
+      "pi_processors": "0.5",
+      "pi_memory": "16",
+      "pi_storage_pool_affinity": false,
+      "storage_option": "Storage Type",
+      "pi_storage_type": "tier5k",
+      "pi_storage_pool": null,
+      "affinity_type": null,
+      "pi_affinity_volume": null,
+      "pi_anti_affinity_volume": null,
+      "pi_anti_affinity_instance": null,
+      "pi_affinity_instance": null,
+      "zone": "dal10",
+      "pi_affinity_policy": null,
+      "pi_user_data": null,
+      "index": 0,
+      "primary_subnet": "pvm",
+      "pi_ibmi_css": false,
+      "pi_ibmi_pha": false,
+      "pi_ibmi_rds_users": null,
+      "pi_pin_policy": "none",
+      "pi_license_repository_capacity": null,
+      "pi_health_status": "OK",
+      "pi_shared_processor_pool": "None",
+      "pi_placement_group_id": "None"
+    }
+  ],
+  "power_placement_groups": [],
+  "power_shared_processor_pools": [],
+  "power_volumes": [
+    {
+      "name": "storsafe-config-repo-vol",
+      "workspace": "dal10",
+      "pi_volume_size": "20",
+      "pi_volume_type": "tier3",
+      "count": null,
+      "storage_option": "None",
+      "pi_volume_pool": null,
+      "affinity_type": null,
+      "pi_affinity_volume": null,
+      "pi_anti_affinity_volume": null,
+      "pi_anti_affinity_instance": null,
+      "pi_affinity_instance": null,
+      "pi_replication_enabled": false,
+      "pi_volume_shareable": false,
+      "attachments": ["storsafe-vtl (VTL)"],
+      "zone": "dal10",
+      "pi_affinity_policy": null,
+      "index": 0
+    },
+    {
+      "name": "storsafe-index-vol",
+      "workspace": "dal10",
+      "pi_volume_size": "1000",
+      "pi_volume_type": "tier3",
+      "count": null,
+      "storage_option": "None",
+      "pi_volume_pool": null,
+      "affinity_type": null,
+      "pi_affinity_volume": null,
+      "pi_anti_affinity_volume": null,
+      "pi_anti_affinity_instance": null,
+      "pi_affinity_instance": null,
+      "pi_replication_enabled": false,
+      "pi_volume_shareable": false,
+      "attachments": ["storsafe-vtl (VTL)"],
+      "zone": "dal10",
+      "pi_affinity_policy": null,
+      "index": 1
+    },
+    {
+      "name": "storsafe-backup-cache-vol",
+      "workspace": "dal10",
+      "pi_volume_size": "1000",
+      "pi_volume_type": "tier3",
+      "count": null,
+      "storage_option": "None",
+      "pi_volume_pool": null,
+      "affinity_type": null,
+      "pi_affinity_volume": null,
+      "pi_anti_affinity_volume": null,
+      "pi_anti_affinity_instance": null,
+      "pi_affinity_instance": null,
+      "pi_replication_enabled": false,
+      "pi_volume_shareable": false,
+      "attachments": ["storsafe-vtl (VTL)"],
+      "zone": "dal10",
+      "pi_affinity_policy": null,
+      "index": 2
+    }
+  ],
+  "resource_groups": [
+    {
+      "use_prefix": true,
+      "name": "service-rg",
+      "use_data": false
+    },
+    {
+      "use_prefix": true,
+      "name": "transit-rg",
+      "use_data": false
+    },
+    {
+      "use_data": false,
+      "name": "power-rg",
+      "use_prefix": true
+    }
+  ],
+  "routing_tables": [
+    {
+      "routes": [],
+      "name": "poweringress",
+      "vpc": "transit",
+      "internet_ingress": false,
+      "transit_gateway_ingress": true,
+      "vpc_zone_ingress": true,
+      "direct_link_ingress": false,
+      "route_direct_link_ingress": false,
+      "route_vpc_zone_ingress": false,
+      "accept_routes_from_resource_type": ["vpn_gateway", "vpn_server"],
+      "advertise_routes_to": []
+    }
+  ],
+  "scc": {
+    "credential_description": null,
+    "id": null,
+    "passphrase": null,
+    "name": "",
+    "location": "us",
+    "collector_description": null,
+    "is_public": false,
+    "scope_description": null,
+    "enable": false
+  },
+  "scc_v2": {
+    "enable": false,
+    "resource_group": null,
+    "region": null,
+    "account_id": "${var.account_id}",
+    "profile_attachments": [],
+    "name": null,
+    "use_cos": false,
+    "cos": null,
+    "bucket": null
+  },
+  "secrets_manager": [],
+  "security_groups": [
+    {
+      "vpc": "transit",
+      "name": "transit-vpe",
+      "resource_group": "transit-rg",
+      "rules": [
+        {
+          "name": "general-inbound",
+          "direction": "inbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "10.0.0.0/8",
+          "vpc": "transit",
+          "sg": "transit-vpe",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "name": "general-outbound",
+          "direction": "outbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "10.0.0.0/8",
+          "vpc": "transit",
+          "sg": "transit-vpe",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        }
+      ],
+      "use_data": false
+    },
+    {
+      "vpc": "transit",
+      "name": "transit-vsi",
+      "resource_group": "transit-rg",
+      "rules": [
+        {
+          "name": "general-inbound",
+          "direction": "inbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "10.0.0.0/8",
+          "vpc": "transit",
+          "sg": "transit-vsi",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "name": "ibm-inbound",
+          "direction": "inbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "161.26.0.0/16",
+          "vpc": "transit",
+          "sg": "transit-vsi",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        },
+        {
+          "name": "all-outbound",
+          "direction": "outbound",
+          "icmp": {
+            "type": null,
+            "code": null
+          },
+          "tcp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "udp": {
+            "port_min": null,
+            "port_max": null
+          },
+          "source": "0.0.0.0/0",
+          "vpc": "transit",
+          "sg": "transit-vsi",
+          "ruleProtocol": "all",
+          "port_min": null,
+          "port_max": null,
+          "type": null,
+          "code": null
+        }
+      ],
+      "use_data": false
+    }
+  ],
+  "ssh_keys": [
+    {
+      "name": "vsi-ssh-key",
+      "public_key": null,
+      "use_data": false,
+      "resource_group": "transit-rg"
+    }
+  ],
+  "sysdig": {
+    "enabled": true,
+    "plan": "graduated-tier",
+    "resource_group": "service-rg",
+    "name": "sysdig",
+    "platform_logs": true,
+    "secrets_manager": null,
+    "store_secrets": false
+  },
+  "teleport_vsi": [],
+  "transit_gateways": [
+    {
+      "name": "transit-gateway",
+      "resource_group": "service-rg",
+      "global": false,
+      "connections": [
+        {
+          "tgw": "transit-gateway",
+          "vpc": "transit"
+        },
+        {
+          "tgw": "transit-gateway",
+          "power": "dal10"
+        }
+      ],
+      "use_data": false,
+      "gre_tunnels": [],
+      "prefix_filters": [],
+      "crns": null,
+      "classic": false
+    }
+  ],
+  "virtual_private_endpoints": [
+    {
+      "name": "transit-cos",
+      "service": "cos",
+      "vpc": "transit",
+      "resource_group": "transit-rg",
+      "security_groups": ["transit-vpe"],
+      "subnets": ["vpe-zone-1"],
+      "instance": null
+    }
+  ],
+  "vpcs": [
+    {
+      "cos": null,
+      "bucket": "$disabled",
+      "name": "transit",
+      "resource_group": "transit-rg",
+      "classic_access": false,
+      "manual_address_prefix_management": true,
+      "default_network_acl_name": null,
+      "default_security_group_name": null,
+      "default_routing_table_name": null,
+      "publicGateways": [1],
+      "address_prefixes": [
+        {
+          "cidr": "10.10.0.0/26",
+          "name": "vsi-zone-1",
+          "vpc": "transit",
+          "zone": 1
+        },
+        {
+          "cidr": "10.10.0.128/29",
+          "name": "vpe-zone-1",
+          "vpc": "transit",
+          "zone": 1
+        },
+        {
+          "cidr": "10.10.0.144/28",
+          "name": "vpn-zone-1",
+          "vpc": "transit",
+          "zone": 1
+        }
+      ],
+      "subnets": [
+        {
+          "vpc": "transit",
+          "zone": 1,
+          "cidr": "10.10.0.0/26",
+          "name": "vsi-zone-1",
+          "network_acl": "transit",
+          "resource_group": "transit-rg",
+          "public_gateway": true,
+          "has_prefix": false
+        },
+        {
+          "vpc": "transit",
+          "zone": 1,
+          "cidr": "10.10.0.128/29",
+          "name": "vpe-zone-1",
+          "resource_group": "transit-rg",
+          "network_acl": "transit",
+          "public_gateway": false,
+          "has_prefix": false
+        },
+        {
+          "vpc": "transit",
+          "zone": 1,
+          "cidr": "10.10.0.144/28",
+          "name": "vpn-zone-1",
+          "networkAcl": "transit",
+          "resource_group": "transit-rg",
+          "has_prefix": false,
+          "network_acl": "transit",
+          "public_gateway": false
+        }
+      ],
+      "public_gateways": [
+        {
+          "vpc": "transit",
+          "zone": 1,
+          "resource_group": "transit-rg"
+        }
+      ],
+      "acls": [
+        {
+          "resource_group": "transit-rg",
+          "name": "transit",
+          "vpc": "transit",
+          "rules": [
+            {
+              "name": "all-inbound",
+              "action": "allow",
+              "direction": "inbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "0.0.0.0/0",
+              "destination": "10.0.0.0/8",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            },
+            {
+              "name": "all-outbound",
+              "action": "allow",
+              "direction": "outbound",
+              "icmp": {
+                "type": null,
+                "code": null
+              },
+              "tcp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "udp": {
+                "port_min": null,
+                "port_max": null,
+                "source_port_min": null,
+                "source_port_max": null
+              },
+              "source": "10.0.0.0/8",
+              "destination": "0.0.0.0/0",
+              "acl": "transit",
+              "vpc": "transit",
+              "ruleProtocol": "all",
+              "port_min": null,
+              "port_max": null,
+              "type": null,
+              "code": null,
+              "source_port_min": null,
+              "source_port_max": null
+            }
+          ],
+          "use_data": false
+        }
+      ],
+      "subnetTiers": [
+        {
+          "name": "vsi",
+          "zones": 1,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
+        },
+        {
+          "name": "vpe",
+          "zones": 1,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
+        },
+        {
+          "name": "vpn",
+          "zones": 1,
+          "advanced": false,
+          "networkAcl": null,
+          "addPublicGateway": false
+        }
+      ],
+      "use_data": false
+    }
+  ],
+  "vpn_gateways": [
+    {
+      "name": "dal10gw",
+      "resource_group": "transit-rg",
+      "vpc": "transit",
+      "subnet": "vpn-zone-1",
+      "policy_mode": true,
+      "connections": [
+        {
+          "name": "on-prem-connection",
+          "peer_cidrs": ["10.40.0.0/16"],
+          "local_cidrs": [
+            "10.20.0.0/26",
+            "10.50.0.0/26",
+            "10.10.0.0/26",
+            "10.10.0.128/29",
+            "10.10.0.144/28"
+          ],
+          "vpn": "dal10gw",
+          "peer_address": null,
+          "admin_state_up": true
+        }
+      ],
+      "additional_prefixes": ["10.40.0.0/16"]
+    }
+  ],
+  "vpn_servers": [],
+  "vsi": [
+    {
+      "kms": "kms",
+      "encryption_key": "key",
+      "image": "ibm-redhat-9-4-minimal-amd64-3",
+      "image_name": "Red Hat Enterprise Linux 9.x - Minimal Install (amd64) [ibm-redhat-9-4-minimal-amd64-3]",
+      "profile": "bx2-4x16",
+      "name": "example-deployment",
+      "security_groups": ["transit-vsi"],
+      "ssh_keys": ["vsi-ssh-key"],
+      "vpc": "transit",
+      "vsi_per_subnet": "1",
+      "resource_group": "transit-rg",
+      "override_vsi_name": null,
+      "user_data": null,
+      "network_interfaces": [],
+      "subnets": ["vsi-zone-1"],
+      "volumes": [],
+      "subnet": "",
+      "enable_floating_ip": false,
+      "primary_interface_ip_spoofing": false,
+      "use_variable_names": false,
+      "snapshot": null,
+      "use_snapshot": false,
+      "reserved_ips": [[""]],
+      "enable_static_ips": false
+    },
+    {
+      "kms": "kms",
+      "encryption_key": "key",
+      "image": "ibm-rocky-linux-8-10-minimal-amd64-2",
+      "image_name": "Rocky Linux 8 - Minimal Install (amd64) [ibm-rocky-linux-8-10-minimal-amd64-2]",
+      "profile": "mx2-4x32",
+      "name": "storsight-vsi",
+      "security_groups": ["transit-vsi"],
+      "ssh_keys": ["vsi-ssh-key"],
+      "vpc": "transit",
+      "vsi_per_subnet": "1",
+      "resource_group": "transit-rg",
+      "override_vsi_name": null,
+      "user_data": null,
+      "network_interfaces": [],
+      "subnets": ["vsi-zone-1"],
+      "volumes": [
+        {
+          "name": "storsight-db",
+          "profile": "10iops-tier",
+          "encryption_key": "key",
+          "capacity": "100"
+        }
+      ],
+      "use_variable_names": false,
+      "use_snapshot": false,
+      "snapshot": null,
+      "enable_floating_ip": false,
+      "primary_interface_ip_spoofing": false,
+      "enable_static_ips": false,
+      "reserved_ips": [[""]]
+    }
+  ],
+  "vtl": [
+    {
+      "name": "storsafe-vtl",
+      "workspace": "dal10",
+      "network": [
+        {
+          "name": "pvm",
+          "ip_address": ""
+        },
+        {
+          "name": "iscsi-backup-network",
+          "ip_address": ""
+        },
+        {
+          "name": "replication-network",
+          "ip_address": ""
+        }
+      ],
+      "ssh_key": "powervs-ssh-key",
+      "image": "VTL-FalconStor-11_13_001",
+      "pi_sys_type": "s922",
+      "pi_proc_type": "shared",
+      "pi_processors": "1",
+      "pi_memory": "18",
+      "pi_license_repository_capacity": "1",
+      "pi_storage_pool_affinity": false,
+      "pi_health_status": "WARNING",
+      "storage_option": "None",
+      "pi_storage_type": "tier3",
+      "pi_storage_pool": null,
+      "affinity_type": null,
+      "pi_affinity_volume": null,
+      "pi_anti_affinity_volume": null,
+      "pi_anti_affinity_instance": null,
+      "pi_affinity_instance": null,
+      "zone": "dal10",
+      "primary_subnet": "pvm",
+      "pi_affinity_policy": null,
+      "index": 0,
+      "sap": false,
+      "sap_profile": null,
+      "pi_shared_processor_pool": "None",
+      "pi_ibmi_css": false,
+      "pi_ibmi_pha": false,
+      "pi_ibmi_rds_users": null,
+      "pi_user_data": null,
+      "pi_pin_policy": "none",
+      "pi_placement_group_id": "None"
+    }
+  ]
+}
