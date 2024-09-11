@@ -4,6 +4,7 @@ const {
   getObjectFromArray,
   kebabCase,
   distinct,
+  isEmpty,
 } = require("lazy-z");
 const {
   rgIdRef,
@@ -400,6 +401,101 @@ function formatSecretsManagerK8sSecret(secret, config) {
   );
 }
 
+function formatCertificate(cert) {
+  let certJson = {
+    instance_id: `\${ibm_resource_instance.${snakeCase(
+      cert.secrets_manager
+    )}_secrets_manager.guid}`,
+    name: "${var.prefix}-" + cert.name,
+    region: varDotRegion,
+    common_name: cert.common_name ? cert.common_name : undefined,
+    description: cert.description ? cert.description : undefined,
+    secret_group_id: cert.secrets_group
+      ? `\${ibm_sm_secret_group.${snakeCase(
+          cert.secrets_manager
+        )}_group_${snakeCase(cert.secrets_group)}.secret_group_id}`
+      : undefined,
+    max_ttl: cert.max_ttl ? cert.max_ttl : undefined,
+    country: cert.country ? [cert.country] : undefined,
+    organization: cert.organization ? [cert.organization] : undefined,
+    key_bits: cert.key_bits ? parseInt(cert.key_bits) : undefined,
+    signing_method: cert?.signing_method ? cert.signing_method : undefined,
+    client_flag: cert.client_flag ? cert.client_flag : undefined,
+    server_flag: cert.server_flag ? cert.server_flag : undefined,
+    allow_subdomains: cert.allow_subdomains ? cert.allow_subdomains : undefined,
+    allowed_domains:
+      cert.allowed_domains && !isEmpty(cert.allowed_domains)
+        ? cert.allowed_domains
+        : undefined,
+    key_usage:
+      cert.key_usage && !isEmpty(cert.key_usage) ? cert.key_usage : undefined,
+    ext_key_usage:
+      cert.ext_key_usage && !isEmpty(cert.ext_key_usage)
+        ? cert.ext_key_usage
+        : undefined,
+    ttl: cert.ttl ? cert.ttl : undefined,
+  };
+  if (cert.issuer) {
+    certJson.issuer = `\${ibm_sm_private_certificate_configuration_root_ca.${
+      snakeCase(cert.secrets_manager) +
+      "_secrets_manager_root_ca_configuration_" +
+      snakeCase(cert.issuer)
+    }.name}`;
+    certJson.depends_on = [
+      `\${ibm_sm_private_certificate_configuration_root_ca.${
+        snakeCase(cert.secrets_manager) +
+        "_secrets_manager_root_ca_configuration_" +
+        snakeCase(cert.issuer)
+      }}`,
+    ];
+  } else if (cert.certificate_authority) {
+    certJson.certificate_authority = `\${ibm_sm_private_certificate_configuration_intermediate_ca.${
+      snakeCase(cert.secrets_manager) +
+      "_secrets_manager_intermediate_ca_configuration_" +
+      snakeCase(cert.certificate_authority)
+    }.name}`;
+    certJson.depends_on = [
+      `\${ibm_sm_private_certificate_configuration_intermediate_ca.${
+        snakeCase(cert.secrets_manager) +
+        "_secrets_manager_intermediate_ca_configuration_" +
+        snakeCase(cert.certificate_authority)
+      }}`,
+    ];
+  } else if (cert.certificate_template) {
+    certJson.certificate_template = `\${ibm_sm_private_certificate_configuration_template.${snakeCase(
+      cert.secrets_manager
+    )}_secrets_manager_template_configuration_${snakeCase(
+      cert.certificate_template
+    )}.name}`;
+    certJson.rotation = [
+      {
+        auto_rotate: cert.auto_rotate,
+        interval: cert.interval,
+        unit: cert.unit,
+      },
+    ];
+    certJson.depends_on = [
+      `\${ibm_sm_private_certificate_configuration_template.${snakeCase(
+        cert.secrets_manager
+      )}_secrets_manager_template_configuration_${snakeCase(
+        cert.certificate_template
+      )}}`,
+    ];
+  }
+  return jsonToTfPrint(
+    "resource",
+    cert.type === "private"
+      ? "ibm_sm_private_certificate"
+      : "ibm_sm_private_certificate_configuration_" + snakeCase(cert.type),
+    snakeCase(cert.secrets_manager) +
+      "_secrets_manager_" +
+      snakeCase(cert.type) +
+      (cert.type === "private" ? "_certificate_" : "_configuration_") +
+      snakeCase(cert.name),
+    certJson
+  );
+}
+
 /**
  * create secrets manager terraform
  * @param {Object} config
@@ -455,6 +551,13 @@ function secretsManagerTf(config) {
         secretsManagerData += formatSecretsManagerSecret(secret, config);
       });
     }
+
+    if (instance.certificates) {
+      instance.certificates.forEach((cert) => {
+        secretsManagerData += formatCertificate(cert);
+      });
+    }
+
     tf +=
       tfBlock(instance.name + " Secrets Manager", secretsManagerData) +
       (index !== config.secrets_manager.length - 1 ? "\n" : "");

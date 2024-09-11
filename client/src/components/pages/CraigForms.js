@@ -208,6 +208,11 @@ function craigForms(craig) {
           resource_group: craig.appid.resource_group,
           encryption_key: craig.appid.encryption_key,
         },
+        {
+          disable_facebook: craig.appid.disable_facebook,
+          disable_google: craig.appid.disable_google,
+          disable_saml: craig.appid.disable_saml,
+        },
       ],
       subForms: [
         {
@@ -1362,6 +1367,61 @@ function craigForms(craig) {
             groups: [
               {
                 name: craig.secrets_manager.secrets_groups.name,
+              },
+            ],
+          },
+        },
+        {
+          name: "Certificates",
+          addText: "Add a Certificate",
+          jsonField: "certificates",
+          form: {
+            groups: [
+              {
+                name: craig.secrets_manager.certificates.name,
+              },
+              {
+                description: craig.secrets_manager.certificates.description,
+              },
+              {
+                type: craig.secrets_manager.certificates.type,
+                common_name: craig.secrets_manager.certificates.common_name,
+                signing_method:
+                  craig.secrets_manager.certificates.signing_method,
+              },
+              {
+                secrets_group: craig.secrets_manager.certificates.secrets_group,
+                max_ttl: craig.secrets_manager.certificates.max_ttl,
+                ttl: craig.secrets_manager.certificates.ttl,
+                key_bits: craig.secrets_manager.certificates.key_bits,
+              },
+              {
+                country: craig.secrets_manager.certificates.country,
+                organization: craig.secrets_manager.certificates.organization,
+                issuer: craig.secrets_manager.certificates.issuer,
+                certificate_authority:
+                  craig.secrets_manager.certificates.certificate_authority,
+                certificate_template:
+                  craig.secrets_manager.certificates.certificate_template,
+              },
+              {
+                key_usage: craig.secrets_manager.certificates.key_usage,
+                ext_key_usage: craig.secrets_manager.certificates.ext_key_usage,
+              },
+              {
+                server_flag: craig.secrets_manager.certificates.server_flag,
+                client_flag: craig.secrets_manager.certificates.client_flag,
+                allow_subdomains:
+                  craig.secrets_manager.certificates.allow_subdomains,
+              },
+              {
+                allowed_domains:
+                  craig.secrets_manager.certificates.allowed_domains,
+              },
+              {
+                auto_rotate: craig.secrets_manager.certificates.auto_rotate,
+                unit: craig.secrets_manager.certificates.unit,
+                interval: craig.secrets_manager.certificates.interval,
               },
             ],
           },

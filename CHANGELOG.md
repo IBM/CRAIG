@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.16.5
+
+### Features
+
+- Users can now create SSL certificates in Secrets Manager using the Certificates subform
+- Users can now disable the Facebook, Google, and SAML logins for an App ID instance from the App ID page
+- Added the template for Power VS FalconStor VTL Quickstart to get started with using FalconStor VTL on IBM Cloud
+
 ## 1.16.4
 
 ### Features

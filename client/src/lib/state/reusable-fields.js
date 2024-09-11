@@ -147,6 +147,12 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
         });
       }
     );
+  } else if (field === "certificates") {
+    allOtherNames = nestedSplat(
+      componentProps.craig.store.json.secrets_manager,
+      field,
+      "name"
+    );
   } else if (
     field === "arbitrary_secret_name" ||
     field === "username_password_secret_name"

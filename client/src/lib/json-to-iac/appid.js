@@ -136,12 +136,30 @@ function ibmResourceInstanceAppId(instance, config) {
  */
 function formatAppId(instance, config) {
   let appid = ibmResourceInstanceAppId(instance, config);
-  return jsonToTfPrint(
+  let tfString = jsonToTfPrint(
     getResourceOrData(instance),
     "ibm_resource_instance",
     appid.name,
     appid.data
   );
+  ["facebook", "google", "saml"].forEach((idp) => {
+    if (instance["disable_" + idp]) {
+      tfString += jsonToTfPrint(
+        "resource",
+        "ibm_appid_idp_" + idp,
+        instance.name + "_" + idp,
+        {
+          tenant_id: resourceRef(
+            instance.name,
+            "guid",
+            useData(instance.use_data)
+          ),
+          is_active: false,
+        }
+      );
+    }
+  });
+  return tfString;
 }
 
 /**

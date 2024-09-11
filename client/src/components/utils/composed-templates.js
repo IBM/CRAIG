@@ -9,6 +9,7 @@ import OracleSI from "../../images/oracle-si.png";
 import Vpnaas from "../../images/vpnaas.png";
 import PowerVsPoc from "../../images/power-poc.png";
 import PowerVsPocClassic from "../../images/power-poc-classic.png";
+import vtlQuickstart from "../../images/vtl-quickstart.png";
 import { keys } from "lazy-z";
 const { template_dropdown_map } = require("../../lib/constants");
 
@@ -24,6 +25,7 @@ const templateImages = {
   "VPN as a Service": Vpnaas,
   "Power VS POC": PowerVsPoc,
   "Power VS POC Classic": PowerVsPocClassic,
+  "Power VS FalconStor VTL Quickstart": vtlQuickstart,
 };
 
 keys(template_dropdown_map).forEach((template) => {

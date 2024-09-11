@@ -31,7 +31,10 @@
           "name": "sap-appid-key",
           "appid": "appid"
         }
-      ]
+      ],
+      "disable_facebook": false,
+      "disable_google": false,
+      "disable_saml": false
     }
   ],
   "atracker": {
