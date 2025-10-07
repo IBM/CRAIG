@@ -435,7 +435,6 @@ function calculateNeededSubnetIps(config) {
  * @returns {string} next cidr block
  */
 function getNextCidr(lastCidr, newIps) {
-  //console.log("last cidr", lastCidr, "new ips", newIps)
   let range = 1;
   while (2 ** range < newIps) {
     range++;
