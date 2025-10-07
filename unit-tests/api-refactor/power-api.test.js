@@ -197,9 +197,119 @@ describe("power api", () => {
         )
         .then(() => {
           assert.isTrue(
+            res.send.calledOnceWith([{ name: "image1", use_data: true }]),
+            "it should be true"
+          );
+          assert.isTrue(
+            testPowerController.getBearerToken.calledOnce,
+            "should be true"
+          );
+          assert.isTrue(
+            testPowerController.getResourceInstance.calledOnceWith("egg"),
+            "should be true"
+          );
+        });
+    });
+    it("should respond with a list of images when using req and images are found within workspace", () => {
+      function twoStepAxios(data, err) {
+        let calls = -1;
+        /**
+         * moch axios promise
+         * @returns {Promise} axios mock promise
+         */
+        function mockAxios() {
+          calls++;
+          return new Promise((resolve, reject) => {
+            if (err) reject(data);
+            else {
+              console.log("calls", calls, data[calls]);
+              resolve({ data: data[calls] });
+            }
+          });
+        }
+
+        function constructor() {
+          this.axios = mockAxios;
+        }
+        return new constructor();
+      }
+      let { axios } = twoStepAxios([
+        {
+          resources: [
+            {
+              guid: "1234",
+              crn: "fooCrn",
+              id: "power-iaas",
+            },
+            {
+              id: "no",
+            },
+          ],
+          images: [
+            {
+              name: "image1",
+            },
+            {
+              name: "image2",
+            },
+          ],
+        },
+        {
+          resources: [
+            {
+              guid: "1234",
+              crn: "fooCrn",
+              id: "power-iaas",
+            },
+            {
+              id: "no",
+            },
+          ],
+          images: [
+            {
+              name: "image1",
+            },
+
+            {
+              name: "image2",
+            },
+          ],
+        },
+        {
+          images: [
+            {
+              name: "image1",
+            },
+            {
+              name: "image3",
+            },
+          ],
+        },
+      ]);
+      let testPowerController = new controller(axios);
+      testPowerController.getBearerToken = new sinon.spy(
+        spyFns,
+        "getBearerToken"
+      );
+      testPowerController.getResourceInstance = new sinon.spy(
+        testPowerController.getResourceInstance
+      );
+      return testPowerController
+        .getPowerComponent(
+          {
+            params: { zone: "us-south", component: "images" },
+            query: {
+              name: "egg",
+            },
+          },
+          res
+        )
+        .then(() => {
+          assert.isTrue(
             res.send.calledOnceWith([
+              { name: "image2" },
               { name: "image1", use_data: true },
-              { name: "image1", use_data: true },
+              { name: "image3", use_data: true },
             ]),
             "it should be true"
           );

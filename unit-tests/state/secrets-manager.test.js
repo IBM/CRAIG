@@ -451,7 +451,7 @@ describe("secrets_manager", () => {
                   client_flag: false,
                   allow_subdomains: false,
                   signing_method: null,
-                  key_bits: null
+                  key_bits: null,
                 },
                 {
                   type: "template",

@@ -1,8 +1,8 @@
 const { assert } = require("chai");
 const {
-  state,
   storageChangeDisabledCallback,
-} = require("../../client/src/lib/state");
+} = require("../../client/src/lib/forms/power-affinity.js");
+const { state } = require("../../client/src/lib/state");
 
 describe("storageChangeDisabledCallback", () => {
   it("should be false when is modal", () => {

@@ -172,12 +172,6 @@ function deleteLegacySubnetTier(
         splatTiers.indexOf(subnet.name.replace(/-zone-\d/g, ""))
       );
       subnet.cidr = newCidr;
-      let subnetAddressPrefix = getObjectFromArray(
-        config.store.json.vpcs[vpcIndex].address_prefixes,
-        "name",
-        subnet.name
-      );
-      if (subnetAddressPrefix) subnetAddressPrefix.cidr = newCidr;
     }
   });
 }

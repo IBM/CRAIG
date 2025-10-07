@@ -1,5 +1,12 @@
 [
   {
+    "version": "1.17.0",
+    "features": [
+      "When using dynamic subnets, CIDR blocks are now calculated to use the fewest total IPs within a VPC"
+    ],
+    "fixes": [],
+    "upgrade_notes": []
+  },{
     "version": "1.16.5",
     "features": [
       "Users can now create SSL certificates in Secrets Manager using the Certificates subform",

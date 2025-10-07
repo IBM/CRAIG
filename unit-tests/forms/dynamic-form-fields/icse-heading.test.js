@@ -1,7 +1,7 @@
 const { assert } = require("chai");
 const {
   dynamicIcseHeadingProps,
-} = require("../../../client/src/lib/forms/dynamic-form-fields");
+} = require("../../../client/src/lib/forms/dynamic-form-fields/icse-heading");
 
 describe("dynamicIcseHeadingProps", () => {
   it("should return props based on group", () => {

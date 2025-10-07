@@ -1172,7 +1172,7 @@ describe("vpcs", () => {
         );
         assert.deepEqual(
           state.store.json.vpcs[0].subnets[1].cidr,
-          "10.10.0.16/28",
+          "10.1.0.16/28",
           "it should be frog"
         );
       });
@@ -1812,7 +1812,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.10.0.0/29",
+            cidr: "10.1.0.0/29",
             name: "frog-zone-1",
             network_acl: "todd",
             resource_group: "management-rg",
@@ -1826,7 +1826,7 @@ describe("vpcs", () => {
           {
             vpc: "management",
             zone: 2,
-            cidr: "10.20.0.0/29",
+            cidr: "10.1.0.32/29",
             name: "frog-zone-2",
             network_acl: "todd",
             resource_group: "management-rg",
@@ -3435,7 +3435,7 @@ describe("vpcs", () => {
             {
               vpc: "management",
               zone: 1,
-              cidr: "10.10.0.0/29",
+              cidr: "10.1.0.0/29",
               name: "frog-zone-1",
               network_acl: "todd",
               resource_group: "management-rg",
@@ -3445,7 +3445,7 @@ describe("vpcs", () => {
             {
               vpc: "management",
               zone: 1,
-              cidr: "10.10.0.16/28",
+              cidr: "10.1.0.16/28",
               name: "vpn-zone-1",
               network_acl: "management",
               resource_group: "management-rg",
@@ -3455,7 +3455,7 @@ describe("vpcs", () => {
             {
               vpc: "management",
               zone: 2,
-              cidr: "10.20.0.0/29",
+              cidr: "10.1.0.32/29",
               name: "frog-zone-2",
               network_acl: "todd",
               resource_group: "management-rg",
@@ -3465,7 +3465,7 @@ describe("vpcs", () => {
             {
               vpc: "management",
               zone: 1,
-              cidr: "10.10.0.48/29",
+              cidr: "10.1.0.40/29",
               name: "vpe-zone-1",
               resource_group: "management-rg",
               network_acl: "management",
@@ -3475,7 +3475,7 @@ describe("vpcs", () => {
             {
               vpc: "management",
               zone: 2,
-              cidr: "10.20.0.16/29",
+              cidr: "10.1.0.48/29",
               name: "vpe-zone-2",
               network_acl: "management",
               resource_group: "management-rg",
@@ -3485,7 +3485,7 @@ describe("vpcs", () => {
             {
               vpc: "management",
               zone: 3,
-              cidr: "10.30.0.0/29",
+              cidr: "10.1.0.56/29",
               name: "vpe-zone-3",
               network_acl: "management",
               resource_group: "management-rg",
@@ -7661,22 +7661,40 @@ describe("vpcs", () => {
       let vpcState = newState();
       let expectedData = [
         {
+          cidr: "10.1.0.0/29",
+          name: "frog-zone-1",
           vpc: "management",
           zone: 1,
-          cidr: "10.10.0.0/22",
-          name: "management-zone-1",
         },
         {
+          cidr: "10.1.0.16/28",
+          name: "vpn-zone-1",
+          vpc: "management",
+          zone: 1,
+        },
+        {
+          cidr: "10.1.0.32/29",
+          name: "frog-zone-2",
           vpc: "management",
           zone: 2,
-          cidr: "10.20.0.0/22",
-          name: "management-zone-2",
         },
         {
+          cidr: "10.1.0.40/29",
+          name: "vpe-zone-1",
+          vpc: "management",
+          zone: 1,
+        },
+        {
+          cidr: "10.1.0.48/29",
+          name: "vpe-zone-2",
+          vpc: "management",
+          zone: 2,
+        },
+        {
+          cidr: "10.1.0.56/29",
+          name: "vpe-zone-3",
           vpc: "management",
           zone: 3,
-          cidr: "10.30.0.0/22",
-          name: "management-zone-3",
         },
       ];
       vpcState.vpcs.subnetTiers.save(
@@ -7705,7 +7723,7 @@ describe("vpcs", () => {
         {
           vpc: "management",
           zone: 1,
-          cidr: "10.10.0.0/29",
+          cidr: "10.1.0.0/29",
           name: "frog-zone-1",
           network_acl: "management",
           resource_group: "management-rg",
@@ -7715,7 +7733,7 @@ describe("vpcs", () => {
         {
           vpc: "management",
           zone: 1,
-          cidr: "10.10.0.16/28",
+          cidr: "10.1.0.16/28",
           name: "vpn-zone-1",
           network_acl: "management",
           resource_group: "management-rg",
@@ -7725,7 +7743,7 @@ describe("vpcs", () => {
         {
           vpc: "management",
           zone: 2,
-          cidr: "10.20.0.0/29",
+          cidr: "10.1.0.32/29",
           name: "frog-zone-2",
           network_acl: "management",
           resource_group: "management-rg",
@@ -7735,7 +7753,7 @@ describe("vpcs", () => {
         {
           vpc: "management",
           zone: 1,
-          cidr: "10.10.0.48/29",
+          cidr: "10.1.0.40/29",
           name: "vpe-zone-1",
           resource_group: "management-rg",
           network_acl: "management",
@@ -7745,7 +7763,7 @@ describe("vpcs", () => {
         {
           vpc: "management",
           zone: 2,
-          cidr: "10.20.0.16/29",
+          cidr: "10.1.0.48/29",
           name: "vpe-zone-2",
           network_acl: "management",
           resource_group: "management-rg",
@@ -7755,7 +7773,7 @@ describe("vpcs", () => {
         {
           vpc: "management",
           zone: 3,
-          cidr: "10.30.0.0/29",
+          cidr: "10.1.0.56/29",
           name: "vpe-zone-3",
           network_acl: "management",
           resource_group: "management-rg",
@@ -7765,22 +7783,40 @@ describe("vpcs", () => {
       ];
       let expectedWorkloadPrefixes = [
         {
-          vpc: "workload",
+          name: "vsi-zone-1",
+          cidr: "10.2.0.0/29",
           zone: 1,
-          name: "workload-zone-1",
-          cidr: "10.40.0.0/22",
+          vpc: "workload",
         },
         {
-          vpc: "workload",
+          name: "vsi-zone-2",
+          cidr: "10.2.0.8/29",
           zone: 2,
-          name: "workload-zone-2",
-          cidr: "10.50.0.0/22",
+          vpc: "workload",
         },
         {
-          vpc: "workload",
+          name: "vsi-zone-3",
+          cidr: "10.2.0.16/29",
           zone: 3,
-          name: "workload-zone-3",
-          cidr: "10.60.0.0/22",
+          vpc: "workload",
+        },
+        {
+          name: "vpe-zone-1",
+          cidr: "10.2.0.24/29",
+          zone: 1,
+          vpc: "workload",
+        },
+        {
+          name: "vpe-zone-2",
+          cidr: "10.2.0.32/29",
+          zone: 2,
+          vpc: "workload",
+        },
+        {
+          name: "vpe-zone-3",
+          cidr: "10.2.0.40/29",
+          zone: 3,
+          vpc: "workload",
         },
       ];
       assert.deepEqual(
@@ -7804,43 +7840,43 @@ describe("vpcs", () => {
       let expectedData = [
         {
           name: "vsi-zone-1",
-          cidr: "10.10.0.0/29",
+          cidr: "10.1.0.0/29",
           zone: 1,
           vpc: "management",
         },
         {
           name: "vpn-zone-1",
-          cidr: "10.10.0.16/28",
+          cidr: "10.1.0.16/28",
           zone: 1,
           vpc: "management",
         },
         {
           name: "vsi-zone-2",
-          cidr: "10.20.0.0/29",
+          cidr: "10.1.0.32/29",
           zone: 2,
           vpc: "management",
         },
         {
           name: "vsi-zone-3",
-          cidr: "10.30.0.0/29",
+          cidr: "10.1.0.40/29",
           zone: 3,
           vpc: "management",
         },
         {
           name: "vpe-zone-1",
-          cidr: "10.10.0.48/29",
+          cidr: "10.1.0.48/29",
           zone: 1,
           vpc: "management",
         },
         {
           name: "vpe-zone-2",
-          cidr: "10.20.0.16/29",
+          cidr: "10.1.0.56/29",
           zone: 2,
           vpc: "management",
         },
         {
           name: "vpe-zone-3",
-          cidr: "10.30.0.16/29",
+          cidr: "10.1.0.64/29",
           zone: 3,
           vpc: "management",
         },
@@ -7855,12 +7891,12 @@ describe("vpcs", () => {
         }
       );
       let expectedWorkloadPrefixes = [
-        { name: "vsi-zone-1", cidr: "10.40.0.0/28", zone: 1, vpc: "workload" },
-        { name: "vsi-zone-2", cidr: "10.50.0.0/28", zone: 2, vpc: "workload" },
-        { name: "vsi-zone-3", cidr: "10.60.0.0/28", zone: 3, vpc: "workload" },
-        { name: "vpe-zone-1", cidr: "10.40.0.32/29", zone: 1, vpc: "workload" },
-        { name: "vpe-zone-2", cidr: "10.50.0.32/29", zone: 2, vpc: "workload" },
-        { name: "vpe-zone-3", cidr: "10.60.0.32/29", zone: 3, vpc: "workload" },
+        { name: "vsi-zone-1", cidr: "10.2.0.0/28", zone: 1, vpc: "workload" },
+        { name: "vsi-zone-2", cidr: "10.2.0.16/28", zone: 2, vpc: "workload" },
+        { name: "vsi-zone-3", cidr: "10.2.0.32/28", zone: 3, vpc: "workload" },
+        { name: "vpe-zone-1", cidr: "10.2.0.48/29", zone: 1, vpc: "workload" },
+        { name: "vpe-zone-2", cidr: "10.2.0.56/29", zone: 2, vpc: "workload" },
+        { name: "vpe-zone-3", cidr: "10.2.0.64/29", zone: 3, vpc: "workload" },
       ];
       assert.deepEqual(
         vpcState.store.json.vpcs[0].address_prefixes,
@@ -7880,7 +7916,7 @@ describe("vpcs", () => {
         {
           vpc: "workload",
           zone: 1,
-          cidr: "10.40.0.0/28",
+          cidr: "10.2.0.0/28",
           name: "vsi-zone-1",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -7890,7 +7926,7 @@ describe("vpcs", () => {
         {
           vpc: "workload",
           zone: 2,
-          cidr: "10.50.0.0/28",
+          cidr: "10.2.0.16/28",
           name: "vsi-zone-2",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -7900,7 +7936,7 @@ describe("vpcs", () => {
         {
           vpc: "workload",
           zone: 3,
-          cidr: "10.60.0.0/28",
+          cidr: "10.2.0.32/28",
           name: "vsi-zone-3",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -7910,7 +7946,7 @@ describe("vpcs", () => {
         {
           vpc: "workload",
           zone: 1,
-          cidr: "10.40.0.32/29",
+          cidr: "10.2.0.48/29",
           name: "vpe-zone-1",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -7921,7 +7957,7 @@ describe("vpcs", () => {
         {
           vpc: "workload",
           zone: 2,
-          cidr: "10.50.0.32/29",
+          cidr: "10.2.0.56/29",
           name: "vpe-zone-2",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -7932,7 +7968,7 @@ describe("vpcs", () => {
         {
           vpc: "workload",
           zone: 3,
-          cidr: "10.60.0.32/29",
+          cidr: "10.2.0.64/29",
           name: "vpe-zone-3",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -7956,7 +7992,7 @@ describe("vpcs", () => {
         {
           vpc: "workload",
           zone: 1,
-          cidr: "10.40.0.0/28",
+          cidr: "10.2.0.0/28",
           name: "vsi-zone-1",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -7966,7 +8002,7 @@ describe("vpcs", () => {
         {
           vpc: "workload",
           zone: 2,
-          cidr: "10.50.0.0/28",
+          cidr: "10.2.0.16/28",
           name: "vsi-zone-2",
           network_acl: "workload",
           resource_group: "workload-rg",
@@ -7976,7 +8012,7 @@ describe("vpcs", () => {
         {
           vpc: "workload",
           zone: 3,
-          cidr: "10.60.0.0/28",
+          cidr: "10.2.0.32/28",
           name: "vsi-zone-3",
           network_acl: "workload",
           resource_group: "workload-rg",

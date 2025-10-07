@@ -435,32 +435,26 @@ function calculateNeededSubnetIps(config) {
  * @returns {string} next cidr block
  */
 function getNextCidr(lastCidr, newIps) {
-  let rangeMax = 1;
-  let rangeCount = 0;
-  while (rangeMax < newIps) {
-    rangeMax *= 2;
-    rangeCount++;
+  //console.log("last cidr", lastCidr, "new ips", newIps)
+  let range = 1;
+  while (2 ** range < newIps) {
+    range++;
   }
   if (contains(lastCidr, "x")) {
-    return lastCidr.replace("x", 32 - rangeCount);
+    return lastCidr.replace("x", 32 - range);
   } else {
     let splitCidr = [];
     lastCidr.split(/\.|\//).forEach((item) => {
       splitCidr.push(Number(item));
     });
-    let range = Number(splitCidr.pop());
-    splitCidr[3] += 2 ** (32 - range + 1);
-    // while next set of ips forces address out of range
-    if (splitCidr[3] >= 255) {
-      // add one to the 256s place until number is in range
-      // not covering greater ranges, it would be wildly impractical and time consuming
-      // for any user to dynamically create more than 65,536 ips using CRAIG
-      while (splitCidr[3] >= 255) {
-        splitCidr[3] -= 255;
-        splitCidr[2]++;
-      }
-    }
-    return splitCidr.join(".") + "/" + (32 - rangeCount);
+    let cidrIps = 2 ** (32 - splitCidr.pop());
+    if (cidrIps >= 256) {
+      splitCidr[2] += 1;
+    } else if (cidrIps < 2 ** range) {
+      splitCidr[3] += 2 ** range;
+    } else splitCidr[3] += cidrIps;
+
+    return splitCidr.join(".") + "/" + (32 - range);
   }
 }
 

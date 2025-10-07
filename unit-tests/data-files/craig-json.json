@@ -943,6 +943,7 @@
   "classic_vlans": [],
   "classic_gateways": [],
   "power_instances": [],
+  "power_placement_groups": [],
   "power_volumes": [],
   "cis": [],
   "vtl": [],

@@ -27,7 +27,7 @@ describe("subnet row functions", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.10.0.0/29",
+            cidr: "10.1.0.0/29",
             name: "vsi-zone-1",
             network_acl: "management",
             resource_group: "management-rg",
@@ -41,7 +41,7 @@ describe("subnet row functions", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.30.0.0/29",
+            cidr: "10.1.0.40/29",
             name: "vsi-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -179,7 +179,7 @@ describe("subnet row functions", () => {
           {
             vpc: "management",
             zone: 1,
-            cidr: "10.10.0.0/29",
+            cidr: "10.1.0.0/29",
             name: "vsi-zone-1",
             network_acl: "management",
             resource_group: "management-rg",
@@ -193,7 +193,7 @@ describe("subnet row functions", () => {
           {
             vpc: "management",
             zone: 3,
-            cidr: "10.30.0.0/29",
+            cidr: "10.1.0.40/29",
             name: "vsi-zone-3",
             network_acl: "management",
             resource_group: "management-rg",
@@ -230,7 +230,7 @@ describe("subnet row functions", () => {
         [
           {
             name: "vsi-zone-1",
-            cidr: "10.10.0.0/29",
+            cidr: "10.1.0.0/29",
             network_acl: "management",
             public_gateway: false,
             zone: 1,
@@ -240,7 +240,7 @@ describe("subnet row functions", () => {
           },
           {
             name: "vsi-zone-2",
-            cidr: "10.20.0.0/29",
+            cidr: "10.1.0.32/29",
             network_acl: "management",
             public_gateway: false,
             zone: 2,
@@ -250,7 +250,7 @@ describe("subnet row functions", () => {
           },
           {
             name: "vsi-zone-3",
-            cidr: "10.30.0.0/29",
+            cidr: "10.1.0.40/29",
             network_acl: "management",
             public_gateway: false,
             zone: 3,
@@ -289,7 +289,7 @@ describe("subnet row functions", () => {
         [
           {
             name: "vsi-zone-1",
-            cidr: "10.10.0.0/29",
+            cidr: "10.1.0.40/29",
             network_acl: null,
             public_gateway: false,
             zone: "1",
@@ -300,7 +300,7 @@ describe("subnet row functions", () => {
           },
           {
             name: "vsi-zone-2",
-            cidr: "10.20.0.0/29",
+            cidr: "10.1.0.48/29",
             network_acl: null,
             public_gateway: false,
             zone: "2",
@@ -311,7 +311,7 @@ describe("subnet row functions", () => {
           },
           {
             name: "vsi-zone-3",
-            cidr: "10.30.0.0/29",
+            cidr: "10.1.0.56/29",
             network_acl: null,
             public_gateway: false,
             zone: "3",
@@ -359,7 +359,7 @@ describe("subnet row functions", () => {
           },
           {
             name: "vsi-zone-3",
-            cidr: "10.30.0.0/29",
+            cidr: "10.1.0.40/29",
             network_acl: null,
             public_gateway: false,
             zone: "3",
