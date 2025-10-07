@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.17.0
+
+### Features
+
+- When using dynamic subnets, CIDR blocks are now calculated to use the fewest total IPs within a VPC
+
 ## 1.16.5
 
 ### Features
