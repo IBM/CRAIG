@@ -179,17 +179,52 @@ describe("rgIdRef", () => {
     });
   });
   describe("getNextCidr", () => {
-    it("should return the correct next cidr for a range that is larger than 255", () => {
+    it("should return the correct next cidr when adding 8 ips", () => {
       assert.deepEqual(
-        getNextCidr("10.0.0.254/32", 29),
-        "10.0.1.1/27",
+        getNextCidr("10.0.0.0/29", 8),
+        "10.0.0.8/29",
         "it should retun next cidr"
       );
     });
-    it("should return the correct next cidr for vpn in zone 1", () => {
+    it("should return the correct next cidr when adding 8 more ips", () => {
       assert.deepEqual(
-        getNextCidr("10.10.0.0/29", 9),
-        "10.10.0.16/28",
+        getNextCidr("10.0.0.8/29", 8),
+        "10.0.0.16/29",
+        "it should retun next cidr"
+      );
+    });
+    it("should return the correct next cidr when adding 16 ips", () => {
+      assert.deepEqual(
+        getNextCidr("10.0.0.0/29", 16),
+        "10.0.0.16/28",
+        "it should retun next cidr"
+      );
+    });
+    it("should return the correct next cidr when adding 32 ips", () => {
+      assert.deepEqual(
+        getNextCidr("10.0.0.0/29", 32),
+        "10.0.0.32/27",
+        "it should retun next cidr"
+      );
+    });
+    it("should return the correct next cidr when adding 8 ips", () => {
+      assert.deepEqual(
+        getNextCidr("10.0.0.0/27", 8),
+        "10.0.0.32/29",
+        "it should retun next cidr"
+      );
+    });
+    it("should return the correct next cidr when adding 8 to 256", () => {
+      assert.deepEqual(
+        getNextCidr("10.0.0.0/24", 8),
+        "10.0.1.0/29",
+        "it should retun next cidr"
+      );
+    });
+    it("should return the correct next cidr when adding 32 ips", () => {
+      assert.deepEqual(
+        getNextCidr("10.0.0.32/27", 8),
+        "10.0.0.64/29",
         "it should retun next cidr"
       );
     });

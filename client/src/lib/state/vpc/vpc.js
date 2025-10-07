@@ -297,49 +297,27 @@ function vpcOnStoreUpdate(config) {
     config.store.json.vpcs.forEach((vpc) => {
       let vpcCidr = dynamicCidrList[vpc.name];
       vpc.address_prefixes = [];
-      while (vpc.address_prefixes.length < config.store.json._options.zones) {
-        let zone = vpc.address_prefixes.length + 1;
-        vpc.address_prefixes.push({
-          vpc: vpc.name,
-          zone: zone,
-          name: vpc.name + "-zone-" + zone,
-          cidr:
-            "10." +
-            (arraySplatIndex(config.store.json.vpcs, "name", vpc.name) * 3 +
-              Number(zone)) +
-            "0.0.0/22",
-        });
-      }
       let newSubnets = [];
       vpc.subnets.forEach((subnet) => {
         // get last address for zone from subnet list or zone prefix
         let lastCidr = // automatically set to first in zone for vpc
-          "10." +
-          (arraySplatIndex(config.store.json.vpcs, "name", vpc.name) * 3 +
-            Number(subnet.zone)) +
-          "0.0.0/x";
-        // if new subnets has subnets and the zone exists within array
-        if (
-          newSubnets.length > 0 &&
-          splatContains(newSubnets, "zone", subnet.zone)
-        ) {
-          let searchIndex = newSubnets.length - 1;
-          // get index of the zone
-          while (
-            searchIndex >= 0 &&
-            newSubnets[searchIndex].zone !== subnet.zone
-          ) {
-            searchIndex--;
-          }
-          // get cidr
-          lastCidr = newSubnets[searchIndex].cidr;
-        }
+          newSubnets.length === 0
+            ? "10." +
+              (arraySplatIndex(config.store.json.vpcs, "name", vpc.name) + 1) +
+              ".0.0/x"
+            : newSubnets[newSubnets.length - 1].cidr;
         let nextSubnet = {}; // transpose subnet to get old data
         transpose(subnet, nextSubnet);
         if (!subnet.use_data)
           nextSubnet.cidr = getNextCidr(lastCidr, vpcCidr[subnet.name]);
         nextSubnet.has_prefix = false;
         newSubnets.push(nextSubnet);
+        vpc.address_prefixes.push({
+          vpc: vpc.name,
+          zone: nextSubnet.zone,
+          name: nextSubnet.name,
+          cidr: nextSubnet.cidr,
+        });
       });
       vpc.subnets = newSubnets;
     });
