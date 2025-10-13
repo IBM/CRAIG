@@ -77,13 +77,13 @@ DynamicFormTextInput.propTypes = {
 
 const DynamicFormSelect = (props) => {
   let selectProps = { ...dynamicSelectProps(props) };
-
+  const { key, ...filteredProps } = selectProps;
   return (
     <PopoverWrapper
       hoverText={selectProps.value || ""}
       className={props.field.tooltip ? " tooltip" : "select"}
     >
-      <Select {...selectProps}>
+      <Select key={key} { ...filteredProps}>
         {selectProps.groups.map((value) => (
           <SelectItem
             text={value}

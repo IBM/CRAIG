@@ -136,7 +136,7 @@ class StatefulTabs extends React.Component {
                     />
                   </TabPanel>
                 ) : (
-                  <></>
+                  <div></div>
                 )}
               </TabPanels>
             )}
