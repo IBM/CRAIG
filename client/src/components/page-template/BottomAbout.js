@@ -63,7 +63,7 @@ const BottomAbout = () => {
           />
         </div>
         <div className="newFooterLogoColumn">
-          <img src={craigNoBackground} width="190" height="190" />
+          <img src={craigNoBackground.src} width="190" height="190" />
         </div>
       </div>
       <hr width="99%"></hr>

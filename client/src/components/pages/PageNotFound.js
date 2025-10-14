@@ -7,7 +7,7 @@ import craig404 from "../../images/craig404.png";
 export const PageNotFound = () => {
   return (
     <div className="underConstruction flexDirectionColumn">
-      <img src={craig404} width="300" height="300" />
+      <img src={craig404.src} width="300" height="300" />
       <br />
       <h4>
         Unfortunately, we couldn’t find the page you were looking for, but here

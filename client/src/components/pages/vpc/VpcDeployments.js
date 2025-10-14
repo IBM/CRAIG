@@ -67,7 +67,7 @@ import { CopyRuleForm } from "../../forms";
 import ScrollForm from "../diagrams/ScrollForm";
 
 function F5Icon() {
-  return <img src={f5} className="vpcDeploymentIcon" />;
+  return <img src={f5.src} className="vpcDeploymentIcon" />;
 }
 
 class VpcDeploymentsDiagramPage extends React.Component {

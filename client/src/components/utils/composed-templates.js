@@ -14,18 +14,18 @@ import { keys } from "lazy-z";
 const { template_dropdown_map } = require("../../lib/constants");
 
 const templateImages = {
-  Mixed: MixedPattern,
-  VSI: VsiPattern,
-  "VSI Edge": VsiEdgePattern,
-  "Power VS SAP Hana": SapHanaPattern,
-  "Power VS Oracle Ready": OracleRac,
-  "Empty Project": Empty,
-  "Power VS Quick Start": PowerVsQuickStart,
-  "Power VS Oracle Single Instance": OracleSI,
-  "VPN as a Service": Vpnaas,
-  "Power VS POC": PowerVsPoc,
-  "Power VS POC Classic": PowerVsPocClassic,
-  "Power VS FalconStor VTL Quickstart": vtlQuickstart,
+  Mixed: MixedPattern.src,
+  VSI: VsiPattern.src,
+  "VSI Edge": VsiEdgePattern.src,
+  "Power VS SAP Hana": SapHanaPattern.src,
+  "Power VS Oracle Ready": OracleRac.src,
+  "Empty Project": Empty.src,
+  "Power VS Quick Start": PowerVsQuickStart.src,
+  "Power VS Oracle Single Instance": OracleSI.src,
+  "VPN as a Service": Vpnaas.src,
+  "Power VS POC": PowerVsPoc.src,
+  "Power VS POC Classic": PowerVsPocClassic.src,
+  "Power VS FalconStor VTL Quickstart": vtlQuickstart.src,
 };
 
 keys(template_dropdown_map).forEach((template) => {

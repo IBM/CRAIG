@@ -36,3 +36,5 @@ tf-test/
 dev/
 
 vars.yml
+.next
+next-env.d.ts

@@ -36,7 +36,7 @@ export default SplashPage;
 export const CraigHeader = (props) => {
   return (
     <div className={"header" + props?.className}>
-      <img src={craig} width="150" height="150" className="marginBottomXs" />
+      <img src={craig.src} width="150" height="150" className="marginBottomXs" />
       <h1 className="marginBottomXs">
         Cloud Resource and Infrastructure-as-Code Generator
       </h1>

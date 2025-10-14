@@ -45,6 +45,7 @@
     "js-yaml": "^4.1.0",
     "json-to-tf": "^0.3.0",
     "lazy-z": "1.12.1",
+    "next": "^15.5.4",
     "regex-but-with-words": "^1.5.1",
     "swagger-ui-express": "^5.0.0",
     "tar-stream": "^3.1.6"

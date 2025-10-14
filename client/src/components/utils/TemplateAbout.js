@@ -27,7 +27,7 @@ export const TemplateAbout = (props) => {
           className="magnifier"
         >
           <img
-            src={props.template.image}
+            src={props.template.image.src}
             className={
               props.smallImage
                 ? "borderGray tileStyles imageTileSize smallImage"

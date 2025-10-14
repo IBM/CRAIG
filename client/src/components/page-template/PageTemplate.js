@@ -68,7 +68,7 @@ import { ActionableNotification } from "@carbon/react";
 import NoProjectModal from "./NoProjectModal";
 
 function F5Icon() {
-  return <img src={f5} />;
+  return <img src={f5.src} />;
 }
 
 const releaseNotes = require("../../lib/docs/release-notes.json");

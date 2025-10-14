@@ -267,7 +267,7 @@ class EdgeNetworkingForm extends React.Component {
                   <h4>Edge Network</h4>
                   <img
                     alt="Edge Networking Image"
-                    src={edgeNetwork}
+                    src={edgeNetwork.src}
                     className="imageMargin edgeTileImage magnifier"
                   />
                 </Tile>

@@ -28,7 +28,7 @@ const MiniTutorialTile = (props) => {
   return (
     <div className="tutorial-tile">
       <div className="image-container">
-        <img className="fit-images" src={props.image} />
+        <img className="fit-images" src={props.image.src} />
       </div>
       <p className="bold center">{props.title}</p>
       <hr />
