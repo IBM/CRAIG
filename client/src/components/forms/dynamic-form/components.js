@@ -83,7 +83,7 @@ const DynamicFormSelect = (props) => {
       hoverText={selectProps.value || ""}
       className={props.field.tooltip ? " tooltip" : "select"}
     >
-      <Select key={key} { ...filteredProps}>
+      <Select key={key} {...filteredProps}>
         {selectProps.groups.map((value) => (
           <SelectItem
             text={value}

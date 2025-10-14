@@ -46,10 +46,6 @@ const {
   ibmResourceInstanceEventStreams,
   ibmResourceInstanceAppId,
   ibmResourceKeyAppId,
-  ibmSccAccountSettings,
-  ibmSccPostureCredential,
-  ibmSccPostureCollector,
-  ibmSccPostureScope,
   ibmIsLbPoolMembers,
   ibmIsLb,
   ibmIsLbPool,
@@ -642,42 +638,6 @@ function craigToCdktf(craig) {
       auth.data
     );
   });
-
-  // scc
-  if (craig.scc.enable) {
-    let acct = ibmSccAccountSettings(craig.scc);
-    cdktfValues(
-      cdktfJson,
-      "resource",
-      "ibm_scc_account_settings",
-      acct.name,
-      acct.data
-    );
-    let cred = ibmSccPostureCredential(craig.scc);
-    cdktfValues(
-      cdktfJson,
-      "resource",
-      "ibm_scc_posture_credential",
-      cred.name,
-      cred.data
-    );
-    let collector = ibmSccPostureCollector(craig.scc, craig);
-    cdktfValues(
-      cdktfJson,
-      "resource",
-      "ibm_scc_posture_collector",
-      collector.name,
-      collector.data
-    );
-    let scope = ibmSccPostureScope(craig.scc, craig);
-    cdktfValues(
-      cdktfJson,
-      "resource",
-      "ibm_scc_posture_scope",
-      scope.name,
-      scope.data
-    );
-  }
 
   // load balancers
   if (craig.load_balancers)

@@ -1657,60 +1657,6 @@ describe("automate schema generation", () => {
             },
           },
         },
-        scc: {
-          object: {
-            collector_description: { type: "string", default: null },
-            scope_description: { type: "string", default: null },
-          },
-        },
-        scc_v2: {
-          object: {
-            name: { type: "string", default: null },
-            resource_group: {
-              type: "string",
-              default: null,
-              groups: "<calculated>",
-            },
-            region: {
-              type: "string",
-              default: null,
-              groups: ["us-south", "us-east", "eu-de"],
-            },
-            cos: {
-              default: null,
-              groups: "<calculated>",
-              type: "string",
-            },
-            bucket: {
-              default: null,
-              groups: "<calculated>",
-              type: "string",
-            },
-            use_cos: {
-              type: "boolean",
-              default: false,
-            },
-            profile_attachments: {
-              Array: {
-                name: { type: "string", default: null },
-                profile: {
-                  type: "string",
-                  default: null,
-                  groups: [
-                    "FS Cloud",
-                    "Kubernetes Benchmark",
-                    "Cloud Internet Services Benchmark",
-                  ],
-                },
-                schedule: {
-                  type: "string",
-                  default: null,
-                  groups: ["daily", "every_7_days", "every_30_days"],
-                },
-              },
-            },
-          },
-        },
         secrets_manager: {
           Array: {
             use_data: { type: "boolean", default: false },

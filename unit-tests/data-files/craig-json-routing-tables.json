@@ -923,10 +923,6 @@
       ]
     }
   ],
-  "scc": {
-    "name": "scc",
-    "enable": true
-  },
   "event_streams": [],
   "load_balancers": [],
   "f5_vsi": [],
@@ -950,12 +946,5 @@
     "enabled": true,
     "plan": "graduated-tier",
     "resource_group": "slz-service-rg"
-  },
-  "scc_v2" : {
-    "account_id" : "${var.account_id}",
-    "enable": false,
-    "profile_attachments": [],
-    "region": "",
-    "resource_group": ""
   }
 }

@@ -186,17 +186,6 @@
       }
     }
   },
-  "scc": {
-    "credential_description": "string",
-    "id": "string",
-    "passphrase": "string",
-    "name": "string",
-    "location": "string",
-    "collector_description": "string",
-    "is_public": "boolean",
-    "scope_description": "string",
-    "enable": "boolean"
-  },
   "vpcs": {
     "Array": {
       "cos": "string",

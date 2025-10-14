@@ -877,10 +877,6 @@ const minimumValidJson = (data) => {
       },
     ],
     appid: [],
-    scc: {
-      name: "scc",
-      enable: true,
-    },
     event_streams: [],
     load_balancers: [],
     access_groups: [],
@@ -1360,21 +1356,6 @@ describe("validate", () => {
       assert.throws(
         task,
         "VPN Gateways require a VPC Name, `management-gateway` vpc is null."
-      );
-    });
-  });
-  describe("scc", () => {
-    it("should throw an error if is_public is null and scc is enabled", () => {
-      let testData = minimumValidJson({
-        scc: {
-          enable: true,
-          is_public: null,
-        },
-      });
-      let task = () => validate(testData);
-      assert.throws(
-        task,
-        "If enable is true, location and is_public must have valid values."
       );
     });
   });
@@ -1930,52 +1911,6 @@ describe("validate", () => {
         expectedData,
         "it should set secrets manager"
       );
-    });
-    it("should set scc if not found", () => {
-      let goodOverride = minimumValidJson();
-      delete goodOverride.scc;
-      let actualData = validate(goodOverride);
-      let expectedData = {
-        collector_description: null,
-        credential_description: null,
-        passphrase: null,
-        enable: false,
-        is_public: false,
-        location: [],
-        scope_description: null,
-        id: null,
-      };
-      assert.deepEqual(actualData.scc, expectedData, "it should set scc");
-    });
-    it("should set scc enable false if scc found but enable missing", () => {
-      let goodOverride = minimumValidJson();
-      delete goodOverride.scc;
-      goodOverride.scc = {};
-      let actualData = validate(goodOverride);
-      let expectedData = {
-        enable: false,
-      };
-      assert.deepEqual(actualData.scc, expectedData, "it should set scc");
-    });
-    it("should add scc fields if enable true and missing", () => {
-      let goodOverride = minimumValidJson();
-      delete goodOverride.scc;
-      goodOverride.scc = {
-        name: "",
-        enable: true,
-        credential_description: "hi",
-      };
-      let actualData = validate(goodOverride);
-      let expectedData = {
-        name: "",
-        credential_description: "hi",
-        collector_description: null,
-        passphrase: null,
-        enable: true,
-        scope_description: null,
-        id: null,
-      };
-      assert.deepEqual(actualData.scc, expectedData, "it should set scc");
     });
     it("should set iam_account_settings if not found", () => {
       let goodOverride = minimumValidJson();

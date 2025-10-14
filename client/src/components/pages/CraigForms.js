@@ -1428,43 +1428,6 @@ function craigForms(craig) {
         },
       ],
     },
-    scc_v2: {
-      jsonField: "scc_v2",
-      disableSave: disableSave,
-      groups: [
-        {
-          name: craig.scc_v2.name,
-          region: craig.scc_v2.region,
-          resource_group: craig.scc_v2.resource_group,
-        },
-        {
-          use_cos: craig.scc_v2.use_cos,
-          cos: craig.scc_v2.cos,
-          bucket: craig.scc_v2.bucket,
-        },
-      ],
-      subForms: [
-        {
-          name: "Profile Attachments",
-          jsonField: "profile_attachments",
-          addText: "Create a Profile Attachment",
-          hideWhen: function (stateData, componentProps) {
-            return componentProps.craig.store.json.scc_v2.enable === false;
-          },
-          form: {
-            groups: [
-              {
-                name: craig.scc_v2.profile_attachments.name,
-                profile: craig.scc_v2.profile_attachments.profile,
-              },
-              {
-                schedule: craig.scc_v2.profile_attachments.schedule,
-              },
-            ],
-          },
-        },
-      ],
-    },
     ssh_keys: {
       groups: [
         {

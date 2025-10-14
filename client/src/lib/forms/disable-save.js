@@ -83,11 +83,9 @@ function disableSave(field, stateData, componentProps, craig) {
     "buckets",
     "object_storage",
     "cos_keys",
-    "scc_v2",
     "profile_attachments",
     "f5_vsi_template",
     "f5_vsi",
-    "scc",
     "cis_glbs",
     "origins",
     "glbs",
@@ -155,8 +153,6 @@ function disableSave(field, stateData, componentProps, craig) {
         ? componentProps.craig.appid.keys
         : contains(["policies", "dynamic_policies"], field)
         ? componentProps.craig.access_groups[field]
-        : field === "profile_attachments"
-        ? componentProps.craig.scc_v2.profile_attachments
         : contains(["f5_vsi_template", "f5_vsi"], field)
         ? componentProps.craig.f5[
             field === "f5_vsi_template" ? "template" : "vsi"

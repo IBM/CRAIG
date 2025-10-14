@@ -54,7 +54,6 @@ import {
   resourceGroupTf,
   secretsManagerTf,
 } from "../../../lib/json-to-iac";
-import { scc2Tf } from "../../../lib/json-to-iac/scc-v2";
 import { DynamicFormSelect } from "../../forms/dynamic-form";
 import { CraigEmptyResourceTile } from "../../forms/dynamic-form";
 import ScrollForm from "../diagrams/ScrollForm";
@@ -92,9 +91,6 @@ const serviceFormMap = {
   },
   atracker: {
     icon: CloudMonitoring,
-  },
-  scc_v2: {
-    icon: IbmCloudSecurityComplianceCenterWorkloadProtection,
   },
 };
 
@@ -158,8 +154,6 @@ class CloudServicesPage extends React.Component {
           ? "appid"
           : value === "Activity Tracker"
           ? "atracker"
-          : value === "Security & Compliance Center"
-          ? "scc_v2"
           : snakeCase(value),
     });
   }
@@ -197,10 +191,7 @@ class CloudServicesPage extends React.Component {
   }
 
   getIndex() {
-    return contains(
-      ["logdna", "sysdig", "atracker", "scc_v2"],
-      this.state.service
-    )
+    return contains(["logdna", "sysdig", "atracker"], this.state.service)
       ? 0
       : arraySplatIndex(
           this.props.craig.store.json[this.state.service],
@@ -217,15 +208,8 @@ class CloudServicesPage extends React.Component {
   onServiceSubmit(stateData, componentProps) {
     if (
       // if the service is not part of an array
-      contains(
-        ["logdna", "sysdig", "atracker", "scc_v2"],
-        this.state.modalService
-      )
+      contains(["logdna", "sysdig", "atracker"], this.state.modalService)
     ) {
-      if (this.state.modalService === "scc_v2") {
-        // set SCC enable to true since it is not part of
-        stateData.enable = true;
-      }
       this.props.craig[this.state.modalService].save(stateData, componentProps);
     }
     // otherwise create
@@ -359,15 +343,6 @@ class CloudServicesPage extends React.Component {
       });
     }
 
-    // filter out scc when enabled
-    if (craig.store.json.scc_v2.enable) {
-      modalGroups = modalGroups.filter((group) => {
-        if (group !== "Security & Compliance Center") {
-          return group;
-        }
-      });
-    }
-
     return (
       <>
         <DynamicFormModal
@@ -411,8 +386,6 @@ class CloudServicesPage extends React.Component {
                   ? "LogDNA"
                   : stateData.modalService === "atracker"
                   ? "Activity Tracker"
-                  : stateData.modalService === "scc_v2"
-                  ? "Security & Compliance Center"
                   : titleCase(stateData.modalService);
               },
             }}
@@ -435,8 +408,6 @@ class CloudServicesPage extends React.Component {
                   ? "LogDNA"
                   : this.state.modalService === "atracker"
                   ? "Activity Tracker"
-                  : this.state.modalService === "scc_v2"
-                  ? "Security & Compliance Center"
                   : this.state.modalService === "dns"
                   ? "DNS"
                   : titleCase(this.state.modalService)
@@ -539,10 +510,6 @@ class CloudServicesPage extends React.Component {
             {
               name: "Secrets Manager",
               tf: secretsManagerTf(craig.store.json),
-            },
-            {
-              name: "Security & Compliance Center",
-              tf: scc2Tf(craig.store.json) || "",
             },
           ]}
           nestedDocs={docTabs(
@@ -714,11 +681,9 @@ class CloudServicesPage extends React.Component {
                     selectedIndex={this.getIndex()}
                     composedName={
                       "Editing " +
-                      (this.state.serviceName === "scc_v2"
-                        ? "Security & Compliance Center"
-                        : titleCase(this.state.service) +
-                          " " +
-                          this.state.serviceName)
+                      (titleCase(this.state.service) +
+                        " " +
+                        this.state.serviceName)
                     }
                     overrideSave={this.onServiceSave}
                     overrideDelete={this.onServiceDelete}
@@ -728,7 +693,7 @@ class CloudServicesPage extends React.Component {
                       propsMatchState: propsMatchState,
                       craig: craig,
                       data: contains(
-                        ["logdna", "sysdig", "atracker", "scc_v2"],
+                        ["logdna", "sysdig", "atracker"],
                         this.state.service
                       )
                         ? craig.store.json[this.state.service]
