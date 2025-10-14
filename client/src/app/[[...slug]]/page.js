@@ -26,6 +26,7 @@ function formSlug() {
         "lb",
         "nacls",
         "objectStorage",
+        "observability",
         "power",
         "powerInstances",
         "powerPlacementGroups",
