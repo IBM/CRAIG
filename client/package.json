@@ -48,7 +48,7 @@
     "lint-staged": "^16.0.0",
     "postcss": "^8.4.38",
     "prettier": "^3.0.0",
-    "wait-for-expect": "3.0.2"
+    "wait-for-expect": "4.0.0"
   },
   "overrides": {
     "react-scripts": {
