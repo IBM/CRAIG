@@ -33,12 +33,6 @@ function slzToCraig(slz, prefix) {
     vsi: [],
     appid: [],
     teleport_vsi: [],
-    scc: {
-      enable: false,
-      id: null,
-      name: null,
-      credential_description: null,
-    },
     f5_vsi: [],
   };
 
@@ -453,16 +447,6 @@ function slzToCraig(slz, prefix) {
       });
     });
     craig.appid.push(craigAppId);
-  }
-
-  if (slz.security_compliance_center.enable_scc) {
-    let scc = slz.security_compliance_center;
-    craig.scc.enable = true;
-    craig.scc.is_public = scc.is_public;
-    craig.scc.passphrase = scc.collector_passphrase;
-    craig.scc.collector_description = scc.collector_description;
-    craig.scc.location = scc.location_id;
-    craig.scc.scope_description = scc.scope_description;
   }
 
   if (slz.f5_vsi)

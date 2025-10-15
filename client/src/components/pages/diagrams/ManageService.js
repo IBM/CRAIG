@@ -46,17 +46,13 @@ export const ManageService = (props) => {
             .replace("Icd", "Cloud Database")
             .replace("Atracker", "Activity Tracker")
             .replace("Logdna", "LogDNA")
-            .replace(/Scc\s.+/g, "Security & Compliance Center")
             .replace(/Dns/g, "DNS")}
         </h6>
         {props.small ? (
           ""
         ) : (
           <p>
-            {contains(
-              ["atracker", "logdna", "sysdig", "scc_v2"],
-              props.service.name
-            )
+            {contains(["atracker", "logdna", "sysdig"], props.service.name)
               ? ""
               : props.service.name}
           </p>

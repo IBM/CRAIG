@@ -9,7 +9,6 @@ const { flowLogsTf } = require("./flow-logs");
 const { kmsTf } = require("./key-management");
 const { cosTf } = require("./object-storage");
 const resourceGroupTf = require("./resource-groups");
-const { sccTf } = require("./scc");
 const { secretsManagerTf } = require("./secrets-manager");
 const { sshKeyTf } = require("./ssh-keys");
 const { tgwTf } = require("./transit-gateway");
@@ -32,7 +31,6 @@ const { classicGatewayTf } = require("./classic-gateway");
 const { classicInfraTf } = require("./classic");
 const { cisTf } = require("./cis");
 const { cisGlbTf } = require("./cis-glb");
-const { scc2Tf } = require("./scc-v2");
 const { fortigateTf } = require("./fortigate");
 const { outputsTf } = require("./outputs");
 const { classicSecurityGroupTf } = require("./classic-security-group");
@@ -287,7 +285,6 @@ function configToFilesJson(config, apiMode, templateTarMode) {
       "atracker.tf": atrackerTf(config),
       "craig.json": prettyJSON(config),
       "appid.tf": config.appid.length > 0 ? appidTf(config) : null,
-      "scc.tf": config.scc.name === "" ? null : sccTf(config),
       "event_streams.tf":
         config.event_streams && config.event_streams.length > 0
           ? eventStreamsTf(config)
@@ -318,7 +315,6 @@ function configToFilesJson(config, apiMode, templateTarMode) {
       "classic_infrastructure.tf": classicInfraTf(config),
       "cis.tf": cisTf(config),
       "cis_global_load_balancers.tf": cisGlbTf(config),
-      "scc_v2.tf": scc2Tf(config),
       "fortigate_vnf.tf": fortigateTf(config),
       "outputs.tf": outputsTf(config),
       "classic_security_groups.tf": classicSecurityGroupTf(config),

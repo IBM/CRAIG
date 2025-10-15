@@ -1070,15 +1070,6 @@
   "appid": [],
   "teleport_vsi": [],
   "routing_tables": [],
-  "scc": {
-    "collector_description": null,
-    "credential_description": null,
-    "id": null,
-    "passphrase": null,
-    "scope_description": null,
-    "name": "scc",
-    "enable": true
-  },
   "event_streams": [],
   "load_balancers": [],
   "f5_vsi": [],
@@ -1098,13 +1089,7 @@
   "classic_gateways": [],
   "cis": [],
   "vtl": [],
-  "scc_v2" : {
-    "account_id" : "${var.account_id}",
-    "enable": false,
-    "profile_attachments": [],
-    "region": "",
-    "resource_group": null
-  },"cis_glbs": [],
+  "cis_glbs": [],
   "fortigate_vnf": [],
   "classic_security_groups": [],
   "classic_vsi": [],

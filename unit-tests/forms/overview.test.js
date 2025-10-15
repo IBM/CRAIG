@@ -707,7 +707,6 @@ describe("overview", () => {
         { data: { name: "default" } }
       );
       craig.store.json.atracker.instance = true;
-      craig.store.json.scc_v2.enable = true;
       let actualData = getServices(craig, [
         "appid",
         "icd",
@@ -801,17 +800,6 @@ describe("overview", () => {
                 cos_key: "cos-bind-key",
                 locations: ["global", "us-south"],
                 instance: true,
-              },
-            },
-            {
-              name: "scc_v2",
-              type: "scc_v2",
-              data: {
-                enable: true,
-                resource_group: null,
-                region: "",
-                account_id: "${var.account_id}",
-                profile_attachments: [],
               },
             },
           ],

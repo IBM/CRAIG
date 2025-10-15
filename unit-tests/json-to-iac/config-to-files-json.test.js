@@ -328,26 +328,6 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
         "it should create file"
       );
     });
-    it("should return correct scc.tf", () => {
-      let nw = { ...slzNetwork };
-      nw.scc = {
-        enable: true,
-        credential_description: "scc posture credential description",
-        id: "scc_group_id",
-        passphrase: "scc_group_passphrase",
-        name: "scc-posture-credential",
-        location: "us",
-        collector_description: "scc collector",
-        is_public: true,
-        scope_description: "scc scope",
-      };
-      let actualData = configToFilesJson(nw);
-      assert.deepEqual(
-        actualData["scc.tf"],
-        slzNetworkFiles["scc.tf"],
-        "it should create file"
-      );
-    });
     it("should return correct event_streams.tf", () => {
       let nw = { ...slzNetwork };
       nw.event_streams = [

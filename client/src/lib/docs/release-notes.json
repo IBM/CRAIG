@@ -2,11 +2,15 @@
   {
     "version": "1.17.0",
     "features": [
-      "When using dynamic subnets, CIDR blocks are now calculated to use the fewest total IPs within a VPC"
+      "When using dynamic subnets, CIDR blocks are now calculated to use the fewest total IPs within a VPC",
+      "Security and Compliance Center (SCC) has been removed as the service is no longer supported on IBM Cloud"
     ],
     "fixes": [],
-    "upgrade_notes": []
-  },{
+    "upgrade_notes": [
+      "CRAIG no longer depends on react-scripts and uses Next JS to build"
+    ]
+  },
+  {
     "version": "1.16.5",
     "features": [
       "Users can now create SSL certificates in Secrets Manager using the Certificates subform",

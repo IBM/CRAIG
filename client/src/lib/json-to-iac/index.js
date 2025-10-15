@@ -57,13 +57,6 @@ const {
 } = require("./object-storage");
 const resourceGroupTf = require("./resource-groups");
 const {
-  sccTf,
-  ibmSccPostureCredential,
-  ibmSccAccountSettings,
-  ibmSccPostureScope,
-  ibmSccPostureCollector,
-} = require("./scc");
-const {
   secretsManagerTf,
   ibmResourceInstanceSecretsManager,
   ibmIamAuthorizationPolicySecretsManager,
@@ -252,7 +245,6 @@ module.exports = {
   flowLogsTf,
   kmsTf,
   cosTf,
-  sccTf,
   secretsManagerTf,
   sgTf,
   sshKeyTf,
@@ -298,10 +290,6 @@ module.exports = {
   ibmIsSecurityGroup,
   ibmResourceInstanceSecretsManager,
   ibmIamAuthorizationPolicySecretsManager,
-  ibmSccPostureCredential,
-  ibmSccAccountSettings,
-  ibmSccPostureScope,
-  ibmSccPostureCollector,
   ibmResourceInstanceCos,
   ibmIamAuthorizationPolicyCos,
   ibmCosBucket,

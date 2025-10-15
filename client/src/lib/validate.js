@@ -27,7 +27,6 @@ const simpleErrors = {
   noDeploymentSshKeys: (deploymentName) => {
     return `${deploymentName} must have at least one SSH Key, got 0.`;
   },
-  invalidScc: `If enable is true, location and is_public must have valid values.`,
   invalidObjectStorageBucketKey: (instance, bucket, kms, key) => {
     return `${bucket} must reference a key in the kms service ${kms} used by ${instance}. ${key} is invalid.`;
   },
@@ -219,41 +218,6 @@ const validate = function (json) {
         }
       });
     });
-  }
-
-  // unfound fields
-
-  if (!json.scc) {
-    json.scc = {
-      collector_description: null,
-      credential_description: null,
-      passphrase: null,
-      enable: false,
-      is_public: false,
-      location: [],
-      scope_description: null,
-      id: null,
-    };
-  } else {
-    if (json.scc?.enable) {
-      // force insert if fields missing
-      [
-        "credential_description",
-        "scope_description",
-        "passphrase",
-        "collector_description",
-        "id",
-      ].forEach((field) => {
-        if (!containsKeys(json.scc, field)) {
-          json.scc[field] = null;
-        }
-      });
-      if (json.scc.is_public === null || json.scc.location === null) {
-        throw new Error(simpleErrors.invalidScc);
-      }
-    } else {
-      json.scc.enable = false; // add field
-    }
   }
 
   if (!json.iam_account_settings) {

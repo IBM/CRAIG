@@ -52,9 +52,6 @@ const serviceFormMap = {
   atracker: {
     icon: CloudMonitoring,
   },
-  scc_v2: {
-    icon: IbmCloudSecurityComplianceCenterWorkloadProtection,
-  },
 };
 
 export const RgServiceMap = (props) => {

@@ -954,76 +954,6 @@ const RoutingTablesPage = (craig) => {
   });
 };
 
-const SccV2 = (craig) => {
-  return (
-    <CraigToggleForm
-      craig={craig}
-      about={RenderDocs("scc_v2", craig.store.json._options.template)()}
-      name="Security and Compliance Center"
-      hideName
-      noDeleteButton={
-        craig.store.json.scc_v2
-          ? craig.store.json.scc_v2.enable === false
-          : true
-      }
-      onDelete={craig.scc_v2.delete}
-      useAddButton={
-        craig.store.json.scc_v2
-          ? craig.store.json.scc_v2.enable === false
-          : true
-      }
-      tabPanel={{
-        name: "Security and Compliance Center",
-      }}
-      onShowToggle={() => {}}
-      submissionFieldName="scc_v2"
-      onSave={craig.scc_v2.save}
-      innerFormProps={{
-        craig: craig,
-        data: craig.store.json.scc_v2,
-        disableSave: disableSave,
-        form: {
-          jsonField: "scc_v2",
-          disableSave: disableSave,
-          groups: [
-            {
-              name: craig.scc_v2.name,
-              region: craig.scc_v2.region,
-              resource_group: craig.scc_v2.resource_group,
-            },
-            {
-              use_cos: craig.scc_v2.use_cos,
-              cos: craig.scc_v2.cos,
-              bucket: craig.scc_v2.bucket,
-            },
-          ],
-          subForms: [
-            {
-              name: "Profile Attachments",
-              jsonField: "profile_attachments",
-              addText: "Create a Profile Attachment",
-              hideWhen: function (stateData, componentProps) {
-                return componentProps.craig.store.json.scc_v2.enable === false;
-              },
-              form: {
-                groups: [
-                  {
-                    name: craig.scc_v2.profile_attachments.name,
-                    profile: craig.scc_v2.profile_attachments.profile,
-                  },
-                  {
-                    schedule: craig.scc_v2.profile_attachments.schedule,
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      }}
-    />
-  );
-};
-
 const SecretsManagerPage = (craig) => {
   return formPageTemplate(craig, {
     name: "Secrets Manager",
@@ -1491,8 +1421,6 @@ export const NewFormPage = (props) => {
     return PowerVsVolumes(craig);
   } else if (form === "resourceGroups") {
     return ResourceGroupPage(craig);
-  } else if (form === "sccV2") {
-    return SccV2(craig);
   } else if (form === "secretsManager") {
     return SecretsManagerPage(craig);
   } else if (form === "routingTables") {

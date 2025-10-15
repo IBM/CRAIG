@@ -92,7 +92,7 @@ function invalidForms(craig) {
         // if item is not enabled or is not an item that can be enabled
         (contains(["logdna", "iam_account_settings"], key) &&
           json[key].enabled) ||
-        !contains(["logdna", "iam_account_settings", "scc_v2", "sysdig"], key)
+        !contains(["logdna", "iam_account_settings", "sysdig"], key)
       ) {
         forms = distinct(
           forms.concat(

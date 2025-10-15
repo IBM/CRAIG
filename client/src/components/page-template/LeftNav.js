@@ -117,7 +117,6 @@ class LeftNav extends React.Component {
                   "atracker",
                   "icd",
                   "dns",
-                  "scc_v2",
                 ])}
               />
               <LeftNavItem

@@ -3,25 +3,25 @@ import "../app.scss";
 export const metadata = {
   title: "CRAIG [Cloud Resource and IaC Generator]",
   "theme-color": "#000000",
-  viewport: "width=device-width, initial-scale=1, shrink-to-fit=no"
-}
+  viewport: "width=device-width, initial-scale=1, shrink-to-fit=no",
+};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       {/* <head> */}
-        {/* <link rel="shortcut icon" href="%PUBLIC_URL%/craig-ibm-c-rounded.png" /> */}
-        {/* <meta
+      {/* <link rel="shortcut icon" href="%PUBLIC_URL%/craig-ibm-c-rounded.png" /> */}
+      {/* <meta
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         /> */}
-        {/* <meta name="theme-color" content="#000000" /> */}
-        {/* <!--
+      {/* <meta name="theme-color" content="#000000" /> */}
+      {/* <!--
           manifest.json provides metadata used when your web app is installed on a
           user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
         --> */}
-        {/* <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> */}
-        {/* <!--
+      {/* <link rel="manifest" href="%PUBLIC_URL%/manifest.json" /> */}
+      {/* <!--
           Notice the use of %PUBLIC_URL% in the tags above.
           It will be replaced with the URL of the `public` folder during the build.
           Only files inside the `public` folder can be referenced from the HTML.
@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
           work correctly both with client-side routing and a non-root public URL.
           Learn how to configure a non-root public URL by running `npm run build`.
         --> */}
-        {/* <title>CRAIG [Cloud Resource and IaC Generator]</title> */}
+      {/* <title>CRAIG [Cloud Resource and IaC Generator]</title> */}
       {/* </head> */}
       <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -46,6 +46,6 @@ export default function RootLayout({ children }) {
           To create a production bundle, use `npm run build` or `yarn build`.
         --> */}
       </body>
-    </html>  
-  )
+    </html>
+  );
 }

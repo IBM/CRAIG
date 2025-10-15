@@ -37,7 +37,6 @@ const {
 const { cisTf } = require("./json-to-iac/cis");
 const { classicGatewayTf } = require("./json-to-iac/classic-gateway");
 const { powerInstanceTf } = require("./json-to-iac/power-vs-instances");
-const { scc2Tf } = require("./json-to-iac/scc-v2");
 const { cisGlbTf } = require("./json-to-iac/cis-glb");
 const { fortigateTf } = require("./json-to-iac/fortigate");
 
@@ -374,15 +373,6 @@ const navCatagories = [
   {
     name: "Advanced Features",
     links: [
-      {
-        title: "Security Compliance Center V2",
-        path: "/form/sccV2",
-        react_icon: "IbmCloudSecurityComplianceCenterWorkloadProtection",
-        toTf: function (config) {
-          return scc2Tf(config) || "";
-        },
-        jsonField: "scc_v2",
-      },
       {
         title: "DNS Service",
         path: "/form/dns",

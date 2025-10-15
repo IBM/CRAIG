@@ -1790,17 +1790,6 @@ let expectedData = {
       },
     },
   ],
-  scc: {
-    enable: true,
-    credential_description: null,
-    id: null,
-    passphrase: "",
-    name: null,
-    collector_description: "asdasd",
-    scope_description: "sdfsdfsdfsdfsdsdfdsfsdf",
-    is_public: true,
-    location: "us",
-  },
   f5_vsi: [
     {
       kms: "kms",
@@ -2158,26 +2147,6 @@ describe("slzToCraig", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").teleport_vsi,
       expectedData.teleport_vsi,
-      "it should return correct options"
-    );
-  });
-  it("should create scc", () => {
-    assert.deepEqual(
-      slzToCraig(slz, "slz").scc,
-      expectedData.scc,
-      "it should return correct options"
-    );
-  });
-  it("should create scc when not enabled in slz", () => {
-    slzDupe.security_compliance_center.enable_scc = false;
-    assert.deepEqual(
-      slzToCraig(slzDupe, "slz").scc,
-      {
-        enable: false,
-        credential_description: null,
-        id: null,
-        name: null,
-      },
       "it should return correct options"
     );
   });

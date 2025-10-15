@@ -563,26 +563,6 @@ Please note, IBM Cloud Secrets Manager is not yet Financial Services Validated. 
 
 -----
 
-## Security Compliance Center
-
-IBM Cloud Security and Compliance Center (SCC) is comprised of two components: Posture Management and Configuration Governance.
-
-Component Name           | Description
--------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-Posture Manager          | Prevents the misconfiguration of resources by allowing users to standardize how resources should be provisioned and configured according to the organization's security policies.
-Configuration Governance | Ensures all teams in the organization are adhering to best practices and external regulations/laws at all times. It will routinely scan all available resources in the account and output a report for review.
-
-By default, IBM Cloud Security and Compliance Center is not enabled but can be enabled if desired.
-
-### Related Links
-
-- [Docs](https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-getting-started)
-- [SCC Posture Credential Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_posture_credential)
-- [SCC Account Settings Terraform Documetation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_account_settings)
-- [SCC Posture Scope Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_posture_scope)
-
------
-
 ## Event Streams
 
 IBM Cloud Event Streams is an event-streaming platform that helps you build smart apps that can react to events as they happen.
@@ -895,31 +875,6 @@ Repository Capacity | Select the repository capacity for the FalconStor VTL obje
 - [What's the difference between capped and uncapped shared processor performance? How does they compare to dedicated processor performance?](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-power-iaas-faqs#processor)
 - [IBM Power Storage Tiers](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-about-virtual-server#storage-tiers)
 - [Configuring and adding a private network subnet](https://cloud.ibm.com/docs/power-iaas?topic=power-iaas-configuring-subnet)
-
------
-
-## Scc V 2
-
-IBM Cloud Security and Compliance Center is designed to help you create and maintain a secure and compliant development environment. With a wide variety of available controls, customization opportunities, and integrations, Security and Compliance Center can help you to meet your most stringent security and compliance goals. This cannot be used concurrently with SccV1.
-
-CRAIG currently supports the following SCC profiles:
-
-Profile                                | Description
----------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-IBM Cloud for Financial Services       | The IBM Cloud for Financial Services profile provides you with a set of pre-configured automated goals that are mapped to the IBM Cloud Framework for Financial Services control requirements. The results of these tests help you validate compliance when you are using one of the references architectures for the IBM Cloud for Financial Services.
-IBM Cloud Kubernetes Service Benchmark | Validate the configuration of your IBM Cloud Red Hat OpenShift clusters.
-Cloud Internet Services Benchmark      | Secure your IBM Cloud Foundations resources with CIS Benchmarks.
-
-By default, IBM Cloud Security and Compliance Center is not enabled but can be enabled if desired.
-
-### Related Links
-
-- [Docs](https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-getting-started)
-- [SCC Predefined Profiles Documentation](https://cloud.ibm.com/docs/security-compliance?topic=security-compliance-predefined-profiles)
-- [SCC IBM Cloud Catalog](https://cloud.ibm.com/catalog/services/security-and-compliance-center#about)
-- [IBM Cloud Framework for Financial Services control requirements](https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-about#framework-control-requirements)
-- [IBM Cloud for Financial Services Reference Architectures](https://cloud.ibm.com/docs/framework-financial-services?topic=framework-financial-services-reference-architecture-overview)
-- [SCC Profile Attachment Terraform Documentation](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/scc_profile_attachment)
 
 -----
 

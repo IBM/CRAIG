@@ -629,12 +629,6 @@
   ],
   "appid": [],
   "teleport_vsi": [],
-  "scc": {
-    "enable": false,
-    "id": null,
-    "name": null,
-    "credential_description": null
-  },
   "f5_vsi": [],
   "atracker": {
     "add_route": true,
