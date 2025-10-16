@@ -32,7 +32,7 @@
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.23.1",
+    "react-router-dom": "^7.0.0",
     "regex-but-with-words": "^1.5.0",
     "sass": "1.93.2",
     "stream-browserify": "^3.0.0"
