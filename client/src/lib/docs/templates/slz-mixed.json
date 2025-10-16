@@ -567,7 +567,7 @@
     },
     {
       "vpc": "management",
-      "name": "management-vsi",
+      "name": "asdasdasdasd-vsi",
       "resource_group": "management-rg",
       "rules": [
         {
@@ -716,6 +716,13 @@
         }
       ],
       "use_data": false
+    },
+    {
+      "cluster_security_group": true,
+      "name": "workload-cluster-security-group",
+      "vpc": "workload",
+      "resource_group": "workload-rg",
+      "rules": []
     }
   ],
   "ssh_keys": [

@@ -38,6 +38,7 @@ const {
   getRuleProtocol,
   nameField,
   duplicateNameCallback,
+  nameHelperText,
 } = require("./reusable-fields");
 
 /**
@@ -277,8 +278,20 @@ function initSecurityGroupStore(store) {
         helperText: function (stateData, componentProps) {
           return `${componentProps.craig.store.json._options.prefix}-${stateData.vpc}-${stateData.name}-sg`;
         },
+        readOnly: function (stateData) {
+          return stateData?.cluster_security_group;
+        },
+        helperText: function (stateData, componentProps) {
+          return stateData?.cluster_security_group
+            ? stateData.name
+            : nameHelperText(stateData, componentProps);
+        },
       }),
-      resource_group: resourceGroupsField(true),
+      resource_group: resourceGroupsField(true, {
+        hideWhen: function (stateData) {
+          return stateData?.cluster_security_group === true;
+        },
+      }),
       vpc: {
         type: "select",
         labelText: "VPC",
@@ -288,7 +301,10 @@ function initSecurityGroupStore(store) {
         size: "small",
         groups: vpcGroups,
         disabled: function (stateData) {
-          return stateData.use_data && !isNullOrEmptyString(stateData.vpc);
+          return (
+            (stateData.use_data && !isNullOrEmptyString(stateData.vpc)) ||
+            stateData?.cluster_security_group
+          );
         },
       },
     },

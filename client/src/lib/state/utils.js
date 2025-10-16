@@ -436,7 +436,11 @@ function resourceGroupsField(small, options) {
     groups: function (stateData, componentProps) {
       return splat(componentProps.craig.store.json.resource_groups, "name");
     },
-    hideWhen: options?.noHideWhen ? undefined : hideWhenUseData,
+    hideWhen: options?.hideWhen
+      ? options.hideWhen
+      : options?.noHideWhen
+        ? undefined
+        : hideWhenUseData,
     size: small ? "small" : undefined,
     labelText: options?.labelText || undefined,
   };

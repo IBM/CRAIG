@@ -972,6 +972,10 @@ const SecurityGroupPage = (craig) => {
         jsonField: "security_groups",
         formName: "Security Groups",
         hideFormTitleButton: craig.store.json.vpcs.length === 0,
+        deleteDisabled: function (componentProps) {
+          return componentProps.data?.cluster_security_group;
+        },
+        deleteDisabledMessage: "Cluster Security Groups cannot be deleted",
       })}
       {craig.store.json.security_groups.length > 0 && (
         <div
