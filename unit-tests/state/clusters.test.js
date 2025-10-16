@@ -276,6 +276,84 @@ describe("clusters", () => {
         "it should update opaque secrets cluster name",
       );
     });
+    it("should update cluster security group name when cluster.name is changed", () => {
+      craig.clusters.create(newDefaultWorkloadCluster());
+      craig.clusters.save(
+        { name: "new-name" },
+        { data: { name: "workload-cluster" } },
+      );
+      assert.deepEqual(
+        craig.store.json.security_groups[
+          craig.store.json.security_groups.length - 3
+        ].name,
+        "new-name-security-group",
+        "it should update opaque secrets cluster name",
+      );
+    });
+    it("should update cluster security group when changing vpc", () => {
+      craig.clusters.create({
+        cos: "cos",
+        entitlement: "cloud_pak",
+        kube_type: "openshift",
+        kube_version: "default (Default)",
+        flavor: "bx2.16x64",
+        name: "frog",
+        resource_group: "workload-rg",
+        encryption_key: "roks-key",
+        subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+        update_all_workers: false,
+        vpc: "workload",
+        worker_pools: [
+          {
+            entitlement: "cloud_pak",
+            resource_group: "workload-rg",
+            flavor: "bx2.16x64",
+            name: "logging-worker-pool",
+            subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+            vpc: "workload",
+            workers_per_subnet: 2,
+          },
+        ],
+        workers_per_subnet: 2,
+        private_endpoint: true,
+      });
+      craig.clusters.save(
+        {
+          vpc: "management",
+          kube_version: "default (Default)",
+          worker_pools: [
+            {
+              entitlement: "cloud_pak",
+              flavor: "bx2.16x64",
+              name: "logging-worker-pool",
+              resource_group: "workload-rg",
+              subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+              vpc: "workload",
+              workers_per_subnet: 2,
+            },
+          ],
+        },
+        {
+          data: {
+            name: "frog",
+            vpc: "workload",
+          },
+        },
+      );
+      assert.deepEqual(
+        craig.store.json.security_groups[
+          craig.store.json.security_groups.length - 1
+        ],
+        {
+          cluster_security_group: true,
+          name: "frog-security-group",
+          vpc: "management",
+          resource_group: "workload-rg",
+          rules: [],
+        },
+        "it should update security group",
+      );
+    });
   });
   describe("clusters.delete", () => {
     it("should delete cluster", () => {

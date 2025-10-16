@@ -44,6 +44,13 @@ const {
  */
 function clusterInit(config) {
   config.store.json.clusters = [newDefaultWorkloadCluster()];
+  config.store.json.security_groups.push({
+    cluster_security_group: true,
+    name: "workload-cluster-security-group",
+    vpc: "workload",
+    resource_group: "workload-rg",
+    rules: [],
+  });
 }
 
 /**
@@ -164,6 +171,19 @@ function clusterSave(config, stateData, componentProps) {
       pool.vpc = stateData.vpc;
       pool.subnets = [];
     });
+    new revision(config.store.json)
+      .child("security_groups", componentProps.data.name + "-security-group")
+      .then((sg) => {
+        sg.vpc = stateData.vpc;
+      });
+  }
+  console.log(stateData.name, componentProps.data.name);
+  if (stateData.name && stateData.name !== componentProps.data.name) {
+    new revision(config.store.json)
+      .child("security_groups", componentProps.data.name + "-security-group")
+      .then((sg) => {
+        sg.name = stateData.name + "-security-group";
+      });
   }
   config.updateChild(["json", "clusters"], componentProps.data.name, stateData);
 }
