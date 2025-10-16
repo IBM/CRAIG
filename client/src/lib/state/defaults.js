@@ -1282,6 +1282,13 @@ function defaultSecurityGroups() {
       vpc: "workload",
     },
     {
+      cluster_security_group: true,
+      name: "workload-cluster-security-group",
+      resource_group: "workload-rg",
+      rules: [],
+      vpc: "workload",
+    },
+    {
       vpc: "management",
       name: "management-vsi",
       resource_group: "management-rg",

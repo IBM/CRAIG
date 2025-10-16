@@ -333,6 +333,13 @@ describe("security groups", () => {
           ],
         },
         {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
+        {
           vpc: "management",
           name: "management-vsi",
           resource_group: "management-rg",
@@ -498,7 +505,7 @@ describe("security groups", () => {
       assert.deepEqual(
         {
           management: ["management-vpe", "management-vsi"],
-          workload: ["workload-vpe"],
+          workload: ["workload-vpe", "workload-cluster-security-group"],
         },
         craig.store.securityGroups,
         "it should add groups",
@@ -538,7 +545,7 @@ describe("security groups", () => {
         rules: [],
       });
       assert.deepEqual(
-        craig.store.json.security_groups[3],
+        craig.store.json.security_groups[4],
         {
           name: "frog",
           vpc: "management",
@@ -608,7 +615,7 @@ describe("security groups", () => {
       craig.security_groups.delete({}, { data: { name: "management-vpe" } });
       assert.deepEqual(
         craig.store.json.security_groups.length,
-        2,
+        3,
         "it should delete the group",
       );
     });
@@ -682,7 +689,7 @@ describe("security groups", () => {
           { parent_name: "frog" },
         );
         assert.deepEqual(
-          craig.store.json.security_groups[3].rules,
+          craig.store.json.security_groups[4].rules,
           [
             {
               sg: "frog",
@@ -792,7 +799,7 @@ describe("security groups", () => {
           },
         );
         assert.deepEqual(
-          craig.store.json.security_groups[3].rules,
+          craig.store.json.security_groups[4].rules,
           [
             {
               name: "test-rule",
@@ -861,7 +868,7 @@ describe("security groups", () => {
           },
         );
         assert.deepEqual(
-          craig.store.json.security_groups[3].rules,
+          craig.store.json.security_groups[4].rules,
           [
             {
               name: "test-rule",
@@ -924,7 +931,7 @@ describe("security groups", () => {
           },
         );
         assert.deepEqual(
-          craig.store.json.security_groups[3].rules,
+          craig.store.json.security_groups[4].rules,
           [
             {
               name: "test-rule",
@@ -967,7 +974,7 @@ describe("security groups", () => {
           },
         );
         assert.deepEqual(
-          craig.store.json.security_groups[3].rules,
+          craig.store.json.security_groups[4].rules,
           [
             {
               name: "test-rule",
@@ -1009,7 +1016,7 @@ describe("security groups", () => {
           },
         );
         assert.deepEqual(
-          craig.store.json.security_groups[3].rules,
+          craig.store.json.security_groups[2].rules,
           [],
           "it should delete rule",
         );

@@ -812,6 +812,13 @@ describe("setup wizard", () => {
           ],
         },
         {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
+        {
           vpc: "management",
           name: "management-vsi",
           resource_group: "management-rg",
@@ -1762,6 +1769,13 @@ describe("setup wizard", () => {
           ],
         },
         {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
+        {
           vpc: "management",
           name: "management-vsi",
           resource_group: "management-rg",
@@ -2359,6 +2373,13 @@ describe("setup wizard", () => {
             },
           ],
         },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
       ],
       transit_gateways: [
         {
@@ -2879,6 +2900,13 @@ describe("setup wizard", () => {
             },
           ],
         },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
       ],
       transit_gateways: [
         {
@@ -3395,6 +3423,13 @@ describe("setup wizard", () => {
               ruleProtocol: "tcp",
             },
           ],
+        },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
         },
         {
           vpc: "management",
@@ -4152,6 +4187,13 @@ describe("setup wizard", () => {
           ],
         },
         {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
+        {
           vpc: "management",
           name: "management-vsi",
           resource_group: "management-rg",
@@ -4766,6 +4808,13 @@ describe("setup wizard", () => {
             },
           ],
         },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
       ],
       transit_gateways: [
         {
@@ -5324,6 +5373,13 @@ describe("setup wizard", () => {
             },
           ],
         },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
       ],
       transit_gateways: [
         {
@@ -5814,6 +5870,13 @@ describe("setup wizard", () => {
               ruleProtocol: "tcp",
             },
           ],
+        },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
         },
       ],
       transit_gateways: [
@@ -6311,6 +6374,13 @@ describe("setup wizard", () => {
               ruleProtocol: "tcp",
             },
           ],
+        },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
         },
       ],
       transit_gateways: [
@@ -7615,6 +7685,13 @@ describe("setup wizard", () => {
               ruleProtocol: "tcp",
             },
           ],
+        },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
         },
       ],
       transit_gateways: [

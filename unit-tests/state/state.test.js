@@ -63,7 +63,7 @@ describe("state util functions", () => {
       craig.store.json.vpcs[1].acls = [];
       craig.copySecurityGroup("management-vpe", "workload");
       assert.deepEqual(
-        splat(craig.store.json.security_groups, "name")[3],
+        splat(craig.store.json.security_groups, "name")[4],
         "management-vpe-copy",
         "it should copy",
       );
@@ -2771,7 +2771,7 @@ describe("state util functions", () => {
           { ruleSource: "management-vpe" },
           { isAclForm: false },
         ),
-        ["workload-vpe", "management-vsi"],
+        ["workload-vpe", "workload-cluster-security-group", "management-vsi"],
         "it should return empty array",
       );
     });
