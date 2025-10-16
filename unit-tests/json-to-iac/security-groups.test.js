@@ -112,7 +112,7 @@ describe("security groups", () => {
               use_data: true,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
@@ -231,7 +231,7 @@ resource "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
@@ -351,7 +351,7 @@ resource "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
               use_data: true,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 data "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
@@ -401,7 +401,7 @@ data "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_allow_ibm_inbound" {
@@ -413,7 +413,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format security group rule with no protocol and security group uses", () => {
@@ -461,7 +461,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
               use_data: true,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_allow_ibm_inbound" {
@@ -473,7 +473,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format security group rule with tcp protocol", () => {
@@ -515,7 +515,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_allow_ibm_inbound_8080" {
@@ -531,7 +531,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format security group rule with udp protocol", () => {
@@ -573,7 +573,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_allow_ibm_inbound_8080" {
@@ -589,7 +589,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format security group rule with icmp protocol", () => {
@@ -631,7 +631,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_allow_ibm_inbound_8080" {
@@ -647,7 +647,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format security group rule with icmp protocol when null", () => {
@@ -689,7 +689,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_allow_ibm_inbound_8080" {
@@ -705,7 +705,7 @@ resource "ibm_is_security_group_rule" "management_vpc_management_vpe_sg_sg_rule_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -843,7 +843,7 @@ resource "ibm_is_security_group_rule" "workload_vpc_workload_vpe_sg_sg_rule_allo
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

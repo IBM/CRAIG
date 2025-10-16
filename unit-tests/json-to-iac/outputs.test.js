@@ -615,7 +615,7 @@ output "cos_object_storage_bucket_workload_bucket_region_location" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct outputs"
+        "it should return correct outputs",
       );
     });
     it("should return correct outputs file with multiple deployments", () => {
@@ -1277,7 +1277,7 @@ output "logging_ingestion_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct outputs"
+        "it should return correct outputs",
       );
     });
     it("should return correct outputs for power vs workspaces", () => {
@@ -1521,7 +1521,7 @@ output "power_vs_workspace_iac_power_workspace_test_output_location" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct outputs"
+        "it should return correct outputs",
       );
     });
     it("should return correct outputs for power vs workspaces and vpc", () => {
@@ -2459,7 +2459,7 @@ output "cos_object_storage_bucket_workload_bucket_region_location" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct outputs"
+        "it should return correct outputs",
       );
     });
     it("should return the correct outputs for power vs instances", () => {
@@ -2727,7 +2727,7 @@ output "vsi_workspace_instance_output_test_primary_ip" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should create correct outputs"
+        "it should create correct outputs",
       );
     });
     it("should return the correct outputs for power vs instances with ws and nw from data", () => {
@@ -2995,7 +2995,7 @@ output "vsi_workspace_instance_output_test_primary_ip" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should create correct outputs"
+        "it should create correct outputs",
       );
     });
   });

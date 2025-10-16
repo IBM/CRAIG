@@ -32,10 +32,10 @@ describe("getVolumeDisplayName", () => {
               ],
             },
           },
-        }
+        },
       ),
       "Affinity Instance frog ()",
-      "it should return correct data"
+      "it should return correct data",
     );
   });
   it("should show correct display name for storage type", () => {
@@ -45,7 +45,7 @@ describe("getVolumeDisplayName", () => {
         pi_volume_type: "tier1",
       }),
       "Tier 1",
-      "it should return correct data"
+      "it should return correct data",
     );
   });
   it("should show correct display name for storage pool", () => {
@@ -55,7 +55,7 @@ describe("getVolumeDisplayName", () => {
         pi_volume_pool: "storage-pool-1-flash-4",
       }),
       "Storage Pool 1 Flash 4",
-      "it should return correct data"
+      "it should return correct data",
     );
   });
   it("should show correct display name for affinity volume with instance affinity for storage type instance", () => {
@@ -78,10 +78,10 @@ describe("getVolumeDisplayName", () => {
               ],
             },
           },
-        }
+        },
       ),
       "Affinity Instance frog (Tier 1)",
-      "it should return correct data"
+      "it should return correct data",
     );
   });
   it("should show correct display name for affinity volume with instance affinity for storage pool instance", () => {
@@ -104,10 +104,10 @@ describe("getVolumeDisplayName", () => {
               ],
             },
           },
-        }
+        },
       ),
       "Affinity Instance frog (Tier 1)",
-      "it should return correct data"
+      "it should return correct data",
     );
   });
   it("should show correct display name for affinity volume with instance affinity for storage pool instance", () => {
@@ -130,10 +130,10 @@ describe("getVolumeDisplayName", () => {
               ],
             },
           },
-        }
+        },
       ),
       "Affinity Instance frog (Fixed IOPs)",
-      "it should return correct data"
+      "it should return correct data",
     );
   });
 
@@ -157,10 +157,10 @@ describe("getVolumeDisplayName", () => {
               ],
             },
           },
-        }
+        },
       ),
       "Affinity Volume frog (Tier 1)",
-      "it should return correct data"
+      "it should return correct data",
     );
   });
   it("should show correct display name for affinity volume with volume affinity for storage pool volume", () => {
@@ -183,10 +183,10 @@ describe("getVolumeDisplayName", () => {
               ],
             },
           },
-        }
+        },
       ),
       "Affinity Volume frog (Tier 1)",
-      "it should return correct data"
+      "it should return correct data",
     );
   });
   it("should show correct display name for anti-affinity volume with instance affinity for storage type instance", () => {
@@ -209,10 +209,10 @@ describe("getVolumeDisplayName", () => {
               ],
             },
           },
-        }
+        },
       ),
       "Anti-Affinity Instance frog (Tier 1)",
-      "it should return correct data"
+      "it should return correct data",
     );
   });
   it("should show correct display name for anti-affinity volume with instance affinity for storage type instance", () => {
@@ -235,10 +235,10 @@ describe("getVolumeDisplayName", () => {
               ],
             },
           },
-        }
+        },
       ),
       "Anti-Affinity Instance frog (Fixed IOPs)",
-      "it should return correct data"
+      "it should return correct data",
     );
   });
   it("should show correct display name for anti-affinity volume with instance affinity for storage pool instance", () => {
@@ -261,10 +261,10 @@ describe("getVolumeDisplayName", () => {
               ],
             },
           },
-        }
+        },
       ),
       "Anti-Affinity Instance frog (Fixed IOPs)",
-      "it should return correct data"
+      "it should return correct data",
     );
   });
   it("should show correct display name for anti-affinity volume with volume affinity for storage type volume", () => {
@@ -287,10 +287,10 @@ describe("getVolumeDisplayName", () => {
               ],
             },
           },
-        }
+        },
       ),
       "Anti-Affinity Volume frog (Tier 1)",
-      "it should return correct data"
+      "it should return correct data",
     );
   });
   it("should show correct display name for anti-affinity volume with volume affinity for storage pool volume", () => {
@@ -313,10 +313,10 @@ describe("getVolumeDisplayName", () => {
               ],
             },
           },
-        }
+        },
       ),
       "Anti-Affinity Volume frog (Tier 1)",
-      "it should return correct data"
+      "it should return correct data",
     );
   });
 });

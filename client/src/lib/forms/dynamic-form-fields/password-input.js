@@ -27,13 +27,13 @@ function dynamicPasswordInputProps(props) {
     props.field.invalidText,
     "props.handleInputChange",
     "Function",
-    props.handleInputChange
+    props.handleInputChange,
   );
   let invalid = invalidReturnsBooleanCheck(props, "dynamicPasswordInputProps");
   let invalidText = fieldFunctionReturnsStringCheck(
     props,
     "dynamicPasswordInputProps",
-    "invalidText"
+    "invalidText",
   );
   return {
     labelText: "Public Key",

@@ -43,7 +43,7 @@ describe("dns", () => {
       assert.deepEqual(
         craig.store.json.dns,
         expectedData,
-        "it should create correct dns instance"
+        "it should create correct dns instance",
       );
     });
     it("should update a dns instance", () => {
@@ -57,7 +57,7 @@ describe("dns", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       );
       let expectedData = [
         {
@@ -72,7 +72,7 @@ describe("dns", () => {
       assert.deepEqual(
         craig.store.json.dns,
         expectedData,
-        "it should create correct dns instance"
+        "it should create correct dns instance",
       );
     });
     it("should update a dns instance when resource group is not found", () => {
@@ -86,7 +86,7 @@ describe("dns", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       );
       let expectedData = [
         {
@@ -101,7 +101,7 @@ describe("dns", () => {
       assert.deepEqual(
         craig.store.json.dns,
         expectedData,
-        "it should create correct dns instance"
+        "it should create correct dns instance",
       );
     });
     it("should delete a dns instance", () => {
@@ -111,13 +111,13 @@ describe("dns", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       );
       let expectedData = [];
       assert.deepEqual(
         craig.store.json.dns,
         expectedData,
-        "it should create correct dns instance"
+        "it should create correct dns instance",
       );
     });
   });
@@ -137,7 +137,7 @@ describe("dns", () => {
         },
         {
           innerFormProps: { arrayParentName: "dev" },
-        }
+        },
       );
       let expectedData = {
         instance: "dev",
@@ -147,7 +147,7 @@ describe("dns", () => {
       assert.deepEqual(
         craig.store.json.dns[0].zones[0],
         expectedData,
-        "it should add zone"
+        "it should add zone",
       );
     });
     it("should create a new zone and update permitted networks when vpcs are unfound", () => {
@@ -158,7 +158,7 @@ describe("dns", () => {
         },
         {
           innerFormProps: { arrayParentName: "dev" },
-        }
+        },
       );
       craig.dns.zones.save(
         {
@@ -168,7 +168,7 @@ describe("dns", () => {
         {
           data: { name: "zone" },
           arrayParentName: "dev",
-        }
+        },
       );
       let expectedData = {
         instance: "dev",
@@ -178,7 +178,7 @@ describe("dns", () => {
       assert.deepEqual(
         craig.store.json.dns[0].zones[0],
         expectedData,
-        "it should add zone"
+        "it should add zone",
       );
     });
     it("should delete a zone", () => {
@@ -189,19 +189,19 @@ describe("dns", () => {
         },
         {
           innerFormProps: { arrayParentName: "dev" },
-        }
+        },
       );
       craig.dns.zones.delete(
         {},
         {
           data: { name: "zone" },
           arrayParentName: "dev",
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.dns[0].zones,
         [],
-        "it should delete zone"
+        "it should delete zone",
       );
     });
     it("should disable save when zone name duplicate in modal", () => {
@@ -212,7 +212,7 @@ describe("dns", () => {
         },
         {
           innerFormProps: { arrayParentName: "dev" },
-        }
+        },
       );
       craig.dns.zones.create(
         {
@@ -221,14 +221,14 @@ describe("dns", () => {
         },
         {
           innerFormProps: { arrayParentName: "dev" },
-        }
+        },
       );
       assert.isTrue(
         craig.dns.zones.name.invalid(
           { name: "zone" },
-          { isModal: true, craig: craig }
+          { isModal: true, craig: craig },
         ),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
   });
@@ -245,7 +245,7 @@ describe("dns", () => {
         },
         {
           innerFormProps: { arrayParentName: "dev" },
-        }
+        },
       );
     });
     it("should create a new record", () => {
@@ -256,7 +256,7 @@ describe("dns", () => {
       assert.deepEqual(
         craig.store.json.dns[0].records[0],
         expectedData,
-        "it should add zone"
+        "it should add zone",
       );
     });
     it("should update a record", () => {
@@ -267,7 +267,7 @@ describe("dns", () => {
         {
           data: { name: "zone" },
           arrayParentName: "dev",
-        }
+        },
       );
       let expectedData = {
         name: "zzzz",
@@ -276,7 +276,7 @@ describe("dns", () => {
       assert.deepEqual(
         craig.store.json.dns[0].records[0],
         expectedData,
-        "it should add zone"
+        "it should add zone",
       );
     });
     it("should delete a record", () => {
@@ -285,93 +285,93 @@ describe("dns", () => {
         {
           data: { name: "zone" },
           arrayParentName: "dev",
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.dns[0].records,
         [],
-        "it should add zone"
+        "it should add zone",
       );
     });
     describe("dns.records.schema", () => {
       it("should have a valid preference when type is not mx", () => {
         assert.isFalse(
           craig.dns.records.preference.invalid({ type: "AAAA" }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should have an valid preference when type is mx and is not in range", () => {
         assert.isTrue(
           craig.dns.records.preference.invalid({ type: "MX", preference: -10 }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should have a valid port when type is not srv", () => {
         assert.isFalse(
           craig.dns.records.port.invalid({ type: "AAAA" }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should have an valid port when type is srv and is not in range", () => {
         assert.isTrue(
           craig.dns.records.port.invalid({ type: "SRV", port: -10 }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should have a valid protocol when type is not srv", () => {
         assert.isFalse(
           craig.dns.records.protocol.invalid({ type: "AAAA" }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should have an valid protocol when type is srv and no value", () => {
         assert.isTrue(
           craig.dns.records.protocol.invalid({ type: "SRV" }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should have a valid priority when type is not srv", () => {
         assert.isFalse(
           craig.dns.records.priority.invalid({ type: "AAAA" }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should have an valid priority when type is srv and is not in range", () => {
         assert.isTrue(
           craig.dns.records.priority.invalid({ type: "SRV", priority: -12 }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should have a valid service when type is not srv", () => {
         assert.isFalse(
           craig.dns.records.service.invalid({ type: "AAAA" }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should have invalid service", () => {
         assert.isTrue(
           craig.dns.records.service.invalid({ type: "SRV" }),
-          "it should be valid"
+          "it should be valid",
         );
         assert.isTrue(
           craig.dns.records.service.invalid({ type: "SRV", service: "mmm" }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should have a valid weight when type is not srv", () => {
         assert.isFalse(
           craig.dns.records.weight.invalid({ type: "AAAA" }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should have invalid weight", () => {
         assert.isTrue(
           craig.dns.records.weight.invalid({ type: "SRV" }),
-          "it should be valid"
+          "it should be valid",
         );
         assert.isTrue(
           craig.dns.records.weight.invalid({ type: "SRV", weight: "mmm" }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should return correct groups for zones", () => {
@@ -381,69 +381,69 @@ describe("dns", () => {
             {
               arrayParentName: "dev",
               craig: craig,
-            }
+            },
           ),
           [],
-          "it should return correct groups"
+          "it should return correct groups",
         );
       });
       it("should hide preference when type is not MX", () => {
         assert.isTrue(
           craig.dns.records.preference.hideWhen({ type: "A" }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should hide port when type is not SRV", () => {
         assert.isTrue(
           craig.dns.records.port.hideWhen({ type: "A" }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should have invalid ttl when not a whole number", () => {
         assert.isTrue(
           craig.dns.records.ttl.invalid({ ttl: "1.2" }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should have invalid ttl when not in range", () => {
         assert.isTrue(
           craig.dns.records.ttl.invalid({ ttl: "2" }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should have a small ttl", () => {
         assert.deepEqual(
           craig.dns.records.ttl.size,
           "small",
-          "it should be small"
+          "it should be small",
         );
       });
       it("should return false for vpc invalid if not using vsi", () => {
         assert.deepEqual(
           craig.dns.records.vpc.invalid({}),
           false,
-          "it should be false"
+          "it should be false",
         );
       });
       it("should return true for vpc invalid if using vsi and no vpc selected", () => {
         assert.deepEqual(
           craig.dns.records.vpc.invalid({ use_vsi: true, vpc: "" }),
           true,
-          "it should be true"
+          "it should be true",
         );
       });
       it("should return true for vsi invalid if using vsi and no vsi selected", () => {
         assert.deepEqual(
           craig.dns.records.vsi.invalid({ use_vsi: true, vsi: "" }),
           true,
-          "it should be true"
+          "it should be true",
         );
       });
       it("should return false for vsi invalid if using vsi and no vpc selected", () => {
         assert.deepEqual(
           craig.dns.records.vsi.invalid({ use_vsi: false, vsi: "" }),
           false,
-          "it should be true"
+          "it should be true",
         );
       });
       it("should return a list of vsi based on vpc", () => {
@@ -457,36 +457,36 @@ describe("dns", () => {
             "management-server-3-1",
             "management-server-3-2",
           ],
-          "it should return list of vsi"
+          "it should return list of vsi",
         );
       });
       it("should return a list of vsi based on vpc when none selected", () => {
         assert.deepEqual(
           craig.dns.records.vsi.groups({ vpc: "" }, { craig: craig }),
           [],
-          "it should return list of vsi"
+          "it should return list of vsi",
         );
       });
       it("should hide rdata when using vsi", () => {
         assert.isTrue(
           craig.dns.records.rdata.hideWhen({ use_vsi: true }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should hide vsi when not using vsi", () => {
         assert.isTrue(
           craig.dns.records.vsi.hideWhen({ use_vsi: false }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should handle rdata invalid", () => {
         assert.isFalse(
           craig.dns.records.rdata.invalid({ use_vsi: true }),
-          "it should have a valid rdata field when undefined and using VSI"
+          "it should have a valid rdata field when undefined and using VSI",
         );
         assert.isFalse(
           craig.dns.records.rdata.invalid({}),
-          "it should have an invalid rdata field when undefined and not using VSI"
+          "it should have an invalid rdata field when undefined and not using VSI",
         );
       });
     });
@@ -501,7 +501,7 @@ describe("dns", () => {
       it("should return invalid when invalid description", () => {
         assert.isTrue(
           craig.dns.zones.description.invalid({ description: "@@@" }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should return if string is not valid", () => {
@@ -517,8 +517,8 @@ describe("dns", () => {
                   },
                 },
               },
-            }
-          )
+            },
+          ),
         );
       });
       it("should allow periods within the name", () => {
@@ -534,8 +534,8 @@ describe("dns", () => {
                   },
                 },
               },
-            }
-          )
+            },
+          ),
         );
       });
       it("should not allow periods at the end of the name", () => {
@@ -551,8 +551,8 @@ describe("dns", () => {
                   },
                 },
               },
-            }
-          )
+            },
+          ),
         );
       });
     });
@@ -573,7 +573,7 @@ describe("dns", () => {
         },
         {
           innerFormProps: { arrayParentName: "dev" },
-        }
+        },
       );
     });
     it("should create a new custom_resolvers", () => {
@@ -587,7 +587,7 @@ describe("dns", () => {
       assert.deepEqual(
         craig.store.json.dns[0].custom_resolvers[0],
         expectedData,
-        "it should add zone"
+        "it should add zone",
       );
     });
     it("should update a custom_resolvers", () => {
@@ -600,7 +600,7 @@ describe("dns", () => {
         {
           data: { name: "zone" },
           arrayParentName: "dev",
-        }
+        },
       );
       let expectedData = {
         instance: "dev",
@@ -612,7 +612,7 @@ describe("dns", () => {
       assert.deepEqual(
         craig.store.json.dns[0].custom_resolvers[0],
         expectedData,
-        "it should add zone"
+        "it should add zone",
       );
     });
     it("should update a custom_resolvers with unfound vpc", () => {
@@ -626,7 +626,7 @@ describe("dns", () => {
         {
           data: { name: "zone" },
           arrayParentName: "dev",
-        }
+        },
       );
       let expectedData = {
         instance: "dev",
@@ -638,7 +638,7 @@ describe("dns", () => {
       assert.deepEqual(
         craig.store.json.dns[0].custom_resolvers[0],
         expectedData,
-        "it should add zone"
+        "it should add zone",
       );
     });
     it("should update a custom_resolvers with unfound subnet", () => {
@@ -651,7 +651,7 @@ describe("dns", () => {
         {
           data: { name: "zone" },
           arrayParentName: "dev",
-        }
+        },
       );
       let expectedData = {
         name: "zzzz",
@@ -663,7 +663,7 @@ describe("dns", () => {
       assert.deepEqual(
         craig.store.json.dns[0].custom_resolvers[0],
         expectedData,
-        "it should add zone"
+        "it should add zone",
       );
     });
     it("should update a custom_resolvers with found zone", () => {
@@ -674,7 +674,7 @@ describe("dns", () => {
         },
         {
           innerFormProps: { arrayParentName: "dev" },
-        }
+        },
       );
       craig.dns.custom_resolvers.save(
         {
@@ -686,7 +686,7 @@ describe("dns", () => {
         {
           data: { name: "zone" },
           arrayParentName: "dev",
-        }
+        },
       );
       let expectedData = {
         instance: "dev",
@@ -698,7 +698,7 @@ describe("dns", () => {
       assert.deepEqual(
         craig.store.json.dns[0].custom_resolvers[0],
         expectedData,
-        "it should add zone"
+        "it should add zone",
       );
     });
     it("should delete a custom_resolvers", () => {
@@ -707,19 +707,19 @@ describe("dns", () => {
         {
           data: { name: "zone" },
           arrayParentName: "dev",
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.dns[0].custom_resolvers,
         [],
-        "it should add zone"
+        "it should add zone",
       );
     });
     describe("custom resolver schema", () => {
       it("should be invalid when more than three subnets are selected", () => {
         assert.isTrue(
           craig.dns.custom_resolvers.subnets.invalid({ subnets: [1, 2, 3, 4] }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should be invalid when description is invalid", () => {
@@ -727,7 +727,7 @@ describe("dns", () => {
           craig.dns.custom_resolvers.description.invalid({
             description: "[1, 2, 3, 4]",
           }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
     });

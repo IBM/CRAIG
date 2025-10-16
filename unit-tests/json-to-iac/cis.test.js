@@ -52,7 +52,7 @@ resource "ibm_cis" "cis_cis" {
               use_data: false,
             },
           ],
-        }
+        },
       );
       assert.deepEqual(actualData, expectedData, "it should return data");
     });
@@ -97,7 +97,7 @@ resource "ibm_cis_dns_record" "cis_cis_dns_record_example_com" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should format correct record"
+        "it should format correct record",
       );
     });
     it("should create the correct record with empty string ttl", () => {
@@ -121,7 +121,7 @@ resource "ibm_cis_dns_record" "cis_cis_dns_record_example_com" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should format correct record"
+        "it should format correct record",
       );
     });
   });
@@ -218,7 +218,7 @@ resource "ibm_cis_dns_record" "cis_cis_dns_record_example_com" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should return null when no cis", () => {

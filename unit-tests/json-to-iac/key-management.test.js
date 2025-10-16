@@ -46,12 +46,12 @@ resource "ibm_resource_instance" "kms" {
             tags: ["hello", "world"],
             prefix: "iac",
           },
-        }
+        },
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should format instance data"
+        "it should format instance data",
       );
     });
     it("should format a key management resource with resource group from data", () => {
@@ -86,12 +86,12 @@ resource "ibm_resource_instance" "kms" {
             tags: ["hello", "world"],
             prefix: "iac",
           },
-        }
+        },
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should format instance data"
+        "it should format instance data",
       );
     });
     it("should format a key management data source", () => {
@@ -121,12 +121,12 @@ data "ibm_resource_instance" "kms" {
             tags: ["hello", "world"],
             prefix: "iac",
           },
-        }
+        },
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should format instance data"
+        "it should format instance data",
       );
     });
     it("should format hs crypto data source", () => {
@@ -157,12 +157,12 @@ data "ibm_resource_instance" "kms" {
             tags: ["hello", "world"],
             prefix: "iac",
           },
-        }
+        },
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should format instance data"
+        "it should format instance data",
       );
     });
   });
@@ -188,7 +188,7 @@ resource "ibm_iam_authorization_policy" "kms_server_protect_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should create the correct policy"
+        "it should create the correct policy",
       );
     });
     it("should return a correct server protect policy with data source", () => {
@@ -213,7 +213,7 @@ resource "ibm_iam_authorization_policy" "kms_server_protect_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should create the correct policy"
+        "it should create the correct policy",
       );
     });
     it("should return a correct server protect policy with data source and hpcs", () => {
@@ -239,7 +239,7 @@ resource "ibm_iam_authorization_policy" "kms_server_protect_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should create the correct policy"
+        "it should create the correct policy",
       );
     });
     it("should return a correct server protectblock storage policy", () => {
@@ -263,12 +263,12 @@ resource "ibm_iam_authorization_policy" "kms_block_storage_policy" {
           resource_group: "slz-service-rg",
           authorize_vpc_reader_role: true,
         },
-        true
+        true,
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should create the correct policy"
+        "it should create the correct policy",
       );
     });
   });
@@ -287,7 +287,7 @@ resource "ibm_iam_authorization_policy" "kms_block_storage_policy" {
             tags: ["hello", "world"],
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_kms_key_rings" "kms_ring_ring" {
@@ -298,7 +298,7 @@ resource "ibm_kms_key_rings" "kms_ring_ring" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return a correctly formatted ring"
+        "it should return a correctly formatted ring",
       );
     });
   });
@@ -321,7 +321,7 @@ resource "ibm_kms_key_rings" "kms_ring_ring" {
             prefix: "iac",
             endpoints: "private",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_kms_key" "kms_key_key" {
@@ -336,7 +336,7 @@ resource "ibm_kms_key" "kms_key_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return the correct key"
+        "it should return the correct key",
       );
     });
     it("should create the correct encryption key with authorization policies", () => {
@@ -358,7 +358,7 @@ resource "ibm_kms_key" "kms_key_key" {
             prefix: "iac",
             endpoints: "private",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_kms_key" "kms_key_key" {
@@ -377,7 +377,7 @@ resource "ibm_kms_key" "kms_key_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return the correct key"
+        "it should return the correct key",
       );
     });
     it("should create correct encryption key with correct endpoint", () => {
@@ -400,7 +400,7 @@ resource "ibm_kms_key" "kms_key_key" {
             prefix: "iac",
             endpoints: "private",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_kms_key" "kms_key_key" {
@@ -419,7 +419,7 @@ resource "ibm_kms_key" "kms_key_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return the correct key"
+        "it should return the correct key",
       );
     });
   });
@@ -443,7 +443,7 @@ resource "ibm_kms_key" "kms_key_key" {
           _options: {
             endpoints: "private",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_kms_key_policies" "kms_key_key_policy" {
@@ -461,7 +461,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
   });
@@ -499,7 +499,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
             prefix: "iac",
             endpoints: "private",
           },
-        }
+        },
       );
       let expectedData = `##############################################################################
 # Key Management Instance Kms
@@ -574,7 +574,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return terraform code"
+        "it should return terraform code",
       );
     });
     it("should create all of the above items for a sigle key management instance with no iam roles", () => {
@@ -610,7 +610,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
             prefix: "iac",
             endpoints: "private",
           },
-        }
+        },
       );
       let expectedData = `##############################################################################
 # Key Management Instance Kms
@@ -659,7 +659,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return terraform code"
+        "it should return terraform code",
       );
     });
   });
@@ -772,7 +772,7 @@ resource "ibm_kms_key_policies" "kms_key_key_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return terraform code"
+        "it should return terraform code",
       );
     });
     it("should create code for one instance from configuration file with no rotation for standard keys", () => {
@@ -872,7 +872,7 @@ resource "ibm_kms_key" "kms_key_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return terraform code"
+        "it should return terraform code",
       );
     });
     it("should create code for one instance from configuration file with no rotation for standard keys and no key ring", () => {
@@ -966,7 +966,7 @@ resource "ibm_kms_key" "kms_key_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return terraform code"
+        "it should return terraform code",
       );
     });
     it("should create code for more than one instance from configuration file", () => {
@@ -1165,7 +1165,7 @@ resource "ibm_kms_key_policies" "kms2_key_key_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return terraform code"
+        "it should return terraform code",
       );
     });
   });

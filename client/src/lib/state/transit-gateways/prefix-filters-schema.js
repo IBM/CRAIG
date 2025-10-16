@@ -37,24 +37,24 @@ function prefixFiltersSchema() {
         if (isNullOrEmptyString(stateData.connection_type)) return [];
         let parentTgw = new revision(componentProps.craig.store.json).child(
           "transit_gateways",
-          componentProps.arrayParentName
+          componentProps.arrayParentName,
         ).data;
         return stateData.connection_type === "VPC"
           ? splat(
               parentTgw.connections.filter((connection) => {
                 if (connection.vpc) return connection;
               }),
-              "vpc"
+              "vpc",
             )
           : stateData.connection_type === "Power VS"
-          ? splat(
-              parentTgw.connections.filter((connection) => {
-                if (connection.power) return connection;
-              }),
-              "power"
-            )
-          : // else gre
-            splat(parentTgw.gre_tunnels, "name");
+            ? splat(
+                parentTgw.connections.filter((connection) => {
+                  if (connection.power) return connection;
+                }),
+                "power",
+              )
+            : // else gre
+              splat(parentTgw.gre_tunnels, "name");
       },
       invalid: fieldIsNullOrEmptyString("target"),
       invalidText: selectInvalidText("connection target"),

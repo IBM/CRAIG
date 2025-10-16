@@ -12,15 +12,15 @@ export const ManageService = (props) => {
         (props.isSelected
           ? " serviceOpen"
           : disableSave(
-              props.service.overrideType || props.service.type,
-              props.service.data,
-              {
-                data: props.service.data,
-                craig: props.craig,
-              }
-            )
-          ? " noRgService"
-          : "") +
+                props.service.overrideType || props.service.type,
+                props.service.data,
+                {
+                  data: props.service.data,
+                  craig: props.craig,
+                },
+              )
+            ? " noRgService"
+            : "") +
         " " +
         props.className
       }

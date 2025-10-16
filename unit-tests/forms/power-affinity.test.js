@@ -8,7 +8,7 @@ describe("storageChangeDisabledCallback", () => {
   it("should be false when is modal", () => {
     assert.isFalse(
       storageChangeDisabledCallback({}, { isModal: true }),
-      "it should be false for modal forms"
+      "it should be false for modal forms",
     );
   });
   it("should be true for an instance when it is used by another instance for affinity", () => {
@@ -142,7 +142,7 @@ describe("storageChangeDisabledCallback", () => {
             pi_affinity_instance: "oracle-1",
           },
         ],
-      }
+      },
     );
     assert.isTrue(actualData, "it should be true");
   });
@@ -279,7 +279,7 @@ describe("storageChangeDisabledCallback", () => {
             pi_affinity_volume: null,
           },
         ],
-      }
+      },
     );
     assert.isTrue(actualData, "it should be true");
   });
@@ -397,7 +397,7 @@ describe("storageChangeDisabledCallback", () => {
             pi_affinity_instance: "oracle-1",
           },
         ],
-      }
+      },
     );
     assert.isTrue(actualData, "it should be true");
   });
@@ -515,7 +515,7 @@ describe("storageChangeDisabledCallback", () => {
             pi_anti_affinity_instance: "oracle-1",
           },
         ],
-      }
+      },
     );
     assert.isTrue(actualData, "it should be true");
   });
@@ -584,7 +584,7 @@ describe("storageChangeDisabledCallback", () => {
             pi_affinity_volume: "redo-1",
           },
         ],
-      }
+      },
     );
     assert.isTrue(actualData, "it should be true");
   });
@@ -653,7 +653,7 @@ describe("storageChangeDisabledCallback", () => {
             pi_affinity_volume: null,
           },
         ],
-      }
+      },
     );
     assert.isTrue(actualData, "it should be true");
   });
@@ -700,7 +700,7 @@ describe("storageChangeDisabledCallback", () => {
           affinity_type: null,
         },
         power_instances: [],
-      }
+      },
     );
     assert.isTrue(actualData, "it should be true");
   });
@@ -747,7 +747,7 @@ describe("storageChangeDisabledCallback", () => {
           affinity_type: null,
         },
         power_instances: [],
-      }
+      },
     );
     assert.isTrue(actualData, "it should be true");
   });

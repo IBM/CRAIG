@@ -105,7 +105,7 @@ describe("vpc", () => {
                 name: "managment",
               },
             ],
-          }
+          },
         );
       assert.doesNotThrow(task, "it should not throw an error");
     });
@@ -134,7 +134,7 @@ describe("vpc", () => {
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_vpc" "management_vpc" {
@@ -154,7 +154,7 @@ resource "ibm_is_vpc" "management_vpc" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create vpc terraform from data", () => {
@@ -181,7 +181,7 @@ resource "ibm_is_vpc" "management_vpc" {
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 data "ibm_is_vpc" "management_vpc" {
@@ -191,7 +191,7 @@ data "ibm_is_vpc" "management_vpc" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create vpc terraform with optional fields not null", () => {
@@ -217,7 +217,7 @@ data "ibm_is_vpc" "management_vpc" {
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_vpc" "management_vpc" {
@@ -237,7 +237,7 @@ resource "ibm_is_vpc" "management_vpc" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create vpc terraform with classic access and manual prefixes", () => {
@@ -263,7 +263,7 @@ resource "ibm_is_vpc" "management_vpc" {
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_vpc" "management_vpc" {
@@ -284,7 +284,7 @@ resource "ibm_is_vpc" "management_vpc" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -308,7 +308,7 @@ resource "ibm_is_vpc" "management_vpc" {
               name: "management",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
@@ -321,7 +321,7 @@ resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create terraform for vpc address prefix with data vpc", () => {
@@ -344,7 +344,7 @@ resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
               name: "management",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
@@ -357,7 +357,7 @@ resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -396,7 +396,7 @@ resource "ibm_is_vpc_address_prefix" "management_vsi_subnet_1_prefix" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
@@ -416,7 +416,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create subnet with vpc from data", () => {
@@ -454,7 +454,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
@@ -474,7 +474,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create subnet from data with vpc from data", () => {
@@ -513,7 +513,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 data "ibm_is_subnet" "management_vsi_subnet_1" {
@@ -523,7 +523,7 @@ data "ibm_is_subnet" "management_vsi_subnet_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create subnet with dynamic subnets", () => {
@@ -571,7 +571,7 @@ data "ibm_is_subnet" "management_vsi_subnet_1" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_subnet" "management_vsi_subnet_1" {
@@ -594,7 +594,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create subnet with a depends_on when no address_prefix is created", () => {
@@ -609,7 +609,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
           name: "f5-bastion-zone-1",
           public_gateway: false,
         },
-        f5Nw
+        f5Nw,
       );
       let expectedData = `
 resource "ibm_is_subnet" "edge_f5_bastion_zone_1" {
@@ -633,7 +633,7 @@ resource "ibm_is_subnet" "edge_f5_bastion_zone_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -764,7 +764,7 @@ resource "ibm_is_subnet" "edge_f5_bastion_zone_1" {
               name: "managment",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_network_acl" "management_management_acl" {
@@ -780,7 +780,7 @@ resource "ibm_is_network_acl" "management_management_acl" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format network acl with vpc from data", () => {
@@ -910,7 +910,7 @@ resource "ibm_is_network_acl" "management_management_acl" {
               use_data: true,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_network_acl" "management_management_acl" {
@@ -926,7 +926,7 @@ resource "ibm_is_network_acl" "management_management_acl" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format network acl from data with vpc from data", () => {
@@ -1057,7 +1057,7 @@ resource "ibm_is_network_acl" "management_management_acl" {
               use_data: true,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 data "ibm_is_network_acl" "management_management_acl" {
@@ -1067,7 +1067,7 @@ data "ibm_is_network_acl" "management_management_acl" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format network acl with nested rules", () => {
@@ -1197,7 +1197,7 @@ data "ibm_is_network_acl" "management_management_acl" {
             },
           ],
         },
-        true
+        true,
       );
       let expectedData = `
 resource "ibm_is_network_acl" "management_management_acl" {
@@ -1257,7 +1257,7 @@ resource "ibm_is_network_acl" "management_management_acl" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format network acl with nested rules and no rules", () => {
@@ -1286,7 +1286,7 @@ resource "ibm_is_network_acl" "management_management_acl" {
             },
           ],
         },
-        true
+        true,
       );
       let expectedData = `
 resource "ibm_is_network_acl" "management_management_acl" {
@@ -1302,7 +1302,7 @@ resource "ibm_is_network_acl" "management_management_acl" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -1346,7 +1346,7 @@ resource "ibm_is_network_acl" "management_management_acl" {
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound" {
@@ -1361,7 +1361,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format network acl rule with tcp protocol", () => {
@@ -1403,7 +1403,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound_8080" {
@@ -1424,7 +1424,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format network acl rule with udp protocol", () => {
@@ -1466,7 +1466,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound_8080" {
@@ -1487,7 +1487,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format network acl rule with icmp protocol", () => {
@@ -1529,7 +1529,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound_8080" {
@@ -1548,7 +1548,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format network acl rule with icmp protocol null", () => {
@@ -1590,7 +1590,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inbound_8080" {
@@ -1609,7 +1609,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -1633,7 +1633,7 @@ resource "ibm_is_network_acl_rule" "management_management_acl_rule_allow_ibm_inb
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_public_gateway" "management_gateway_zone_1" {
@@ -1650,7 +1650,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format a public gateway with an overriden name", () => {
@@ -1673,7 +1673,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
               name: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_public_gateway" "management_override_gw" {
@@ -1690,7 +1690,7 @@ resource "ibm_is_public_gateway" "management_override_gw" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -1855,7 +1855,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create vpc terraform with vpc and acl from data", () => {
@@ -1995,7 +1995,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create vpc terraform with multiple vpcs", () => {
@@ -2299,7 +2299,7 @@ resource "ibm_is_subnet" "management_vsi_subnet_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct data for f5 nw", () => {
@@ -3501,7 +3501,7 @@ resource "ibm_is_subnet" "edge_vpn_2_zone_3" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     describe("other use cases", () => {
@@ -4005,7 +4005,7 @@ resource "ibm_is_subnet" "customer_a_subnet_tier_zone_2" {
         assert.deepEqual(
           actualData,
           expectedData,
-          "should return correct data"
+          "should return correct data",
         );
       });
     });
@@ -5770,7 +5770,7 @@ module "smatzek_vpc" {
       assert.deepEqual(
         actualData["main.tf"],
         expectedData["main.tf"],
-        "should return correct data"
+        "should return correct data",
       );
     });
     it("should return craig terraform for edge network in module", () => {
@@ -8540,7 +8540,7 @@ resource "ibm_is_subnet" "edge_vpn_2_zone_3" {
       assert.deepEqual(
         actualData.edge_vpc["main.tf"],
         expectedData,
-        "should return correct data"
+        "should return correct data",
       );
     });
   });
@@ -8556,7 +8556,7 @@ resource "ibm_is_subnet" "edge_vpn_2_zone_3" {
           _options: {
             tags: [],
           },
-        }
+        },
       );
       let expectedData = {
         test_case_vpc: {
@@ -8572,7 +8572,7 @@ resource "ibm_is_subnet" "edge_vpn_2_zone_3" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted module"
+        "it should return correctly formatted module",
       );
     });
     it("should return correct module for imported vpc with no rg", () => {
@@ -8586,7 +8586,7 @@ resource "ibm_is_subnet" "edge_vpn_2_zone_3" {
           _options: {
             tags: [],
           },
-        }
+        },
       );
       let expectedData = {
         test_case_vpc: {
@@ -8602,7 +8602,7 @@ resource "ibm_is_subnet" "edge_vpn_2_zone_3" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted module"
+        "it should return correctly formatted module",
       );
     });
   });

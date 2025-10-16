@@ -42,7 +42,7 @@ function powerVsOnStoreUpdate(config) {
       if (
         !contains(
           config.store.json._options.power_vs_zones || "",
-          workspace.zone
+          workspace.zone,
         )
       ) {
         workspace.zone = null;
@@ -251,7 +251,7 @@ function powerVsCloudConnectionCreate(config, stateData, componentProps) {
     "power",
     "cloud_connections",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -267,7 +267,7 @@ function powerVsCloudConnectionSave(config, stateData, componentProps) {
     "power",
     "cloud_connections",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -330,7 +330,7 @@ function initPowerVsStore(store) {
     delete: powerVsDelete,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "imageNames", "resource_group", "zone"],
-      "power"
+      "power",
     ),
     schema: powerVsWorkspaceSchema(),
     subComponents: {
@@ -341,7 +341,7 @@ function initPowerVsStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "public_key"],
           "power",
-          "ssh_keys"
+          "ssh_keys",
         ),
         schema: sshKeySchema("power_vs_ssh_keys"),
       },
@@ -352,7 +352,7 @@ function initPowerVsStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "pi_cidr", "pi_dns", "pi_network_type", "pi_network_mtu"],
           "power",
-          "network"
+          "network",
         ),
         schema: powerVsNetworkSchema(),
       },
@@ -363,7 +363,7 @@ function initPowerVsStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "transit_gateways", "pi_cloud_connection_speed"],
           "power",
-          "cloud_connections"
+          "cloud_connections",
         ),
         schema: powerVsCloudConnectionsSchema(),
       },
@@ -376,7 +376,7 @@ function initPowerVsStore(store) {
               let parentConnections = getObjectFromArray(
                 componentProps.craig.store.json.power,
                 "name",
-                componentProps.arrayParentName
+                componentProps.arrayParentName,
               ).cloud_connections;
               return splat(parentConnections, "name");
             },

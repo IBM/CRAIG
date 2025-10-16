@@ -21,7 +21,7 @@ function formatPowerVsVolume(volume, config) {
     provider: volume.zone
       ? `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`
       : `\${ibm.power_vs_${snakeCase(
-          getObjectFromArray(config.power, "name", volume.workspace).zone
+          getObjectFromArray(config.power, "name", volume.workspace).zone,
         )}}`,
     pi_cloud_instance_id: foundWorkspace
       ? powerVsWorkspaceRef(
@@ -29,7 +29,7 @@ function formatPowerVsVolume(volume, config) {
           config?.power
             ? getObjectFromArray(config.power, "name", volume.workspace)
                 .use_data
-            : false
+            : false,
         )
       : "ERROR: Unfound Ref",
     pi_volume_size: Number(volume.pi_volume_size),
@@ -43,21 +43,21 @@ function formatPowerVsVolume(volume, config) {
       data.pi_affinity_policy = volume.pi_affinity_policy;
       // field will be some combination of pi [anti_affinity|affinity] [volume|instance]
       let affinityField = snakeCase(
-        `pi ${volume.pi_affinity_policy} ${volume.affinity_type}`
+        `pi ${volume.pi_affinity_policy} ${volume.affinity_type}`,
       );
       if (volume.affinity_type === "Instance") {
         data[affinityField] = `\${ibm_pi_instance.${snakeCase(
-          `${volume.workspace}_workspace_instance_${volume[affinityField]}`
+          `${volume.workspace}_workspace_instance_${volume[affinityField]}`,
         )}.instance_id}`;
       } else {
         data[affinityField] = `\${ibm_pi_volume.${snakeCase(
-          volume.workspace + " volume " + volume[affinityField]
+          volume.workspace + " volume " + volume[affinityField],
         )}.volume_id}`;
       }
     } else {
       data.pi_volume_pool = volume.pi_volume_pool?.replace(
         " (Replication Enabled)",
-        ""
+        "",
       );
     }
   }
@@ -72,7 +72,7 @@ function formatPowerVsVolume(volume, config) {
         "resource",
         "ibm_pi_volume",
         `${snakeCase(volume.workspace)} volume ${snakeCase(volume.name)} ${i}`,
-        volumeData
+        volumeData,
       );
     }
     return volumeTf;
@@ -81,7 +81,7 @@ function formatPowerVsVolume(volume, config) {
       "resource",
       "ibm_pi_volume",
       `${snakeCase(volume.workspace)} volume ${snakeCase(volume.name)}`,
-      data
+      data,
     );
 }
 
@@ -97,31 +97,31 @@ function formatPowerVsVolumeAttachment(
   instance,
   lastAttachment,
   config,
-  count
+  count,
 ) {
   let volumeData = {
     provider: volume.zone
       ? `\${ibm.power_vs${snakeCase("_" + volume.zone)}}`
       : `\${ibm.power_vs_${snakeCase(
-          getObjectFromArray(config.power, "name", volume.workspace).zone
+          getObjectFromArray(config.power, "name", volume.workspace).zone,
         )}}`,
     pi_cloud_instance_id: powerVsWorkspaceRef(
       volume.workspace,
       config?.power
         ? getObjectFromArray(config.power, "name", volume.workspace).use_data
-        : false
+        : false,
     ),
     pi_volume_id: `\${ibm_pi_volume.${snakeCase(
-      volume.workspace + " volume " + volume.name
+      volume.workspace + " volume " + volume.name,
     )}${count ? "_" + count : ""}.volume_id}`,
     pi_instance_id: contains(instance, "VTL")
       ? `\${ibm_pi_instance.${snakeCase(
           volume.workspace +
             " falconstor vtl " +
-            instance.replace(/\s\(VTL\)/, "")
+            instance.replace(/\s\(VTL\)/, ""),
         )}.instance_id}`
       : `\${ibm_pi_instance.${snakeCase(
-          `${volume.workspace}_workspace_instance_${instance}`
+          `${volume.workspace}_workspace_instance_${instance}`,
         )}.instance_id}`,
     lifecycle: [
       {
@@ -141,7 +141,7 @@ function formatPowerVsVolumeAttachment(
       instance.replace(/\s\(VTL\)/, "") +
       (contains(instance, "(") ? "_vtl" : "")
     } instance`,
-    volumeData
+    volumeData,
   );
 }
 
@@ -162,12 +162,12 @@ function powerVsVolumeTf(config) {
           instance,
           lastAttachmentAddress,
           config,
-          count ? i + 1 : undefined
+          count ? i + 1 : undefined,
         );
         lastAttachmentAddress = `\${ibm_pi_volume_attach.${snakeCase(
           `${volume.workspace} attach ${volume.name}${
             count ? "_" + (i + 1) : ""
-          } to ${instance.replace(/\s\(VTL\)/, "_vtl")} instance`
+          } to ${instance.replace(/\s\(VTL\)/, "_vtl")} instance`,
         )}}`;
       }
     });

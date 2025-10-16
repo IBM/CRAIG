@@ -17,9 +17,9 @@ describe("icd", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a database instance has an duplicate name", () => {
@@ -48,9 +48,9 @@ describe("icd", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a database instance has an invalid resource group", () => {
@@ -63,9 +63,9 @@ describe("icd", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a database instance has an invalid service", () => {
@@ -78,9 +78,9 @@ describe("icd", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a database instance has a non-whole number memory input", () => {
@@ -99,9 +99,9 @@ describe("icd", () => {
           },
           memoryMin: 1,
           memoryMax: 112,
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a database instance has an invalid integer memory input", () => {
@@ -120,9 +120,9 @@ describe("icd", () => {
           },
           memoryMin: 1,
           memoryMax: 112,
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a database instance has a non-whole number disk input", () => {
@@ -144,9 +144,9 @@ describe("icd", () => {
           memoryMax: 112,
           diskMin: 5,
           diskMax: 4096,
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a database instance has an invalid integer disk input", () => {
@@ -168,9 +168,9 @@ describe("icd", () => {
           memoryMax: 112,
           diskMin: 5,
           diskMax: 4096,
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a database instance has a non-whole number cpu input", () => {
@@ -195,9 +195,9 @@ describe("icd", () => {
           diskMax: 4096,
           cpuMin: 0,
           cpuMax: 28,
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a database instance has an invalid integer cpu input", () => {
@@ -222,9 +222,9 @@ describe("icd", () => {
           diskMax: 4096,
           cpuMin: 0,
           cpuMax: 28,
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return false otherwise", () => {
@@ -251,9 +251,9 @@ describe("icd", () => {
           },
           cpuMin: 3,
           cpuMax: 28,
-        }
+        },
       ),
-      "it should be false"
+      "it should be false",
     );
   });
 });

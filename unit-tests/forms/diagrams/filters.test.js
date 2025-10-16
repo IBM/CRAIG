@@ -58,7 +58,7 @@ describe("filter functions", () => {
             private_vlan: "classic-priv-vlan",
           },
         ],
-        "it should return list of filtered classic gateways"
+        "it should return list of filtered classic gateways",
       );
     });
     it("should return a list of filtered classic gateways for a non-HADR gateway with a private and public vlan", () => {
@@ -86,7 +86,7 @@ describe("filter functions", () => {
             public_vlan: "classic-pub-vlan",
           },
         ],
-        "it should return list of filtered classic gateways"
+        "it should return list of filtered classic gateways",
       );
     });
     it("should return a list of filtered classic gateways for a HADR gateway", () => {
@@ -119,7 +119,7 @@ describe("filter functions", () => {
             private_vlan: "classic-priv-vlan",
           },
         ],
-        "it should return list of filtered classic gateways"
+        "it should return list of filtered classic gateways",
       );
     });
     it("should return an empty list if no vlans provided in props", () => {
@@ -137,7 +137,7 @@ describe("filter functions", () => {
       assert.deepEqual(
         actualData,
         [],
-        "it should return list of filtered classic gateways"
+        "it should return list of filtered classic gateways",
       );
     });
   });
@@ -214,7 +214,7 @@ describe("filter functions", () => {
             index: 1,
           },
         ],
-        "it should return list of filtered classic gateways"
+        "it should return list of filtered classic gateways",
       );
     });
   });
@@ -237,7 +237,7 @@ describe("filter functions", () => {
           },
         }),
         [{ name: "hi" }],
-        "it should return list"
+        "it should return list",
       );
     });
     it("should return a list of subnets when no vtl has unfound subnets in a different workspace subnets", () => {
@@ -260,7 +260,7 @@ describe("filter functions", () => {
           },
         }),
         [{ name: "hi" }],
-        "it should return list"
+        "it should return list",
       );
     });
     it("should return a list of subnets when no vtl has unfound subnets in workspace", () => {
@@ -289,7 +289,7 @@ describe("filter functions", () => {
           },
           { name: "hi" },
         ],
-        "it should return list"
+        "it should return list",
       );
     });
   });
@@ -302,7 +302,7 @@ describe("filter functions", () => {
       assert.deepEqual(
         powerMapFilter({ craig: craig }),
         [],
-        "it should send list of workspaces"
+        "it should send list of workspaces",
       );
     });
     it("should return a list of workspaces when instances have null workspace", () => {
@@ -311,7 +311,7 @@ describe("filter functions", () => {
       assert.deepEqual(
         powerMapFilter({ craig: craig }),
         [{ name: null }],
-        "it should send list of workspaces"
+        "it should send list of workspaces",
       );
     });
   });
@@ -338,7 +338,7 @@ describe("filter functions", () => {
             vpc: "test-vpc",
           },
         ],
-        "it should return filtered routing tables"
+        "it should return filtered routing tables",
       );
     });
     it("should return no routing tables if vpc does not match", () => {
@@ -351,7 +351,7 @@ describe("filter functions", () => {
       assert.deepEqual(
         routingTableFilter({ craig: craig, vpc: { name: "fake-vpc" } }),
         [],
-        "it should return empty array"
+        "it should return empty array",
       );
     });
   });
@@ -378,7 +378,7 @@ describe("filter functions", () => {
             index: 0,
           },
         ],
-        "it should return filtered vsi"
+        "it should return filtered vsi",
       );
     });
     it("should return the vsi that contains the matching private vlan", () => {
@@ -399,7 +399,7 @@ describe("filter functions", () => {
             index: 0,
           },
         ],
-        "it should return filtered vsi"
+        "it should return filtered vsi",
       );
     });
     it("should return empty array if no vlans match", () => {
@@ -413,7 +413,7 @@ describe("filter functions", () => {
       assert.deepEqual(
         classicVsiFilter({ craig: craig, vlan: "fake-vlan" }),
         [],
-        "it should return empty array"
+        "it should return empty array",
       );
     });
   });
@@ -471,7 +471,7 @@ describe("filter functions", () => {
       assert.deepEqual(
         actualData,
         [{ name: null }, { name: "acl1" }],
-        "should be equal"
+        "should be equal",
       );
     });
     it("should return list of acls when use_data is false", () => {
@@ -481,7 +481,7 @@ describe("filter functions", () => {
       assert.deepEqual(
         actualData,
         [{ name: null }, { name: "acl1" }, { name: "acl2" }],
-        "should be equal"
+        "should be equal",
       );
     });
     it("should return empty array when no subnets or acls", () => {
@@ -505,7 +505,7 @@ describe("filter functions", () => {
       assert.deepEqual(
         classicSubnetsFilter({ craig: craig, datacenter: "wdc07" }),
         [],
-        "it should be empty"
+        "it should be empty",
       );
     });
     it("should return subnets when vlans exist in datacenter", () => {
@@ -518,7 +518,7 @@ describe("filter functions", () => {
             type: "PRIVATE",
           },
         ],
-        "it should return one vlan"
+        "it should return one vlan",
       );
     });
   });

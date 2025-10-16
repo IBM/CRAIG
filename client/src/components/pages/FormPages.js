@@ -423,7 +423,7 @@ export const F5BigIp = (craig, isBeta) => {
       resource_group: craig.store.json.f5_vsi[0].resource_group,
       ssh_keys: craig.store.json.f5_vsi[0].ssh_keys,
       image: /f5-bigip-(15-1-5-1-0-0-14|16-1-2-2-0-0-28)-(ltm|all)-1slot/.exec(
-        craig.store.json.f5_vsi[0].image
+        craig.store.json.f5_vsi[0].image,
       )[0], // keep only image name in props
       profile: craig.store.json.f5_vsi[0].profile,
       zones: craig.store.json.f5_vsi.length,
@@ -577,7 +577,7 @@ const IamAccountSettings = (craig) => {
       hide={false}
       about={RenderDocs(
         "iam_account_settings",
-        craig.store.json._options.template
+        craig.store.json._options.template,
       )()}
       noDeleteButton={craig.store.json.iam_account_settings.enable === false}
       useAddButton={craig.store.json.iam_account_settings.enable === false}
@@ -676,7 +676,7 @@ class NetworkAcls extends React.Component {
     let vpcIndex = arraySplatIndex(
       this.props.craig.store.json.vpcs,
       "name",
-      this.props.data.name
+      this.props.data.name,
     );
     return (
       <>
@@ -1087,7 +1087,7 @@ const SubnetsPage = (craig) => {
                 vpcIndex: arraySplatIndex(
                   craig.store.json.vpcs,
                   "name",
-                  this.props.data.name
+                  this.props.data.name,
                 ),
                 subnetTierIndex: -1,
                 aclName: "",
@@ -1162,7 +1162,7 @@ const SubnetsPage = (craig) => {
               vpcIndex={arraySplatIndex(
                 craig.store.json.vpcs,
                 "name",
-                this.props.data.name
+                this.props.data.name,
               )}
               subnetTierIndex={tierIndex}
               onDelete={craig.vpcs.subnetTiers.delete}

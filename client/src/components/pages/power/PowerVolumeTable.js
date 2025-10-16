@@ -43,7 +43,7 @@ export class PowerVolumeTable extends React.Component {
               {
                 data: this.state.data,
                 craig: this.props.craig,
-              }
+              },
             );
             this.setState({ showModal: false, selectedName: "", data: {} });
           }}
@@ -81,7 +81,7 @@ export class PowerVolumeTable extends React.Component {
                     volume.attachments,
                     craig.store.json.power_instances[
                       this.props.parentState.selectedIndex
-                    ].name
+                    ].name,
                   )
                 ) {
                   return volume;

@@ -28,9 +28,9 @@ describe("craig api", () => {
       return api.craigTar({ body: {} }, res).catch(() => {
         assert.isTrue(
           res.send.calledOnceWith(
-            "TypeError: Cannot read properties of undefined (reading 'classic')"
+            "TypeError: Cannot read properties of undefined (reading 'classic')",
           ),
-          "it should call res send"
+          "it should call res send",
         );
       });
     });
@@ -175,13 +175,13 @@ describe("craig api", () => {
           {
             body: slz,
           },
-          res
+          res,
         )
         .then(() => {
           assert.deepEqual(
             tar.files,
             expectedFiles,
-            "it should set correct files"
+            "it should set correct files",
           );
         });
     });
@@ -197,11 +197,13 @@ describe("craig api", () => {
           {
             params: { template: "fake-template" },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
-            res.send.calledOnceWith("No template found with name fake-template")
+            res.send.calledOnceWith(
+              "No template found with name fake-template",
+            ),
           );
         });
     }).timeout(100000);
@@ -298,7 +300,7 @@ describe("craig api", () => {
           assert.deepEqual(
             tar.files,
             expectedFiles,
-            "it should set correct files"
+            "it should set correct files",
           );
         });
     });
@@ -321,7 +323,7 @@ describe("craig api", () => {
           assert.deepEqual(
             getObjectFromArray(tar.files, "name", "mixed/variables.tf"),
             expectedFiles,
-            "it should set correct files"
+            "it should set correct files",
           );
         });
     });
@@ -337,7 +339,7 @@ describe("craig api", () => {
           {
             params: { template: "fake-template" },
           },
-          res
+          res,
         )
         .then(() => {
           assert.deepEqual(res.send.lastCall.args[0].status, 404);
@@ -358,7 +360,7 @@ describe("craig api", () => {
               },
             },
           },
-          res
+          res,
         )
         .then(() => {
           assert.deepEqual(res.send.lastCall.args[0].status, 400);
@@ -478,13 +480,13 @@ describe("craig api", () => {
               ],
             },
           },
-          res
+          res,
         )
         .then(() => {
           assert.deepEqual(
             tar.files,
             expectedFiles,
-            "it should contain added-rg in the tar file"
+            "it should contain added-rg in the tar file",
           );
         });
     });
@@ -512,7 +514,7 @@ describe("craig api", () => {
               ],
             },
           },
-          res
+          res,
         )
         .then(() => {
           assert.deepEqual(
@@ -708,7 +710,7 @@ describe("craig api", () => {
                 "\n" +
                 "##############################################################################\n",
             },
-            "it should contain added-rg in the tar file"
+            "it should contain added-rg in the tar file",
           );
         });
     });

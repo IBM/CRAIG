@@ -21,7 +21,7 @@ function dynamicIcseFormGroupsProps(componentProps, index, stateData) {
         allNextGroupsHidden = allGroupItemsHidden(
           componentProps.form.groups[i],
           stateData,
-          componentProps
+          componentProps,
         );
     }
   }

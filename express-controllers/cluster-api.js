@@ -58,7 +58,7 @@ function clusterRoutes(axios, controller) {
               // add to front if default
               `${element.major}.${element.minor}.${element.patch}${
                 openshift ? "_openshift" : "" // add type
-              }${element.default ? " (Default)" : ""}`
+              }${element.default ? " (Default)" : ""}`,
             );
           }
 

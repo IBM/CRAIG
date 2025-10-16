@@ -45,7 +45,7 @@ function eventStreamsSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "event_streams"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -104,7 +104,7 @@ function initEventStreams(store) {
         "endpoints",
         "plan",
       ],
-      "event_streams"
+      "event_streams",
     ),
     schema: {
       name: nameField("event_streams", { size: "small" }),

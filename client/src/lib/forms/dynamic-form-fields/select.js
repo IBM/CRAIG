@@ -53,7 +53,7 @@ function dynamicSelectProps(props, isMounted, stateData) {
     props.field.invalidText,
     "props.handleInputChange",
     "Function",
-    props.handleInputChange
+    props.handleInputChange,
   );
 
   // check params for disabled
@@ -69,14 +69,14 @@ function dynamicSelectProps(props, isMounted, stateData) {
   let groups = groupsEvaluatesToArrayCheck(
     props,
     "dynamicSelectProps",
-    stateValue
+    stateValue,
   );
 
   let invalid = isDisabled
     ? false
     : contains(groups, stateValue)
-    ? invalidReturnsBooleanCheck(props, "dynamicSelectProps")
-    : props.field.invalid(props.parentState, props.parentProps);
+      ? invalidReturnsBooleanCheck(props, "dynamicSelectProps")
+      : props.field.invalid(props.parentState, props.parentProps);
 
   // hide text when tooltip so that multiple name labels are not rendered
   let labelText = props.field.tooltip
@@ -85,7 +85,7 @@ function dynamicSelectProps(props, isMounted, stateData) {
   let invalidText = fieldFunctionReturnsStringCheck(
     props,
     "dynamicSelectProps",
-    "invalidText"
+    "invalidText",
   );
 
   return {
@@ -98,7 +98,7 @@ function dynamicSelectProps(props, isMounted, stateData) {
     value: String(stateValue || ""),
     className: addClassName(
       `leftTextAlign${props.field.tooltip ? " tooltip" : ""}`,
-      props.field
+      props.field,
     ),
     disabled: isDisabled,
     invalid: invalid,
@@ -106,8 +106,8 @@ function dynamicSelectProps(props, isMounted, stateData) {
     readOnly: !props.field.readOnly
       ? false
       : isFunction(props.field.readOnly)
-      ? props.field.readOnly(props.parentState, props.parentProps)
-      : props.field.readOnly,
+        ? props.field.readOnly(props.parentState, props.parentProps)
+        : props.field.readOnly,
     onChange: props.handleInputChange,
     groups: groups,
   };
@@ -123,7 +123,7 @@ function dynamicSelectProps(props, isMounted, stateData) {
 function dynamicFetchSelectDataToGroups(stateData, componentProps, isMounted) {
   let apiEndpoint = componentProps.field.apiEndpoint(
     componentProps.parentState,
-    componentProps.parentProps
+    componentProps.parentProps,
   );
 
   if (apiEndpoint === "/api/cluster/versions") {
@@ -145,7 +145,7 @@ function dynamicFetchSelectDataToGroups(stateData, componentProps, isMounted) {
         ) {
           return version.replace(/\s\(Default\)/g, "");
         }
-      })
+      }),
     );
   } else {
     // to prevent storage pools from being loaded incorrectly,
@@ -170,7 +170,7 @@ function dynamicFetchSelectDataToGroups(stateData, componentProps, isMounted) {
                   [componentProps.name]: item,
                 });
               } else return item;
-            }
+            },
       );
     return data.filter((item) => {
       if (item !== undefined) return true;

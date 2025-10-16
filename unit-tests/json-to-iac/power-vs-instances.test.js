@@ -57,7 +57,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data with no ssh key", () => {
@@ -107,7 +107,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data with pin policy", () => {
@@ -157,7 +157,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data with pin policy", () => {
@@ -207,7 +207,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data with ibm i licenses", () => {
@@ -263,7 +263,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data with ibm i licenses", () => {
@@ -316,7 +316,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data when workspace is from data", () => {
@@ -406,7 +406,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_instance" "example_workspace_instance_test" {
@@ -433,7 +433,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data when workspace is from data and no ws", () => {
@@ -471,7 +471,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
             },
           ],
           power: [],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_instance" "example_workspace_instance_test" {
@@ -498,7 +498,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data when workspace and ssh key are from data", () => {
@@ -589,7 +589,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_instance" "example_workspace_instance_test" {
@@ -616,7 +616,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data when workspace, ssh key, and network are from data", () => {
@@ -708,7 +708,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_instance" "example_workspace_instance_test" {
@@ -735,7 +735,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data when workspace, ssh key, network, and image are from data", () => {
@@ -828,7 +828,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_instance" "example_workspace_instance_test" {
@@ -855,7 +855,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data with userdata", () => {
@@ -908,7 +908,7 @@ data
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data with sap enabled", () => {
@@ -956,7 +956,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data with BYO IP", () => {
@@ -1007,7 +1007,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data with storage pool", () => {
@@ -1056,7 +1056,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data with affinity instance", () => {
@@ -1110,7 +1110,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data with anti-affinity instance", () => {
@@ -1170,7 +1170,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data with affinity volume", () => {
@@ -1229,7 +1229,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should correctly return power vs instance data with anti-affinity volume", () => {
@@ -1289,7 +1289,7 @@ resource "ibm_pi_instance" "example_workspace_instance_frog" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     describe("formatFalconStorInstance", () => {
@@ -1342,7 +1342,7 @@ resource "ibm_pi_instance" "example_falconstor_vtl_test" {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return correct instance data"
+          "it should return correct instance data",
         );
       });
     });
@@ -1368,7 +1368,7 @@ resource "ibm_pi_shared_processor_pool" "example_workspace_test_processor_pool" 
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should return correct data with existing workspace from data", () => {
@@ -1387,7 +1387,7 @@ resource "ibm_pi_shared_processor_pool" "example_workspace_test_processor_pool" 
               use_data: true,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_shared_processor_pool" "example_workspace_test_processor_pool" {
@@ -1401,7 +1401,7 @@ resource "ibm_pi_shared_processor_pool" "example_workspace_test_processor_pool" 
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should return correct data with unfound workspace ref", () => {
@@ -1420,7 +1420,7 @@ resource "ibm_pi_shared_processor_pool" "example_workspace_test_processor_pool" 
               use_data: true,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_shared_processor_pool" "example_workspace_test_processor_pool" {
@@ -1434,7 +1434,7 @@ resource "ibm_pi_shared_processor_pool" "example_workspace_test_processor_pool" 
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
   });
@@ -1457,7 +1457,7 @@ resource "ibm_pi_placement_group" "example_workspace_test_placement_group" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should return correct data with existing workspace from data", () => {
@@ -1476,7 +1476,7 @@ resource "ibm_pi_placement_group" "example_workspace_test_placement_group" {
               use_data: true,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_placement_group" "example_workspace_test_placement_group" {
@@ -1488,7 +1488,7 @@ resource "ibm_pi_placement_group" "example_workspace_test_placement_group" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should return correct data with unfound workspace ref", () => {
@@ -1507,7 +1507,7 @@ resource "ibm_pi_placement_group" "example_workspace_test_placement_group" {
               use_data: true,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_placement_group" "example_workspace_test_placement_group" {
@@ -1519,7 +1519,7 @@ resource "ibm_pi_placement_group" "example_workspace_test_placement_group" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
   });
@@ -1606,7 +1606,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should return power file with placement group", () => {
@@ -1689,7 +1689,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
   });
@@ -1750,7 +1750,7 @@ resource "ibm_pi_instance" "example_workspace_instance_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should return power file with vtl", () => {
@@ -1859,7 +1859,7 @@ resource "ibm_pi_instance" "example_falconstor_vtl_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
     it("should return power file with vtl and manual naming", () => {
@@ -1971,7 +1971,7 @@ resource "ibm_pi_instance" "example_falconstor_vtl_test2" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct instance data"
+        "it should return correct instance data",
       );
     });
   });

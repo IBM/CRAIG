@@ -22,13 +22,13 @@ function initPlacementGroupStore(store) {
       config.updateChild(
         ["json", "power_placement_groups"],
         componentProps.data.name,
-        stateData
+        stateData,
       );
     },
     delete: function (config, stateData, componentProps) {
       config.carve(
         ["json", "power_placement_groups"],
-        componentProps.data.name
+        componentProps.data.name,
       );
     },
     onStoreUpdate: function (config) {
@@ -43,7 +43,7 @@ function initPlacementGroupStore(store) {
     },
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "workspace", "pi_placement_group_policy"],
-      "power_placement_groups"
+      "power_placement_groups",
     ),
     schema: {
       workspace: {
@@ -54,7 +54,7 @@ function initPlacementGroupStore(store) {
         groups: powerVsWorkspaceGroups,
         onStateChange: function (stateData, componentProps) {
           let powerWorkspaceZone = new revision(
-            componentProps.craig.store.json
+            componentProps.craig.store.json,
           ).child("power", stateData.workspace).data.zone;
           stateData.zone = powerWorkspaceZone;
         },

@@ -27,8 +27,8 @@ export const LoadingModal = (props) => {
         props.customHeading
           ? props.customHeading
           : props.completed === false
-          ? `${task} Schematics Workspace: ${props.workspace}`
-          : `${task} ` + (isFailed ? "Failed!" : "Completed!")
+            ? `${task} Schematics Workspace: ${props.workspace}`
+            : `${task} ` + (isFailed ? "Failed!" : "Completed!")
       }
       // complete
       onRequestSubmit={() => {
@@ -53,7 +53,7 @@ export const LoadingModal = (props) => {
           // didn't fail so only need onRequestSubmit for upload
           window.open(
             props.workspace_url + (isUpload ? "/jobs" : ""),
-            "_blank"
+            "_blank",
           );
         }
       }}

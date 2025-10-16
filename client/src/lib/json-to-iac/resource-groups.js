@@ -28,7 +28,7 @@ function formatResourceGroup(group, config) {
     getResourceOrData(group),
     "ibm_resource_group",
     group.name,
-    rgValues
+    rgValues,
   );
 }
 

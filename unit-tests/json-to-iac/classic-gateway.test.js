@@ -61,7 +61,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return properly formatted gw"
+        "it should return properly formatted gw",
       );
     });
     it("should return a network gateway with one member and private network only", () => {
@@ -118,7 +118,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return properly formatted gw"
+        "it should return properly formatted gw",
       );
     });
     it("should return a network gateway with two members", () => {
@@ -200,7 +200,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return properly formatted gw"
+        "it should return properly formatted gw",
       );
     });
   });
@@ -298,7 +298,7 @@ resource "ibm_network_gateway" "classic_gateway_gw" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return properly formatted gw"
+        "it should return properly formatted gw",
       );
     });
   });

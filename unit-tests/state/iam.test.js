@@ -34,7 +34,7 @@ describe("iam", () => {
             session_expiration_in_seconds: null,
             session_invalidation_in_seconds: null,
           },
-          "it should set defaults"
+          "it should set defaults",
         );
       });
     });
@@ -48,7 +48,7 @@ describe("iam", () => {
         assert.deepEqual(
           craig.store.json.iam_account_settings.include_history,
           false,
-          "it should set value to false"
+          "it should set value to false",
         );
       });
       it("should update", () => {
@@ -56,7 +56,7 @@ describe("iam", () => {
         assert.deepEqual(
           craig.store.json.iam_account_settings.enable,
           true,
-          "it should set value to true"
+          "it should set value to true",
         );
       });
     });
@@ -67,14 +67,14 @@ describe("iam", () => {
             mfa: "TOTP MFA",
           }),
           "TOTP MFA",
-          "should be equal"
+          "should be equal",
         );
       });
       it("should return correct value mfa.onRender when null", () => {
         assert.deepEqual(
           craig.iam_account_settings.mfa.onRender(),
           "",
-          "should be equal"
+          "should be equal",
         );
       });
       it("should return correct value mfa.onStateChange", () => {
@@ -97,7 +97,7 @@ describe("iam", () => {
             restrict_create_service_id: "Unset",
           }),
           "Unset",
-          "should be equal"
+          "should be equal",
         );
       });
       it("should return correct value restrict_create_service_id.onRender when null", () => {
@@ -106,7 +106,7 @@ describe("iam", () => {
             restrict_create_service_id: null,
           }),
           "",
-          "should be equal"
+          "should be equal",
         );
       });
       it("should return correct value restrict_create_service_id.onStateChange", () => {
@@ -114,12 +114,12 @@ describe("iam", () => {
           restrict_create_service_id: "Unset",
         };
         craig.iam_account_settings.restrict_create_service_id.onStateChange(
-          data
+          data,
         );
         assert.deepEqual(
           "NOT_SET",
           data.restrict_create_service_id,
-          "should be equal"
+          "should be equal",
         );
       });
       it("should return correct value restrict_create_service_id.onStateChange when null", () => {
@@ -127,12 +127,12 @@ describe("iam", () => {
           restrict_create_service_id: null,
         };
         craig.iam_account_settings.restrict_create_service_id.onStateChange(
-          data
+          data,
         );
         assert.deepEqual(
           null,
           data.restrict_create_service_id,
-          "should be equal"
+          "should be equal",
         );
       });
       it("should return correct value restrict_create_platform_apikey.onRender", () => {
@@ -141,7 +141,7 @@ describe("iam", () => {
             restrict_create_platform_apikey: "Unset",
           }),
           "Unset",
-          "should be equal"
+          "should be equal",
         );
       });
       it("should return correct value restrict_create_platform_apikey.onRender when null", () => {
@@ -150,7 +150,7 @@ describe("iam", () => {
             restrict_create_platform_apikey: null,
           }),
           "",
-          "should be equal"
+          "should be equal",
         );
       });
       it("should return correct value restrict_create_platform_apikey.onStateChange", () => {
@@ -158,12 +158,12 @@ describe("iam", () => {
           restrict_create_platform_apikey: "Unset",
         };
         craig.iam_account_settings.restrict_create_platform_apikey.onStateChange(
-          data
+          data,
         );
         assert.deepEqual(
           "NOT_SET",
           data.restrict_create_platform_apikey,
-          "should be equal"
+          "should be equal",
         );
       });
       it("should return correct value restrict_create_platform_apikey.onStateChange when null", () => {
@@ -171,12 +171,12 @@ describe("iam", () => {
           restrict_create_platform_apikey: null,
         };
         craig.iam_account_settings.restrict_create_platform_apikey.onStateChange(
-          data
+          data,
         );
         assert.deepEqual(
           null,
           data.restrict_create_platform_apikey,
-          "should be equal"
+          "should be equal",
         );
       });
     });
@@ -211,7 +211,7 @@ describe("iam", () => {
         },
         {
           innerFormProps: { arrayParentName: "test" },
-        }
+        },
       );
     }
     describe("access_groups.init", () => {
@@ -219,7 +219,7 @@ describe("iam", () => {
         assert.deepEqual(
           craig.store.json.access_groups,
           [],
-          "it should have empty array"
+          "it should have empty array",
         );
       });
     });
@@ -235,7 +235,7 @@ describe("iam", () => {
             craig.store.json.access_groups[0].policies[0].resources
               .resource_group,
             null,
-            "it should set unfound group to null"
+            "it should set unfound group to null",
           );
         });
         it("should set resource_group to null if a policy's resource object exists and contains a delete group name", () => {
@@ -243,7 +243,7 @@ describe("iam", () => {
           let task = () =>
             craig.resource_groups.delete(
               {},
-              { data: { name: "management-rg" } }
+              { data: { name: "management-rg" } },
             );
           assert.doesNotThrow(task, "it should not error");
         });
@@ -278,7 +278,7 @@ describe("iam", () => {
                 },
               },
             ],
-            "it should create an access group"
+            "it should create an access group",
           );
         });
       });
@@ -292,7 +292,7 @@ describe("iam", () => {
                 ibm_ids: [],
               },
             },
-            { data: { name: "test" } }
+            { data: { name: "test" } },
           );
           assert.deepEqual(
             craig.store.json.access_groups[0].invites,
@@ -300,7 +300,7 @@ describe("iam", () => {
               group: "frog",
               ibm_ids: [],
             },
-            "it should create an access group"
+            "it should create an access group",
           );
         });
       });
@@ -310,7 +310,7 @@ describe("iam", () => {
           assert.deepEqual(
             craig.store.json.access_groups,
             [],
-            "it should be empty"
+            "it should be empty",
           );
         });
       });
@@ -336,7 +336,7 @@ describe("iam", () => {
                 resource_instance_id: null,
               },
             },
-            "it should create policy"
+            "it should create policy",
           );
         });
       });
@@ -357,7 +357,7 @@ describe("iam", () => {
               data: {
                 name: "hi",
               },
-            }
+            },
           );
           assert.deepEqual(
             craig.store.json.access_groups[0].policies[0],
@@ -373,7 +373,7 @@ describe("iam", () => {
               },
               group: "test",
             },
-            "it should create policy"
+            "it should create policy",
           );
         });
       });
@@ -381,12 +381,12 @@ describe("iam", () => {
         it("should delete an access policy in an existing access group", () => {
           craig.access_groups.policies.delete(
             {},
-            { arrayParentName: "test", data: { name: "hi" } }
+            { arrayParentName: "test", data: { name: "hi" } },
           );
           assert.deepEqual(
             craig.store.json.access_groups[0].policies,
             [],
-            "it should have no policies"
+            "it should have no policies",
           );
         });
       });
@@ -405,10 +405,10 @@ describe("iam", () => {
                     },
                   },
                 },
-              }
+              },
             ),
             "test-policy",
-            "it should display data"
+            "it should display data",
           );
         });
         it("should not have resource group as invalid when empty string", () => {
@@ -416,7 +416,7 @@ describe("iam", () => {
             craig.access_groups.policies.resource_group.invalid({
               resource_group: "",
             }),
-            "it should be valid"
+            "it should be valid",
           );
         });
       });
@@ -435,7 +435,7 @@ describe("iam", () => {
               value: "value",
             },
           },
-          { innerFormProps: { arrayParentName: "test" } }
+          { innerFormProps: { arrayParentName: "test" } },
         );
       });
       describe("access_groups.dynamic_policies.create", () => {
@@ -453,7 +453,7 @@ describe("iam", () => {
                 value: "value",
               },
             },
-            "it should create the policy"
+            "it should create the policy",
           );
         });
       });
@@ -461,7 +461,7 @@ describe("iam", () => {
         it("should update a dynamic access policy in an existing access group", () => {
           craig.access_groups.dynamic_policies.save(
             { expiration: 3 },
-            { arrayParentName: "test", data: { name: "frog" } }
+            { arrayParentName: "test", data: { name: "frog" } },
           );
           assert.deepEqual(
             craig.store.json.access_groups[0].dynamic_policies[0],
@@ -476,7 +476,7 @@ describe("iam", () => {
                 value: "value",
               },
             },
-            "it should create the policy"
+            "it should create the policy",
           );
         });
       });
@@ -484,11 +484,11 @@ describe("iam", () => {
         it("should delete a dynamic access policy in an existing access group", () => {
           craig.access_groups.dynamic_policies.delete(
             {},
-            { arrayParentName: "test", data: { name: "frog" } }
+            { arrayParentName: "test", data: { name: "frog" } },
           );
           assert.isEmpty(
             craig.store.json.access_groups[0].dynamic_policies,
-            "it should have no dynamic policies"
+            "it should have no dynamic policies",
           );
         });
       });
@@ -498,13 +498,13 @@ describe("iam", () => {
             craig.access_groups.dynamic_policies.expiration.invalid({
               expiration: "",
             }),
-            "it should be valid"
+            "it should be valid",
           );
         });
         it("should be invalid when no identity provider", () => {
           assert.isTrue(
             craig.access_groups.dynamic_policies.identity_provider.invalid({}),
-            "it should be invalid"
+            "it should be invalid",
           );
         });
         it("should have invalid expiration when out of range", () => {
@@ -512,13 +512,13 @@ describe("iam", () => {
             craig.access_groups.dynamic_policies.expiration.invalid({
               expiration: "29",
             }),
-            "it should be invalid"
+            "it should be invalid",
           );
         });
         it("should hide helper text for claim", () => {
           assert.isNull(
             craig.access_groups.dynamic_policies.claim.helperText(),
-            "it should be hidden"
+            "it should be hidden",
           );
         });
         it("should set state on condition state change", () => {
@@ -535,7 +535,7 @@ describe("iam", () => {
                 claim: "aa",
               },
             },
-            "it should be hidden"
+            "it should be hidden",
           );
         });
         it("should set state on condition state change", () => {
@@ -551,7 +551,7 @@ describe("iam", () => {
                 claim: "aa",
               },
             },
-            "it should be hidden"
+            "it should be hidden",
           );
         });
         it("should return correct value on render for operator when empty string", () => {
@@ -562,7 +562,7 @@ describe("iam", () => {
               },
             }),
             "",
-            "it should return correct data"
+            "it should return correct data",
           );
         });
         it("should return correct value on render for operator when value", () => {
@@ -573,7 +573,7 @@ describe("iam", () => {
               },
             }),
             "Not Equals (Ignore Case)",
-            "it should return correct data"
+            "it should return correct data",
           );
         });
         it("should return correct value on state change for operator when value", () => {
@@ -581,35 +581,35 @@ describe("iam", () => {
             operator: "Not Equals (Ignore Case)",
             conditions: {},
           };
-          craig.access_groups.dynamic_policies.operator.onStateChange(data),
+          (craig.access_groups.dynamic_policies.operator.onStateChange(data),
             assert.deepEqual(
               data.conditions.operator,
               "NOT_EQUALS_IGNORE_CASE",
-              "it should return correct data"
-            );
+              "it should return correct data",
+            ));
         });
         it("should return correct value on state change for operator when value", () => {
           let data = {
             operator: "Not Equals (Ignore Case)",
           };
-          craig.access_groups.dynamic_policies.operator.onStateChange(data),
+          (craig.access_groups.dynamic_policies.operator.onStateChange(data),
             assert.deepEqual(
               data.conditions.operator,
               "NOT_EQUALS_IGNORE_CASE",
-              "it should return correct data"
-            );
+              "it should return correct data",
+            ));
         });
         it("should return correct value on state change for operator when empty string", () => {
           let data = {
             operator: "",
             conditions: {},
           };
-          craig.access_groups.dynamic_policies.operator.onStateChange(data),
+          (craig.access_groups.dynamic_policies.operator.onStateChange(data),
             assert.deepEqual(
               data.conditions.operator,
               "",
-              "it should return correct data"
-            );
+              "it should return correct data",
+            ));
         });
       });
     });

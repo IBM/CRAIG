@@ -57,8 +57,8 @@ function dynamicSecondaryButtonProps(props, isV2Page) {
         props.disabled && props.disableDeleteMessage
           ? props.disableDeleteMessage
           : isV2Page
-          ? "Delete Resource"
-          : "Delete " + props.name,
+            ? "Delete Resource"
+            : "Delete " + props.name,
       className: props.disabled ? "inlineBlock cursorNotAllowed" : "",
     },
     buttonClassName:
@@ -79,13 +79,13 @@ function statelessWrapperProps(props) {
       `displayFlex alignItemsCenter widthOneHundredPercent${
         props.hide ? "" : " marginBottomSmall"
       }`,
-      props
+      props,
     ),
     headerType: props.toggleFormTitle
       ? "p"
       : props.subHeading
-      ? "subHeading"
-      : "heading",
+        ? "subHeading"
+        : "heading",
   };
 }
 

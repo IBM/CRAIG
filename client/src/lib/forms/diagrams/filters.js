@@ -43,7 +43,7 @@ function classicBareMetalFilter(componentProps) {
         copyServer.index = serverIndex;
         bareMetals.push(copyServer);
       }
-    }
+    },
   );
   return bareMetals;
 }
@@ -88,7 +88,7 @@ function powerMapFilter(props) {
     }
   });
   return (nullPowerWorkspaceResource ? [{ name: null }] : []).concat(
-    props.craig.store.json.power
+    props.craig.store.json.power,
   );
 }
 

@@ -25,7 +25,7 @@ describe("appid", () => {
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_key" "test_appid_key_test_key" {
@@ -41,7 +41,7 @@ resource "ibm_resource_key" "test_appid_key_test_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format appid key with instance from data", () => {
@@ -61,7 +61,7 @@ resource "ibm_resource_key" "test_appid_key_test_key" {
               use_data: true,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_key" "test_appid_key_test_key" {
@@ -77,7 +77,7 @@ resource "ibm_resource_key" "test_appid_key_test_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -112,7 +112,7 @@ resource "ibm_resource_key" "test_appid_key_test_key" {
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_instance" "test_appid" {
@@ -130,7 +130,7 @@ resource "ibm_resource_instance" "test_appid" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format appid from data", () => {
@@ -163,7 +163,7 @@ resource "ibm_resource_instance" "test_appid" {
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 data "ibm_resource_instance" "test_appid" {
@@ -173,7 +173,7 @@ data "ibm_resource_instance" "test_appid" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format appid with encryption", () => {
@@ -228,7 +228,7 @@ data "ibm_resource_instance" "test_appid" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_instance" "test_appid" {
@@ -250,7 +250,7 @@ resource "ibm_resource_instance" "test_appid" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format appid with disabled idps", () => {
@@ -308,7 +308,7 @@ resource "ibm_resource_instance" "test_appid" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_instance" "test_appid" {
@@ -345,7 +345,7 @@ resource "ibm_appid_idp_saml" "test_appid_saml" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -357,7 +357,7 @@ resource "ibm_appid_idp_saml" "test_appid_saml" {
           use_data: false,
           resource_group: "slz-service-rg",
         },
-        ["test.com", "test2.com", "test3.com"]
+        ["test.com", "test2.com", "test3.com"],
       );
       let expectedData = `
 resource "ibm_appid_redirect_urls" "test_appid_urls" {
@@ -372,7 +372,7 @@ resource "ibm_appid_redirect_urls" "test_appid_urls" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format appid urls with data instance", () => {
@@ -382,7 +382,7 @@ resource "ibm_appid_redirect_urls" "test_appid_urls" {
           use_data: true,
           resource_group: "slz-service-rg",
         },
-        ["test.com", "test2.com", "test3.com"]
+        ["test.com", "test2.com", "test3.com"],
       );
       let expectedData = `
 resource "ibm_appid_redirect_urls" "test_appid_urls" {
@@ -397,7 +397,7 @@ resource "ibm_appid_redirect_urls" "test_appid_urls" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -485,7 +485,7 @@ resource "ibm_resource_key" "test_appid_key_test_key_2" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create appid terraform with encrypted appid instances", () => {
@@ -613,7 +613,7 @@ resource "ibm_resource_key" "test_appid_key_test_key_2" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

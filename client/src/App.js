@@ -35,7 +35,7 @@ class App extends Component {
   nav(path) {
     if (this.state.unsaved) {
       let response = confirm(
-        "This page has unsaved changes. Are you sure you want to leave this page?"
+        "This page has unsaved changes. Are you sure you want to leave this page?",
       );
       if (response) {
         this.setState({ unsaved: false }, () => {

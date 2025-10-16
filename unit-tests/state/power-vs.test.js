@@ -87,7 +87,7 @@ describe("power-vs", () => {
       assert.deepEqual(
         craig.store.json.power[0],
         expectedData,
-        "it should create a new power vs"
+        "it should create a new power vs",
       );
     });
   });
@@ -128,7 +128,7 @@ describe("power-vs", () => {
       assert.deepEqual(
         craig.store.json.power[0],
         expectedData,
-        "it should create a new power vs"
+        "it should create a new power vs",
       );
     });
   });
@@ -161,11 +161,11 @@ describe("power-vs", () => {
           data: {
             name: "transit-gateway",
           },
-        }
+        },
       );
       craig.power.save(
         { name: "frog", zone: "wdc06" },
-        { data: { name: "toad" } }
+        { data: { name: "toad" } },
       );
       let expectedData = {
         name: "frog",
@@ -181,12 +181,12 @@ describe("power-vs", () => {
       assert.deepEqual(
         craig.store.json.power[0],
         expectedData,
-        "it should update name in place"
+        "it should update name in place",
       );
       assert.deepEqual(
         craig.store.json.power_instances[0].workspace,
         "frog",
-        "it should update name"
+        "it should update name",
       );
       assert.deepEqual(
         craig.store.json.transit_gateways[0].connections[2],
@@ -194,7 +194,7 @@ describe("power-vs", () => {
           power: "frog",
           tgw: "transit-gateway",
         },
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should save a workspace and update instances, volumes, and vtl to remove storage pools and storage tiers", () => {
@@ -224,7 +224,7 @@ describe("power-vs", () => {
       });
       craig.power.save(
         { name: "toad", zone: "wdc07" },
-        { data: { name: "toad", zone: "wdc06" } }
+        { data: { name: "toad", zone: "wdc06" } },
       );
       let expectedData = {
         name: "toad",
@@ -240,34 +240,34 @@ describe("power-vs", () => {
       assert.deepEqual(
         craig.store.json.power[0],
         expectedData,
-        "it should update zone in place"
+        "it should update zone in place",
       );
       assert.deepEqual(
         craig.store.json.power_instances[0].pi_storage_pool,
         "",
-        "it should update instance storage pool"
+        "it should update instance storage pool",
       );
       assert.isNull(
         craig.store.json.power_instances[0].pi_storage_type,
-        "it should update instance storage type"
+        "it should update instance storage type",
       );
       assert.deepEqual(
         craig.store.json.power_volumes[0].pi_volume_pool,
         "",
-        "it should update volume pool"
+        "it should update volume pool",
       );
       assert.isNull(
         craig.store.json.power_volumes[0].pi_volume_type,
-        "it should update volume type"
+        "it should update volume type",
       );
       assert.deepEqual(
         craig.store.json.vtl[0].pi_storage_pool,
         "",
-        "it should update instance storage pool"
+        "it should update instance storage pool",
       );
       assert.isNull(
         craig.store.json.vtl[0].pi_storage_type,
-        "it should update instance storage type"
+        "it should update instance storage type",
       );
     });
     it("should save a workspoace and not remove storage pools and storage tiers if instances, volumes, and vtl are not in workspace", () => {
@@ -298,7 +298,7 @@ describe("power-vs", () => {
       });
       craig.power.save(
         { name: "toad", zone: "wdc07" },
-        { data: { name: "toad", zone: "wdc06" } }
+        { data: { name: "toad", zone: "wdc06" } },
       );
       let expectedData = {
         name: "toad",
@@ -314,37 +314,37 @@ describe("power-vs", () => {
       assert.deepEqual(
         craig.store.json.power[0],
         expectedData,
-        "it should update zone in place"
+        "it should update zone in place",
       );
       assert.deepEqual(
         craig.store.json.power_instances[0].pi_storage_pool,
         "General-Flash-43",
-        "it should update instance storage pool"
+        "it should update instance storage pool",
       );
       assert.deepEqual(
         craig.store.json.power_instances[0].pi_storage_type,
         "Tier 1",
-        "it should update instance storage type"
+        "it should update instance storage type",
       );
       assert.deepEqual(
         craig.store.json.power_volumes[0].pi_volume_pool,
         "General-Flash-43",
-        "it should update volume pool"
+        "it should update volume pool",
       );
       assert.deepEqual(
         craig.store.json.power_volumes[0].pi_volume_type,
         "Tier 3",
-        "it should update volume type"
+        "it should update volume type",
       );
       assert.deepEqual(
         craig.store.json.vtl[0].pi_storage_pool,
         "General-Flash-43",
-        "it should update instance storage pool"
+        "it should update instance storage pool",
       );
       assert.deepEqual(
         craig.store.json.vtl[0].pi_storage_type,
         "Tier 3",
-        "it should update instance storage type"
+        "it should update instance storage type",
       );
     });
     it("should save a workspace and not alter any storage pools or storage tiers if zone was not changed", () => {
@@ -374,7 +374,7 @@ describe("power-vs", () => {
       });
       craig.power.save(
         { name: "cat", zone: "wdc06" },
-        { data: { name: "toad", zone: "wdc06" } }
+        { data: { name: "toad", zone: "wdc06" } },
       );
       let expectedData = {
         name: "cat",
@@ -390,37 +390,37 @@ describe("power-vs", () => {
       assert.deepEqual(
         craig.store.json.power[0],
         expectedData,
-        "it should update name in place"
+        "it should update name in place",
       );
       assert.deepEqual(
         craig.store.json.power_instances[0].pi_storage_pool,
         "General-Flash-43",
-        "it should update instance storage pool"
+        "it should update instance storage pool",
       );
       assert.deepEqual(
         craig.store.json.power_instances[0].pi_storage_type,
         "Tier 1",
-        "it should update instance storage type"
+        "it should update instance storage type",
       );
       assert.deepEqual(
         craig.store.json.power_volumes[0].pi_volume_pool,
         "General-Flash-43",
-        "it should update volume pool"
+        "it should update volume pool",
       );
       assert.deepEqual(
         craig.store.json.power_volumes[0].pi_volume_type,
         "Tier 3",
-        "it should update volume type"
+        "it should update volume type",
       );
       assert.deepEqual(
         craig.store.json.vtl[0].pi_storage_pool,
         "General-Flash-43",
-        "it should update instance storage pool"
+        "it should update instance storage pool",
       );
       assert.deepEqual(
         craig.store.json.vtl[0].pi_storage_type,
         "Tier 3",
-        "it should update instance storage type"
+        "it should update instance storage type",
       );
     });
   });
@@ -435,7 +435,7 @@ describe("power-vs", () => {
       assert.deepEqual(
         craig.store.json.power,
         [],
-        "it should have no workspaces"
+        "it should have no workspaces",
       );
     });
   });
@@ -445,7 +445,7 @@ describe("power-vs", () => {
         assert.deepEqual(
           craig.power.name.helperText({ use_data: true, name: "name" }),
           "name",
-          "it should return correct helper text"
+          "it should return correct helper text",
         );
       });
       it("should return correct helper text", () => {
@@ -462,10 +462,10 @@ describe("power-vs", () => {
                   },
                 },
               },
-            }
+            },
           ),
           "toad-power-workspace-frog",
-          "it should return correct helper text"
+          "it should return correct helper text",
         );
       });
     });
@@ -508,7 +508,7 @@ describe("power-vs", () => {
           assert.deepEqual(
             craig.power.zone.groups({}, { craig: craig }),
             ["zone"],
-            "it should return a list of zones"
+            "it should return a list of zones",
           );
         });
       });
@@ -517,13 +517,13 @@ describe("power-vs", () => {
       it("should not be invalid when using data", () => {
         assert.isFalse(
           craig.power.imageNames.invalid({ use_data: true }),
-          "it should be false"
+          "it should be false",
         );
       });
       it("should not be invalid when no images", () => {
         assert.isTrue(
           craig.power.imageNames.invalid({ imageNames: [] }),
-          "it should be false"
+          "it should be false",
         );
       });
       it("should not be invalid when no imageNames field", () => {
@@ -536,14 +536,14 @@ describe("power-vs", () => {
             zone: "us-east",
           }),
           '[{"name":"image"}]us-eastundefined',
-          "it should return images array"
+          "it should return images array",
         );
       });
       it("should return groups when no zone", () => {
         assert.deepEqual(
           craig.power.imageNames.groups({}),
           [],
-          "it should return empty array"
+          "it should return empty array",
         );
       });
       it("should return correct api endpoint for images", () => {
@@ -562,10 +562,10 @@ describe("power-vs", () => {
                   },
                 },
               },
-            }
+            },
           ),
           `/api/power/us-east/images`,
-          "it should return api endpoint"
+          "it should return api endpoint",
         );
       });
       it("should return correct api endpoint for images when workspace uses data", () => {
@@ -586,10 +586,10 @@ describe("power-vs", () => {
                   },
                 },
               },
-            }
+            },
           ),
           `/api/power/us-east/images?name=frog`,
-          "it should return api endpoint"
+          "it should return api endpoint",
         );
       });
     });
@@ -607,7 +607,7 @@ describe("power-vs", () => {
       });
       craig.power.ssh_keys.create(
         { name: "test-key" },
-        { innerFormProps: { arrayParentName: "power-vs" } }
+        { innerFormProps: { arrayParentName: "power-vs" } },
       );
     });
     it("should create a ssh key", () => {
@@ -621,7 +621,7 @@ describe("power-vs", () => {
             workspace_use_data: false,
           },
         ],
-        "it should create a ssh key"
+        "it should create a ssh key",
       );
     });
     it("should update a ssh key", () => {
@@ -630,7 +630,7 @@ describe("power-vs", () => {
         {
           arrayParentName: "power-vs",
           data: { name: "test-key" },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power[0].ssh_keys,
@@ -642,18 +642,18 @@ describe("power-vs", () => {
             workspace_use_data: false,
           },
         ],
-        "it should update ssh key name"
+        "it should update ssh key name",
       );
     });
     it("should delete a ssh key", () => {
       craig.power.ssh_keys.delete(
         {},
-        { arrayParentName: "power-vs", data: { name: "test-key" } }
+        { arrayParentName: "power-vs", data: { name: "test-key" } },
       );
       assert.deepEqual(
         craig.store.json.power[0].ssh_keys,
         [],
-        "it should be empty"
+        "it should be empty",
       );
     });
     describe("power.ssh_keys.schema", () => {
@@ -701,10 +701,10 @@ describe("power-vs", () => {
                   },
                   arrayParentName: "workspace",
                   craig: tempState,
-                }
+                },
               ),
               "Provide a unique SSH public key for this workspace",
-              "it should return correct text"
+              "it should return correct text",
             );
             assert.deepEqual(
               tempState.power.ssh_keys.public_key.invalidText(
@@ -720,10 +720,10 @@ describe("power-vs", () => {
                   },
                   arrayParentName: "workspace",
                   craig: tempState,
-                }
+                },
               ),
               "SSH Public Key in use",
-              "it should return correct text"
+              "it should return correct text",
             );
           });
           it("should return correct invalid text when not a duplicate ssh key is added", () => {
@@ -768,10 +768,10 @@ describe("power-vs", () => {
                   },
                   arrayParentName: "workspace",
                   craig: tempState,
-                }
+                },
               ),
               "",
-              "it should return correct text"
+              "it should return correct text",
             );
           });
         });
@@ -784,14 +784,14 @@ describe("power-vs", () => {
                 },
                 {
                   arrayParentName: "workspace",
-                }
-              )
+                },
+              ),
             );
           });
           it("should return true when key name matches data name", () => {
             craig.power.ssh_keys.create(
               { name: "test-key", public_key: "aaa" },
-              { innerFormProps: { arrayParentName: "power-vs" } }
+              { innerFormProps: { arrayParentName: "power-vs" } },
             );
             delete craig.store.json.power[0].ssh_keys[0].workspace;
             assert.isTrue(
@@ -805,8 +805,8 @@ describe("power-vs", () => {
                   data: {
                     name: "name",
                   },
-                }
-              )
+                },
+              ),
             );
           });
         });
@@ -831,7 +831,7 @@ describe("power-vs", () => {
       });
       craig.power.network.create(
         { name: "test-network" },
-        { innerFormProps: { arrayParentName: "power-vs" } }
+        { innerFormProps: { arrayParentName: "power-vs" } },
       );
     });
     it("should create a network interface", () => {
@@ -846,7 +846,7 @@ describe("power-vs", () => {
             pi_network_mtu: "",
           },
         ],
-        "it should create a network interface"
+        "it should create a network interface",
       );
       assert.deepEqual(
         craig.store.json.power[0].attachments,
@@ -858,7 +858,7 @@ describe("power-vs", () => {
             network: "test-network",
           },
         ],
-        "it should create a network interface"
+        "it should create a network interface",
       );
     });
     it("should update a network interface", () => {
@@ -867,7 +867,7 @@ describe("power-vs", () => {
         {
           arrayParentName: "power-vs",
           data: { name: "test-network" },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power[0].network,
@@ -880,7 +880,7 @@ describe("power-vs", () => {
             pi_network_mtu: "2000",
           },
         ],
-        "it should update network name"
+        "it should update network name",
       );
       assert.deepEqual(
         craig.store.json.power[0].attachments,
@@ -893,7 +893,7 @@ describe("power-vs", () => {
             workspace_use_data: false,
           },
         ],
-        "it should create a network interface"
+        "it should create a network interface",
       );
     });
     it("should update a network interface", () => {
@@ -903,7 +903,7 @@ describe("power-vs", () => {
         {
           arrayParentName: "power-vs",
           data: { name: "test-network" },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power[0].network,
@@ -917,7 +917,7 @@ describe("power-vs", () => {
             pi_network_jumbo: true,
           },
         ],
-        "it should update network name"
+        "it should update network name",
       );
     });
     it("should update a network interface with same name", () => {
@@ -926,7 +926,7 @@ describe("power-vs", () => {
         {
           arrayParentName: "power-vs",
           data: { name: "test-network" },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power[0].network,
@@ -939,7 +939,7 @@ describe("power-vs", () => {
             pi_network_mtu: "",
           },
         ],
-        "it should update network name"
+        "it should update network name",
       );
       assert.deepEqual(
         craig.store.json.power[0].attachments,
@@ -952,18 +952,18 @@ describe("power-vs", () => {
             workspace_use_data: false,
           },
         ],
-        "it should create a network interface"
+        "it should create a network interface",
       );
     });
     it("should delete a network interface", () => {
       craig.power.network.delete(
         {},
-        { arrayParentName: "power-vs", data: { name: "test-network" } }
+        { arrayParentName: "power-vs", data: { name: "test-network" } },
       );
       assert.deepEqual(
         craig.store.json.power[0].network,
         [],
-        "it should delete a network interface"
+        "it should delete a network interface",
       );
     });
     describe("power.network.schema", () => {
@@ -976,60 +976,60 @@ describe("power-vs", () => {
             assert.deepEqual(
               craig.power.network.pi_cidr.invalidText(
                 { cidr: null },
-                { data: { cidr: "1.2.3.4/5" } }
+                { data: { cidr: "1.2.3.4/5" } },
               ),
               "Invalid CIDR block",
-              "it should return correct data"
+              "it should return correct data",
             );
           });
           it("should return correct text if cidr is not valid", () => {
             assert.deepEqual(
               craig.power.network.pi_cidr.invalidText(
                 { cidr: "aaa" },
-                { data: { cidr: "1.2.3.4/5" } }
+                { data: { cidr: "1.2.3.4/5" } },
               ),
               "Invalid CIDR block",
-              "it should return correct data"
+              "it should return correct data",
             );
           });
           it("should return correct text if cidr is too many addresses", () => {
             assert.deepEqual(
               craig.power.network.pi_cidr.invalidText(
                 { cidr: "10.0.0.0/11" },
-                { data: { cidr: "1.2.3.4/5" } }
+                { data: { cidr: "1.2.3.4/5" } },
               ),
               "CIDR ranges of /17 or less are not supported",
-              "it should return correct data"
+              "it should return correct data",
             );
           });
           it("should return correct text if cidr overlaps with existing cidr", () => {
             assert.deepEqual(
               craig.power.network.pi_cidr.invalidText(
                 { cidr: "10.10.30.0/24" },
-                { data: {}, craig: craig }
+                { data: {}, craig: craig },
               ),
               "Warning: CIDR overlaps with 10.10.30.0/24",
-              "it should return correct data"
+              "it should return correct data",
             );
           });
           it("should return correct text if cidr does not overlap with existing cidr", () => {
             assert.deepEqual(
               craig.power.network.pi_cidr.invalidText(
                 { cidr: "10.10.80.0/24" },
-                { data: {}, craig: craig }
+                { data: {}, craig: craig },
               ),
               "",
-              "it should return correct data"
+              "it should return correct data",
             );
           });
           it("should return correct text if cidr matches previous cidr", () => {
             assert.deepEqual(
               craig.power.network.pi_cidr.invalidText(
                 { cidr: "10.10.80.0/24" },
-                { data: { cidr: "10.10.80.0/24" } }
+                { data: { cidr: "10.10.80.0/24" } },
               ),
               "",
-              "it should return correct data"
+              "it should return correct data",
             );
           });
         });
@@ -1038,13 +1038,13 @@ describe("power-vs", () => {
             craig.power.network.pi_network_mtu.invalid({
               use_data: true,
             }),
-            "it should be valid"
+            "it should be valid",
           );
           assert.isTrue(
             craig.power.network.pi_network_mtu.invalid({
               pi_network_mtu: "fff",
             }),
-            "it should be invalid"
+            "it should be invalid",
           );
         });
         it("should show correct on render if network jumbo", () => {
@@ -1053,7 +1053,7 @@ describe("power-vs", () => {
               pi_network_jumbo: true,
             }),
             "9000",
-            "it should return correct data"
+            "it should return correct data",
           );
           assert.deepEqual(
             craig.power.network.pi_network_mtu.onRender({
@@ -1061,21 +1061,21 @@ describe("power-vs", () => {
               pi_network_mtu: "8000",
             }),
             "8000",
-            "it should return correct data"
+            "it should return correct data",
           );
           assert.deepEqual(
             craig.power.network.pi_network_mtu.onRender({
               pi_network_jumbo: false,
             }),
             "1500",
-            "it should return correct data"
+            "it should return correct data",
           );
           assert.deepEqual(
             craig.power.network.pi_network_mtu.onRender({
               pi_network_mtu: "1400",
             }),
             "1400",
-            "it should return correct data"
+            "it should return correct data",
           );
         });
       });
@@ -1091,10 +1091,10 @@ describe("power-vs", () => {
                   data: {
                     cidr: "",
                   },
-                }
+                },
               ),
               "Invalid CIDR block",
-              "it should return correct data"
+              "it should return correct data",
             );
           });
         });
@@ -1104,13 +1104,13 @@ describe("power-vs", () => {
           it("should return true if the pi_dns value is string", () => {
             assert.isTrue(
               craig.power.network.pi_dns.invalid({ pi_dns: "" }),
-              "it should be true"
+              "it should be true",
             );
           });
           it("should return true if the pi_dns value is null", () => {
             assert.isTrue(
               craig.power.network.pi_dns.invalid({}),
-              "it should be true"
+              "it should be true",
             );
           });
         });
@@ -1119,7 +1119,7 @@ describe("power-vs", () => {
             assert.deepEqual(
               craig.power.network.pi_dns.invalidText(),
               "Invalid IP Address",
-              "it should return correct invalid text"
+              "it should return correct invalid text",
             );
           });
         });
@@ -1127,7 +1127,7 @@ describe("power-vs", () => {
           it("should be null", () => {
             assert.isNull(
               craig.power.network.pi_dns.helperText(),
-              "it should be null"
+              "it should be null",
             );
           });
         });
@@ -1138,10 +1138,10 @@ describe("power-vs", () => {
                 {
                   pi_dns: "dns",
                 },
-                "dns"
+                "dns",
               ),
               ["dns"],
-              "it should set data"
+              "it should set data",
             );
           });
         });
@@ -1152,14 +1152,14 @@ describe("power-vs", () => {
                 pi_dns: ["dns"],
               }),
               "dns",
-              "it should return value"
+              "it should return value",
             );
           });
           it("should return string data", () => {
             assert.deepEqual(
               craig.power.network.pi_dns.onRender({}),
               "",
-              "it should return value"
+              "it should return value",
             );
           });
         });
@@ -1167,7 +1167,7 @@ describe("power-vs", () => {
       it("should hide subnet use data when not workspace use data", () => {
         assert.isTrue(
           craig.power.network.use_data.hideWhen({}),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should not have pi cidr invalid when use data", () => {
@@ -1175,7 +1175,7 @@ describe("power-vs", () => {
           craig.power.network.pi_cidr.invalid({
             use_data: true,
           }),
-          "it should be use data"
+          "it should be use data",
         );
       });
       it("should not have pi_dns invalid when use data", () => {
@@ -1183,7 +1183,7 @@ describe("power-vs", () => {
           craig.power.network.pi_dns.invalid({
             use_data: true,
           }),
-          "it should be use data"
+          "it should be use data",
         );
       });
     });
@@ -1198,7 +1198,7 @@ describe("power-vs", () => {
       });
       craig.power.cloud_connections.create(
         { name: "test-network" },
-        { innerFormProps: { arrayParentName: "power-vs" } }
+        { innerFormProps: { arrayParentName: "power-vs" } },
       );
     });
     it("should create a cloud connection", () => {
@@ -1212,7 +1212,7 @@ describe("power-vs", () => {
             workspace_use_data: false,
           },
         ],
-        "it should create a cloud connection"
+        "it should create a cloud connection",
       );
     });
     it("should update a cloud connection", () => {
@@ -1221,7 +1221,7 @@ describe("power-vs", () => {
         {
           arrayParentName: "power-vs",
           data: { name: "test-network" },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power[0].cloud_connections,
@@ -1233,18 +1233,18 @@ describe("power-vs", () => {
             workspace_use_data: false,
           },
         ],
-        "it should update cloud connection"
+        "it should update cloud connection",
       );
     });
     it("should delete a cloud connection", () => {
       craig.power.cloud_connections.delete(
         {},
-        { arrayParentName: "power-vs", data: { name: "test-network" } }
+        { arrayParentName: "power-vs", data: { name: "test-network" } },
       );
       assert.deepEqual(
         craig.store.json.power[0].cloud_connections,
         [],
-        "it should delete a cloud connection"
+        "it should delete a cloud connection",
       );
     });
     describe("power.cloud_connections.schema", () => {
@@ -1253,13 +1253,13 @@ describe("power-vs", () => {
           assert.deepEqual(
             craig.power.cloud_connections.vpcs.groups({}, { craig: craig }),
             ["management", "workload"],
-            "it should have correct groups"
+            "it should have correct groups",
           );
         });
         it("should hide vpcs when not enabled", () => {
           assert.isTrue(
             craig.power.cloud_connections.vpcs.hideWhen({}),
-            "it should be hidden"
+            "it should be hidden",
           );
         });
       });
@@ -1270,14 +1270,14 @@ describe("power-vs", () => {
               pi_cloud_connection_transit_enabled: true,
               transit_gateways: [],
             }),
-            "it should be invalid"
+            "it should be invalid",
           );
           assert.isFalse(
             craig.power.cloud_connections.transit_gateways.invalid({
               pi_cloud_connection_transit_enabled: false,
               transit_gateways: [],
             }),
-            "it should be valid"
+            "it should be valid",
           );
         });
         describe("power.cloud_connections.transit_gateways.hideWhen", () => {
@@ -1286,7 +1286,7 @@ describe("power-vs", () => {
               craig.power.cloud_connections.transit_gateways.hideWhen({
                 pi_cloud_connection_transit_enabled: true,
               }),
-              "it should be shown"
+              "it should be shown",
             );
           });
         });
@@ -1299,10 +1299,10 @@ describe("power-vs", () => {
                 },
                 {
                   craig: craig,
-                }
+                },
               ),
               ["transit-gateway"],
-              "it should return list of tgws"
+              "it should return list of tgws",
             );
           });
         });
@@ -1319,11 +1319,11 @@ describe("power-vs", () => {
       });
       craig.power.network.create(
         { name: "test-network" },
-        { innerFormProps: { arrayParentName: "power-vs" } }
+        { innerFormProps: { arrayParentName: "power-vs" } },
       );
       craig.power.cloud_connections.create(
         { name: "test-network" },
-        { innerFormProps: { arrayParentName: "power-vs" } }
+        { innerFormProps: { arrayParentName: "power-vs" } },
       );
       craig.power.attachments.save(
         {
@@ -1336,7 +1336,7 @@ describe("power-vs", () => {
             network: "test-network",
             connections: [],
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power[0].attachments,
@@ -1349,7 +1349,7 @@ describe("power-vs", () => {
             workspace_use_data: false,
           },
         ],
-        "it should delete a cloud connection"
+        "it should delete a cloud connection",
       );
     });
     describe("attachments schema", () => {
@@ -1363,13 +1363,13 @@ describe("power-vs", () => {
         });
         craig.power.cloud_connections.create(
           { name: "test-network" },
-          { innerFormProps: { arrayParentName: "power-vs" } }
+          { innerFormProps: { arrayParentName: "power-vs" } },
         );
       });
       it("should return false for invalid", () => {
         assert.isFalse(
           craig.power.attachments.connections.invalid(),
-          "it should not be invalid"
+          "it should not be invalid",
         );
       });
       it("should return groups", () => {
@@ -1379,10 +1379,10 @@ describe("power-vs", () => {
             {
               craig: craig,
               arrayParentName: "power-vs",
-            }
+            },
           ),
           ["test-network"],
-          "it should not be invalid"
+          "it should not be invalid",
         );
       });
     });
@@ -1391,7 +1391,7 @@ describe("power-vs", () => {
     it("should be true when workspace does not use data", () => {
       assert.isTrue(
         hideWhenWorkspaceNotUseData({ workspace_use_data: false }),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
   });

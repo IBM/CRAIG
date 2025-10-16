@@ -133,7 +133,7 @@ function securityGroupSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "security_groups"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -162,7 +162,7 @@ function securityGroupRulesCreate(config, stateData, componentProps) {
   let parent = getObjectFromArray(
     config.store.json.security_groups,
     "name",
-    componentProps.parent_name
+    componentProps.parent_name,
   );
   rule.vpc = parent.vpc;
   rule.sg = parent.name;
@@ -255,7 +255,7 @@ function initSecurityGroupStore(store) {
     delete: securityGroupDelete,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "resource_group", "vpc"],
-      "security_groups"
+      "security_groups",
     ),
     schema: {
       use_data: {
@@ -267,7 +267,7 @@ function initSecurityGroupStore(store) {
             getObjectFromArray(
               componentProps.craig.store.json.vpcs,
               "name",
-              stateData.vpc || "" // modal
+              stateData.vpc || "", // modal
             )?.use_data !== true
           );
         },
@@ -300,7 +300,7 @@ function initSecurityGroupStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "source", "type", "code", "port_min", "port_max"],
           "security_groups",
-          "rules"
+          "rules",
         ),
         schema: {
           name: {
@@ -316,7 +316,7 @@ function initSecurityGroupStore(store) {
               return !isIpv4CidrOrAddress(stateData.source || "");
             },
             invalidText: unconditionalInvalidText(
-              "Please provide a valid IPV4 IP address or CIDR notation."
+              "Please provide a valid IPV4 IP address or CIDR notation.",
             ),
             size: "small",
             placeholder: "x.x.x.x",

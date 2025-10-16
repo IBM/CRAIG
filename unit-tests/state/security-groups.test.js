@@ -488,7 +488,7 @@ describe("security groups", () => {
       assert.deepEqual(
         craig.store.json.security_groups,
         expectedData,
-        "it should return default security groups"
+        "it should return default security groups",
       );
     });
   });
@@ -501,7 +501,7 @@ describe("security groups", () => {
           workload: ["workload-vpe"],
         },
         craig.store.securityGroups,
-        "it should add groups"
+        "it should add groups",
       );
     });
     it("should set vpc name to null when a vpc a security group is attached to is deleted", () => {
@@ -509,7 +509,7 @@ describe("security groups", () => {
       assert.deepEqual(
         craig.store.json.security_groups[0].vpc,
         null,
-        "it should set to null"
+        "it should set to null",
       );
     });
     it("should set vpc name in a security group rule to null when a vpc a security group is attached to is deleted", () => {
@@ -517,7 +517,7 @@ describe("security groups", () => {
       assert.deepEqual(
         craig.store.json.security_groups[0].rules[0].vpc,
         null,
-        "it should set to null"
+        "it should set to null",
       );
     });
     it("should set resource group to null when a resource group a security group is attached to is deleted", () => {
@@ -525,7 +525,7 @@ describe("security groups", () => {
       assert.deepEqual(
         craig.store.json.security_groups[0].resource_group,
         null,
-        "it should set to null"
+        "it should set to null",
       );
     });
   });
@@ -545,7 +545,7 @@ describe("security groups", () => {
           resource_group: null,
           rules: [],
         },
-        "it should create the group"
+        "it should create the group",
       );
     });
   });
@@ -553,23 +553,23 @@ describe("security groups", () => {
     it("should update a security group", () => {
       craig.security_groups.save(
         { name: "todd" },
-        { data: { name: "management-vpe", rules: [] } }
+        { data: { name: "management-vpe", rules: [] } },
       );
       assert.deepEqual(
         craig.store.json.security_groups[0].name,
         "todd",
-        "it should update the group"
+        "it should update the group",
       );
     });
     it("should update a security group with same name", () => {
       craig.security_groups.save(
         { name: "management-vpe" },
-        { data: { name: "management-vpe", rules: [] } }
+        { data: { name: "management-vpe", rules: [] } },
       );
       assert.deepEqual(
         craig.store.json.security_groups[0].name,
         "management-vpe",
-        "it should update the group"
+        "it should update the group",
       );
     });
     it("should update a security group with a new vpc and sg name", () => {
@@ -589,17 +589,17 @@ describe("security groups", () => {
               },
             ],
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.security_groups[0].rules[0].vpc,
         "workload",
-        "it should update the group"
+        "it should update the group",
       );
       assert.deepEqual(
         craig.store.json.security_groups[0].rules[0].sg,
         "todd",
-        "it should update the group"
+        "it should update the group",
       );
     });
   });
@@ -609,7 +609,7 @@ describe("security groups", () => {
       assert.deepEqual(
         craig.store.json.security_groups.length,
         2,
-        "it should delete the group"
+        "it should delete the group",
       );
     });
   });
@@ -628,23 +628,23 @@ describe("security groups", () => {
                 },
               },
             },
-          }
+          },
         ),
         "hi-undefined-undefined-sg",
-        "it should have correct helper text"
+        "it should have correct helper text",
       );
     });
     it("should hide use_data", () => {
       assert.isTrue(
         craig.security_groups.use_data.hideWhen({}, { craig: craig }),
-        "it should hide when in modal"
+        "it should hide when in modal",
       );
       assert.isTrue(
         craig.security_groups.use_data.hideWhen(
           { vpc: "management" },
-          { craig: craig }
+          { craig: craig },
         ),
-        "it should hide when vpc does not use data"
+        "it should hide when vpc does not use data",
       );
       craig.store.json.vpcs.push({
         name: "data",
@@ -653,19 +653,19 @@ describe("security groups", () => {
       assert.isFalse(
         craig.security_groups.use_data.hideWhen(
           { vpc: "data" },
-          { craig: craig }
+          { craig: craig },
         ),
-        "it should be shown"
+        "it should be shown",
       );
     });
     it("should disable vpc when using data for security group", () => {
       assert.isFalse(
         craig.security_groups.vpc.disabled({ use_data: true, vpc: "" }),
-        "it should not be disabled"
+        "it should not be disabled",
       );
       assert.isTrue(
         craig.security_groups.vpc.disabled({ use_data: true, vpc: "frog" }),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
   });
@@ -679,7 +679,7 @@ describe("security groups", () => {
             source: "8.8.8.8",
             direction: "inbound",
           },
-          { parent_name: "frog" }
+          { parent_name: "frog" },
         );
         assert.deepEqual(
           craig.store.json.security_groups[3].rules,
@@ -700,7 +700,7 @@ describe("security groups", () => {
               ruleProtocol: "all",
             },
           ],
-          "it should create rule"
+          "it should create rule",
         );
       });
     });
@@ -712,7 +712,7 @@ describe("security groups", () => {
             name: "test-rule",
             source: "8.8.8.8",
           },
-          { parent_name: "frog" }
+          { parent_name: "frog" },
         );
         craig.security_groups.rules.save(
           {
@@ -723,12 +723,12 @@ describe("security groups", () => {
             parent_name: "frog",
             data: { name: "test-rule" },
             isSecurityGroup: true,
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.security_groups[3].rules[0].direction,
           "inbound",
-          "it should update rule"
+          "it should update rule",
         );
       });
       it("should update a rule in place with protocol", () => {
@@ -759,7 +759,7 @@ describe("security groups", () => {
           },
           {
             parent_name: "frog",
-          }
+          },
         );
         craig.security_groups.rules.save(
           {
@@ -789,7 +789,7 @@ describe("security groups", () => {
             parent_name: "frog",
             data: { name: "test-rule" },
             isSecurityGroup: true,
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.security_groups[3].rules,
@@ -810,7 +810,7 @@ describe("security groups", () => {
               port_max: 8080,
             },
           ],
-          "it should update rule"
+          "it should update rule",
         );
       });
       it("should update a rule in place with icmp protocol", () => {
@@ -834,7 +834,7 @@ describe("security groups", () => {
           },
           {
             parent_name: "frog",
-          }
+          },
         );
         craig.security_groups.rules.save(
           {
@@ -858,7 +858,7 @@ describe("security groups", () => {
             parent_name: "frog",
             data: { name: "test-rule" },
             isSecurityGroup: true,
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.security_groups[3].rules,
@@ -879,7 +879,7 @@ describe("security groups", () => {
               ruleProtocol: "icmp",
             },
           ],
-          "it should update rule"
+          "it should update rule",
         );
       });
       it("should update a rule in place with icmp protocol", () => {
@@ -903,7 +903,7 @@ describe("security groups", () => {
           },
           {
             parent_name: "frog",
-          }
+          },
         );
         craig.security_groups.rules.save(
           {
@@ -921,7 +921,7 @@ describe("security groups", () => {
             parent_name: "frog",
             data: { name: "test-rule" },
             isSecurityGroup: true,
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.security_groups[3].rules,
@@ -942,7 +942,7 @@ describe("security groups", () => {
               ruleProtocol: "icmp",
             },
           ],
-          "it should update rule"
+          "it should update rule",
         );
       });
       it("should update a rule in place with all protocol", () => {
@@ -952,7 +952,7 @@ describe("security groups", () => {
             name: "test-rule",
             source: "8.8.8.8",
           },
-          { parent_name: "frog" }
+          { parent_name: "frog" },
         );
         craig.security_groups.rules.save(
           {
@@ -964,7 +964,7 @@ describe("security groups", () => {
             parent_name: "frog",
             data: { name: "test-rule" },
             isSecurityGroup: true,
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.security_groups[3].rules,
@@ -985,7 +985,7 @@ describe("security groups", () => {
               ruleProtocol: "all",
             },
           ],
-          "it should update rule"
+          "it should update rule",
         );
       });
     });
@@ -999,19 +999,19 @@ describe("security groups", () => {
           },
           {
             parent_name: "frog",
-          }
+          },
         );
         craig.security_groups.rules.delete(
           {},
           {
             parent_name: "frog",
             data: { name: "test-rule" },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.security_groups[3].rules,
           [],
-          "it should delete rule"
+          "it should delete rule",
         );
       });
     });
@@ -1044,7 +1044,7 @@ describe("security groups", () => {
               code: null,
             },
           },
-          "it should return data"
+          "it should return data",
         );
       });
       it("should return true if icmp type is not a number", () => {
@@ -1053,33 +1053,33 @@ describe("security groups", () => {
             ruleProtocol: "icmp",
             type: "asdf",
           }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should return true if no source", () => {
         assert.isTrue(
           craig.security_groups.rules.source.invalid({}),
-          "it should be invalid and not crash"
+          "it should be invalid and not crash",
         );
       });
       it("should return generic name callback when an invalid name is passed", () => {
         assert.deepEqual(
           craig.security_groups.rules.name.invalidText(
             { name: "@@@" },
-            { rules: [], data: { name: "" } }
+            { rules: [], data: { name: "" } },
           ),
           "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
-          "it should return error text"
+          "it should return error text",
         );
       });
       it("should return generic name callback when an invalid duplicate name is passed", () => {
         assert.deepEqual(
           craig.security_groups.rules.name.invalidText(
             { name: "aaa" },
-            { rules: [{ name: "aaa" }], data: { name: "" } }
+            { rules: [{ name: "aaa" }], data: { name: "" } },
           ),
           'Name "aaa" already in use',
-          "it should return error text"
+          "it should return error text",
         );
       });
       it("should return false if security group rule does not have invalid name in modal", () => {
@@ -1098,9 +1098,9 @@ describe("security groups", () => {
               innerFormProps: { rules: [{ name: "ff" }] },
               data: { name: "aa" },
               craig: state(),
-            }
+            },
           ),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
     });

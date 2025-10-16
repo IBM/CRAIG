@@ -34,7 +34,7 @@ function ibmIsSecurityGroup(sg, config) {
             "${",
             getObjectFromArray(config.vpcs, "name", sg.vpc).use_data
               ? "${data."
-              : "${"
+              : "${",
           ),
           resource_group: `\${var.${snakeCase(sg.resource_group)}_id}`,
           tags: getTags(config),
@@ -59,7 +59,7 @@ function formatSecurityGroup(sg, config) {
     sg.use_data ? "data" : "resource",
     "ibm_is_security_group",
     group.name,
-    group.data
+    group.data,
   );
 }
 
@@ -95,7 +95,7 @@ function ibmIsSecurityGroupRule(rule, config) {
       snakeCase(sgAddress),
       "id",
       config?.security_groups &&
-        getObjectFromArray(config.security_groups, "name", rule.sg).use_data
+        getObjectFromArray(config.security_groups, "name", rule.sg).use_data,
     ),
     remote: rule.source,
     direction: rule.direction,
@@ -136,7 +136,7 @@ function formatSgRule(rule, config) {
     "resource",
     "ibm_is_security_group_rule",
     data.name,
-    data.data
+    data.data,
   );
 }
 

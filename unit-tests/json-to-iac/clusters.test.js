@@ -28,7 +28,7 @@ describe("clusters", () => {
           workers_per_subnet: 2,
           private_endpoint: false,
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster_cluster" {
@@ -74,7 +74,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster_cluster" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create terraform code for iks cluster with private endpoint", () => {
@@ -973,7 +973,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster_cluster" {
           },
           event_streams: [],
           load_balancers: [],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
@@ -1017,7 +1017,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create terraform code for iks cluster with private endpoint with a bad kms ref", () => {
@@ -1879,7 +1879,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
           },
           event_streams: [],
           load_balancers: [],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
@@ -1923,7 +1923,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create terraform code for iks cluster with private endpoint and imported subnet", () => {
@@ -2786,7 +2786,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
           },
           event_streams: [],
           load_balancers: [],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
@@ -2830,7 +2830,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -2851,7 +2851,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
           vpc: "workload",
           workers_per_subnet: 2,
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
@@ -2879,7 +2879,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create terraform code for worker pool with imported subnet", () => {
@@ -2896,7 +2896,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
           vpc: "workload",
           workers_per_subnet: 2,
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
@@ -2924,7 +2924,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -3006,7 +3006,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return cluster terraform with logging and monitoring integration", () => {
@@ -3106,7 +3106,7 @@ resource "ibm_ob_monitoring" "workload_cluster_monitoring" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return cluster terraform with opaque secret", () => {
@@ -3279,7 +3279,7 @@ resource "ibm_container_ingress_secret_opaque" "workload_ingress_example" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
       slzNetwork.clusters[0].opaque_secrets = [];
     });
@@ -3444,7 +3444,7 @@ resource "ibm_container_ingress_secret_opaque" "workload_ingress_example" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
       slzNetwork.clusters[0].opaque_secrets = [];
     });
@@ -4340,7 +4340,7 @@ resource "ibm_container_ingress_secret_opaque" "workload_ingress_example" {
           },
           event_streams: [],
           load_balancers: [],
-        }
+        },
       );
 
       let expectedData = `
@@ -4368,7 +4368,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

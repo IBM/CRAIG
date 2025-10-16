@@ -104,7 +104,7 @@ describe("utils", () => {
             },
           },
         },
-        "username_password_secret_name"
+        "username_password_secret_name",
       );
       assert.deepEqual(result, ["toad", "bowser", "yoshi", "mario", "luigi"]);
     });
@@ -130,7 +130,7 @@ describe("utils", () => {
             },
           },
         },
-        "arbitrary_secret_name"
+        "arbitrary_secret_name",
       );
       assert.deepEqual(result, ["frog", "mario", "luigi"]);
     });

@@ -19,7 +19,7 @@ describe("dns", () => {
       {
         data: { name: "" },
         craig: state(),
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -41,7 +41,7 @@ describe("dns", () => {
             ],
           },
         }),
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -52,7 +52,7 @@ describe("dns", () => {
       {
         data: { name: "hi" },
         craig: state(),
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -64,7 +64,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -83,7 +83,7 @@ describe("dns", () => {
         },
         {
           innerFormProps: { arrayParentName: "dev" },
-        }
+        },
       );
       let actualData = disableSave(
         "zones",
@@ -91,7 +91,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: tempCraig,
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -102,7 +102,7 @@ describe("dns", () => {
         {
           data: { name: "hi" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -113,7 +113,7 @@ describe("dns", () => {
         {
           data: { name: "hi" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -124,7 +124,7 @@ describe("dns", () => {
         {
           data: { name: "hi" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -137,7 +137,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -156,7 +156,7 @@ describe("dns", () => {
               ],
             },
           }),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -167,7 +167,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -178,7 +178,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -189,7 +189,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -200,7 +200,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isFalse(actualData, "it should not be disabled");
     });
@@ -220,7 +220,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -240,7 +240,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -260,7 +260,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -280,7 +280,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -300,7 +300,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -320,7 +320,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -340,7 +340,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -360,7 +360,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -371,7 +371,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isFalse(actualData, "it should not be disabled");
     });
@@ -391,7 +391,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isFalse(actualData, "it should not be disabled");
     });
@@ -404,7 +404,7 @@ describe("dns", () => {
         {
           data: { name: "" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -423,7 +423,7 @@ describe("dns", () => {
               ],
             },
           }),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -434,7 +434,7 @@ describe("dns", () => {
         {
           data: { name: "hi" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -445,7 +445,7 @@ describe("dns", () => {
         {
           data: { name: "hi" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -456,7 +456,7 @@ describe("dns", () => {
         {
           data: { name: "hi" },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });

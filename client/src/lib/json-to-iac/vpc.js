@@ -86,7 +86,7 @@ function formatVpc(vpc, config, useVarRef) {
     vpc.use_data ? "data" : "resource",
     "ibm_is_vpc",
     data.name,
-    data.data
+    data.data,
   );
 }
 
@@ -104,7 +104,7 @@ function ibmIsVpcAddressPrefix(address) {
   return {
     name: `${address.vpc}-${address.name}-prefix`.replace(
       "edge-edge-",
-      "edge-"
+      "edge-",
     ),
     data: {
       name: kebabName([address.vpc, address.name]),
@@ -132,14 +132,14 @@ function formatAddressPrefix(address, config, isOutsideVpc) {
   if (address.vpn_server)
     prefix.data.depends_on = [
       `\${ibm_is_vpn_server.${snakeCase(
-        address.vpc + " vpn server " + address.vpn_server.name
+        address.vpc + " vpn server " + address.vpn_server.name,
       )}}`,
     ];
   return jsonToTfPrint(
     "resource",
     "ibm_is_vpc_address_prefix",
     prefix.name,
-    prefix.data
+    prefix.data,
   );
 }
 
@@ -183,7 +183,7 @@ function ibmIsSubnet(subnet, config, useVarRef) {
         "ibm_is_network_acl",
         snakeCase(subnet.vpc + ` ${subnet.network_acl}_acl`),
         "id",
-        shouldUseData
+        shouldUseData,
       ),
     },
   };
@@ -200,14 +200,14 @@ function ibmIsSubnet(subnet, config, useVarRef) {
   if (subnet.public_gateway) {
     data.data.public_gateway = tfRef(
       "ibm_is_public_gateway",
-      `${subnet.vpc} gateway zone ${subnet.zone}`
+      `${subnet.vpc} gateway zone ${subnet.zone}`,
     );
   }
   if (!subnet.has_prefix || isEdgeSubnet) {
     let addressPrefixes = getObjectFromArray(
       config.vpcs,
       "name",
-      subnet.vpc
+      subnet.vpc,
     ).address_prefixes;
     data.data.depends_on = [];
     addressPrefixes.forEach((prefix) => {
@@ -223,9 +223,9 @@ function ibmIsSubnet(subnet, config, useVarRef) {
             `ibm_is_vpc_address_prefix.${snakeCase(
               isEdgeSubnet
                 ? `edge_zone_${prefix.name.replace(/\D|5*/g, "")}`
-                : `${subnet.vpc} ${prefix.name}`
-            )}_prefix`
-          )
+                : `${subnet.vpc} ${prefix.name}`,
+            )}_prefix`,
+          ),
         );
     });
   }
@@ -255,7 +255,7 @@ function formatSubnet(subnet, config, useVarRef) {
       ? {
           name: subnet.name,
         }
-      : data.data
+      : data.data,
   );
 }
 
@@ -337,7 +337,7 @@ function formatAcl(acl, config, useRules) {
       ? {
           name: data.data.name,
         }
-      : data.data
+      : data.data,
   );
 }
 
@@ -415,7 +415,7 @@ function formatAclRule(rule) {
     "resource",
     "ibm_is_network_acl_rule",
     data.name,
-    data.data
+    data.data,
   );
 }
 
@@ -462,7 +462,7 @@ function formatPgw(pgw, config, useVarRef) {
     "resource",
     "ibm_is_public_gateway",
     data.name,
-    data.data
+    data.data,
   );
 }
 
@@ -542,7 +542,7 @@ function vpcModuleOutputs(vpc, securityGroups) {
   ["name", "id", "crn"].forEach((field) => {
     outputs[field] = {
       value: `\${${vpc.use_data ? "data." : ""}ibm_is_vpc.${snakeCase(
-        vpc.name + "-vpc"
+        vpc.name + "-vpc",
       )}.${field}}`,
     };
   });
@@ -553,14 +553,14 @@ function vpcModuleOutputs(vpc, securityGroups) {
         `_name`
     ] = {
       value: `\${${subnet.use_data ? "data." : ""}ibm_is_subnet.${snakeCase(
-        `${subnet.vpc}-${subnet.name}`
+        `${subnet.vpc}-${subnet.name}`,
       )}.name}`,
     };
     outputs[
       (subnet.use_data ? "import_" : "subnet_") + snakeCase(subnet.name) + `_id`
     ] = {
       value: `\${${subnet.use_data ? "data." : ""}ibm_is_subnet.${snakeCase(
-        `${subnet.vpc}-${subnet.name}`
+        `${subnet.vpc}-${subnet.name}`,
       )}.id}`,
     };
     outputs[
@@ -569,7 +569,7 @@ function vpcModuleOutputs(vpc, securityGroups) {
         `_crn`
     ] = {
       value: `\${${subnet.use_data ? "data." : ""}ibm_is_subnet.${snakeCase(
-        `${subnet.vpc}-${subnet.name}`
+        `${subnet.vpc}-${subnet.name}`,
       )}.crn}`,
     };
   });
@@ -579,7 +579,7 @@ function vpcModuleOutputs(vpc, securityGroups) {
         value: `\${${
           sg.use_data ? "data." : ""
         }ibm_is_security_group.${snakeCase(
-          `${sg.vpc} vpc ${sg.name} sg`
+          `${sg.vpc} vpc ${sg.name} sg`,
         )}.name}`,
       };
       outputs[snakeCase(`${sg.name}_id`)] = {
@@ -647,7 +647,7 @@ function vpcModuleTf(files, config) {
       "versions.tf": versionsTf.replace(/\$ADDITIONAL_PROVIDERS\n/g, ""),
       "variables.tf": tfBlock(
         vpc.name + " VPC variables",
-        "\n" + jsonToTf(JSON.stringify({ variable: variables })) + "\n"
+        "\n" + jsonToTf(JSON.stringify({ variable: variables })) + "\n",
       ),
     };
 
@@ -663,7 +663,7 @@ function vpcModuleTf(files, config) {
         sg.rules.forEach((rule) => (sgData += formatSgRule(rule)));
         files[vpcModule]["sg_" + snakeCase(`${sg.name}`) + ".tf"] = tfBlock(
           "Security Group " + sg.name,
-          sgData
+          sgData,
         );
       }
     });
@@ -676,7 +676,7 @@ function vpcModuleTf(files, config) {
               routing_tables: [rt],
               vpcs: cloneConfig.vpcs,
               _options: config._options,
-            }
+            },
           );
         }
       });
@@ -688,9 +688,9 @@ function vpcModuleTf(files, config) {
         jsonToTf(
           JSON.stringify({
             output: vpcModuleOutputs(vpc, cloneConfig.security_groups),
-          })
+          }),
         ) +
-        "\n"
+        "\n",
     );
 
     let moduleData =
@@ -698,7 +698,7 @@ function vpcModuleTf(files, config) {
       jsonToTf(
         JSON.stringify({
           module: vpcModuleJson(vpc, allRgs, config),
-        })
+        }),
       ) +
       "\n";
     files["main.tf"] += "\n" + tfBlock(`${vpc.name} VPC module`, moduleData);

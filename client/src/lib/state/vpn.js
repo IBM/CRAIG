@@ -88,7 +88,7 @@ function vpnSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "vpn_gateways"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -115,7 +115,7 @@ function initVpnGatewayStore(store) {
     delete: vpnDelete,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "vpc", "resource_group", "subnet", "additional_prefixes"],
-      "vpn_gateways"
+      "vpn_gateways",
     ),
     schema: {
       name: nameField("vpn_gateways"),
@@ -143,9 +143,9 @@ function initVpnGatewayStore(store) {
             return splat(
               new revision(componentProps.craig.store.json).child(
                 "vpcs",
-                stateData.vpc
+                stateData.vpc,
               ).data.subnets,
-              "name"
+              "name",
             );
           }
         },
@@ -175,7 +175,7 @@ function initVpnGatewayStore(store) {
             "vpn_gateways",
             "connections",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         save: function (config, stateData, componentProps) {
@@ -184,7 +184,7 @@ function initVpnGatewayStore(store) {
             "vpn_gateways",
             "connections",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         delete: function (config, stateData, componentProps) {
@@ -193,7 +193,7 @@ function initVpnGatewayStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "peer_cidrs", "local_cidrs", "peer_address"],
           "vpn_gateways",
-          "connections"
+          "connections",
         ),
         schema: {
           name: nameField("connections"),

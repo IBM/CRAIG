@@ -63,15 +63,15 @@ function setupRowsAndHeaders(componentProps) {
       isClassicSg && row.ruleProtocol === "all"
         ? "ALL"
         : isClassicSg
-        ? `${row.port_range_min}-${row.port_range_max}`
-        : row.protocol === "all"
-        ? "ALL"
-        : row.protocol === "icmp"
-        ? row.icmp.code
-        : contains(["null", null], row[row.protocol].port_min) ||
-          contains(["null", null], row[row.protocol].port_max)
-        ? "ALL"
-        : `${row[row.protocol].port_min}-${row[row.protocol].port_max}`;
+          ? `${row.port_range_min}-${row.port_range_max}`
+          : row.protocol === "all"
+            ? "ALL"
+            : row.protocol === "icmp"
+              ? row.icmp.code
+              : contains(["null", null], row[row.protocol].port_min) ||
+                  contains(["null", null], row[row.protocol].port_max)
+                ? "ALL"
+                : `${row[row.protocol].port_min}-${row[row.protocol].port_max}`;
     delete row.icmp;
     delete row.tcp;
     delete row.udp;
@@ -146,7 +146,7 @@ class OrderCardDataTable extends Component {
                           <div key={JSON.stringify(cell) + "-port"}>
                             {contains(
                               ["tcp", "udp", "all", "icmp"],
-                              cell.value
+                              cell.value,
                             ) && !contains(cell.id, ":name") // prevent name from being transformed into ALL CAPS
                               ? cell.value.toUpperCase()
                               : cell.value}

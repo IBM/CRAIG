@@ -33,12 +33,12 @@ function formatCloudLogs(config) {
     logsData.parameters.logs_bucket_crn = bucketRef(
       config.cloud_logs.cos,
       config.cloud_logs.logs_bucket,
-      "crn"
+      "crn",
     );
     logsData.parameters.logs_bucket_endpoint = bucketRef(
       config.cloud_logs.cos,
       config.cloud_logs.logs_bucket,
-      `s3_endpoint_${config._options.endpoints}`
+      `s3_endpoint_${config._options.endpoints}`,
     );
   }
 
@@ -46,12 +46,12 @@ function formatCloudLogs(config) {
     logsData.parameters.metrics_bucket_crn = bucketRef(
       config.cloud_logs.cos,
       config.cloud_logs.metrics_bucket,
-      "crn"
+      "crn",
     );
     logsData.parameters.metrics_bucket_endpoint = bucketRef(
       config.cloud_logs.cos,
       config.cloud_logs.metrics_bucket,
-      `s3_endpoint_${config._options.endpoints}`
+      `s3_endpoint_${config._options.endpoints}`,
     );
   }
 
@@ -60,7 +60,7 @@ function formatCloudLogs(config) {
   } else {
     logsData.depends_on = [
       `\${ibm_iam_authorization_policy.${snakeCase(
-        config.cloud_logs.cos
+        config.cloud_logs.cos,
       )}_object_storage_to_cloud_logs}`,
     ];
   }
@@ -69,7 +69,7 @@ function formatCloudLogs(config) {
     "resource",
     "ibm_resource_instance",
     "cloud_logs",
-    logsData
+    logsData,
   );
 }
 
@@ -86,17 +86,17 @@ function formatCosToCloudLogsAuth(config) {
     {
       source_service_name: "logs",
       description: `Allow Cloud Logs to access ${titleCase(
-        config.cloud_logs.cos
+        config.cloud_logs.cos,
       )} Object Storage`,
       target_service_name: "cloud-object-storage",
       target_resource_instance_id: cosRef(
         config.cloud_logs.cos,
         "guid",
         getObjectFromArray(config.object_storage, "name", config.cloud_logs.cos)
-          .use_data
+          .use_data,
       ),
       roles: ["Writer"],
-    }
+    },
   );
 }
 

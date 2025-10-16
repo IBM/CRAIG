@@ -26,7 +26,7 @@ describe("power_instances", () => {
       assert.deepEqual(
         craig.store.json.power_shared_processor_pools,
         [],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
   });
@@ -50,7 +50,7 @@ describe("power_instances", () => {
             pi_shared_processor_pool_reserved_cores: "2",
           },
         ],
-        "it should create pool"
+        "it should create pool",
       );
     });
   });
@@ -79,7 +79,7 @@ describe("power_instances", () => {
             pi_shared_processor_pool_host_group: "s922",
             pi_shared_processor_pool_reserved_cores: "2",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power_shared_processor_pools,
@@ -92,7 +92,7 @@ describe("power_instances", () => {
             pi_shared_processor_pool_reserved_cores: "2",
           },
         ],
-        "it should create pool"
+        "it should create pool",
       );
     });
   });
@@ -115,12 +115,12 @@ describe("power_instances", () => {
             pi_shared_processor_pool_host_group: "s922",
             pi_shared_processor_pool_reserved_cores: "2",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power_shared_processor_pools,
         [],
-        "it should be empty"
+        "it should be empty",
       );
     });
   });
@@ -139,7 +139,7 @@ describe("power_instances", () => {
           data: {
             name: "example",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power_shared_processor_pools,
@@ -152,7 +152,7 @@ describe("power_instances", () => {
             pi_shared_processor_pool_reserved_cores: "2",
           },
         ],
-        "it should update"
+        "it should update",
       );
     });
   });
@@ -162,18 +162,18 @@ describe("power_instances", () => {
         craig.power_shared_processor_pools.pi_shared_processor_pool_host_group.apiEndpoint(
           {
             zone: "frog",
-          }
+          },
         ),
         "/api/power/frog/system_pools",
-        "it should be equal"
+        "it should be equal",
       );
     });
     it("should hide sys type when no workspace", () => {
       assert.isTrue(
         craig.power_shared_processor_pools.pi_shared_processor_pool_host_group.hideWhen(
-          {}
+          {},
         ),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
     it("should update workspace and zone on change", () => {
@@ -197,7 +197,7 @@ describe("power_instances", () => {
           workspace: "toad",
           zone: "dal12",
         },
-        "it should return list of workspaces"
+        "it should return list of workspaces",
       );
     });
     it("should have invalid cores", () => {
@@ -205,38 +205,38 @@ describe("power_instances", () => {
         craig.power_shared_processor_pools.pi_shared_processor_pool_reserved_cores.invalid(
           {
             pi_shared_processor_pool_reserved_cores: "",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
       assert.isFalse(
         craig.power_shared_processor_pools.pi_shared_processor_pool_reserved_cores.invalid(
           {
             pi_shared_processor_pool_reserved_cores: "10",
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
     it("should have invalid name", () => {
       assert.isTrue(
         craig.power_shared_processor_pools.name.invalid({ name: "" }),
-        "it should be invalid"
+        "it should be invalid",
       );
       assert.isTrue(
         craig.power_shared_processor_pools.name.invalid(
           { name: "ssssss-sss" },
           {
             craig: craig,
-          }
+          },
         ),
-        "it should be invalid"
+        "it should be invalid",
       );
       assert.isTrue(
         craig.power_shared_processor_pools.name.invalid({
           name: "1234561234561",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
       assert.isTrue(
         craig.power_shared_processor_pools.name.invalid(
@@ -255,23 +255,23 @@ describe("power_instances", () => {
                 },
               },
             },
-          }
+          },
         ),
-        "it should be invalid when duplicate name"
+        "it should be invalid when duplicate name",
       );
     });
     it("should have invalid name text", () => {
       assert.deepEqual(
         craig.power_shared_processor_pools.name.invalidText({ name: "" }),
         "Name must be between 2 and 12 characters and follow the regex pattern: /^[A-z]([a-z0-9]*[a-z0-9])*$/s",
-        "it should have correct text"
+        "it should have correct text",
       );
       assert.deepEqual(
         craig.power_shared_processor_pools.name.invalidText({
           name: "1234561234561",
         }),
         "Name must be between 2 and 12 characters and follow the regex pattern: /^[A-z]([a-z0-9]*[a-z0-9])*$/s",
-        "it should have correct text"
+        "it should have correct text",
       );
       assert.deepEqual(
         craig.power_shared_processor_pools.name.invalidText(
@@ -290,10 +290,10 @@ describe("power_instances", () => {
                 },
               },
             },
-          }
+          },
         ),
         'Name "dupe" in use',
-        "It should have correct invalid text"
+        "It should have correct invalid text",
       );
     });
   });

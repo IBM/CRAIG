@@ -110,7 +110,7 @@ module.exports = {
     .group((exp) => {
       exp
         .group((exp) =>
-          exp.literal('"').negatedSet('"').oneOrMore().look.ahead('"')
+          exp.literal('"').negatedSet('"').oneOrMore().look.ahead('"'),
         )
         .or()
         .literal("null")

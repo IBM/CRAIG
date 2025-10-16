@@ -42,7 +42,7 @@ class ScrollForm extends React.Component {
             name={
               contains(
                 ["logdna", "sysdig", "atracker", "cloud_logs"],
-                this.props.selectedItem
+                this.props.selectedItem,
               )
                 ? this.props.craig.store.json[this.props.selectedItem].name
                 : this.props.craig.store.json[this.props.selectedItem][

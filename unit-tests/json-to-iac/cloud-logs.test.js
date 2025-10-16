@@ -50,7 +50,7 @@ resource "ibm_resource_instance" "cloud_logs" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted cloud logs"
+        "it should return correctly formatted cloud logs",
       );
     });
     it("should format logs with log bucket no metrics bucket", () => {
@@ -94,7 +94,7 @@ resource "ibm_resource_instance" "cloud_logs" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted cloud logs"
+        "it should return correctly formatted cloud logs",
       );
     });
     it("should format logs with log bucket no logs bucket", () => {
@@ -138,7 +138,7 @@ resource "ibm_resource_instance" "cloud_logs" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted cloud logs"
+        "it should return correctly formatted cloud logs",
       );
     });
     it("should format logs with log bucket no logs bucket and no metrics bucket", () => {
@@ -175,7 +175,7 @@ resource "ibm_resource_instance" "cloud_logs" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted cloud logs"
+        "it should return correctly formatted cloud logs",
       );
     });
   });
@@ -221,7 +221,7 @@ resource "ibm_iam_authorization_policy" "cos_object_storage_to_cloud_logs" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct authorization policy"
+        "it should return correct authorization policy",
       );
     });
   });
@@ -289,7 +289,7 @@ resource "ibm_resource_instance" "cloud_logs" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct authorization policy"
+        "it should return correct authorization policy",
       );
     });
     it("should return correct cloud logs tf with no cos auth", () => {
@@ -336,7 +336,7 @@ resource "ibm_resource_instance" "cloud_logs" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct authorization policy"
+        "it should return correct authorization policy",
       );
     });
   });

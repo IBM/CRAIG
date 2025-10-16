@@ -34,7 +34,7 @@ describe("dynamic toggle", () => {
       };
       assert.throws(
         task,
-        "dynamicToggleProps expects props.field.disabled to evaluate to boolean, got string"
+        "dynamicToggleProps expects props.field.disabled to evaluate to boolean, got string",
       );
     });
     it("should return props form properly formatted toggle", () => {
@@ -74,18 +74,18 @@ describe("dynamic toggle", () => {
       assert.deepEqual(
         toggleData,
         "use_data",
-        "it should return name to parent function"
+        "it should return name to parent function",
       );
       assert.deepEqual(
         actualData.key,
         "foo",
-        "it should return name to parent function"
+        "it should return name to parent function",
       );
       delete actualData.onToggle;
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct props"
+        "it should return correct props",
       );
     });
     it("should return props form properly formatted toggle for dynamic subnets", () => {
@@ -120,13 +120,13 @@ describe("dynamic toggle", () => {
       assert.deepEqual(
         toggleData,
         "use_data",
-        "it should return name to parent function"
+        "it should return name to parent function",
       );
       delete actualData.onToggle;
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct props"
+        "it should return correct props",
       );
     });
     it("should return props form properly formatted toggle with on render", () => {
@@ -164,13 +164,13 @@ describe("dynamic toggle", () => {
       assert.deepEqual(
         toggleData,
         "use_data",
-        "it should return name to parent function"
+        "it should return name to parent function",
       );
       delete actualData.onToggle;
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct props"
+        "it should return correct props",
       );
     });
     it("should return props form properly formatted toggle with tooltip", () => {
@@ -206,13 +206,13 @@ describe("dynamic toggle", () => {
       assert.deepEqual(
         toggleData,
         "use_data",
-        "it should return name to parent function"
+        "it should return name to parent function",
       );
       delete actualData.onToggle;
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct props"
+        "it should return correct props",
       );
     });
     it("should return props form properly formatted toggle with tooltip", () => {
@@ -248,13 +248,13 @@ describe("dynamic toggle", () => {
       assert.deepEqual(
         toggleData,
         "use_data",
-        "it should return name to parent function"
+        "it should return name to parent function",
       );
       delete actualData.onToggle;
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct props"
+        "it should return correct props",
       );
     });
     it("should return props form properly formatted toggle with tooltip and use on off", () => {
@@ -291,13 +291,13 @@ describe("dynamic toggle", () => {
       assert.deepEqual(
         toggleData,
         "use_data",
-        "it should return name to parent function"
+        "it should return name to parent function",
       );
       delete actualData.onToggle;
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct props"
+        "it should return correct props",
       );
     });
   });

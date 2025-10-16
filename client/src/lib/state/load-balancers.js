@@ -63,8 +63,8 @@ function loadBalancerOnStoreUpdate(config) {
           // each vsi deployment
           lbSubnets.concat(
             getObjectFromArray(config.store.json.vsi, "name", deployment)
-              .subnets
-          )
+              .subnets,
+          ),
         );
       }
     });
@@ -75,7 +75,7 @@ function loadBalancerOnStoreUpdate(config) {
     if (vpcExists) {
       lb.subnets = deleteUnfoundArrayItems(
         config.store.subnets[lb.vpc],
-        lb.subnets
+        lb.subnets,
       );
     } else {
       lb.vpc = null;
@@ -85,7 +85,7 @@ function loadBalancerOnStoreUpdate(config) {
       config.store.securityGroups[lb.vpc] === undefined // if there are no security groups for this vpc, looking up will result in undefined
         ? []
         : config.store.securityGroups[lb.vpc],
-      lb.security_groups
+      lb.security_groups,
     );
     config.updateUnfoundResourceGroup(lb);
   });
@@ -117,7 +117,7 @@ function loadBalancerSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "load_balancers"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -204,7 +204,7 @@ function initLoadBalancers(store) {
         "health_delay",
         "port",
       ],
-      "load_balancers"
+      "load_balancers",
     ),
     schema: {
       name: nameField("load_balancers", {
@@ -258,7 +258,7 @@ function initLoadBalancers(store) {
           return isEmpty(stateData?.target_vsi);
         },
         invalidText: unconditionalInvalidText(
-          "select at least one VSI deployment"
+          "select at least one VSI deployment",
         ),
         groups: function (stateData, componentProps) {
           if (isNullOrEmptyString(stateData.vpc, true)) {
@@ -270,7 +270,7 @@ function initLoadBalancers(store) {
                   return instance;
                 }
               }),
-              "name"
+              "name",
             );
           }
         },
@@ -282,9 +282,9 @@ function initLoadBalancers(store) {
                 getObjectFromArray(
                   componentProps.craig.store.json.vsi,
                   "name",
-                  deployment
-                ).subnets
-              )
+                  deployment,
+                ).subnets,
+              ),
             );
           });
           stateData.target_vsi = targetData;
@@ -338,7 +338,7 @@ function initLoadBalancers(store) {
         default: "",
         invalid: disableLoadBalancerSaveRangeValue("health_timeout", 5, 3000),
         invalidText: unconditionalInvalidText(
-          "Must be a whole number between 5 and 3000"
+          "Must be a whole number between 5 and 3000",
         ),
       },
       health_delay: {
@@ -350,7 +350,7 @@ function initLoadBalancers(store) {
           return (
             fieldIsNullOrEmptyString("health_delay")(
               stateData,
-              componentProps
+              componentProps,
             ) ||
             !isWholeNumber(Number(stateData.health_delay)) ||
             !isInRange(Number(stateData.health_delay), 5, 3000) ||
@@ -369,7 +369,7 @@ function initLoadBalancers(store) {
         default: "",
         invalid: disableLoadBalancerSaveRangeValue("health_retries", 5, 3000),
         invalidText: unconditionalInvalidText(
-          "Must be a whole number between 5 and 3000"
+          "Must be a whole number between 5 and 3000",
         ),
       },
       listener_port: {
@@ -378,7 +378,7 @@ function initLoadBalancers(store) {
         default: "",
         invalid: disableLoadBalancerSaveRangeValue("listener_port", 1, 65535),
         invalidText: unconditionalInvalidText(
-          "Must be a whole number between 1 and 65535"
+          "Must be a whole number between 1 and 65535",
         ),
       },
       listener_protocol: {
@@ -406,7 +406,7 @@ function initLoadBalancers(store) {
           );
         },
         invalidText: unconditionalInvalidText(
-          "Must be a whole number between 1 and 15000"
+          "Must be a whole number between 1 and 15000",
         ),
       },
       proxy_protocol: {
@@ -433,8 +433,8 @@ function initLoadBalancers(store) {
           return stateData.session_persistence_type === "source_ip"
             ? "Source IP"
             : stateData.session_persistence_type === "http_cookie"
-            ? "HTTP Cookie"
-            : titleCase(stateData.session_persistence_type);
+              ? "HTTP Cookie"
+              : titleCase(stateData.session_persistence_type);
         },
         onInputChange: function (stateData) {
           return snakeCase(stateData.session_persistence_type.toLowerCase());
@@ -455,7 +455,7 @@ function initLoadBalancers(store) {
         default: "",
         invalid: disableLoadBalancerSaveRangeValue("port", 1, 65535),
         invalidText: unconditionalInvalidText(
-          "Enter a whole number between 1 and 65535"
+          "Enter a whole number between 1 and 65535",
         ),
       },
     },

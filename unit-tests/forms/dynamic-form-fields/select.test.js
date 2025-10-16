@@ -34,7 +34,7 @@ describe("dynamic select", () => {
       };
       assert.throws(
         task,
-        "dynamicSelectProps expects props.field.disabled to evaluate to boolean, got string"
+        "dynamicSelectProps expects props.field.disabled to evaluate to boolean, got string",
       );
     });
     it("should throw an error if groups is not an array or does not return an array", () => {
@@ -68,7 +68,7 @@ describe("dynamic select", () => {
       };
       assert.throws(
         task,
-        "dynamicSelectProps expects props.field.groups to be an array of string or to be a function that evaluates to be an array of string. Got value boolean"
+        "dynamicSelectProps expects props.field.groups to be an array of string or to be a function that evaluates to be an array of string. Got value boolean",
       );
     });
     it("should throw an error if groups is not an array or does not return an array", () => {
@@ -100,7 +100,7 @@ describe("dynamic select", () => {
       };
       assert.throws(
         task,
-        "dynamicSelectProps expects props.field.groups to be an array of string or to be a function that evaluates to be an array of string. Got value boolean"
+        "dynamicSelectProps expects props.field.groups to be an array of string or to be a function that evaluates to be an array of string. Got value boolean",
       );
     });
     it("should throw an error if invalid does not return a boolean", () => {
@@ -135,7 +135,7 @@ describe("dynamic select", () => {
       };
       assert.throws(
         task,
-        "dynamicSelectProps expects props.field.invalid to evaluate to boolean, got string"
+        "dynamicSelectProps expects props.field.invalid to evaluate to boolean, got string",
       );
     });
     it("should throw an error if invalidText does not return a string", () => {
@@ -167,7 +167,7 @@ describe("dynamic select", () => {
       };
       assert.throws(
         task,
-        "dynamicSelectProps expects props.field.invalidText to evaluate to string, got boolean"
+        "dynamicSelectProps expects props.field.invalidText to evaluate to string, got boolean",
       );
     });
     it("should return the correct props for text input when disabled and no value", () => {
@@ -219,7 +219,7 @@ describe("dynamic select", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when disabled and no value and groups is function", () => {
@@ -272,7 +272,7 @@ describe("dynamic select", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when disabled and no value and groups is function with tooltip", () => {
@@ -326,7 +326,7 @@ describe("dynamic select", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it('should return the correct props for select when not disabled and fetch select and unmounted and stateData is ["Loading..."] and no value', () => {
@@ -362,7 +362,7 @@ describe("dynamic select", () => {
           propsName: "frog",
         },
         false,
-        ["Loading..."]
+        ["Loading..."],
       );
       let expectedData = {
         className: "leftTextAlign fieldWidth",
@@ -382,7 +382,7 @@ describe("dynamic select", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when not disabled and no value", () => {
@@ -434,7 +434,7 @@ describe("dynamic select", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when not disabled and no value and read only is function", () => {
@@ -488,7 +488,7 @@ describe("dynamic select", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
   });
@@ -510,12 +510,12 @@ describe("dynamic select", () => {
             kube_version: "yes",
             kube_type: "openshift",
           },
-        }
+        },
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct list of versions based on kube type of iks", () => {
@@ -535,12 +535,12 @@ describe("dynamic select", () => {
             kube_version: null,
             kube_type: "iks",
           },
-        }
+        },
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct list of versions based on kube type of iks and modal", () => {
@@ -562,12 +562,12 @@ describe("dynamic select", () => {
             kube_version: "none",
             kube_type: "iks",
           },
-        }
+        },
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct list for other endpoints when mounted and loaded", () => {
@@ -600,12 +600,12 @@ describe("dynamic select", () => {
           },
           handleInputChange: () => {},
         },
-        true
+        true,
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct list for other endpoints when mounted and loaded but selected", () => {
@@ -637,12 +637,12 @@ describe("dynamic select", () => {
           },
           handleInputChange: () => {},
         },
-        true
+        true,
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct list for other endpoints when mounted and loaded but selected with on render function", () => {
@@ -677,12 +677,12 @@ describe("dynamic select", () => {
           },
           handleInputChange: () => {},
         },
-        true
+        true,
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct list for other endpoints when mounted and loaded but selected and is vtl", () => {
@@ -716,12 +716,12 @@ describe("dynamic select", () => {
           },
           handleInputChange: () => {},
         },
-        true
+        true,
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

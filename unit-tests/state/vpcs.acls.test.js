@@ -32,14 +32,14 @@ describe("vpc network acls", () => {
         assert.deepEqual(
           craig.store.json.vpcs[0].acls[1],
           expectedData,
-          "it should create acl"
+          "it should create acl",
         );
       });
       it("should create an acl with rg", () => {
         craig.store.json.vpcs[0].resource_group = null;
         craig.vpcs.acls.create(
           { name: "new", resource_group: "workload-rg" },
-          { vpc_name: "management" }
+          { vpc_name: "management" },
         );
         let expectedData = {
           name: "new",
@@ -51,7 +51,7 @@ describe("vpc network acls", () => {
         assert.deepEqual(
           craig.store.json.vpcs[0].acls[1],
           expectedData,
-          "it should create acl"
+          "it should create acl",
         );
       });
       it("should create an acl and update rg when deleted", () => {
@@ -67,7 +67,7 @@ describe("vpc network acls", () => {
         assert.deepEqual(
           craig.store.json.vpcs[0].acls[1],
           expectedData,
-          "it should create acl"
+          "it should create acl",
         );
       });
     });
@@ -75,31 +75,31 @@ describe("vpc network acls", () => {
       it("should delete an acl", () => {
         craig.vpcs.acls.delete(
           {},
-          { data: { name: "management" }, vpc_name: "management" }
+          { data: { name: "management" }, vpc_name: "management" },
         );
         let expectedData = [];
         assert.deepEqual(
           craig.store.json.vpcs[0].acls,
           expectedData,
-          "it should delete acl"
+          "it should delete acl",
         );
       });
       it("should set subnet acls to null on delete", () => {
         craig.store.json._options.dynamic_subnets = false;
         craig.vpcs.acls.delete(
           {},
-          { data: { name: "management" }, vpc_name: "management" }
+          { data: { name: "management" }, vpc_name: "management" },
         );
         let expectedData = [];
         assert.deepEqual(
           craig.store.json.vpcs[0].acls,
           expectedData,
-          "it should delete acl"
+          "it should delete acl",
         );
         assert.deepEqual(
           distinct(splat(craig.store.json.vpcs[0].subnets, "network_acl")),
           [null],
-          "it should have correct subnets"
+          "it should have correct subnets",
         );
       });
     });
@@ -109,33 +109,33 @@ describe("vpc network acls", () => {
         craig.store.json.vpcs[0].subnets[1].network_acl = "frog";
         craig.vpcs.acls.save(
           { name: "new" },
-          { data: { name: "management" }, vpc_name: "management" }
+          { data: { name: "management" }, vpc_name: "management" },
         );
         assert.deepEqual(
           craig.store.json.vpcs[0].acls[0].name,
           "new",
-          "it should update acl"
+          "it should update acl",
         );
         assert.deepEqual(
           craig.store.json.vpcs[0].acls[0].rules[0].acl,
           "new",
-          "it should have correct acl"
+          "it should have correct acl",
         );
         assert.deepEqual(
           craig.store.json.vpcs[0].subnets[0].network_acl,
           "new",
-          "it should have correct acl"
+          "it should have correct acl",
         );
       });
       it("should update an acl with no name change", () => {
         craig.vpcs.acls.save(
           { name: "management", resource_group: "workload-rg" },
-          { data: { name: "management" }, vpc_name: "management" }
+          { data: { name: "management" }, vpc_name: "management" },
         );
         assert.deepEqual(
           craig.store.json.vpcs[0].acls[0].resource_group,
           "workload-rg",
-          "it should update acl rg"
+          "it should update acl rg",
         );
       });
     });
@@ -153,7 +153,7 @@ describe("vpc network acls", () => {
             {
               vpc_name: "management",
               parent_name: "management",
-            }
+            },
           );
 
           assert.deepEqual(
@@ -190,7 +190,7 @@ describe("vpc network acls", () => {
               code: null,
               ruleProtocol: "all",
             },
-            "it should add rule"
+            "it should add rule",
           );
         });
         it("should create a network acl rule with deny outbound", () => {
@@ -205,7 +205,7 @@ describe("vpc network acls", () => {
             {
               vpc_name: "management",
               parent_name: "management",
-            }
+            },
           );
           assert.deepEqual(
             craig.store.json.vpcs[0].acls[0].rules[4],
@@ -241,7 +241,7 @@ describe("vpc network acls", () => {
               code: null,
               ruleProtocol: "all",
             },
-            "it should add rule"
+            "it should add rule",
           );
         });
       });
@@ -260,7 +260,7 @@ describe("vpc network acls", () => {
               vpc_name: "management",
               parent_name: "management",
               data: { name: "allow-all-network-outbound" },
-            }
+            },
           );
 
           assert.deepEqual(
@@ -297,7 +297,7 @@ describe("vpc network acls", () => {
               code: null,
               ruleProtocol: "all",
             },
-            "it should update rule"
+            "it should update rule",
           );
         });
         it("should update a rule in place with protocol", () => {
@@ -320,7 +320,7 @@ describe("vpc network acls", () => {
               vpc_name: "management",
               parent_name: "management",
               data: { name: "allow-all-network-outbound" },
-            }
+            },
           );
           assert.deepEqual(
             craig.store.json.vpcs[0].acls[0].rules[3],
@@ -356,7 +356,7 @@ describe("vpc network acls", () => {
               code: null,
               ruleProtocol: "tcp",
             },
-            "it should update rule"
+            "it should update rule",
           );
         });
         it("should update a rule in place with only one change protocol", () => {
@@ -377,7 +377,7 @@ describe("vpc network acls", () => {
               vpc_name: "management",
               parent_name: "management",
               data: { name: "allow-all-network-outbound" },
-            }
+            },
           );
 
           assert.deepEqual(
@@ -414,7 +414,7 @@ describe("vpc network acls", () => {
               code: null,
               ruleProtocol: "tcp",
             },
-            "it should update rule"
+            "it should update rule",
           );
         });
         it("should update a rule in place with protocol and change port values to numbers from string", () => {
@@ -435,7 +435,7 @@ describe("vpc network acls", () => {
               vpc_name: "management",
               parent_name: "management",
               data: { name: "allow-all-network-outbound" },
-            }
+            },
           );
           assert.deepEqual(
             craig.store.json.vpcs[0].acls[0].rules[3],
@@ -471,7 +471,7 @@ describe("vpc network acls", () => {
               code: null,
               ruleProtocol: "tcp",
             },
-            "it should update rule"
+            "it should update rule",
           );
         });
       });
@@ -483,12 +483,12 @@ describe("vpc network acls", () => {
               vpc_name: "management",
               parent_name: "management",
               data: { name: "allow-all-network-outbound" },
-            }
+            },
           );
           assert.deepEqual(
             craig.store.json.vpcs[0].acls[0].rules.length,
             3,
-            "it should add rule"
+            "it should add rule",
           );
         });
       });
@@ -515,9 +515,9 @@ describe("vpc network acls", () => {
                 },
               },
             },
-          }
+          },
         ),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
     it("should return correct text", () => {
@@ -535,10 +535,10 @@ describe("vpc network acls", () => {
                 },
               },
             },
-          }
+          },
         ),
         "iac-vpc-test-acl",
-        "it should return correct text"
+        "it should return correct text",
       );
     });
     it("should return correct text when use data", () => {
@@ -556,10 +556,10 @@ describe("vpc network acls", () => {
                 },
               },
             },
-          }
+          },
         ),
         "test",
-        "it should return correct text"
+        "it should return correct text",
       );
     });
     it("should set data when changing rule protocol", () => {
@@ -594,7 +594,7 @@ describe("vpc network acls", () => {
             code: null,
           },
         },
-        "it should return data"
+        "it should return data",
       );
     });
     it("should render value for each type when present on sub rule but not main", () => {
@@ -605,7 +605,7 @@ describe("vpc network acls", () => {
           },
         }),
         "443",
-        "it should set sub rule"
+        "it should set sub rule",
       );
       assert.deepEqual(
         craig.vpcs.acls.rules.type.onRender({
@@ -614,7 +614,7 @@ describe("vpc network acls", () => {
           },
         }),
         "",
-        "it should set sub rule"
+        "it should set sub rule",
       );
       assert.deepEqual(
         craig.vpcs.acls.rules.type.onRender({
@@ -624,7 +624,7 @@ describe("vpc network acls", () => {
           type: "1234",
         }),
         "1234",
-        "it should set sub rule"
+        "it should set sub rule",
       );
       assert.deepEqual(
         craig.vpcs.acls.rules.code.onRender({
@@ -633,7 +633,7 @@ describe("vpc network acls", () => {
           },
         }),
         "",
-        "it should set sub rule"
+        "it should set sub rule",
       );
       assert.deepEqual(
         craig.vpcs.acls.rules.type.onRender({
@@ -643,7 +643,7 @@ describe("vpc network acls", () => {
           type: "443",
         }),
         "443",
-        "it should set sub rule"
+        "it should set sub rule",
       );
       assert.deepEqual(
         craig.vpcs.acls.rules.code.onRender({
@@ -652,7 +652,7 @@ describe("vpc network acls", () => {
           },
         }),
         "443",
-        "it should set sub rule"
+        "it should set sub rule",
       );
       assert.deepEqual(
         craig.vpcs.acls.rules.code.onRender({
@@ -660,7 +660,7 @@ describe("vpc network acls", () => {
           code: "443",
         }),
         "443",
-        "it should set sub rule"
+        "it should set sub rule",
       );
       assert.deepEqual(
         craig.vpcs.acls.rules.port_max.onRender({
@@ -669,7 +669,7 @@ describe("vpc network acls", () => {
           },
         }),
         "443",
-        "it should set sub rule"
+        "it should set sub rule",
       );
       assert.deepEqual(
         craig.vpcs.acls.rules.port_min.onRender({
@@ -678,7 +678,7 @@ describe("vpc network acls", () => {
           },
         }),
         "443",
-        "it should set sub rule"
+        "it should set sub rule",
       );
       assert.deepEqual(
         craig.vpcs.acls.rules.source_port_max.onRender({
@@ -687,7 +687,7 @@ describe("vpc network acls", () => {
           },
         }),
         "443",
-        "it should set sub rule"
+        "it should set sub rule",
       );
       assert.deepEqual(
         craig.vpcs.acls.rules.source_port_min.onRender({
@@ -696,7 +696,7 @@ describe("vpc network acls", () => {
           },
         }),
         "443",
-        "it should set sub rule"
+        "it should set sub rule",
       );
       assert.deepEqual(
         craig.vpcs.acls.rules.source_port_min.onRender({
@@ -706,7 +706,7 @@ describe("vpc network acls", () => {
           source_port_min: "443",
         }),
         "443",
-        "it should set sub rule"
+        "it should set sub rule",
       );
     });
     it("should set rule data on input change", () => {
@@ -743,40 +743,40 @@ describe("vpc network acls", () => {
             code: null,
           },
         },
-        "it should set rule"
+        "it should set rule",
       );
     });
     it("should render all as rule protocol", () => {
       assert.deepEqual(
         "ALL",
         craig.vpcs.acls.rules.ruleProtocol.onRender({ ruleProtocol: "all" }),
-        "it should return protocol"
+        "it should return protocol",
       );
     });
     it("should render TCP as rule protocol", () => {
       assert.deepEqual(
         "TCP",
         craig.vpcs.acls.rules.ruleProtocol.onRender({ ruleProtocol: "tcp" }),
-        "it should return protocol"
+        "it should return protocol",
       );
     });
     it("should render empty string as rule protocol", () => {
       assert.deepEqual(
         "",
         craig.vpcs.acls.rules.ruleProtocol.onRender({ ruleProtocol: "" }),
-        "it should return protocol"
+        "it should return protocol",
       );
     });
     it("should return invalid for object when no source", () => {
       assert.isTrue(
         craig.vpcs.acls.rules.source.invalid({}),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return invalid for object when no destination", () => {
       assert.isTrue(
         craig.vpcs.acls.rules.destination.invalid({}),
-        "it should be true"
+        "it should be true",
       );
     });
   });
@@ -826,9 +826,9 @@ describe("vpc network acls", () => {
               name: "hi",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should return true if a acl rule in a modal has an invalid duplicate name", () => {
@@ -846,9 +846,9 @@ describe("vpc network acls", () => {
               name: "hi",
             },
             parent_name: "management",
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should return true if a acl rule has an invalid source", () => {
@@ -865,9 +865,9 @@ describe("vpc network acls", () => {
             data: {
               name: "hi",
             },
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should return true if a acl rule has an invalid destination", () => {
@@ -886,9 +886,9 @@ describe("vpc network acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a acl rule has an invalid source_port_max", () => {
@@ -911,9 +911,9 @@ describe("vpc network acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a acl rule has an invalid source_port_min", () => {
@@ -937,9 +937,9 @@ describe("vpc network acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a acl rule has an invalid port_max", () => {
@@ -964,9 +964,9 @@ describe("vpc network acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a acl rule has an invalid port_min", () => {
@@ -992,9 +992,9 @@ describe("vpc network acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a icmp rule has invalid code", () => {
@@ -1020,9 +1020,9 @@ describe("vpc network acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a icmp rule has invalid type", () => {
@@ -1049,9 +1049,9 @@ describe("vpc network acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return false if a acl rule with icmp protocol is valid", () => {
@@ -1075,9 +1075,9 @@ describe("vpc network acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return false if a acl rule with all protocol is valid", () => {
@@ -1098,9 +1098,9 @@ describe("vpc network acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return false if a acl rule is valid", () => {
@@ -1126,9 +1126,9 @@ describe("vpc network acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
   });

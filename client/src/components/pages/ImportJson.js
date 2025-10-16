@@ -74,8 +74,8 @@ class ImportJson extends React.Component {
     window.location.pathname = contains(window.location.pathname, "/v2")
       ? "/v2/services"
       : this.props.slz
-      ? "/"
-      : "/form/resourceGroups";
+        ? "/"
+        : "/form/resourceGroups";
   }
 
   handlePrefix(event) {

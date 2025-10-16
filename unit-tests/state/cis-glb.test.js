@@ -49,7 +49,7 @@ describe("cis global load balancer", () => {
             health_checks: [],
           },
         ],
-        "it should return data"
+        "it should return data",
       );
     });
     it("should update cis glb cis after deletion", () => {
@@ -78,7 +78,7 @@ describe("cis global load balancer", () => {
           data: {
             name: "cis",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.cis_glbs,
@@ -97,7 +97,7 @@ describe("cis global load balancer", () => {
             health_checks: [],
           },
         ],
-        "it should return data"
+        "it should return data",
       );
     });
   });
@@ -134,7 +134,7 @@ describe("cis global load balancer", () => {
           data: {
             name: "pool",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.cis_glbs,
@@ -153,7 +153,7 @@ describe("cis global load balancer", () => {
             health_checks: [],
           },
         ],
-        "it should return data"
+        "it should return data",
       );
     });
   });
@@ -190,7 +190,7 @@ describe("cis global load balancer", () => {
           data: {
             name: "pool",
           },
-        }
+        },
       );
       assert.deepEqual(craig.store.json.cis_glbs, [], "it should return data");
     });
@@ -223,7 +223,7 @@ describe("cis global load balancer", () => {
       assert.deepEqual(
         craig.cis_glbs.cis.groups({}, { craig: craig }),
         ["cis"],
-        "it should return groups"
+        "it should return groups",
       );
     });
     it("should return invalid when description is invalid", () => {
@@ -233,15 +233,15 @@ describe("cis global load balancer", () => {
           { description: "@@@", name: "frog", cis: "toad" },
           {
             craig: craig,
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should return false when notification_email is null", () => {
       assert.isFalse(
         craig.cis_glbs.notification_email.invalid({ notification_email: "" }),
-        "it should be valid"
+        "it should be valid",
       );
     });
     it("should return false when notification_email is a valid email", () => {
@@ -249,7 +249,7 @@ describe("cis global load balancer", () => {
         craig.cis_glbs.notification_email.invalid({
           notification_email: "frog.toad@frog.toad.com",
         }),
-        "it should be valid"
+        "it should be valid",
       );
     });
     it("should return true when notification_email is a invalid email", () => {
@@ -257,7 +257,7 @@ describe("cis global load balancer", () => {
         craig.cis_glbs.notification_email.invalid({
           notification_email: "frog.toad@frog.toad.",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
   });
@@ -298,7 +298,7 @@ describe("cis global load balancer", () => {
             innerFormProps: {
               arrayParentName: "pool",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis_glbs[0].origins,
@@ -310,7 +310,7 @@ describe("cis global load balancer", () => {
               cis: "cis",
             },
           ],
-          "it should create origin"
+          "it should create origin",
         );
       });
       it("should save an origin", () => {
@@ -324,7 +324,7 @@ describe("cis global load balancer", () => {
             innerFormProps: {
               arrayParentName: "pool",
             },
-          }
+          },
         );
         craig.cis_glbs.origins.save(
           {
@@ -337,7 +337,7 @@ describe("cis global load balancer", () => {
               name: "example",
             },
             arrayParentName: "pool",
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis_glbs[0].origins,
@@ -349,7 +349,7 @@ describe("cis global load balancer", () => {
               cis: "cis",
             },
           ],
-          "it should create origin"
+          "it should create origin",
         );
       });
       it("should delete an origin", () => {
@@ -363,7 +363,7 @@ describe("cis global load balancer", () => {
             innerFormProps: {
               arrayParentName: "pool",
             },
-          }
+          },
         );
         craig.cis_glbs.origins.delete(
           {
@@ -376,12 +376,12 @@ describe("cis global load balancer", () => {
               name: "example",
             },
             arrayParentName: "pool",
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis_glbs[0].origins,
           [],
-          "it should create origin"
+          "it should create origin",
         );
       });
       describe("origin schema", () => {
@@ -394,9 +394,9 @@ describe("cis global load balancer", () => {
               },
               {
                 craig: craig,
-              }
+              },
             ),
-            "it should be invalid"
+            "it should be invalid",
           );
         });
       });
@@ -418,7 +418,7 @@ describe("cis global load balancer", () => {
             innerFormProps: {
               arrayParentName: "pool",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis_glbs[0].glbs,
@@ -434,7 +434,7 @@ describe("cis global load balancer", () => {
               name: "www.example.com",
             },
           ],
-          "it should create origin"
+          "it should create origin",
         );
       });
       it("should save a glb", () => {
@@ -453,7 +453,7 @@ describe("cis global load balancer", () => {
             innerFormProps: {
               arrayParentName: "pool",
             },
-          }
+          },
         );
         craig.cis_glbs.glbs.save(
           {
@@ -471,7 +471,7 @@ describe("cis global load balancer", () => {
               name: "www.example.com",
             },
             arrayParentName: "pool",
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis_glbs[0].glbs,
@@ -487,7 +487,7 @@ describe("cis global load balancer", () => {
               name: "www.example2.com",
             },
           ],
-          "it should create origin"
+          "it should create origin",
         );
       });
       it("should delete a glb", () => {
@@ -506,7 +506,7 @@ describe("cis global load balancer", () => {
             innerFormProps: {
               arrayParentName: "pool",
             },
-          }
+          },
         );
         craig.cis_glbs.glbs.delete(
           {
@@ -524,12 +524,12 @@ describe("cis global load balancer", () => {
               name: "www.example.com",
             },
             arrayParentName: "pool",
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis_glbs[0].glbs,
           [],
-          "it should create origin"
+          "it should create origin",
         );
       });
       describe("schema", () => {
@@ -543,22 +543,22 @@ describe("cis global load balancer", () => {
               innerFormProps: {
                 arrayParentName: "cis",
               },
-            }
+            },
           );
           assert.deepEqual(
             craig.cis_glbs.glbs.domain.groups(
               {},
-              { craig: craig, arrayParentName: "pool" }
+              { craig: craig, arrayParentName: "pool" },
             ),
             ["example.com"],
-            "it should return list of domains"
+            "it should return list of domains",
           );
         });
         it("should return a list of pools for fallback pool", () => {
           assert.deepEqual(
             craig.cis_glbs.glbs.fallback_pool.groups({}, { craig: craig }),
             ["pool"],
-            "it should return list of pools"
+            "it should return list of pools",
           );
         });
         it("should be disabled when none default pools selected", () => {
@@ -573,20 +573,20 @@ describe("cis global load balancer", () => {
               {
                 craig: craig,
                 arrayParentName: "pool",
-              }
+              },
             ),
-            "it should be disabled"
+            "it should be disabled",
           );
         });
         it("should be invalid if name is not a url", () => {
           assert.isTrue(
             craig.cis_glbs.glbs.name.invalid({ name: "frog" }),
-            "it should be invalid"
+            "it should be invalid",
           );
           assert.deepEqual(
             craig.cis_glbs.glbs.name.invalidText({ name: "frog" }),
             "Enter a valid domain name",
-            "it should have correct invalid text"
+            "it should have correct invalid text",
           );
         });
         it("should be invalid if name is duplicate in modal", () => {
@@ -605,22 +605,22 @@ describe("cis global load balancer", () => {
               innerFormProps: {
                 arrayParentName: "pool",
               },
-            }
+            },
           );
           assert.isTrue(
             craig.cis_glbs.glbs.name.invalid(
               { name: "www.example.com" },
-              { craig: craig, arrayParentName: "pool" }
+              { craig: craig, arrayParentName: "pool" },
             ),
-            "it should be invalid"
+            "it should be invalid",
           );
           assert.deepEqual(
             craig.cis_glbs.glbs.name.invalidText(
               { name: "www.example.com" },
-              { craig: craig, arrayParentName: "pool" }
+              { craig: craig, arrayParentName: "pool" },
             ),
             "Name www.example.com in use",
-            "it should have correct invalid text"
+            "it should have correct invalid text",
           );
         });
         it("should be not invalid if name is not duplicate after save", () => {
@@ -639,7 +639,7 @@ describe("cis global load balancer", () => {
               innerFormProps: {
                 arrayParentName: "pool",
               },
-            }
+            },
           );
           craig.cis_glbs.glbs.create(
             {
@@ -656,7 +656,7 @@ describe("cis global load balancer", () => {
               innerFormProps: {
                 arrayParentName: "pool",
               },
-            }
+            },
           );
           assert.isFalse(
             craig.cis_glbs.glbs.name.invalid(
@@ -667,9 +667,9 @@ describe("cis global load balancer", () => {
                 data: {
                   name: "www.example2.com",
                 },
-              }
+              },
             ),
-            "it should be invalid"
+            "it should be invalid",
           );
         });
       });
@@ -695,7 +695,7 @@ describe("cis global load balancer", () => {
             innerFormProps: {
               arrayParentName: "pool",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis_glbs[0].health_checks,
@@ -715,7 +715,7 @@ describe("cis global load balancer", () => {
               type: "https",
             },
           ],
-          "it should create origin"
+          "it should create origin",
         );
       });
       it("should save a health_check", () => {
@@ -738,7 +738,7 @@ describe("cis global load balancer", () => {
             innerFormProps: {
               arrayParentName: "pool",
             },
-          }
+          },
         );
         craig.cis_glbs.health_checks.save(
           {
@@ -760,7 +760,7 @@ describe("cis global load balancer", () => {
               name: "check",
             },
             arrayParentName: "pool",
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis_glbs[0].health_checks,
@@ -780,7 +780,7 @@ describe("cis global load balancer", () => {
               type: "https",
             },
           ],
-          "it should create origin"
+          "it should create origin",
         );
       });
       it("should delete a health_check", () => {
@@ -803,7 +803,7 @@ describe("cis global load balancer", () => {
             innerFormProps: {
               arrayParentName: "pool",
             },
-          }
+          },
         );
         craig.cis_glbs.health_checks.delete(
           {
@@ -825,12 +825,12 @@ describe("cis global load balancer", () => {
               name: "check",
             },
             arrayParentName: "pool",
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis_glbs[0].health_checks,
           [],
-          "it should create origin"
+          "it should create origin",
         );
       });
       describe("health checks schema", () => {
@@ -854,15 +854,15 @@ describe("cis global load balancer", () => {
               innerFormProps: {
                 arrayParentName: "pool",
               },
-            }
+            },
           );
           assert.isTrue(
             disableSave(
               "health_checks",
               { name: "check" },
-              { craig: craig, isModal: true, data: { name: "" } }
+              { craig: craig, isModal: true, data: { name: "" } },
             ),
-            "it should be disabled"
+            "it should be disabled",
           );
         });
       });

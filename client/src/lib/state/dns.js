@@ -53,7 +53,7 @@ function dnsOnStoreUpdate(config) {
       zone.instance = dns.name;
       zone.vpcs = deleteUnfoundArrayItems(
         splat(config.store.json.vpcs, "name"),
-        zone.vpcs
+        zone.vpcs,
       );
     });
     if (dns.records)
@@ -71,8 +71,8 @@ function dnsOnStoreUpdate(config) {
           splat(
             getObjectFromArray(config.store.json.vpcs, "name", resolver.vpc)
               .subnets,
-            "name"
-          )
+            "name",
+          ),
         );
       }
       if (!splatContains(dns.zones, "name", resolver.zone)) {
@@ -258,7 +258,7 @@ function initDnsStore(store) {
     delete: dnsDelete,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "resource_group", "plan"],
-      "dns"
+      "dns",
     ),
     schema: {
       name: nameField("dns", { size: "small" }),
@@ -281,7 +281,7 @@ function initDnsStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "vpcs", "label", "description"],
           "dns",
-          "zones"
+          "zones",
         ),
         schema: {
           name: {
@@ -303,13 +303,13 @@ function initDnsStore(store) {
               return contains(allZoneNames, stateData.name)
                 ? true
                 : hasDuplicateName(
-                    "zones",
-                    stateData,
-                    componentProps,
-                    "name"
-                  ) || stateData.name
-                ? stateData.name.match(dnsZoneNameExp) === null
-                : true;
+                      "zones",
+                      stateData,
+                      componentProps,
+                      "name",
+                    ) || stateData.name
+                  ? stateData.name.match(dnsZoneNameExp) === null
+                  : true;
             },
             invalidText: invalidNameText("zones"),
           },
@@ -331,7 +331,7 @@ function initDnsStore(store) {
             default: "",
             invalid: fieldIsNullOrEmptyString("label"),
             invalidText: unconditionalInvalidText(
-              "Label cannot be null or empty string"
+              "Label cannot be null or empty string",
             ),
           },
           description: {
@@ -342,7 +342,7 @@ function initDnsStore(store) {
               return invalidDescription(stateData.description);
             },
             invalidText: unconditionalInvalidText(
-              "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/."
+              "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/.",
             ),
             placeholder: "(Optional) DNS Zone Description",
           },
@@ -369,7 +369,7 @@ function initDnsStore(store) {
             "ttl",
           ],
           "dns",
-          "records"
+          "records",
         ),
         schema: {
           use_vsi: {
@@ -437,9 +437,9 @@ function initDnsStore(store) {
               return splat(
                 new revision(componentProps.craig.store.json).child(
                   "dns",
-                  componentProps.arrayParentName
+                  componentProps.arrayParentName,
                 ).data.zones,
-                "name"
+                "name",
               );
             },
           },
@@ -453,7 +453,7 @@ function initDnsStore(store) {
                 : fieldIsNullOrEmptyString("rdata")(stateData);
             },
             invalidText: unconditionalInvalidText(
-              "Resource Data cannot be null or empty string."
+              "Resource Data cannot be null or empty string.",
             ),
             hideWhen: hideWhenFieldFalse("use_vsi", true),
           },
@@ -475,7 +475,7 @@ function initDnsStore(store) {
               } else return false;
             },
             invalidText: unconditionalInvalidText(
-              "Must be a whole number within range 0 and 65535"
+              "Must be a whole number within range 0 and 65535",
             ),
             hideWhen: function (stateData) {
               return stateData.type !== "MX";
@@ -490,7 +490,7 @@ function initDnsStore(store) {
               } else return false;
             },
             invalidText: unconditionalInvalidText(
-              "Must be a whole number between 1 and 65535"
+              "Must be a whole number between 1 and 65535",
             ),
             hideWhen: hideWhenRecordNotSrv,
           },
@@ -516,7 +516,7 @@ function initDnsStore(store) {
               } else return false;
             },
             invalidText: unconditionalInvalidText(
-              "Must be a whole number between 0 and 65535"
+              "Must be a whole number between 0 and 65535",
             ),
             hideWhen: hideWhenRecordNotSrv,
           },
@@ -534,7 +534,7 @@ function initDnsStore(store) {
               } else return false;
             },
             invalidText: unconditionalInvalidText(
-              "Service must start with a '_'."
+              "Service must start with a '_'.",
             ),
             hideWhen: hideWhenRecordNotSrv,
           },
@@ -549,7 +549,7 @@ function initDnsStore(store) {
               } else return false;
             },
             invalidText: unconditionalInvalidText(
-              "Must be a whole number between 0 and 65535"
+              "Must be a whole number between 0 and 65535",
             ),
             hideWhen: hideWhenRecordNotSrv,
           },
@@ -562,7 +562,7 @@ function initDnsStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "vpc", "subnets", "description"],
           "dns",
-          "custom_resolvers"
+          "custom_resolvers",
         ),
         schema: {
           name: nameField("custom_resolvers", { size: "small" }),
@@ -589,10 +589,10 @@ function initDnsStore(store) {
               return invalidDescription(stateData.description);
             },
             invalidText: unconditionalInvalidText(
-              "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/."
+              "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/.",
             ),
             placeholder: unconditionalInvalidText(
-              "(Optional) Custom Resolver Description"
+              "(Optional) Custom Resolver Description",
             ),
           },
         },
