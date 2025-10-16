@@ -31,7 +31,7 @@ describe("clusters", () => {
         slzNetwork,
       );
       let expectedData = `
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
   name                            = "\${var.prefix}-workload-cluster-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -976,7 +976,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster_cluster" {
         },
       );
       let expectedData = `
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -1882,7 +1882,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
         },
       );
       let expectedData = `
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -2789,7 +2789,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
         },
       );
       let expectedData = `
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -2854,11 +2854,11 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
         slzNetwork,
       );
       let expectedData = `
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
@@ -2899,11 +2899,11 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
         slzNetwork,
       );
       let expectedData = `
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
@@ -2939,7 +2939,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
 # Workload Cluster
 ##############################################################################
 
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -2979,11 +2979,11 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
   }
 }
 
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
@@ -3017,7 +3017,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
 # Workload Cluster
 ##############################################################################
 
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -3057,11 +3057,11 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
   }
 }
 
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
@@ -3086,7 +3086,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
 ##############################################################################
 
 resource "ibm_ob_logging" "workload_cluster_logging" {
-  cluster     = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster     = ibm_container_vpc_cluster.workload_vpc_workload.id
   instance_id = ibm_resource_instance.logdna.guid
   depends_on = [
     logdna_key.logdna_ingestion_key
@@ -3094,7 +3094,7 @@ resource "ibm_ob_logging" "workload_cluster_logging" {
 }
 
 resource "ibm_ob_monitoring" "workload_cluster_monitoring" {
-  cluster     = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster     = ibm_container_vpc_cluster.workload_vpc_workload.id
   instance_id = ibm_resource_instance.sysdig.guid
   depends_on = [
     ibm_resource_key.sysdig_key
@@ -3153,7 +3153,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_secrets_manager_to_cont
 # Workload Cluster
 ##############################################################################
 
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -3193,11 +3193,11 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
   }
 }
 
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
@@ -3262,7 +3262,7 @@ resource "ibm_sm_username_password_secret" "secrets_manager_username_secret_secr
 }
 
 resource "ibm_container_ingress_secret_opaque" "workload_ingress_example" {
-  cluster          = ibm_container_vpc_cluster.workload_vpc_workload_cluster.name
+  cluster          = ibm_container_vpc_cluster.workload_vpc_workload.name
   secret_name      = "\${var.prefix}-ingress-example"
   secret_namespace = "ns"
   persistence      = true
@@ -3318,7 +3318,7 @@ resource "ibm_container_ingress_secret_opaque" "workload_ingress_example" {
 # Workload Cluster
 ##############################################################################
 
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -3358,11 +3358,11 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
   }
 }
 
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
@@ -3427,7 +3427,7 @@ resource "ibm_sm_username_password_secret" "secrets_manager_username_secret_secr
 }
 
 resource "ibm_container_ingress_secret_opaque" "workload_ingress_example" {
-  cluster          = ibm_container_vpc_cluster.workload_vpc_workload_cluster.name
+  cluster          = ibm_container_vpc_cluster.workload_vpc_workload.name
   secret_name      = "\${var.prefix}-ingress-example"
   secret_namespace = "ns"
   persistence      = true
@@ -4344,11 +4344,11 @@ resource "ibm_container_ingress_secret_opaque" "workload_ingress_example" {
       );
 
       let expectedData = `
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   zones {

@@ -360,6 +360,75 @@ data "ibm_is_security_group" "management_vpc_management_vpe_sg_sg" {
 `;
       assert.deepEqual(actualData, expectedData, "it should return correct tf");
     });
+//     it("should format a cluster security group from data", () => {
+//       let actualData = formatSecurityGroup(
+//         {
+//           cluster_security_group: true,
+//           vpc: "workload",
+//           name: "workload-cluster-security-group",
+//           resource_group: "slz-workload-rg",
+//           rules: [
+//             {
+//               vpc: "workload",
+//               sg: "workload-cluster-security-group",
+//               direction: "outbound",
+//               name: "allow-ibm-tcp-443-outbound",
+//               source: "161.26.0.0/16",
+//               tcp: {
+//                 port_max: 443,
+//                 port_min: 443,
+//               },
+//             },
+//           ],
+//         },
+//         {
+//           _options: {
+//             region: "us-south",
+//             tags: ["hello", "world"],
+//             prefix: "iac",
+//           },
+//           resource_groups: [
+//             {
+//               use_prefix: false,
+//               name: "slz-service-rg",
+//               use_data: false,
+//             },
+//             {
+//               use_prefix: false,
+//               name: "slz-management-rg",
+//               use_data: false,
+//             },
+//             {
+//               use_prefix: false,
+//               name: "slz-workload-rg",
+//               use_data: false,
+//             },
+//           ],
+//           vpcs: [
+//             {
+//               name: "workload",
+//               use_data: true,
+//             },
+//           ],
+//         },
+//       );
+//       let expectedData = `
+// data "ibm_is_security_groups" "groups_workload_vpc_workload_cluster" {
+//   vpc_crn = ibm_container_vpc_cluster.workload_vpc_workload_cluster[0].crn
+//   depends_on = [
+//     ibm_container_vpc_cluster.workload_vpc_roks_cluster
+//   ]
+// }
+
+// locals {
+//   workload_cluster_security_group_id = [
+//     for group in data.ibm_is_security_groups.groups_workload_vpc_workload_cluster.security_groups :
+//     group if group.name == "kube-\${ibm_container_vpc_cluster.workload_vpc_workload_cluster.id}"
+//   ][0].id
+// }
+// `;
+//       assert.deepEqual(actualData, expectedData, "it should return correct tf");
+//     });
   });
   describe("formatSgRule", () => {
     it("should format security group rule with no protocol", () => {

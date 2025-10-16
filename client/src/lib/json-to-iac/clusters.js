@@ -53,7 +53,7 @@ const {
  */
 function ibmContainerVpcCluster(cluster, config) {
   let data = {
-    name: `${cluster.vpc} vpc ${cluster.name} cluster`,
+    name: `${cluster.vpc} vpc ${cluster.name}`,
   };
   let clusterData = {
     name: kebabName([cluster.name, "cluster"]),
@@ -125,7 +125,7 @@ function ibmContainerVpcWorkerPool(pool, config) {
   let vpcSubnets = new revision(config).child("vpcs", poolCluster.vpc).data
     .subnets;
   let data = {
-    name: `${pool.vpc} vpc ${pool.cluster} cluster ${pool.name} pool`,
+    name: `${pool.vpc} vpc ${pool.cluster} cluster ${pool.name}`,
   };
   let poolData = {
     worker_pool_name: kebabName([pool.cluster, "cluster", pool.name]),
@@ -133,7 +133,7 @@ function ibmContainerVpcWorkerPool(pool, config) {
     resource_group_id: rgIdRef(pool.resource_group, config),
     cluster: tfRef(
       "ibm_container_vpc_cluster",
-      `${pool.vpc} vpc ${pool.cluster} cluster`,
+      `${pool.vpc} vpc ${pool.cluster}`,
     ),
     flavor: pool.flavor,
     worker_count: pool.workers_per_subnet,
@@ -244,7 +244,7 @@ function clusterTf(config) {
           {
             cluster: `\${ibm_container_vpc_cluster.${snakeCase(
               cluster.vpc,
-            )}_vpc_${snakeCase(cluster.name)}_cluster.id}`,
+            )}_vpc_${snakeCase(cluster.name)}.id}`,
             instance_id: `\${ibm_resource_instance.${
               field === "logging" ? "logdna" : "sysdig"
             }.guid}`,
@@ -277,7 +277,7 @@ function clusterTf(config) {
             {
               cluster:
                 "${ibm_container_vpc_cluster." +
-                snakeCase(`${cluster.vpc} vpc ${cluster.name} cluster`) +
+                snakeCase(`${cluster.vpc} vpc ${cluster.name}`) +
                 ".name}",
               secret_name: `\${var.prefix}-ingress-` + secret.name,
               secret_namespace: secret.namespace,

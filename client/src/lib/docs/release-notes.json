@@ -7,7 +7,8 @@
     ],
     "fixes": [],
     "upgrade_notes": [
-      "CRAIG no longer depends on react-scripts and uses Next JS to build"
+      "CRAIG no longer depends on react-scripts and uses Next JS to build",
+      "Updated VPC Cluster and Worker Pool resource addressess to be more intuitive"
     ]
   },
   {
