@@ -55,14 +55,12 @@ function ibmIsSecurityGroup(sg, config) {
  */
 function formatSecurityGroup(sg, config) {
   let group = ibmIsSecurityGroup(sg, config);
-  return sg.cluster_security_group
-    ? jsonToTfPrint("data", "ibm_is_security_groups", "groups", {})
-    : jsonToTfPrint(
-        sg.use_data ? "data" : "resource",
-        "ibm_is_security_group",
-        group.name,
-        group.data,
-      );
+  return jsonToTfPrint(
+    sg.use_data ? "data" : "resource",
+    "ibm_is_security_group",
+    group.name,
+    group.data,
+  );
 }
 
 /** create sg rule

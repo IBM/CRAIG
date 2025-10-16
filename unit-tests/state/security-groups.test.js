@@ -621,6 +621,28 @@ describe("security groups", () => {
     });
   });
   describe("security_groups.schema", () => {
+    it("should hide resource group if a cluster security group", () => {
+      assert.isTrue(
+        craig.security_groups.resource_group.hideWhen(
+          {
+            name: "hello",
+            cluster_security_group: true,
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "hi",
+                  },
+                },
+              },
+            },
+          },
+        ),
+        "it should be read only",
+      );
+    });
     it("should have the correct name helper text", () => {
       assert.deepEqual(
         craig.security_groups.name.helperText(
@@ -639,6 +661,49 @@ describe("security groups", () => {
         ),
         "hi-undefined-undefined-sg",
         "it should have correct helper text",
+      );
+      assert.deepEqual(
+        craig.security_groups.name.helperText(
+          {
+            name: "hello",
+            cluster_security_group: true,
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "hi",
+                  },
+                },
+              },
+            },
+          },
+        ),
+        "hello",
+        "it should have correct helper text",
+      );
+    });
+    it("should have a read only name if a cluster security group", () => {
+      assert.isTrue(
+        craig.security_groups.name.readOnly(
+          {
+            name: "hello",
+            cluster_security_group: true,
+          },
+          {
+            craig: {
+              store: {
+                json: {
+                  _options: {
+                    prefix: "hi",
+                  },
+                },
+              },
+            },
+          },
+        ),
+        "it should be read only",
       );
     });
     it("should hide use_data", () => {
@@ -672,6 +737,13 @@ describe("security groups", () => {
       );
       assert.isTrue(
         craig.security_groups.vpc.disabled({ use_data: true, vpc: "frog" }),
+        "it should be disabled",
+      );
+      assert.isTrue(
+        craig.security_groups.vpc.disabled({
+          cluster_security_group: true,
+          vpc: "frog",
+        }),
         "it should be disabled",
       );
     });

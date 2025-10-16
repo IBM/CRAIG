@@ -276,22 +276,15 @@ function initSecurityGroupStore(store) {
       name: nameField("security_groups", {
         size: "small",
         helperText: function (stateData, componentProps) {
-          return `${componentProps.craig.store.json._options.prefix}-${stateData.vpc}-${stateData.name}-sg`;
+          return stateData?.cluster_security_group
+            ? stateData.name
+            : `${componentProps.craig.store.json._options.prefix}-${stateData.vpc}-${stateData.name}-sg`;
         },
         readOnly: function (stateData) {
           return stateData?.cluster_security_group;
         },
-        helperText: function (stateData, componentProps) {
-          return stateData?.cluster_security_group
-            ? stateData.name
-            : nameHelperText(stateData, componentProps);
-        },
       }),
-      resource_group: resourceGroupsField(true, {
-        hideWhen: function (stateData) {
-          return stateData?.cluster_security_group === true;
-        },
-      }),
+      resource_group: resourceGroupsField(true),
       vpc: {
         type: "select",
         labelText: "VPC",
@@ -303,7 +296,7 @@ function initSecurityGroupStore(store) {
         disabled: function (stateData) {
           return (
             (stateData.use_data && !isNullOrEmptyString(stateData.vpc)) ||
-            stateData?.cluster_security_group
+            stateData?.cluster_security_group === true
           );
         },
       },
