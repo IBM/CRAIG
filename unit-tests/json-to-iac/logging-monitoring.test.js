@@ -50,7 +50,7 @@ resource "ibm_resource_instance" "logdna" {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       it("should format a logdna instance with platform logs", () => {
@@ -92,7 +92,7 @@ resource "ibm_resource_instance" "logdna" {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return correct data"
+          "it should return correct data",
         );
       });
     });
@@ -131,7 +131,7 @@ resource "ibm_resource_key" "logdna_key" {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return correct data"
+          "it should return correct data",
         );
       });
     });
@@ -174,7 +174,7 @@ resource "logdna_archive" "logdna_archive" {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return correct data"
+          "it should return correct data",
         );
       });
     });
@@ -191,7 +191,7 @@ provider "logdna" {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return correct data"
+          "it should return correct data",
         );
       });
     });
@@ -218,7 +218,7 @@ resource "ibm_resource_key" "sysdig_key" {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return correct data"
+          "it should return correct data",
         );
       });
     });
@@ -258,7 +258,7 @@ resource "ibm_resource_instance" "sysdig" {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       it("should create sysdig instance with platform logs", () => {
@@ -300,7 +300,7 @@ resource "ibm_resource_instance" "sysdig" {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return correct data"
+          "it should return correct data",
         );
       });
     });
@@ -327,7 +327,7 @@ resource "ibm_resource_key" "atracker_key" {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return correct data"
+          "it should return correct data",
         );
       });
     });
@@ -366,7 +366,7 @@ resource "logdna_archive" "atracker_archive" {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return correct terraform"
+          "it should return correct terraform",
         );
       });
     });
@@ -406,7 +406,7 @@ resource "ibm_resource_instance" "atracker" {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return correct data"
+          "it should return correct data",
         );
       });
     });
@@ -551,7 +551,7 @@ resource "ibm_resource_key" "sysdig_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should return correct tf when logdna and sysdig enabled with logdna key stored in secrets manager", () => {
@@ -726,7 +726,7 @@ resource "ibm_sm_arbitrary_secret" "logdna_ingestion_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should return correct tf when logdna and sysdig enabled with sysdig key stored in secrets manager", () => {
@@ -901,7 +901,7 @@ resource "ibm_sm_arbitrary_secret" "sysdig_access_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should return correct tf when logdna and sysdig enabled with sysdig key stored in secrets manager and null secrets manager", () => {
@@ -1076,7 +1076,7 @@ resource "ibm_sm_arbitrary_secret" "sysdig_access_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should return correct tf when logdna and sysdig not enabled", () => {
@@ -1174,7 +1174,7 @@ resource "logdna_archive" "logdna_archive" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should return correct tf when logdna and sysdig not enabled and no logdna archive", () => {
@@ -1262,7 +1262,7 @@ resource "logdna_key" "logdna_ingestion_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should return correct tf when not logdna and sysdig enabled", () => {
@@ -1332,7 +1332,7 @@ resource "ibm_resource_key" "sysdig_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should return correct tf when logdna and sysdig enabled and atracker", () => {
@@ -1521,7 +1521,7 @@ resource "ibm_resource_key" "sysdig_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should return empty string when cloud logs enabled", () => {
@@ -1606,7 +1606,7 @@ resource "ibm_resource_key" "sysdig_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
   });

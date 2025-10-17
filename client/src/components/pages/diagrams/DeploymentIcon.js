@@ -70,7 +70,7 @@ export const DeploymentIcon = (props) => {
         "fortigate_vnf",
         "f5_vsi",
       ],
-      props.itemName
+      props.itemName,
     ) && !props.small;
 
   /**

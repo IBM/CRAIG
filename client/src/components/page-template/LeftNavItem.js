@@ -55,7 +55,7 @@ class LeftNavItem extends React.Component {
                 this.props.item.path,
                 this.props.expanded,
                 this.props.hasInvalidForm,
-                this.state.isHovering
+                this.state.isHovering,
               )
             }
           >

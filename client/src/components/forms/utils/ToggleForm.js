@@ -90,7 +90,7 @@ class CraigToggleForm extends React.Component {
         propsMatchState(
           this.props.submissionFieldName,
           stateData,
-          componentProps
+          componentProps,
         ) === false;
       if (propsDoNotMatch || this.state.useDefaultUnsavedMessage === false) {
         this.toggleUnsavedChangeModal();
@@ -142,7 +142,7 @@ class CraigToggleForm extends React.Component {
     } else {
       this.props.onSave(
         this.childRef.current.state,
-        this.childRef.current.props
+        this.childRef.current.props,
       );
       this.setState({
         useDefaultUnsavedMessage: true,
@@ -158,7 +158,7 @@ class CraigToggleForm extends React.Component {
     if (this.props.onShowToggle) this.props.onShowToggle(this.props.index);
     this.props.onDelete(
       this.childRef.current?.state,
-      this.childRef.current?.props
+      this.childRef.current?.props,
     );
     this.setState({ hide: true, showDeleteModal: false });
   }
@@ -176,7 +176,7 @@ class CraigToggleForm extends React.Component {
       propsMatchState(
         this.props.submissionFieldName,
         stateData,
-        componentProps
+        componentProps,
       ) === false;
     if (
       enableSave === false &&
@@ -209,13 +209,13 @@ class CraigToggleForm extends React.Component {
   render() {
     if (this.props.noDeleteButton !== true && !this.props.onDelete) {
       throw new Error(
-        `ToggleForm expects onDelete Function to be passed when a delete button is rendered`
+        `ToggleForm expects onDelete Function to be passed when a delete button is rendered`,
       );
     }
 
     if (this.props.noSaveButton !== true && !this.props.onSave) {
       throw new Error(
-        `ToggleForm expects onSave Function to be passed when a save button is rendered`
+        `ToggleForm expects onSave Function to be passed when a save button is rendered`,
       );
     }
 
@@ -260,7 +260,7 @@ class CraigToggleForm extends React.Component {
                   buttons={
                     contains(
                       ["acl_rules", "sg_rules"],
-                      this.props.submissionFieldName
+                      this.props.submissionFieldName,
                     ) &&
                     !this.props.isModal &&
                     this.state.hide ? (

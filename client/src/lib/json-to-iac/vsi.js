@@ -51,13 +51,13 @@ function ibmIsInstance(vsi, config) {
   let vsiName =
     vsi.index && vsi.use_variable_names
       ? `\${var.${snakeCase(
-          `${vsi.vpc} vpc vsi deployment ${vsi.name} ${vsi.subnet} subnet server ${vsi.index} name`
+          `${vsi.vpc} vpc vsi deployment ${vsi.name} ${vsi.subnet} subnet server ${vsi.index} name`,
         )}}`
       : vsi.index
-      ? `${varDotPrefix}-${kebabCase(vsi.vpc)}-${vsi.name}-vsi-zone-${zone}-${
-          vsi.index
-        }`
-      : vsi.name;
+        ? `${varDotPrefix}-${kebabCase(vsi.vpc)}-${vsi.name}-vsi-zone-${zone}-${
+            vsi.index
+          }`
+        : vsi.name;
   let allSgIds = [],
     allSshKeyIds = [],
     networkInterfaces = [];
@@ -72,10 +72,10 @@ function ibmIsInstance(vsi, config) {
     image: vsi.snapshot
       ? undefined
       : !vsi.image
-      ? "ERROR: Unfound Ref"
-      : contains(vsi.image, "local")
-      ? vsi.image
-      : tfRef("ibm_is_image", vsi.image, "id", true),
+        ? "ERROR: Unfound Ref"
+        : contains(vsi.image, "local")
+          ? vsi.image
+          : tfRef("ibm_is_image", vsi.image, "id", true),
     profile: vsi.profile,
     resource_group: rgIdRef(vsi.resource_group, config),
     vpc: vpcRef(vsi.vpc, "id", true),
@@ -97,7 +97,7 @@ function ibmIsInstance(vsi, config) {
               "ibm_is_snapshot",
               "snapshot " + vsi.snapshot,
               "id",
-              true
+              true,
             ),
           }
         : {
@@ -121,7 +121,7 @@ function ibmIsInstance(vsi, config) {
       };
       intf.security_groups.forEach((group) => {
         nwInterface["security_groups"].push(
-          `\${module.${vsi.vpc}_vpc.${snakeCase(group)}_id}`
+          `\${module.${vsi.vpc}_vpc.${snakeCase(group)}_id}`,
         );
       });
       networkInterfaces.push(nwInterface);
@@ -132,7 +132,7 @@ function ibmIsInstance(vsi, config) {
   // add security groups
   vsi.security_groups.forEach((group) => {
     allSgIds.push(
-      `\${module.${snakeCase(vsi.vpc)}_vpc.${snakeCase(group)}_id}`
+      `\${module.${snakeCase(vsi.vpc)}_vpc.${snakeCase(group)}_id}`,
     );
   });
   vsiData.primary_network_interface[0].security_groups = allSgIds;
@@ -143,8 +143,8 @@ function ibmIsInstance(vsi, config) {
         `ibm_is_ssh_key`,
         key,
         "id",
-        getObjectFromArray(config.ssh_keys, "name", key)?.use_data
-      )
+        getObjectFromArray(config.ssh_keys, "name", key)?.use_data,
+      ),
     );
   });
   vsiData.keys = allSshKeyIds;
@@ -161,8 +161,8 @@ function ibmIsInstance(vsi, config) {
           "ibm_is_volume",
           `${vsi.vpc} vpc ${vsi.name} vsi ${zone} ${
             vsi.index ? vsi.index + " " : ""
-          }${volume.name}`
-        )
+          }${volume.name}`,
+        ),
       );
     });
   }
@@ -170,7 +170,7 @@ function ibmIsInstance(vsi, config) {
     vsiData.primary_network_interface[0].primary_ip = [
       {
         reserved_ip: `\${ibm_is_subnet_reserved_ip.${snakeCase(
-          data.name
+          data.name,
         )}_reserved_ip.reserved_ip}`,
       },
     ];
@@ -210,7 +210,7 @@ function ibmIsVolume(vsi, config) {
           encryption_key: encryptionKeyRef(
             vsi.kms,
             volume.encryption_key,
-            "crn"
+            "crn",
           ),
           tags: config._options.tags,
         },
@@ -243,7 +243,7 @@ function formatVsi(vsi, config) {
         }_id}`,
         name: kebabCase(data.data.name + "-reserved-ip"),
         address: vsi.reserved_ip,
-      }
+      },
     );
   }
   tf += jsonToTfPrint("resource", "ibm_is_instance", data.name, data.data);
@@ -265,7 +265,7 @@ function formatVsiImage(imageName) {
     imageName || "ERROR_UNFOUND_REF",
     {
       name: imageName || "ERROR: Unfound Ref",
-    }
+    },
   );
 }
 
@@ -305,12 +305,12 @@ function ibmIsLbPoolMembers(deployment, config) {
             pool: tfRef(
               "ibm_is_lb_pool",
               `${deployment.name} load balancer pool`,
-              "pool_id"
+              "pool_id",
             ),
             target_address: tfRef(
               "ibm_is_instance",
               vsiAddress,
-              "primary_network_interface.0.primary_ip.0.address"
+              "primary_network_interface.0.primary_ip.0.address",
             ),
           },
         });
@@ -338,7 +338,7 @@ function ibmIsLbListener(deployment, poolMemberData, cdktf) {
       lb: tfRef("ibm_is_lb", `${deployment.name} load balancer`),
       default_pool: tfRef(
         "ibm_is_lb_pool",
-        `${deployment.name} load balancer pool`
+        `${deployment.name} load balancer pool`,
       ),
       port: deployment.listener_port,
       protocol: deployment.listener_protocol,
@@ -350,7 +350,7 @@ function ibmIsLbListener(deployment, poolMemberData, cdktf) {
   };
   poolMemberData.forEach((member) => {
     data.data.depends_on.push(
-      cdktfRef("ibm_is_lb_pool_member." + snakeCase(member.name))
+      cdktfRef("ibm_is_lb_pool_member." + snakeCase(member.name)),
     );
   });
   return data;
@@ -422,7 +422,7 @@ function ibmIsLb(deployment, config) {
     .subnets;
   deployment.security_groups.forEach((group) => {
     data.data.security_groups.push(
-      `\${module.${snakeCase(deployment.vpc)}_vpc.${snakeCase(group)}_id}`
+      `\${module.${snakeCase(deployment.vpc)}_vpc.${snakeCase(group)}_id}`,
     );
   });
   deployment.subnets.forEach((subnet) => {
@@ -431,7 +431,7 @@ function ibmIsLb(deployment, config) {
         (getObjectFromArray(vpcSubnets, "name", subnet)?.use_data
           ? "import_"
           : "subnet_") + snakeCase(subnet)
-      }_id}`
+      }_id}`,
     );
   });
   return data;
@@ -451,7 +451,7 @@ function formatLoadBalancer(deployment, config) {
       "resource",
       "ibm_is_lb_pool_member",
       member.name,
-      member.data
+      member.data,
     );
   });
   let listenerData = ibmIsLbListener(deployment, poolMemberData);
@@ -465,7 +465,7 @@ function formatLoadBalancer(deployment, config) {
       "resource",
       "ibm_is_lb_listener",
       listenerData.name,
-      listenerData.data
+      listenerData.data,
     )
   );
 }
@@ -485,7 +485,7 @@ function vsiTf(config) {
   let allSnapshotNames = distinct(splat(config.vsi, "snapshot")).filter(
     (name) => {
       if (name) return name;
-    }
+    },
   );
   let allImagesNames = distinct(splat(config.vsi, "image")).filter((name) => {
     if (name) return name;
@@ -515,7 +515,7 @@ function vsiTf(config) {
           deployment.enable_static_ips &&
           !isNullOrEmptyString(
             deployment.reserved_ips[deployment.subnets.indexOf(subnet)][i],
-            true
+            true,
           )
         ) {
           instance.reserved_ip = // get address at same index as subnet followed by index of vsi
@@ -530,7 +530,7 @@ function vsiTf(config) {
     tf +=
       tfBlock(
         `${deployment.vpc} VPC ${deployment.name} deployment`,
-        blockData
+        blockData,
       ) + "\n";
   });
   fipTf === "" ? "" : (tf += tfBlock("floating IPs", fipTf));
@@ -570,7 +570,7 @@ function ibmIsFip(vsi) {
       target: tfRef(
         "ibm_is_instance",
         `${snakeCase(vsi.vpc)}-vpc-${vsi.name}-vsi-${zone}-${vsi.index}`,
-        "primary_network_interface.0.id"
+        "primary_network_interface.0.id",
       ),
     },
   };
@@ -587,7 +587,7 @@ function formatFip(instance) {
     "resource",
     "ibm_is_floating_ip",
     fipData.name,
-    fipData.data
+    fipData.data,
   );
 }
 

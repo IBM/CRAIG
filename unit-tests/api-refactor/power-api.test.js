@@ -32,27 +32,27 @@ describe("power api", () => {
         {
           images: ["first", "second", "third"],
         },
-        true
+        true,
       );
       let testPowerController = new controller(axios);
       testPowerController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       testPowerController.getPowerDetails = new sinon.spy(
-        testPowerController.getPowerDetails
+        testPowerController.getPowerDetails,
       );
       return testPowerController
         .getPowerComponent(
           {
             params: { zone: "us-south", component: "images" },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(testPowerController.getBearerToken.calledOnce);
           assert.isTrue(
-            testPowerController.getPowerDetails.calledOnceWith("fooGuid")
+            testPowerController.getPowerDetails.calledOnceWith("fooGuid"),
           );
         });
     });
@@ -72,23 +72,23 @@ describe("power api", () => {
             },
           ],
         },
-        false
+        false,
       );
       let testPowerController = new controller(axios);
       testPowerController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       testPowerController.getPowerDetails = new sinon.spy(
         spyFns,
-        "getPowerDetails"
+        "getPowerDetails",
       );
       return testPowerController
         .getPowerComponent(
           {
             params: { zone: "us-south", component: "images" },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
@@ -97,15 +97,15 @@ describe("power api", () => {
                 name: "image1",
               },
             ]),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testPowerController.getBearerToken.calledOnce,
-            "should be true"
+            "should be true",
           );
           assert.isTrue(
             testPowerController.getPowerDetails.calledOnceWith("fooGuid"),
-            "should be true"
+            "should be true",
           );
         });
     });
@@ -119,15 +119,15 @@ describe("power api", () => {
             },
           ],
         },
-        false
+        false,
       );
       let testPowerController = new controller(axios);
       testPowerController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       testPowerController.getResourceInstance = new sinon.spy(
-        testPowerController.getResourceInstance
+        testPowerController.getResourceInstance,
       );
       return testPowerController
         .getPowerComponent(
@@ -137,22 +137,22 @@ describe("power api", () => {
               name: "egg",
             },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith(
-              "Error: no power workspace found with name: egg"
+              "Error: no power workspace found with name: egg",
             ),
-            "it should send"
+            "it should send",
           );
           assert.isTrue(
             testPowerController.getBearerToken.calledOnce,
-            "should be true"
+            "should be true",
           );
           assert.isTrue(
             testPowerController.getResourceInstance.calledOnceWith("egg"),
-            "should be true"
+            "should be true",
           );
         });
     });
@@ -175,15 +175,15 @@ describe("power api", () => {
             },
           ],
         },
-        false
+        false,
       );
       let testPowerController = new controller(axios);
       testPowerController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       testPowerController.getResourceInstance = new sinon.spy(
-        testPowerController.getResourceInstance
+        testPowerController.getResourceInstance,
       );
       return testPowerController
         .getPowerComponent(
@@ -193,20 +193,20 @@ describe("power api", () => {
               name: "egg",
             },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith([{ name: "image1", use_data: true }]),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testPowerController.getBearerToken.calledOnce,
-            "should be true"
+            "should be true",
           );
           assert.isTrue(
             testPowerController.getResourceInstance.calledOnceWith("egg"),
-            "should be true"
+            "should be true",
           );
         });
     });
@@ -289,10 +289,10 @@ describe("power api", () => {
       let testPowerController = new controller(axios);
       testPowerController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       testPowerController.getResourceInstance = new sinon.spy(
-        testPowerController.getResourceInstance
+        testPowerController.getResourceInstance,
       );
       return testPowerController
         .getPowerComponent(
@@ -302,7 +302,7 @@ describe("power api", () => {
               name: "egg",
             },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
@@ -311,15 +311,15 @@ describe("power api", () => {
               { name: "image1", use_data: true },
               { name: "image3", use_data: true },
             ]),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testPowerController.getBearerToken.calledOnce,
-            "should be true"
+            "should be true",
           );
           assert.isTrue(
             testPowerController.getResourceInstance.calledOnceWith("egg"),
-            "should be true"
+            "should be true",
           );
         });
     });
@@ -328,29 +328,29 @@ describe("power api", () => {
         {
           images: ["first", "second", "third"],
         },
-        true
+        true,
       );
       let testPowerController = new controller(axios);
       testPowerController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       testPowerController.getPowerDetails = new sinon.spy(
         spyFns,
-        "getPowerDetails"
+        "getPowerDetails",
       );
       return testPowerController
         .getPowerComponent(
           {
             params: { zone: "us-south", component: "images" },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith(
-              "Error: environment variable POWER_WORKSPACE_US_SOUTH has no value."
-            )
+              "Error: environment variable POWER_WORKSPACE_US_SOUTH has no value.",
+            ),
           );
           assert.isTrue(testPowerController.getBearerToken.notCalled);
           assert.isTrue(testPowerController.getPowerDetails.notCalled);
@@ -375,15 +375,15 @@ describe("power api", () => {
             { poolName: "pool1", replicationEnabled: false },
           ],
         },
-        false
+        false,
       );
       let testPowerController = new controller(axios);
       testPowerController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       testPowerController.getResourceInstance = new sinon.spy(
-        testPowerController.getResourceInstance
+        testPowerController.getResourceInstance,
       );
       return testPowerController
         .getPowerComponent(
@@ -393,20 +393,20 @@ describe("power api", () => {
               name: "egg",
             },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith(["pool1"]),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testPowerController.getBearerToken.calledOnce,
-            "should be true"
+            "should be true",
           );
           assert.isTrue(
             testPowerController.getResourceInstance.calledOnceWith("egg"),
-            "should be true"
+            "should be true",
           );
         });
     });
@@ -427,23 +427,23 @@ describe("power api", () => {
             { poolName: "Tier1-Flash-2", replicationEnabled: false },
           ],
         },
-        false
+        false,
       );
       let testPowerController = new controller(axios);
       testPowerController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       testPowerController.getPowerDetails = new sinon.spy(
         spyFns,
-        "getPowerDetails"
+        "getPowerDetails",
       );
       return testPowerController
         .getPowerComponent(
           {
             params: { zone: "us-south", component: "storage_pools" },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
@@ -453,15 +453,15 @@ describe("power api", () => {
               "Tier3-Flash-1",
               "Tier1-Flash-2",
             ]),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testPowerController.getBearerToken.calledOnce,
-            "should be true"
+            "should be true",
           );
           assert.isTrue(
             testPowerController.getPowerDetails.calledOnceWith("fooGuid"),
-            "should be true"
+            "should be true",
           );
         });
     });
@@ -477,33 +477,33 @@ describe("power api", () => {
             { poolName: "Tier1-Flash-2" },
           ],
         },
-        false
+        false,
       );
       let testPowerController = new controller(axios);
       testPowerController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       testPowerController.getPowerDetails = new sinon.spy(
-        testPowerController.getPowerDetails
+        testPowerController.getPowerDetails,
       );
       return testPowerController
         .getPowerComponent(
           {
             params: { zone: "us-south", component: "storage_pools" },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith(
-              "Error: powerWorkspaceData is undefined. Make sure the guid for your power workspace environment variables exist and are correct."
-            )
+              "Error: powerWorkspaceData is undefined. Make sure the guid for your power workspace environment variables exist and are correct.",
+            ),
           );
           assert.isTrue(testPowerController.getBearerToken.calledOnce);
           assert.isTrue(
             testPowerController.getPowerDetails.calledOnceWith("fooGuid"),
-            "should be true"
+            "should be true",
           );
         });
     });
@@ -527,15 +527,15 @@ describe("power api", () => {
           [{ name: "Tier1" }, { name: "Tier2" }],
         ],
         false,
-        true
+        true,
       );
       let testPowerController = new controller(axios);
       testPowerController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       testPowerController.getResourceInstance = new sinon.spy(
-        testPowerController.getResourceInstance
+        testPowerController.getResourceInstance,
       );
       return testPowerController
         .getPowerComponent(
@@ -545,12 +545,12 @@ describe("power api", () => {
               name: "egg",
             },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith(["Tier1", "Tier2"]),
-            "it should be true"
+            "it should be true",
           );
         });
     });
@@ -573,36 +573,36 @@ describe("power api", () => {
             { poolName: "Tier1-Flash-2", replicationEnabled: false },
           ],
         },
-        false
+        false,
       );
       let testPowerController = new controller(axios);
       testPowerController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       testPowerController.getPowerDetails = new sinon.spy(
         spyFns,
-        "getPowerDetails"
+        "getPowerDetails",
       );
       return testPowerController
         .getPowerComponent(
           {
             params: { zone: "us-south", component: "system_pools" },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith(["resources", "storagePoolsCapacity"]),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testPowerController.getBearerToken.calledOnce,
-            "should be true"
+            "should be true",
           );
           assert.isTrue(
             testPowerController.getPowerDetails.calledOnceWith("fooGuid"),
-            "should be true"
+            "should be true",
           );
         });
     });

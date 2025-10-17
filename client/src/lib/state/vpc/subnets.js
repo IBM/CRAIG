@@ -31,7 +31,7 @@ function newSubnetTierSave(config, stateData, componentProps, vpcIndex) {
   let vpc = config.store.json.vpcs[vpcIndex];
   let tier = new revision(vpc).child(
     "subnetTiers",
-    componentProps.data.name
+    componentProps.data.name,
   ).data;
   let foundTierZones = 0;
   let foundZoneNumbers = [];
@@ -53,20 +53,20 @@ function newSubnetTierSave(config, stateData, componentProps, vpcIndex) {
                 .literal(`${tier.name}-zone-`)
                 .digit()
                 .stringEnd()
-                .done("g")
+                .done("g"),
             ) !== null &&
             // if tier is advanced, check select zones or zones for resource zone
             (stateData.advanced && !componentProps.data.zones
               ? contains(
                   stateData.select_zones || stateData.zones,
-                  resource.zone
+                  resource.zone,
                 )
               : isArray(stateData.zones) || isArray(stateData.select_zones)
-              ? contains(
-                  stateData.select_zones || stateData.zones,
-                  String(resource.zone)
-                )
-              : resource.zone <= stateData.zones)
+                ? contains(
+                    stateData.select_zones || stateData.zones,
+                    String(resource.zone),
+                  )
+                : resource.zone <= stateData.zones)
       ) {
         // change name and return
         resource.name = resource.name.replace(tier.name, stateData.name);
@@ -113,7 +113,7 @@ function newSubnetTierSave(config, stateData, componentProps, vpcIndex) {
             .literal(`${tier.name}-zone-`)
             .digit()
             .stringEnd()
-            .done("g")
+            .done("g"),
         ) === null
       ) {
         return nextVpcItems.push(resource);
@@ -157,7 +157,7 @@ function newSubnetTierSave(config, stateData, componentProps, vpcIndex) {
           "f5-workload",
           "f5-bastion",
         ],
-        stateData.name
+        stateData.name,
       ) && config.store.edge_vpc_name === vpc.name;
     for (let i = foundTierZones; i < stateData.zones; i++) {
       vpc.subnets.push(
@@ -177,7 +177,7 @@ function newSubnetTierSave(config, stateData, componentProps, vpcIndex) {
             : arraySplatIndex(
                 vpc.subnetTiers,
                 "name",
-                componentProps.data.name
+                componentProps.data.name,
               ) + 1,
           stateData?.networkAcl,
           vpc.resource_group,
@@ -186,8 +186,8 @@ function newSubnetTierSave(config, stateData, componentProps, vpcIndex) {
             ? stateData.addPublicGateway
             : false,
           stateData.use_prefix,
-          isEdgeVpcTier
-        )
+          isEdgeVpcTier,
+        ),
       );
       let lastSubnet = vpc.subnets.length - 1;
       vpc.address_prefixes.push({
@@ -206,7 +206,7 @@ function newSubnetTierSave(config, stateData, componentProps, vpcIndex) {
         if (resource.subnets[i].startsWith(tier.name)) {
           resource.subnets[i] = resource.subnets[i].replace(
             tier.name,
-            stateData.name
+            stateData.name,
           );
         }
       }
@@ -217,7 +217,7 @@ function newSubnetTierSave(config, stateData, componentProps, vpcIndex) {
       if (cluster.subnets[i].startsWith(tier.name)) {
         cluster.subnets[i] = cluster.subnets[i].replace(
           tier.name,
-          stateData.name
+          stateData.name,
         );
       }
     }
@@ -234,7 +234,7 @@ function newSubnetTierSave(config, stateData, componentProps, vpcIndex) {
       resolver.subnets.forEach((subnet, index) => {
         resolver.subnets[index] = resolver.subnets[index].replace(
           tier.name,
-          stateData.name
+          stateData.name,
         );
       });
     });
@@ -245,7 +245,7 @@ function newSubnetTierSave(config, stateData, componentProps, vpcIndex) {
       carve(
         config.store.subnetTiers[vpc.name],
         "name",
-        componentProps.data.name
+        componentProps.data.name,
       );
     } catch (err) {
       console.error("subnet tier not found on craig object, continuing...");
@@ -256,7 +256,7 @@ function newSubnetTierSave(config, stateData, componentProps, vpcIndex) {
       tier.name,
       vpc.name,
       vpcIndex,
-      true
+      true,
     );
   } else if (stateData.advanced && !tier.advanced) {
     config.store.json._options.advanced_subnets = true;

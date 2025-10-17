@@ -27,7 +27,7 @@ describe("virtual server", () => {
           resource_group: "slz-management-rg",
           network_interfaces: [],
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
@@ -58,7 +58,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should correctly format vsi with ip spoofing", () => {
@@ -88,7 +88,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
           ],
           primary_interface_ip_spoofing: true,
         },
-        slzNetwork
+        slzNetwork,
       );
       delete slzNetwork.vpcs[0].subnets[2].use_data;
       let expectedData = `
@@ -135,7 +135,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should correctly format vsi with user data", () => {
@@ -154,7 +154,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
           resource_group: "slz-management-rg",
           user_data: '"test-user-data"',
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
@@ -188,7 +188,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should correctly format vsi with user data and storage volume", () => {
@@ -217,7 +217,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
             },
           ],
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
@@ -267,7 +267,7 @@ resource "ibm_is_volume" "management_vpc_management_server_vsi_1_1_block_storage
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should correctly format vsi with user data and storage volume with index", () => {
@@ -295,7 +295,7 @@ resource "ibm_is_volume" "management_vpc_management_server_vsi_1_1_block_storage
             },
           ],
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_instance" "management_server" {
@@ -345,7 +345,7 @@ resource "ibm_is_volume" "management_vpc_management_server_vsi_1_block_storage_1
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should correctly format vsi with multiple keys and security groups and ssh key from data", () => {
@@ -367,7 +367,7 @@ resource "ibm_is_volume" "management_vpc_management_server_vsi_1_block_storage_1
           index: 1,
           resource_group: "slz-management-rg",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
@@ -400,7 +400,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should correctly format vsi with reserved ip", () => {
@@ -420,7 +420,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
           network_interfaces: [],
           reserved_ip: "1.2.3.4",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_1_1_reserved_ip" {
@@ -460,7 +460,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should correctly format vsi with reserved ip and imported subnet", () => {
@@ -481,7 +481,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
           network_interfaces: [],
           reserved_ip: "1.2.3.4",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_1_1_reserved_ip" {
@@ -522,7 +522,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should correctly format vsi with reserved ip and no image", () => {
@@ -542,7 +542,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
           network_interfaces: [],
           reserved_ip: "1.2.3.4",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_subnet_reserved_ip" "management_vpc_management_server_vsi_1_1_reserved_ip" {
@@ -582,7 +582,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_1_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -597,7 +597,7 @@ data "ibm_is_image" "ibm_ubuntu_22_04_1_minimal_amd64_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("it should create a vsi image data block when null", () => {
@@ -610,7 +610,7 @@ data "ibm_is_image" "error_unfound_ref" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -693,7 +693,7 @@ data "ibm_is_image" "error_unfound_ref" {
               resource_group: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData =
         `
@@ -793,7 +793,7 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should correctly format load balancer", () => {
@@ -874,7 +874,7 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
               resource_group: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData =
         `
@@ -973,7 +973,7 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should correctly format load balancer without app_cookie", () => {
@@ -1054,7 +1054,7 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
               resource_group: "slz-management-rg",
             },
           ],
-        }
+        },
       );
       let expectedData =
         `
@@ -1153,7 +1153,7 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -1341,7 +1341,7 @@ resource "ibm_is_lb_listener" "lb_1_listener" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -1520,7 +1520,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create vsi terraform with variable names", () => {
@@ -1697,7 +1697,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
       delete nw.vsi[0].use_variable_names;
     });
@@ -1885,7 +1885,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_2" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create vsi terraform with reserved ips", () => {
@@ -2030,7 +2030,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should not render reserved ips when not enabled", () => {
@@ -2147,7 +2147,7 @@ resource "ibm_is_instance" "management_vpc_management_server_vsi_3_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create floating ip tf block if enabled", () => {
@@ -2213,7 +2213,7 @@ resource "ibm_is_floating_ip" "management_vpc_management_server_vsi_1_1_fip" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should have correct templating for user-data", () => {
@@ -2406,7 +2406,7 @@ resource "ibm_is_instance" "workload_vpc_ase_vsi_3_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

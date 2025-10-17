@@ -21,7 +21,7 @@ describe("recursive axios", () => {
       assert.deepEqual(
         response,
         { data: ["hello", "world"] },
-        "should be equal"
+        "should be equal",
       );
     });
   });

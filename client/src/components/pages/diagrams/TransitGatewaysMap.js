@@ -89,16 +89,16 @@ export const TransitGatewaysMap = (props) => {
                       name: connection.vpc
                         ? connection.vpc
                         : connection.power
-                        ? connection.power
-                        : "Classic Network",
+                          ? connection.power
+                          : "Classic Network",
                     }}
                     itemName="connection"
                     icon={
                       connection.vpc
                         ? VirtualPrivateCloud
                         : connection.classic
-                        ? InfrastructureClassic
-                        : IbmPowerVs
+                          ? InfrastructureClassic
+                          : IbmPowerVs
                     }
                     size="30"
                   />

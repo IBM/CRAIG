@@ -18,7 +18,7 @@ describe("f5", () => {
       assert.deepEqual(
         state.store.json.f5_vsi,
         [],
-        "it should create empty array"
+        "it should create empty array",
       );
     });
   });
@@ -70,7 +70,7 @@ describe("f5", () => {
             zone: 1,
           },
         },
-        "it should set fields"
+        "it should set fields",
       );
     });
     it("should update vsi with unfound ssh keys, unfound primary subnet names, and unfound network int. subnet", () => {
@@ -82,7 +82,7 @@ describe("f5", () => {
       state.update();
       assert.isEmpty(
         state.store.json.f5_vsi[0].ssh_keys,
-        "it should have no keys"
+        "it should have no keys",
       );
     });
   });
@@ -118,7 +118,7 @@ describe("f5", () => {
           vpc: "edge",
           zone: 1,
         },
-        { data: { name: "f5-zone-1" } }
+        { data: { name: "f5-zone-1" } },
       );
       assert.deepEqual(
         state.store.json.f5_vsi[0],
@@ -174,7 +174,7 @@ describe("f5", () => {
             zone: 1,
           },
         },
-        "it should set data"
+        "it should set data",
       );
     });
   });
@@ -184,12 +184,12 @@ describe("f5", () => {
     state.f5.vsi.create(false, 2);
     state.f5.template.save(
       { tmos_admin_password: "" },
-      { data: { name: "f5-zone-1" } }
+      { data: { name: "f5-zone-1" } },
     );
     assert.deepEqual(
       state.store.json.f5_vsi[0].template.tmos_admin_password,
       null,
-      "password should set to null"
+      "password should set to null",
     );
   });
   it("should stringify certain empty params", () => {
@@ -223,7 +223,7 @@ describe("f5", () => {
         vpc: "edge",
         zone: 1,
       },
-      { data: { name: "f5-zone-1" } }
+      { data: { name: "f5-zone-1" } },
     );
     assert.deepEqual(
       state.store.json.f5_vsi[0].template,
@@ -253,7 +253,7 @@ describe("f5", () => {
         vpc: "edge",
         zone: 1,
       },
-      'should set empty string to "null" string'
+      'should set empty string to "null" string',
     );
   });
 });
@@ -269,7 +269,7 @@ describe("f5.instance", () => {
           resource_group: "frog",
           encryption_key: "todd",
         },
-        { data: { name: "f5-zone-1" } }
+        { data: { name: "f5-zone-1" } },
       );
       assert.deepEqual(
         state.store.json.f5_vsi[0],
@@ -325,7 +325,7 @@ describe("f5.instance", () => {
             zone: 1,
           },
         },
-        "it should set data"
+        "it should set data",
       );
     });
   });
@@ -334,15 +334,15 @@ describe("f5.instance", () => {
       let craig = state();
       assert.isTrue(
         craig.f5.template.license_host.invalid({ license_host: "" }),
-        "it should be invalid"
+        "it should be invalid",
       );
       assert.isTrue(
         craig.f5.template.license_pool.invalid({ license_pool: "" }),
-        "it should be invalid"
+        "it should be invalid",
       );
       assert.isFalse(
         craig.f5.template.template_version.invalid({ template_version: "" }),
-        "it should be valid"
+        "it should be valid",
       );
     });
     it("should have invalid tmos_admin_password", () => {
@@ -351,13 +351,13 @@ describe("f5.instance", () => {
         craig.f5.template.tmos_admin_password.invalid({
           tmos_admin_password: "",
         }),
-        "it should be invalid when empty"
+        "it should be invalid when empty",
       );
       assert.isTrue(
         craig.f5.template.tmos_admin_password.invalid({
           tmos_admin_password: "aaa",
         }),
-        "it should be invalid when not passing exp"
+        "it should be invalid when not passing exp",
       );
     });
     it("should have invalid ts_declaration_url when not valid url", () => {
@@ -366,7 +366,7 @@ describe("f5.instance", () => {
         craig.f5.template.ts_declaration_url.invalid({
           ts_declaration_url: "oops",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should hide byol license base key when form type is not byol", () => {
@@ -375,7 +375,7 @@ describe("f5.instance", () => {
         craig.f5.template.byol_license_basekey.hideWhen({
           license_type: "none",
         }),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
     it("should not hide byol license base key when form type is byol", () => {
@@ -384,7 +384,7 @@ describe("f5.instance", () => {
         craig.f5.template.byol_license_basekey.hideWhen({
           license_type: "byol",
         }),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
   });
@@ -457,7 +457,7 @@ describe("f5.instance", () => {
               },
             },
           ],
-          "it should return correct vsi"
+          "it should return correct vsi",
         );
       });
       it("should use default template if no pre-existing vsi", () => {
@@ -526,7 +526,7 @@ describe("f5.instance", () => {
               },
             },
           ],
-          "it should return correct vsi"
+          "it should return correct vsi",
         );
       });
       it("should retain template from existing vsi on save", () => {
@@ -560,7 +560,7 @@ describe("f5.instance", () => {
             vpc: "edge",
             zone: 1,
           },
-          { data: { name: "f5-zone-1" } }
+          { data: { name: "f5-zone-1" } },
         );
         state.f5.vsi.save({
           zones: 1,
@@ -625,7 +625,7 @@ describe("f5.instance", () => {
               },
             },
           ],
-          "it should return correct vsi"
+          "it should return correct vsi",
         );
       });
     });
@@ -644,7 +644,7 @@ describe("f5.instance", () => {
               resource_group: null,
             },
           ],
-          "it should return correct ssh key"
+          "it should return correct ssh key",
         );
       });
       it("should create a new encryption key for vsi if one is not found", () => {
@@ -656,7 +656,7 @@ describe("f5.instance", () => {
         assert.deepEqual(
           state.store.encryptionKeys,
           ["vsi-volume-key"],
-          "it should return correct ssh key"
+          "it should return correct ssh key",
         );
       });
       it("should create an f5 vsi on management", () => {
@@ -727,19 +727,19 @@ describe("f5.instance", () => {
       it("should return false for ssh key invalid if zones is 0 and no ssh keys are selected", () => {
         assert.isFalse(
           craig.f5.vsi.ssh_keys.invalid({ zones: "0", ssh_keys: [] }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should not have resource groups as invalid when no zones", () => {
         assert.isFalse(
           craig.f5.vsi.resource_group.invalid({ zones: "0", ssh_keys: [] }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should have resource groups as invalid when  zones", () => {
         assert.isTrue(
           craig.f5.vsi.resource_group.invalid({ zones: "1", ssh_keys: [] }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should have correct image groups", () => {
@@ -751,14 +751,14 @@ describe("f5.instance", () => {
             "f5-bigip-16-1-2-2-0-0-28-ltm-1slot",
             "f5-bigip-16-1-2-2-0-0-28-all-1slot",
           ],
-          "it should return list of images"
+          "it should return list of images",
         );
       });
       it("should return api endpoint for image name with region", () => {
         assert.deepEqual(
           craig.f5.vsi.profile.apiEndpoint({}, { craig: craig }),
           "/api/vsi/us-south/instanceProfiles",
-          "it should return api endpoint"
+          "it should return api endpoint",
         );
       });
     });

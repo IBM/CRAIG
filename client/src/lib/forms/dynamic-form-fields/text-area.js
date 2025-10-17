@@ -35,7 +35,7 @@ function dynamicTextAreaProps(props) {
     props.field.invalidText,
     "props.handleInputChange",
     "Function",
-    props.handleInputChange
+    props.handleInputChange,
   );
 
   let labelText = props.field.tooltip ? "" : props.field.labelText;
@@ -43,7 +43,7 @@ function dynamicTextAreaProps(props) {
   let invalidText = fieldFunctionReturnsStringCheck(
     props,
     "dynamicTextAreaProps",
-    "invalidText"
+    "invalidText",
   );
   return {
     id: dynamicFieldId(props),
@@ -61,7 +61,7 @@ function dynamicTextAreaProps(props) {
     placeholder: fieldFunctionReturnsStringCheck(
       props,
       "dynamicTextAreaProps",
-      "placeholder"
+      "placeholder",
     ),
   };
 }

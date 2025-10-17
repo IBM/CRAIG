@@ -14,7 +14,7 @@ describe("rgIdRef", () => {
     assert.deepEqual(
       rgIdRef(null),
       "ERROR: Unfound Ref",
-      "it should return correct text"
+      "it should return correct text",
     );
   });
   describe("timeouts", () => {
@@ -22,7 +22,7 @@ describe("rgIdRef", () => {
       assert.deepEqual(
         timeouts("1h", "1h", ""),
         [{ create: "1h", update: "1h" }],
-        "it should return data"
+        "it should return data",
       );
     });
   });
@@ -60,7 +60,7 @@ describe("rgIdRef", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return a map of ips"
+        "it should return a map of ips",
       );
     });
     it("should return the correct number rounded up for cluster with worker pools and vpe", () => {
@@ -90,7 +90,7 @@ describe("rgIdRef", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return a map of ips"
+        "it should return a map of ips",
       );
     });
     it("should return the correct number rounded up for cluster with worker pools, vpe, and vpn gw", () => {
@@ -119,7 +119,7 @@ describe("rgIdRef", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return a map of ips"
+        "it should return a map of ips",
       );
     });
     it("should return the correct number rounded up for cluster with worker pools, vpe, vsi, and vpn gw", () => {
@@ -147,7 +147,7 @@ describe("rgIdRef", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return a map of ips"
+        "it should return a map of ips",
       );
     });
     it("should return the correct number rounded up for cluster with worker pools, vpe, vsi, vpn servers, and vpn gw", () => {
@@ -174,7 +174,7 @@ describe("rgIdRef", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return a map of ips"
+        "it should return a map of ips",
       );
     });
   });
@@ -183,49 +183,49 @@ describe("rgIdRef", () => {
       assert.deepEqual(
         getNextCidr("10.0.0.0/29", 8),
         "10.0.0.8/29",
-        "it should retun next cidr"
+        "it should retun next cidr",
       );
     });
     it("should return the correct next cidr when adding 8 more ips", () => {
       assert.deepEqual(
         getNextCidr("10.0.0.8/29", 8),
         "10.0.0.16/29",
-        "it should retun next cidr"
+        "it should retun next cidr",
       );
     });
     it("should return the correct next cidr when adding 16 ips", () => {
       assert.deepEqual(
         getNextCidr("10.0.0.0/29", 16),
         "10.0.0.16/28",
-        "it should retun next cidr"
+        "it should retun next cidr",
       );
     });
     it("should return the correct next cidr when adding 32 ips", () => {
       assert.deepEqual(
         getNextCidr("10.0.0.0/29", 32),
         "10.0.0.32/27",
-        "it should retun next cidr"
+        "it should retun next cidr",
       );
     });
     it("should return the correct next cidr when adding 8 ips", () => {
       assert.deepEqual(
         getNextCidr("10.0.0.0/27", 8),
         "10.0.0.32/29",
-        "it should retun next cidr"
+        "it should retun next cidr",
       );
     });
     it("should return the correct next cidr when adding 8 to 256", () => {
       assert.deepEqual(
         getNextCidr("10.0.0.0/24", 8),
         "10.0.1.0/29",
-        "it should retun next cidr"
+        "it should retun next cidr",
       );
     });
     it("should return the correct next cidr when adding 32 ips", () => {
       assert.deepEqual(
         getNextCidr("10.0.0.32/27", 8),
         "10.0.0.64/29",
-        "it should retun next cidr"
+        "it should retun next cidr",
       );
     });
   });
@@ -239,7 +239,7 @@ describe("rgIdRef", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return title comment"
+        "it should return title comment",
       );
     });
   });

@@ -31,7 +31,7 @@ describe("schematics api", () => {
       return api.getWorkspaceData("bad name").catch((err) => {
         assert.isTrue(
           api.getBearerToken.calledOnce,
-          "it should try to fetch token"
+          "it should try to fetch token",
         );
         assert.deepEqual(
           axiosSpy.lastCall.args,
@@ -45,7 +45,7 @@ describe("schematics api", () => {
               },
             },
           ],
-          "it should call axios with correct args"
+          "it should call axios with correct args",
         );
         assert.deepEqual(err, {}, "it should reject with error");
       });
@@ -67,7 +67,7 @@ describe("schematics api", () => {
       return api.getWorkspaceData("bad name").catch((err) => {
         assert.isTrue(
           api.getBearerToken.calledOnce,
-          "it should try to fetch token"
+          "it should try to fetch token",
         );
         assert.deepEqual(
           axiosSpy.lastCall.args,
@@ -81,12 +81,12 @@ describe("schematics api", () => {
               },
             },
           ],
-          "it should call axios with correct args"
+          "it should call axios with correct args",
         );
         assert.deepEqual(
           err,
           "No workspace found with name bad name",
-          "it should reject with error"
+          "it should reject with error",
         );
       });
     });
@@ -113,7 +113,7 @@ describe("schematics api", () => {
       return api.getWorkspaceData("toad").then((data) => {
         assert.isTrue(
           api.getBearerToken.calledOnce,
-          "it should try to fetch token"
+          "it should try to fetch token",
         );
         assert.deepEqual(
           axiosSpy.lastCall.args,
@@ -127,12 +127,12 @@ describe("schematics api", () => {
               },
             },
           ],
-          "it should call axios with correct args"
+          "it should call axios with correct args",
         );
         assert.deepEqual(
           data,
           { w_id: "toad", t_id: "toad-id" },
-          "it should return correct workspace and template data ids"
+          "it should return correct workspace and template data ids",
         );
       });
     });
@@ -152,7 +152,7 @@ describe("schematics api", () => {
             },
           ],
         },
-        false
+        false,
       );
       let uploadTarController = new controller(axios);
       return uploadTarController
@@ -163,14 +163,14 @@ describe("schematics api", () => {
             },
             body: {},
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith({
               error: "Schematics feature not supported on development.",
             }),
-            "it should be true"
+            "it should be true",
           );
         });
     });
@@ -186,16 +186,16 @@ describe("schematics api", () => {
             },
           ],
         },
-        false
+        false,
       );
       let uploadTarController = new controller(axios);
       uploadTarController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       uploadTarController.getWorkspaceData = new sinon.spy(
         spyFns,
-        "getWorkspaceData"
+        "getWorkspaceData",
       );
       return uploadTarController
         .uploadTar(
@@ -205,24 +205,24 @@ describe("schematics api", () => {
             },
             body: {},
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith({
               error: "Error: failed to parse CRAIG data",
             }),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             uploadTarController.getBearerToken.calledOnce,
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             uploadTarController.getWorkspaceData.calledOnceWith(
-              "frog-workspace"
+              "frog-workspace",
             ),
-            "it should be true"
+            "it should be true",
           );
         });
     });
@@ -238,16 +238,16 @@ describe("schematics api", () => {
             },
           ],
         },
-        false
+        false,
       );
       let uploadTarController = new controller(axios);
       uploadTarController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       uploadTarController.getWorkspaceData = new sinon.spy(
         spyFns,
-        "getWorkspaceData"
+        "getWorkspaceData",
       );
       let craig = new state();
       craig.setUpdateCallback(() => {});
@@ -262,24 +262,24 @@ describe("schematics api", () => {
             },
             body: craig.store.json,
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith({
               error: "Error: failed to pack tar file",
             }),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             uploadTarController.getBearerToken.calledOnce,
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             uploadTarController.getWorkspaceData.calledOnceWith(
-              "frog-workspace"
+              "frog-workspace",
             ),
-            "it should be true"
+            "it should be true",
           );
         });
     });
@@ -301,14 +301,14 @@ describe("schematics api", () => {
       let testSchematicsController = new controller(axios);
       testSchematicsController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       testSchematicsController.getWorkspaceData = new sinon.spy(
         spyFns,
-        "getWorkspaceData"
+        "getWorkspaceData",
       );
       testSchematicsController.createBlob = new sinon.spy(
-        testSchematicsController.createBlob
+        testSchematicsController.createBlob,
       );
       return testSchematicsController
         .uploadTar(
@@ -318,7 +318,7 @@ describe("schematics api", () => {
             },
             body: craig.store.json,
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
@@ -332,21 +332,21 @@ describe("schematics api", () => {
                 },
               ],
             }),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testSchematicsController.getBearerToken.calledOnce,
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testSchematicsController.getWorkspaceData.calledOnceWith(
-              "frog-workspace"
+              "frog-workspace",
             ),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testSchematicsController.createBlob.calledOnce,
-            "it should be true"
+            "it should be true",
           );
         });
     });
@@ -368,14 +368,14 @@ describe("schematics api", () => {
       let testSchematicsController = new controller(axios);
       testSchematicsController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       testSchematicsController.getWorkspaceData = new sinon.spy(
         spyFns,
-        "getWorkspaceData"
+        "getWorkspaceData",
       );
       testSchematicsController.createBlob = new sinon.spy(
-        testSchematicsController.createBlob
+        testSchematicsController.createBlob,
       );
       return testSchematicsController
         .uploadTar(
@@ -386,31 +386,31 @@ describe("schematics api", () => {
             },
             body: craig.store.json,
           },
-          res
+          res,
         )
         .then(() => {
           assert.deepEqual(
             res.send.lastCall.args,
             [
               Error(
-                "frog-workspace has not received file. In uploadTar response data, has_received_file is false"
+                "frog-workspace has not received file. In uploadTar response data, has_received_file is false",
               ),
             ],
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testSchematicsController.getBearerToken.calledOnce,
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testSchematicsController.getWorkspaceData.calledOnceWith(
-              "frog-workspace"
+              "frog-workspace",
             ),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testSchematicsController.createBlob.calledOnce,
-            "it should be true"
+            "it should be true",
           );
         });
     });
@@ -424,7 +424,7 @@ describe("schematics api", () => {
       return api.getResourceGroupID("bad name").catch((err) => {
         assert.isTrue(
           api.getBearerToken.calledOnce,
-          "it should try to fetch token"
+          "it should try to fetch token",
         );
         assert.deepEqual(
           axiosSpy.lastCall.args,
@@ -441,7 +441,7 @@ describe("schematics api", () => {
               },
             },
           ],
-          "it should call axios with correct args"
+          "it should call axios with correct args",
         );
         assert.deepEqual(err, {}, "it should reject with error");
       });
@@ -456,7 +456,7 @@ describe("schematics api", () => {
       return api.getResourceGroupID("toad").then((data) => {
         assert.isTrue(
           api.getBearerToken.calledOnce,
-          "it should try to fetch token"
+          "it should try to fetch token",
         );
         assert.deepEqual(
           axiosSpy.lastCall.args,
@@ -473,12 +473,12 @@ describe("schematics api", () => {
               },
             },
           ],
-          "it should call axios with correct args"
+          "it should call axios with correct args",
         );
         assert.deepEqual(
           data,
           { hello: "world" },
-          "it should return correct resource group ID"
+          "it should return correct resource group ID",
         );
       });
     });
@@ -493,7 +493,7 @@ describe("schematics api", () => {
       return api.getResourceGroupID("toad").then((data) => {
         assert.isTrue(
           api.getBearerToken.calledOnce,
-          "it should try to fetch token"
+          "it should try to fetch token",
         );
         assert.deepEqual(
           axiosSpy.lastCall.args,
@@ -511,12 +511,12 @@ describe("schematics api", () => {
               },
             },
           ],
-          "it should call axios with correct args"
+          "it should call axios with correct args",
         );
         assert.deepEqual(
           data,
           { hello: "world" },
-          "it should return correct resource group ID"
+          "it should return correct resource group ID",
         );
       });
     });
@@ -535,7 +535,7 @@ describe("schematics api", () => {
             id: "foo-123-id",
           },
         },
-        false
+        false,
       );
       let testSchematicsController = new controller(axios);
       return testSchematicsController
@@ -546,14 +546,14 @@ describe("schematics api", () => {
               resourceGroup: "foo-rg",
             },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith({
               error: "Schematics feature not supported on development.",
             }),
-            "it should be true"
+            "it should be true",
           );
         });
     });
@@ -566,7 +566,7 @@ describe("schematics api", () => {
             id: "foo-123-id",
           },
         },
-        false
+        false,
       );
       let testSchematicsController = new controller(axios);
       return testSchematicsController
@@ -576,14 +576,14 @@ describe("schematics api", () => {
               workspaceName: "testWorkspace",
             },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
             res.send.calledOnceWith({
               error: "No region provided for workspace.",
             }),
-            "it should be true"
+            "it should be true",
           );
         });
     });
@@ -594,7 +594,7 @@ describe("schematics api", () => {
           name: "testWorkspace",
           location: "us-south",
         },
-        true
+        true,
       );
       let testSchematicsController = new controller(axios);
       testSchematicsController.getResourceGroupID = new sinon.spy(function () {
@@ -606,7 +606,7 @@ describe("schematics api", () => {
       });
       testSchematicsController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       return testSchematicsController
         .createWorkspace(
@@ -617,17 +617,17 @@ describe("schematics api", () => {
               resourceGroup: "foo-rg",
             },
           },
-          res
+          res,
         )
         .then(() => {
           assert.deepEqual(
             res.send.lastCall.args,
             [{ error: "> Provided resource group not found." }],
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testSchematicsController.getResourceGroupID.calledOnce,
-            "it should be true"
+            "it should be true",
           );
         });
     });
@@ -643,12 +643,12 @@ describe("schematics api", () => {
             },
           ],
         },
-        false
+        false,
       );
       let testSchematicsController = new controller(axios);
       testSchematicsController.getBearerToken = new sinon.spy(
         spyFns,
-        "getBearerToken"
+        "getBearerToken",
       );
       return testSchematicsController
         .createWorkspace(
@@ -659,7 +659,7 @@ describe("schematics api", () => {
               region: "us-south",
             },
           },
-          res
+          res,
         )
         .then(() => {
           assert.isTrue(
@@ -673,11 +673,11 @@ describe("schematics api", () => {
                 },
               ],
             }),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             testSchematicsController.getBearerToken.calledOnce,
-            "it should be true"
+            "it should be true",
           );
         });
     });

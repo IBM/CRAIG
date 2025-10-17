@@ -49,7 +49,7 @@ function cbrZoneSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "cbr_zones"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -78,7 +78,7 @@ function cbrZoneAddressCreate(config, stateData, componentProps) {
     "cbr_zones",
     "addresses",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -126,7 +126,7 @@ function cbrZoneExclusionCreate(config, stateData, componentProps) {
     "cbr_zones",
     "exclusions",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -217,7 +217,7 @@ function initCbrZones(store) {
     delete: cbrZoneDelete,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "description", "account_id"],
-      "cbr_zones"
+      "cbr_zones",
     ),
     schema: {
       name: nameField("cbr_zones"),
@@ -231,7 +231,7 @@ function initCbrZones(store) {
           );
         },
         invalidText: unconditionalInvalidText(
-          "Invalid description. Must be 0-300 characters and match the regex expression /^[\x20-\xFE]*$/"
+          "Invalid description. Must be 0-300 characters and match the regex expression /^[\x20-\xFE]*$/",
         ),
         placeholder: "(Optional) Zone Description",
       },
@@ -260,7 +260,7 @@ function initCbrZones(store) {
             "value",
           ],
           "cbr_zones",
-          "addresses"
+          "addresses",
         ),
         schema: {
           name: nameField("addresses"),
@@ -335,7 +335,7 @@ function initCbrZones(store) {
             "value",
           ],
           "cbr_zones",
-          "exclusions"
+          "exclusions",
         ),
         schema: {
           name: nameField("exclusions"),

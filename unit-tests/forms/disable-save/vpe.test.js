@@ -19,9 +19,9 @@ describe("vpe", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a vpe has an invalid service", () => {
@@ -41,9 +41,9 @@ describe("vpe", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a vpe has secrets manager as service but no instance selected", () => {
@@ -64,9 +64,9 @@ describe("vpe", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a vpe has an invalid rg", () => {
@@ -86,9 +86,9 @@ describe("vpe", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a vpe has an invalid vpc", () => {
@@ -109,9 +109,9 @@ describe("vpe", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a vpe has an invalid security group", () => {
@@ -132,9 +132,9 @@ describe("vpe", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a vpe has no security group(s) selected", () => {
@@ -154,9 +154,9 @@ describe("vpe", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a vpe has an invalid subnet", () => {
@@ -177,9 +177,9 @@ describe("vpe", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a vpe has no subnets", () => {
@@ -200,9 +200,9 @@ describe("vpe", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
 });

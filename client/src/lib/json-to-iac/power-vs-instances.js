@@ -24,47 +24,47 @@ function powerVsInstanceData(instance, config) {
   let piKeyPairUseData = !config?.power
     ? ""
     : (
-        foundWorkspace
-          ? new revision(config)
-              .child("power", instance.workspace)
-              .child("ssh_keys", instance.ssh_key).data?.use_data
-          : false
-      )
-    ? "data."
-    : "";
+          foundWorkspace
+            ? new revision(config)
+                .child("power", instance.workspace)
+                .child("ssh_keys", instance.ssh_key).data?.use_data
+            : false
+        )
+      ? "data."
+      : "";
   let imageUseData = !config?.power
     ? ""
     : (
-        foundWorkspace
-          ? new revision(config)
-              .child("power", instance.workspace)
-              .child("images", instance.image).data?.use_data
-          : false
-      )
-    ? "data."
-    : "";
+          foundWorkspace
+            ? new revision(config)
+                .child("power", instance.workspace)
+                .child("images", instance.image).data?.use_data
+            : false
+        )
+      ? "data."
+      : "";
   let data = {
     provider: `\${ibm.power_vs${snakeCase("_" + instance.zone)}}`,
     pi_image_id: foundWorkspace
       ? `\${${imageUseData}ibm_pi_image.power_image_${snakeCase(
-          instance.workspace
+          instance.workspace,
         )}_${snakeCase(instance.image)}.${imageUseData ? "id" : "image_id"}}`
       : "${ERROR: Unfound Ref}",
     pi_key_pair_name:
       instance.ssh_key === "(None)" || !instance.ssh_key
         ? undefined
         : foundWorkspace
-        ? `\${${piKeyPairUseData}ibm_pi_key.power_vs_ssh_key_${snakeCase(
-            instance.ssh_key
-          )}.pi_key_name}`
-        : "${ERROR: Unfound Ref}",
+          ? `\${${piKeyPairUseData}ibm_pi_key.power_vs_ssh_key_${snakeCase(
+              instance.ssh_key,
+            )}.pi_key_name}`
+          : "${ERROR: Unfound Ref}",
     pi_cloud_instance_id: foundWorkspace
       ? powerVsWorkspaceRef(
           instance.workspace,
           config?.power
             ? getObjectFromArray(config.power, "name", instance.workspace)
                 .use_data
-            : false
+            : false,
         )
       : "${ERROR: Unfound Ref}",
     pi_instance_name: (manualVsiNaming ? "" : "${var.prefix}-") + instance.name,
@@ -96,7 +96,7 @@ function powerVsInstanceData(instance, config) {
   } else {
     data.pi_storage_pool = data.pi_storage_pool.replace(
       " (Replication Enabled)",
-      ""
+      "",
     );
   }
 
@@ -106,18 +106,18 @@ function powerVsInstanceData(instance, config) {
     let networkUseData = !config?.power
       ? ""
       : (
-          foundWorkspace
-            ? new revision(config)
-                .child("power", instance.workspace)
-                .child("network", nw.name).data.use_data
-            : "${Error: Unfound Ref}"
-        )
-      ? "data."
-      : "";
+            foundWorkspace
+              ? new revision(config)
+                  .child("power", instance.workspace)
+                  .child("network", nw.name).data.use_data
+              : "${Error: Unfound Ref}"
+          )
+        ? "data."
+        : "";
     let nwData = {
       network_id: foundWorkspace
         ? `\${${networkUseData}ibm_pi_network.power_network_${snakeCase(
-            instance.workspace
+            instance.workspace,
           )}_${snakeCase(nw.name)}.${networkUseData ? "id" : "network_id"}}`
         : "${ERROR: Unfound Ref}",
     };
@@ -133,7 +133,7 @@ function powerVsInstanceData(instance, config) {
     delete data.pi_shared_processor_pool;
   } else {
     data.pi_shared_processor_pool = `\${ibm_pi_shared_processor_pool.${snakeCase(
-      instance.workspace
+      instance.workspace,
     )}_workspace_${
       data.pi_shared_processor_pool
     }_processor_pool.shared_processor_pool_id}`;
@@ -143,9 +143,9 @@ function powerVsInstanceData(instance, config) {
     delete data.pi_placement_group_id;
   } else {
     data.pi_placement_group_id = `\${ibm_pi_placement_group.${snakeCase(
-      instance.workspace
+      instance.workspace,
     )}_workspace_${snakeCase(
-      data.pi_placement_group_id
+      data.pi_placement_group_id,
     )}_placement_group.placement_group_id}`;
   }
 
@@ -171,13 +171,13 @@ function powerVsInstanceData(instance, config) {
         // affinity instance
         delete data.pi_affinity_volume;
         data.pi_affinity_instance = `\${ibm_pi_instance.${snakeCase(
-          `${instance.workspace}_workspace_instance_${instance.pi_affinity_instance}`
+          `${instance.workspace}_workspace_instance_${instance.pi_affinity_instance}`,
         )}.instance_id}`;
       } else {
         // affinity volume
         delete data.pi_affinity_instance;
         data.pi_affinity_volume = `\${ibm_pi_volume.${snakeCase(
-          instance.workspace + " volume " + instance.pi_affinity_volume
+          instance.workspace + " volume " + instance.pi_affinity_volume,
         )}.volume_id}`;
       }
     } else {
@@ -187,13 +187,13 @@ function powerVsInstanceData(instance, config) {
         // anti affinity instance
         delete data.pi_anti_affinity_volume;
         data.pi_anti_affinity_instance = `\${ibm_pi_instance.${snakeCase(
-          `${instance.workspace}_workspace_instance_${instance.pi_anti_affinity_instance}`
+          `${instance.workspace}_workspace_instance_${instance.pi_anti_affinity_instance}`,
         )}.instance_id}`;
       } else {
         // anti affinity volume
         delete data.pi_anti_affinity_instance;
         data.pi_anti_affinity_volume = `\${ibm_pi_volume.${snakeCase(
-          instance.workspace + " volume " + instance.pi_anti_affinity_volume
+          instance.workspace + " volume " + instance.pi_anti_affinity_volume,
         )}.volume_id}`;
       }
     }
@@ -236,7 +236,7 @@ function formatPowerVsInstance(instance, config) {
     "resource",
     "ibm_pi_instance",
     `${instance.workspace}_workspace_instance_${instance.name}`,
-    powerVsInstanceData(instance, config)
+    powerVsInstanceData(instance, config),
   );
 }
 
@@ -252,7 +252,7 @@ function formatFalconStorInstance(instance, config) {
     "resource",
     "ibm_pi_instance",
     `${instance.workspace}_falconstor_vtl_${instance.name}`,
-    data
+    data,
   );
 }
 
@@ -277,7 +277,7 @@ function formatSharedProcessorPool(pool, config) {
             config?.power
               ? getObjectFromArray(config.power, "name", pool.workspace)
                   .use_data
-              : false
+              : false,
           )
         : "${ERROR: Unfound Ref}",
       pi_shared_processor_pool_host_group:
@@ -285,7 +285,7 @@ function formatSharedProcessorPool(pool, config) {
       pi_shared_processor_pool_reserved_cores:
         pool.pi_shared_processor_pool_reserved_cores,
       pi_shared_processor_pool_name: pool.name,
-    }
+    },
   );
 }
 
@@ -310,12 +310,12 @@ function formatPlacementGroup(group, config) {
             config?.power
               ? getObjectFromArray(config.power, "name", group.workspace)
                   .use_data
-              : false
+              : false,
           )
         : "${ERROR: Unfound Ref}",
       pi_placement_group_policy: group.pi_placement_group_policy,
       pi_placement_group_name: kebabName([group.name]),
-    }
+    },
   );
 }
 
@@ -330,28 +330,28 @@ function powerInstanceTf(config) {
     tf +=
       tfBlock(
         `${pool.name} Processor Pool`,
-        formatSharedProcessorPool(pool, config)
+        formatSharedProcessorPool(pool, config),
       ) + "\n";
   });
   (config.power_placement_groups || []).forEach((pool) => {
     tf +=
       tfBlock(
         `${pool.name} Placement Group`,
-        formatPlacementGroup(pool, config)
+        formatPlacementGroup(pool, config),
       ) + "\n";
   });
   (config.power_instances || []).forEach((instance) => {
     tf +=
       tfBlock(
         `${instance.name} Power Instance`,
-        formatPowerVsInstance(instance, config)
+        formatPowerVsInstance(instance, config),
       ) + "\n";
   });
   (config.vtl || []).forEach((instance) => {
     tf +=
       tfBlock(
         `${instance.name} FalconStor VTL`,
-        formatFalconStorInstance(instance, config)
+        formatFalconStorInstance(instance, config),
       ).replace("Falcon Stor", "FalconStor") + "\n";
   });
   return tf ? tf.replace(/\n+$/g, "\n") : tf;

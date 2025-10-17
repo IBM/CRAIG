@@ -94,14 +94,14 @@ class ClassicDiagram extends React.Component {
     return this.state.selectedItem === "classic_security_groups"
       ? SecurityServices
       : this.state.selectedItem === "classic_ssh_keys"
-      ? Password
-      : this.state.selectedItem === "classic_vlans"
-      ? VlanIbm
-      : this.state.selectedItem === "classic_bare_metal"
-      ? IbmCloudBareMetalServer
-      : this.state.selectedItem === "classic_vsi"
-      ? InstanceClassic
-      : FirewallClassic;
+        ? Password
+        : this.state.selectedItem === "classic_vlans"
+          ? VlanIbm
+          : this.state.selectedItem === "classic_bare_metal"
+            ? IbmCloudBareMetalServer
+            : this.state.selectedItem === "classic_vsi"
+              ? InstanceClassic
+              : FirewallClassic;
   }
 
   /**
@@ -242,14 +242,14 @@ class ClassicDiagram extends React.Component {
       this.state.selectedItem === "classic_security_groups"
         ? "Classic Security Group"
         : this.state.selectedItem === "classic_ssh_keys"
-        ? "Classic SSH Key"
-        : this.state.selectedItem === "classic_vlans"
-        ? "VLAN"
-        : this.state.selectedItem === "classic_bare_metal"
-        ? "Classic Bare Metal"
-        : this.state.selectedItem === "classic_vsi"
-        ? "Classic VSI"
-        : "Classic Gateway"
+          ? "Classic SSH Key"
+          : this.state.selectedItem === "classic_vlans"
+            ? "VLAN"
+            : this.state.selectedItem === "classic_bare_metal"
+              ? "Classic Bare Metal"
+              : this.state.selectedItem === "classic_vsi"
+                ? "Classic VSI"
+                : "Classic Gateway"
     } ${
       this.props.craig.store.json[this.state.selectedItem][
         this.state.selectedIndex
@@ -278,7 +278,7 @@ class ClassicDiagram extends React.Component {
               : (stateData, componentProps) => {
                   craig[this.state.modalService].create(
                     stateData,
-                    componentProps
+                    componentProps,
                   );
                   this.setState({
                     showModal: false,
@@ -359,7 +359,7 @@ class ClassicDiagram extends React.Component {
                   disableSave(
                     this.props.modalService,
                     this.state,
-                    this.props
+                    this.props,
                   ) === false
                 ) {
                   this.props.enableModal();
@@ -394,7 +394,7 @@ class ClassicDiagram extends React.Component {
                 "Classic Bare Metal",
                 "Classic VSIs",
               ],
-              craig
+              craig,
             )}
             tfTabs={[
               {

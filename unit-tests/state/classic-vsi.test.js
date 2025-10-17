@@ -58,7 +58,7 @@ describe("classic vsi state", () => {
             ssh_keys: [],
           },
         ],
-        "it should create vsi"
+        "it should create vsi",
       );
     });
     it("should create a vsi with found values", () => {
@@ -82,7 +82,7 @@ describe("classic vsi state", () => {
             ssh_keys: ["key"],
           },
         ],
-        "it should create vsi"
+        "it should create vsi",
       );
       craig.classic_vsi.save(
         {
@@ -97,7 +97,7 @@ describe("classic vsi state", () => {
           data: {
             name: "test",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.classic_vsi,
@@ -111,7 +111,7 @@ describe("classic vsi state", () => {
             ssh_keys: ["key"],
           },
         ],
-        "it should update vsi"
+        "it should update vsi",
       );
       craig.classic_vsi.delete(
         {
@@ -126,12 +126,12 @@ describe("classic vsi state", () => {
           data: {
             name: "honk",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.classic_vsi,
         [],
-        "it should delete vsi"
+        "it should delete vsi",
       );
     });
   });
@@ -139,20 +139,20 @@ describe("classic vsi state", () => {
     it("should be invalid when no values", () => {
       assert.isTrue(
         disableSave("classic_vsi", {}, { craig: craig }),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should return invalid when no ssh keys selected", () => {
       assert.isTrue(
         craig.classic_vsi.ssh_keys.invalid({ ssh_keys: [] }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should return groups for classic ssh keys", () => {
       assert.deepEqual(
         craig.classic_vsi.ssh_keys.groups({}, { craig: craig }),
         [],
-        "it should return data"
+        "it should return data",
       );
     });
     it("should return invalid and groups for private security groups", () => {
@@ -160,12 +160,12 @@ describe("classic vsi state", () => {
         craig.classic_vsi.private_security_groups.invalid({
           private_security_groups: [],
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
       assert.deepEqual(
         craig.classic_vsi.private_security_groups.groups({}, { craig: craig }),
         [],
-        "it should return data"
+        "it should return data",
       );
     });
     it("should return invalid and groups for public security groups", () => {
@@ -174,7 +174,7 @@ describe("classic vsi state", () => {
           private_security_groups: [],
           public_security_groups: [],
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
       assert.isFalse(
         craig.classic_vsi.public_security_groups.invalid({
@@ -182,7 +182,7 @@ describe("classic vsi state", () => {
           private_network_only: true,
           public_security_groups: [],
         }),
-        "it should be valid when none and private only"
+        "it should be valid when none and private only",
       );
       assert.isTrue(
         craig.classic_vsi.public_security_groups.hideWhen({
@@ -190,12 +190,12 @@ describe("classic vsi state", () => {
           private_network_only: true,
           public_security_groups: [],
         }),
-        "it should be hidden"
+        "it should be hidden",
       );
       assert.deepEqual(
         craig.classic_vsi.public_security_groups.groups({}, { craig: craig }),
         [],
-        "it should return data"
+        "it should return data",
       );
     });
   });

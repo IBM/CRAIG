@@ -18,7 +18,7 @@ function getDisplayTierSubnetList(props) {
             .literal("-zone-")
             .digit()
             .stringEnd()
-            .done("g")
+            .done("g"),
         ) !== null &&
         !subnet.tier
       ) {
@@ -28,7 +28,7 @@ function getDisplayTierSubnetList(props) {
   } else {
     props.tier.subnets.forEach((subnetName) => {
       tierSubnets.push(
-        getObjectFromArray(props.vpc.subnets, "name", subnetName)
+        getObjectFromArray(props.vpc.subnets, "name", subnetName),
       );
     });
   }

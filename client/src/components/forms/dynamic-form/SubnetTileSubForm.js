@@ -25,7 +25,7 @@ export const SubnetTileTitle = (props) => {
               onClick={() => {
                 props.parentProps.craig.vpcs.subnets.save(
                   props.parentState,
-                  props.parentProps
+                  props.parentProps,
                 );
               }}
             />
@@ -35,7 +35,7 @@ export const SubnetTileTitle = (props) => {
                 onClick={() => {
                   props.parentProps.craig.vpcs.subnets.delete(
                     props.parentState,
-                    props.parentProps
+                    props.parentProps,
                   );
                 }}
               />
@@ -63,8 +63,8 @@ export const SubnetTileSubForm = (props) => {
         props.parentProps.dynamicSubnetFormSubForm
           ? ""
           : props.parentProps.isModal
-          ? "subForm"
-          : "formInSubForm"
+            ? "subForm"
+            : "formInSubForm"
       } marginTop1Rem marginBottomNone`}
     >
       <CraigFormHeading name="Subnets" type="subHeading" noMarginBottom />

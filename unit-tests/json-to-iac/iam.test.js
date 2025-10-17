@@ -39,7 +39,7 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return empty string when disabled", () => {
@@ -59,7 +59,7 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -75,7 +75,7 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
             tags: ["frog"],
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_iam_access_group" "frog_access_group" {
@@ -89,7 +89,7 @@ resource "ibm_iam_access_group" "frog_access_group" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -129,7 +129,7 @@ resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct access group policy with no attributes", () => {
@@ -161,7 +161,7 @@ resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct access group policy with resource attributes", () => {
@@ -193,7 +193,7 @@ resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct access group policy with resource tags", () => {
@@ -225,7 +225,7 @@ resource "ibm_iam_access_group_policy" "frog_frogs_only_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -258,7 +258,7 @@ resource "ibm_iam_access_group_dynamic_rule" "frog_frogs_only_dynamic_rule" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -279,7 +279,7 @@ resource "ibm_iam_access_group_members" "frog_invites" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -413,7 +413,7 @@ resource "ibm_iam_access_group_members" "frog_invites" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return terraform for iam and access groups with account settings disabled and invites disabled", () => {
@@ -520,7 +520,7 @@ resource "ibm_iam_access_group_dynamic_rule" "frog_frogs_only_dynamic_rule" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

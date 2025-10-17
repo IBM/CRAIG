@@ -41,7 +41,7 @@ function hideWhenNoWorkspaceAndVtl(vtl) {
       vtl &&
       (isNullOrEmptyString(stateData.workspace, true) ||
         isEmpty(
-          componentProps.craig.vtl.image.groups(stateData, componentProps)
+          componentProps.craig.vtl.image.groups(stateData, componentProps),
         ))
     );
   };
@@ -97,7 +97,7 @@ function powerVsInstanceSchema(vtl) {
       hideWhen: function (stateData) {
         return !contains(
           [null, "", "None"],
-          stateData.pi_shared_processor_pool
+          stateData.pi_shared_processor_pool,
         );
       },
     },
@@ -130,11 +130,11 @@ function powerVsInstanceSchema(vtl) {
       groups: powerVsWorkspaceGroups,
       onStateChange: function (stateData, componentProps) {
         let powerWorkspaceZone = new revision(
-          componentProps.craig.store.json
+          componentProps.craig.store.json,
         ).child("power", stateData.workspace).data.zone;
         stateData.zone = powerWorkspaceZone;
         stateData.network = [];
-        (stateData.primary_subnet = ""), (stateData.ssh_key = "");
+        ((stateData.primary_subnet = ""), (stateData.ssh_key = ""));
         stateData.image = "";
       },
     },
@@ -178,9 +178,9 @@ function powerVsInstanceSchema(vtl) {
           return splat(
             new revision(componentProps.craig.store.json).child(
               "power",
-              stateData.workspace
+              stateData.workspace,
             ).data.network,
-            "name"
+            "name",
           );
         }
       },
@@ -256,10 +256,10 @@ function powerVsInstanceSchema(vtl) {
             splat(
               new revision(componentProps.craig.store.json).child(
                 "power",
-                stateData.workspace
+                stateData.workspace,
               ).data.ssh_keys,
-              "name"
-            )
+              "name",
+            ),
           );
         }
       },
@@ -301,7 +301,7 @@ function powerVsInstanceSchema(vtl) {
       disabled: function (stateData) {
         return !contains(
           [null, "", "None", undefined],
-          stateData.pi_shared_processor_pool
+          stateData.pi_shared_processor_pool,
         );
       },
       hideWhen: function (stateData, componentProps) {
@@ -310,7 +310,7 @@ function powerVsInstanceSchema(vtl) {
           hideWhenNoWorkspaceAndVtl(vtl)(stateData, componentProps) ||
           !contains(
             [null, "", "None", undefined],
-            stateData.pi_shared_processor_pool
+            stateData.pi_shared_processor_pool,
           )
         );
       },
@@ -322,7 +322,7 @@ function powerVsInstanceSchema(vtl) {
       groups: function (stateData) {
         return contains(
           [null, "", "None", undefined],
-          stateData.pi_shared_processor_pool
+          stateData.pi_shared_processor_pool,
         )
           ? ["Shared", "Capped", "Dedicated"]
           : ["Shared", "Capped"];
@@ -342,10 +342,10 @@ function powerVsInstanceSchema(vtl) {
             componentProps.craig.store.json.power_shared_processor_pools.filter(
               (instance) => {
                 if (instance.workspace === stateData.workspace) return instance;
-              }
+              },
             ),
-            "name"
-          )
+            "name",
+          ),
         );
       },
       size: "small",
@@ -358,7 +358,7 @@ function powerVsInstanceSchema(vtl) {
           stateData.pi_sys_type = getObjectFromArray(
             componentProps.craig.store.json.power_shared_processor_pools,
             "name",
-            stateData.pi_shared_processor_pool
+            stateData.pi_shared_processor_pool,
           ).pi_shared_processor_pool_host_group;
           stateData.sap = false;
           stateData.sap_profile = null;
@@ -425,7 +425,7 @@ function powerVsInstanceSchema(vtl) {
           !isInRange(
             memoryFloat,
             stateData.pi_license_repository_capacity ? vtlMemMin : 2,
-            memoryMax
+            memoryMax,
           )
         );
       },
@@ -458,7 +458,7 @@ function powerVsInstanceSchema(vtl) {
     pi_storage_pool: powerStoragePoolSelect(),
     storage_option: powerVsStorageOptions(
       false,
-      hideWhenNoWorkspaceAndVtl(vtl)
+      hideWhenNoWorkspaceAndVtl(vtl),
     ),
     pi_storage_type: powerVsStorageType(false, hideWhenNoWorkspaceAndVtl(vtl)),
     affinity_type: powerVsAffinityType(),
@@ -475,7 +475,7 @@ function powerVsInstanceSchema(vtl) {
       invalid: function (stateData) {
         return isNullOrEmptyString(
           stateData.pi_license_repository_capacity,
-          true
+          true,
         ) || stateData.pi_license_repository_capacity.match(/^\d+$/g) === null
           ? true
           : !isWholeNumber(parseInt(stateData.pi_license_repository_capacity));
@@ -507,7 +507,7 @@ function powerVsInstanceSchema(vtl) {
         } else return !isInRange(Number(stateData.pi_ibmi_rds_users), 1, 500);
       },
       invalidText: unconditionalInvalidText(
-        "Enter a whole number between 1 and 500"
+        "Enter a whole number between 1 and 500",
       ),
       placeholder: "1",
       hideWhen: hideWhenNotIbmi,
@@ -562,10 +562,10 @@ function powerVsInstanceSchema(vtl) {
                 if (group.workspace === stateData.workspace) {
                   return group;
                 }
-              }
+              },
             ),
-            "name"
-          )
+            "name",
+          ),
         );
       },
     },

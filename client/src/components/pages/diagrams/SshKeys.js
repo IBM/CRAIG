@@ -58,7 +58,7 @@ export const SshKeys = (props) => {
                 />
               </div>
             </HoverClassNameWrapper>
-          )
+          ),
         )}
       </div>
     </div>

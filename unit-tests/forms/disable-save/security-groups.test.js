@@ -14,9 +14,9 @@ describe("security groups", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a security group has an invalid rg", () => {
@@ -32,9 +32,9 @@ describe("security groups", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a security group has an invalid vpc", () => {
@@ -51,9 +51,9 @@ describe("security groups", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   describe("rules", () => {
@@ -64,8 +64,8 @@ describe("security groups", () => {
           {
             name: "@@@",
           },
-          { rules: [], data: { name: "" }, craig: state() }
-        )
+          { rules: [], data: { name: "" }, craig: state() },
+        ),
       );
     });
     it("should return true if security group rule has invalid source", () => {
@@ -73,8 +73,8 @@ describe("security groups", () => {
         disableSave(
           "sg_rules",
           { name: "aa", source: "mm" },
-          { rules: [], data: { name: "" }, craig: state() }
-        )
+          { rules: [], data: { name: "" }, craig: state() },
+        ),
       );
     });
     it("should return true if security group rule has invalid port", () => {
@@ -94,8 +94,8 @@ describe("security groups", () => {
             innerFormProps: { rules: [{ name: "ff" }] },
             data: { name: "aa" },
             craig: state(),
-          }
-        )
+          },
+        ),
       );
     });
     it("should return true if security group rule has invalid name in modal", () => {
@@ -103,8 +103,8 @@ describe("security groups", () => {
         disableSave(
           "sg_rules",
           { name: "@@@" },
-          { rules: [], data: { name: "" }, isModal: true, craig: state() }
-        )
+          { rules: [], data: { name: "" }, isModal: true, craig: state() },
+        ),
       );
     });
   });

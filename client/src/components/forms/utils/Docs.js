@@ -95,7 +95,7 @@ const RelatedLinks = (props) => {
 
 RelatedLinks.propTypes = {
   links: PropTypes.arrayOf(
-    PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
+    PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   ).isRequired,
 };
 
@@ -135,7 +135,7 @@ const Docs = (props) => {
         ) : (
           // table
           <DocTable key={index} list={[...field.table]} />
-        )
+        ),
       )}
       <div className="displayFlex spaceBetween">
         {props.relatedLinks && <RelatedLinks links={props.relatedLinks} />}
@@ -152,7 +152,7 @@ Docs.propTypes = {
       className: PropTypes.string,
       table: PropTypes.array,
       subHeading: PropTypes.string,
-    })
+    }),
   ).isRequired,
   relatedLinks: PropTypes.array,
 };

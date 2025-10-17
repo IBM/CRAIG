@@ -27,7 +27,7 @@ describe("vpn server", () => {
           vpc: "management",
           routes: [],
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
@@ -76,7 +76,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           vpc: "management",
           routes: [],
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
@@ -126,7 +126,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           routes: [],
           additional_prefixes: ["127.0.0.1"],
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
@@ -174,7 +174,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           vpc: "management",
           routes: [],
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
@@ -222,7 +222,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           vpc: "management",
           routes: [],
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
@@ -270,7 +270,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           vpc: "management",
           routes: [],
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
@@ -316,7 +316,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           vpc: "management",
           routes: [],
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_vpn_server" "management_vpn_server_abc" {
@@ -370,7 +370,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           bring_your_own_cert: true,
           secrets_manager: "secrets-manager",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_sm_imported_certificate" "management_vpn_server_abc_imported_certificate" {
@@ -444,7 +444,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           bring_your_own_cert: true,
           secrets_manager: "secrets-manager",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_sm_imported_certificate" "management_vpn_server_abc_imported_certificate" {
@@ -519,7 +519,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           routes: [],
           secrets_manager: "secrets-manager",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_sm_imported_certificate" "management_vpn_server_abc_imported_certificate" {
@@ -589,7 +589,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           DANGER_developer_certificate: true,
           secrets_manager: "secrets-manager",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `##############################################################################
 # DANGER ZONE - DEVELOPMENT ONLY - DO NOT USE IN PRODUCTION
@@ -726,7 +726,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           DANGER_developer_certificate: true,
           secrets_manager: "secrets-manager",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `##############################################################################
 # DANGER ZONE - DEVELOPMENT ONLY - DO NOT USE IN PRODUCTION
@@ -863,7 +863,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           DANGER_developer_certificate: true,
           secrets_manager: "secrets-manager",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `##############################################################################
 # DANGER ZONE - DEVELOPMENT ONLY - DO NOT USE IN PRODUCTION
@@ -994,7 +994,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           routes: [],
           secrets_manager: "secrets-manager",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `##############################################################################
 # DANGER ZONE - DEVELOPMENT ONLY - DO NOT USE IN PRODUCTION
@@ -1124,7 +1124,7 @@ resource "ibm_is_vpn_server" "management_vpn_server_abc" {
           action: "translate",
           destination: "172.16.0.0/16",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_vpn_server_route" "management_vpn_server_route_qwe" {
@@ -1142,7 +1142,7 @@ resource "ibm_is_vpn_server_route" "management_vpn_server_route_qwe" {
       assert.deepEqual(
         vpnServerTf({ vpn_servers: [] }),
         "",
-        "it should return empty string"
+        "it should return empty string",
       );
     });
     it("should return correct data when servers are present", () => {
@@ -1638,7 +1638,7 @@ resource "ibm_is_vpc_address_prefix" "management_vpn_abc_on_prem_127_0_0_1_5_pre
           ],
         }),
         expectedData,
-        "it should return empty string"
+        "it should return empty string",
       );
     });
     it("should return correct data when servers are present with no auth flag", () => {
@@ -2125,7 +2125,7 @@ resource "ibm_is_vpc_address_prefix" "management_vpn_abc_on_prem_127_0_0_1_5_pre
           ],
         }),
         expectedData,
-        "it should return empty string"
+        "it should return empty string",
       );
     });
   });

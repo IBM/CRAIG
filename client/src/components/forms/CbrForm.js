@@ -115,7 +115,7 @@ class CbrForm extends React.Component {
           name="Context Based Restrictions"
           about={RenderDocs(
             "cbr",
-            this.props.craig.store.json._options.template
+            this.props.craig.store.json._options.template,
           )()}
           form={
             <div>

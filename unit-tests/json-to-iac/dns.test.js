@@ -38,7 +38,7 @@ describe("dns service", () => {
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_instance" "test_dns_instance" {
@@ -194,7 +194,7 @@ resource "ibm_dns_permitted_network" "test_dns_instance_test_dot_com_permitted_n
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_dns_custom_resolver" "test_dns_instance_resolver_dev_res" {

@@ -73,7 +73,7 @@ function variablesDotTf(config, useF5, templateTarMode) {
     variables[snakeKeyName] = {
       description: `Public SSH Key Value for ${titleCase(key.name).replace(
         /Ssh/g,
-        "SSH"
+        "SSH",
       )}`,
       type: "${string}",
       sensitive: true,
@@ -130,15 +130,15 @@ function variablesDotTf(config, useF5, templateTarMode) {
           (vsi) => {
             allVsiNames.push({
               name: snakeCase(
-                `${deployment.vpc} vpc vsi deployment ${deployment.name} ${subnet} subnet server ${vsi} name`
+                `${deployment.vpc} vpc vsi deployment ${deployment.name} ${subnet} subnet server ${vsi} name`,
               ),
               vpc: deployment.vpc,
               subnet: subnet,
               default: kebabCase(
-                `${config._options.prefix} ${deployment.vpc} ${deployment.name} server ${subnet} ${vsi}`
+                `${config._options.prefix} ${deployment.vpc} ${deployment.name} server ${subnet} ${vsi}`,
               ),
             });
-          }
+          },
         );
       });
       allVsiNames.forEach((vsi) => {
@@ -156,7 +156,7 @@ function variablesDotTf(config, useF5, templateTarMode) {
       cluster.opaque_secrets.forEach((secret) => {
         variables[
           snakeCase(
-            `${secret.secrets_manager} ${secret.name} secret arbitrary_secret_data`
+            `${secret.secrets_manager} ${secret.name} secret arbitrary_secret_data`,
           )
         ] = {
           description: `Data for ${secret.name} secret arbitrary secret data`,
@@ -191,8 +191,8 @@ function variablesDotTf(config, useF5, templateTarMode) {
           variables[snakeCase(`power ${workspace.name} ${key.name} key`)] = {
             description: capitalize(
               titleCase(
-                `${workspace.name} ${key.name} public key value`
-              ).toLowerCase()
+                `${workspace.name} ${key.name} public key value`,
+              ).toLowerCase(),
             ),
             type: "${string}",
             default: templateTarMode ? undefined : key.public_key,
@@ -204,7 +204,7 @@ function variablesDotTf(config, useF5, templateTarMode) {
     variables[snakeCase(`classic ${sshKey.name} public key`)] = {
       description: `Public SSH Key Value for classic SSH Key ${sshKey.name.replace(
         /-/g,
-        " "
+        " ",
       )}`,
       type: "${string}",
       default: templateTarMode ? undefined : sshKey.public_key,
@@ -242,7 +242,7 @@ function variablesDotTf(config, useF5, templateTarMode) {
           snakeCase(`${server.vpc} vpn server ${server.name} certificate crn`)
         ] = {
           description: `${titleCase(server.vpc)} VPN Server ${titleCase(
-            server.name
+            server.name,
           )} Certificate CRN`,
           type: "${string}",
           default: server.certificate_crn,
@@ -256,7 +256,7 @@ function variablesDotTf(config, useF5, templateTarMode) {
             snakeCase(`${server.vpc} vpn server ${server.name} client ca crn`)
           ] = {
             description: `${titleCase(server.vpc)} VPN Server ${titleCase(
-              server.name
+              server.name,
             )} Client CA CRN`,
             type: "${string}",
             default: server.client_ca_crn,
@@ -272,9 +272,9 @@ function variablesDotTf(config, useF5, templateTarMode) {
       jsonToTf(
         JSON.stringify({
           variable: variables,
-        })
+        }),
       ) +
-      "\n"
+      "\n",
   );
 }
 

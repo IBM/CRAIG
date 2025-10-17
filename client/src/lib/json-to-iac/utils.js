@@ -56,7 +56,7 @@ function getTags(config, useVarRef) {
  */
 function getCosId(cos, getGuid) {
   return `\${${cos.use_data ? "data." : ""}ibm_resource_instance.${snakeCase(
-    cos.name
+    cos.name,
   )}_object_storage.${getGuid ? "gu" : ""}id}`;
 }
 
@@ -81,7 +81,7 @@ function buildTitleComment(name) {
           .whitespace()
           .literal("5")
           .done("g"),
-        "F5"
+        "F5",
       )
       .replace(/VLA\sN/g, "VLAN")
       .replace(/\sDNA/g, "DNA") // replace `Log DNA`
@@ -200,7 +200,7 @@ function bucketRef(cos, bucket, value, data) {
     "ibm_cos_bucket",
     cos + " object storage " + bucket + " bucket",
     value || "bucket_name",
-    data
+    data,
   );
 }
 
@@ -304,7 +304,7 @@ function timeouts(create, update, destroy) {
  */
 function composedKmsId(kms) {
   return `\${${kms.use_data ? "data." : ""}ibm_resource_instance.${snakeCase(
-    kms.name
+    kms.name,
   )}.guid}`;
 }
 
@@ -347,7 +347,7 @@ function cdktfValues(obj, resource, type, name, values) {
  */
 function jsonToTfPrint(resource, type, name, values) {
   let data = jsonToTf(
-    JSON.stringify(cdktfValues({}, resource, type, name, values))
+    JSON.stringify(cdktfValues({}, resource, type, name, values)),
   );
   return "\n" + data + "\n";
 }

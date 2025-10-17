@@ -55,7 +55,7 @@ function copyRuleCodeMirrorData(stateData, componentProps) {
         })
         .lazy()
         .done("g"),
-      ""
+      "",
     )
     .replace(
       new RegexButWithWords()
@@ -68,7 +68,7 @@ function copyRuleCodeMirrorData(stateData, componentProps) {
           exp.literal("\n}").stringEnd();
         })
         .done("g"),
-      ""
+      "",
     );
 }
 
@@ -87,17 +87,17 @@ function copyAclModalContent(props) {
   return prettyJSON(
     new revision(props.craig.store.json)
       .child("vpcs", props.data.name, "name")
-      .child("acls", props.sourceAcl, "name").data
+      .child("acls", props.sourceAcl, "name").data,
   )
     .replace(
       // replace top level vpc with new name
       new RegexButWithWords().literal(`"vpc": "${props.data.name}"`).done("s"),
-      `"vpc": "${props.destinationVpc}"`
+      `"vpc": "${props.destinationVpc}"`,
     )
     .replace(
       // replace top level acl name with new name
       new RegexButWithWords().literal(`"name": "${props.sourceAcl}"`).done("s"),
-      `"name": "${props.sourceAcl}-copy"`
+      `"name": "${props.sourceAcl}-copy"`,
     )
     .replace(
       // replace all other references to vpc and acl name with empty space
@@ -108,11 +108,11 @@ function copyAclModalContent(props) {
               exp
                 .group((exp) => exp.literal(`"vpc": "${props.data.name}"`))
                 .or()
-                .group((exp) => exp.literal(`"name": "${props.sourceAcl}"`))
+                .group((exp) => exp.literal(`"name": "${props.sourceAcl}"`)),
             )
             .literal(",")
             .whitespace()
-            .oneOrMore()
+            .oneOrMore(),
         )
         .or()
         .group((exp) =>
@@ -124,11 +124,11 @@ function copyAclModalContent(props) {
               exp
                 .group((exp) => exp.literal(`"vpc": "${props.data.name}"`))
                 .or()
-                .group((exp) => exp.literal(`"acl": "${props.sourceAcl}"`))
-            )
+                .group((exp) => exp.literal(`"acl": "${props.sourceAcl}"`)),
+            ),
         )
         .done("g"),
-      ""
+      "",
     );
 }
 
@@ -146,8 +146,8 @@ function copySgModalContent(props) {
     new revision(props.craig.store.json).child(
       "security_groups",
       props.source,
-      "name"
-    ).data
+      "name",
+    ).data,
   )
     .replace(
       // replace top level vpc with new name
@@ -157,12 +157,12 @@ function copySgModalContent(props) {
         .oneOrMore()
         .literal('"')
         .done("s"),
-      `"vpc": "${props.destinationVpc}"`
+      `"vpc": "${props.destinationVpc}"`,
     )
     .replace(
       // replace top level acl name with new name
       new RegexButWithWords().literal(`"name": "${props.source}"`).done("g"),
-      `"name": "${props.source}-copy"`
+      `"name": "${props.source}-copy"`,
     )
     .replace(
       // replace all other references to vpc and sg name with empty space
@@ -179,15 +179,15 @@ function copySgModalContent(props) {
                     .negativeLook.ahead(props.destinationVpc)
                     .negatedSet('"')
                     .oneOrMore()
-                    .literal('"')
-                )
+                    .literal('"'),
+                ),
             )
             .literal(",")
             .whitespace()
-            .oneOrMore()
+            .oneOrMore(),
         )
         .done("g"),
-      ""
+      "",
     )
     .replace(
       new RegexButWithWords()
@@ -199,7 +199,7 @@ function copySgModalContent(props) {
         .oneOrMore()
         .literal('"')
         .done("g"),
-      ""
+      "",
     );
 }
 

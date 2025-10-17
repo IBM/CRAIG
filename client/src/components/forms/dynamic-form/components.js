@@ -30,7 +30,7 @@ const DynamicToolTipWrapper = (props) => {
   //make sure that either children or innerForm are passed as a prop
   if (props.children === undefined && props.innerForm === undefined) {
     throw new Error(
-      "DynamicToolTipWrapper expects either `props.children` or `props.innerForm` when rendering ToolTipWrapper, got neither."
+      "DynamicToolTipWrapper expects either `props.children` or `props.innerForm` when rendering ToolTipWrapper, got neither.",
     );
   }
   return props.tooltip ? (

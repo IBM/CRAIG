@@ -84,7 +84,7 @@ function initAtracker(store) {
     save: atrackerSave,
     shouldDisableSave: shouldDisableComponentSave(
       ["bucket", "cos_key", "locations", "plan", "resource_group"],
-      "atracker"
+      "atracker",
     ),
     schema: {
       enabled: {
@@ -145,7 +145,7 @@ function initAtracker(store) {
           return nestedSplat(
             componentProps.craig.store.json.object_storage,
             "buckets",
-            "name"
+            "name",
           );
         },
         invalid: function (stateData) {
@@ -172,7 +172,7 @@ function initAtracker(store) {
           return nestedSplat(
             componentProps.craig.store.json.object_storage,
             "keys",
-            "name"
+            "name",
           );
         },
         invalid: function (stateData) {
@@ -200,7 +200,7 @@ function initAtracker(store) {
         type: "multiselect",
         groups: function (stateData, componentProps) {
           return ["global"].concat(
-            componentProps?.craig?.store?.json?._options?.region || ""
+            componentProps?.craig?.store?.json?._options?.region || "",
           );
         },
         hideWhen: hideWhenDisabled,

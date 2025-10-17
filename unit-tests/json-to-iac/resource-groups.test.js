@@ -56,7 +56,7 @@ data "ibm_resource_group" "slz_workload_rg" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct terraform"
+      "it should return correct terraform",
     );
   });
   it("should return terraform code for json resource group with no prefix", () => {
@@ -113,7 +113,7 @@ data "ibm_resource_group" "slz_workload_rg" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct terraform"
+      "it should return correct terraform",
     );
   });
 });

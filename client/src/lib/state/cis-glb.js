@@ -71,7 +71,7 @@ function initCisGlbStore(store) {
       config.updateChild(
         ["json", "cis_glbs"],
         componentProps.data.name,
-        stateData
+        stateData,
       );
     },
     delete: function (config, stateData, componentProps) {
@@ -79,7 +79,7 @@ function initCisGlbStore(store) {
     },
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "cis", "description", "minimum_origins"],
-      "cis_glbs"
+      "cis_glbs",
     ),
     schema: {
       name: nameField("cis_glbs"),
@@ -106,7 +106,7 @@ function initCisGlbStore(store) {
           return invalidDescription(stateData.description);
         },
         invalidText: unconditionalInvalidText(
-          "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/."
+          "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/.",
         ),
         placeholder: "(Optional) CIS Global Load Balancer Description",
       },
@@ -121,7 +121,7 @@ function initCisGlbStore(store) {
         },
         invalid: fieldIsNotWholeNumber("minimum_origins", 1, 100),
         invalidText: unconditionalInvalidText(
-          "Must be a whole number greater than 1"
+          "Must be a whole number greater than 1",
         ),
       },
       notification_email: {
@@ -161,7 +161,7 @@ function initCisGlbStore(store) {
             "cis_glbs",
             "origins",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         save: function (config, stateData, componentProps) {
@@ -170,7 +170,7 @@ function initCisGlbStore(store) {
             "cis_glbs",
             "origins",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         delete: function (config, stateData, componentProps) {
@@ -179,7 +179,7 @@ function initCisGlbStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "address"],
           "cis_glbs",
-          "origins"
+          "origins",
         ),
         schema: {
           name: nameField("origins"),
@@ -203,7 +203,7 @@ function initCisGlbStore(store) {
             "cis_glbs",
             "glbs",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         save: function (config, stateData, componentProps) {
@@ -215,7 +215,7 @@ function initCisGlbStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["domain", "fallback_pool", "default_pools", "ttl", "name"],
           "cis_glbs",
-          "glbs"
+          "glbs",
         ),
         schema: {
           domain: {
@@ -226,12 +226,12 @@ function initCisGlbStore(store) {
             groups: function (stateData, componentProps) {
               let cis = new revision(componentProps.craig.store.json).child(
                 "cis_glbs",
-                componentProps.arrayParentName
+                componentProps.arrayParentName,
               ).data.cis;
               return splat(
                 new revision(componentProps.craig.store.json).child("cis", cis)
                   .data.domains,
-                "domain"
+                "domain",
               );
             },
           },
@@ -280,7 +280,7 @@ function initCisGlbStore(store) {
                         name !== componentProps.data.name
                       )
                         return name;
-                    })
+                    }),
                   );
                 });
                 return contains(allGlbNames, stateData.name);
@@ -304,7 +304,7 @@ function initCisGlbStore(store) {
             "cis_glbs",
             "health_checks",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         save: function (config, stateData, componentProps) {
@@ -313,7 +313,7 @@ function initCisGlbStore(store) {
             "cis_glbs",
             "health_checks",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         delete: function (config, stateData, componentProps) {
@@ -332,7 +332,7 @@ function initCisGlbStore(store) {
             "expected_codes",
           ],
           "cis_glbs",
-          "health_checks"
+          "health_checks",
         ),
         schema: {
           name: nameField("health_checks"),
@@ -363,7 +363,7 @@ function initCisGlbStore(store) {
             placeholder: "200",
             invalid: fieldIsNotWholeNumber("expected_codes", 200, 600),
             invalidText: unconditionalInvalidText(
-              "Expected codes should be a whole number between 200 and 600"
+              "Expected codes should be a whole number between 200 and 600",
             ),
           },
           method: {
@@ -380,7 +380,7 @@ function initCisGlbStore(store) {
             labelText: "Timeout (Seconds)",
             invalid: fieldIsNotWholeNumber("timeout", 5, 200),
             invalidText: unconditionalInvalidText(
-              "Enter a whole number between 5 and 200"
+              "Enter a whole number between 5 and 200",
             ),
           },
           interval: {
@@ -389,7 +389,7 @@ function initCisGlbStore(store) {
             labelText: "Check Interval (Seconds)",
             invalid: fieldIsNotWholeNumber("interval", 60, 600),
             invalidText: unconditionalInvalidText(
-              "Enter a whole number between 60 and 600"
+              "Enter a whole number between 60 and 600",
             ),
           },
           path: {
@@ -408,7 +408,7 @@ function initCisGlbStore(store) {
             labelText: "Healthcheck TCP Port",
             invalid: fieldIsNotWholeNumber("port", 1, 65535),
             invalidText: unconditionalInvalidText(
-              "Enter a whole number between 1 and 65535"
+              "Enter a whole number between 1 and 65535",
             ),
             placeholder: "443",
           },
@@ -426,7 +426,7 @@ function initCisGlbStore(store) {
             placeholder: "2",
             invalid: fieldIsNotWholeNumber("retries", 2, 10),
             invalidText: unconditionalInvalidText(
-              "Enter a whole number between 2 and 10"
+              "Enter a whole number between 2 and 10",
             ),
           },
         },

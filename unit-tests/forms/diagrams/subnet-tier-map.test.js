@@ -33,7 +33,7 @@ describe("subnet tier map functions", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct subnet tiers"
+      "it should return correct subnet tiers",
     );
   });
   it("should return empty subnet resources as true when a vsi has a matching vpc and no subnets", () => {
@@ -65,12 +65,12 @@ describe("subnet tier map functions", () => {
     });
     assert.isTrue(
       data.emptySubnetResources,
-      "it should have empty subnet resources"
+      "it should have empty subnet resources",
     );
     assert.deepEqual(
       data.subnetTiers,
       ["NO_SUBNETS"],
-      "it should return subnet tiers"
+      "it should return subnet tiers",
     );
   });
   it("should return empty subnet resources as true when a vpn gateway has a matching vpc and a null subnet", () => {
@@ -104,12 +104,12 @@ describe("subnet tier map functions", () => {
     });
     assert.isTrue(
       data.emptySubnetResources,
-      "it should have empty subnet resources"
+      "it should have empty subnet resources",
     );
     assert.deepEqual(
       data.subnetTiers,
       ["NO_SUBNETS"],
-      "it should return subnet tiers"
+      "it should return subnet tiers",
     );
   });
   it("should return empty subnet resources as false when all items have a matching vpc and subnet", () => {
@@ -143,7 +143,7 @@ describe("subnet tier map functions", () => {
     });
     assert.isFalse(
       data.emptySubnetResources,
-      "it should not have empty subnet resources"
+      "it should not have empty subnet resources",
     );
     assert.deepEqual(data.subnetTiers, [], "it should return subnet tiers");
   });

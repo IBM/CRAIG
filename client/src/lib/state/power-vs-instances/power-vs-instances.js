@@ -62,7 +62,7 @@ function powerVsInstanceOnStoreUpdate(vtl) {
         let workspace = getObjectFromArray(
           config.store.json.power,
           "name",
-          instance.workspace
+          instance.workspace,
         );
         if (instance.zone !== workspace.zone) {
           instance.pi_storage_type = null;
@@ -91,7 +91,7 @@ function powerVsInstanceOnStoreUpdate(vtl) {
         !splatContains(
           config.store.json.power_instances,
           "name",
-          instance.pi_affinity_instance
+          instance.pi_affinity_instance,
         )
       ) {
         instance.pi_affinity_instance = null;
@@ -101,7 +101,7 @@ function powerVsInstanceOnStoreUpdate(vtl) {
         !splatContains(
           config.store.json.power_instances,
           "name",
-          instance.pi_anti_affinity_instance
+          instance.pi_anti_affinity_instance,
         )
       ) {
         instance.pi_anti_affinity_instance = null;
@@ -111,7 +111,7 @@ function powerVsInstanceOnStoreUpdate(vtl) {
         !splatContains(
           config.store.json.power_volumes,
           "name",
-          instance.pi_anti_affinity_volume
+          instance.pi_anti_affinity_volume,
         )
       ) {
         instance.pi_anti_affinity_volume = null;
@@ -121,7 +121,7 @@ function powerVsInstanceOnStoreUpdate(vtl) {
         !splatContains(
           config.store.json.power_volumes,
           "name",
-          instance.pi_affinity_volume
+          instance.pi_affinity_volume,
         )
       ) {
         instance.pi_affinity_volume = null;
@@ -132,7 +132,7 @@ function powerVsInstanceOnStoreUpdate(vtl) {
         !splatContains(
           config.store.json.power_shared_processor_pools,
           "name",
-          instance.pi_shared_processor_pool
+          instance.pi_shared_processor_pool,
         )
       ) {
         instance.pi_shared_processor_pool = "None";
@@ -163,8 +163,8 @@ function addSapVolumes(config, stateData) {
         stateData.sap_profile,
         stateData.workspace,
         stateData.name,
-        stateData.zone
-      )
+        stateData.zone,
+      ),
     );
   }
 }
@@ -195,7 +195,7 @@ function deleteSapVolumes(config, componentProps) {
                 .set("1-4");
             })
             .stringEnd()
-            .done("g")
+            .done("g"),
         ) === null
       ) {
         newVolumes.push(volume);
@@ -245,13 +245,13 @@ function powerVsInstanceSave(vtl) {
         stateData.sap_profile,
         stateData.workspace,
         stateData.name,
-        stateData.zone
+        stateData.zone,
       );
       newVolumes.forEach((volume) => {
         let volumeData = getObjectFromArray(
           config.store.json.power_volumes,
           "name",
-          volume.name.replace(stateData.name, componentProps.data.name)
+          volume.name.replace(stateData.name, componentProps.data.name),
         );
         volumeData.name = volume.name;
         volumeData.pi_volume_size = volume.pi_volume_size;
@@ -281,12 +281,12 @@ function powerVsInstanceSave(vtl) {
                   .set("1-4");
               })
               .stringEnd()
-              .done("g")
+              .done("g"),
           ) !== null
         ) {
           volume.name = volume.name.replace(
             componentProps.data.name,
-            stateData.name
+            stateData.name,
           );
           volume.zone = stateData.zone;
           volume.attachments = [stateData.name];
@@ -315,7 +315,7 @@ function powerVsInstanceSave(vtl) {
               if (instance[subField] === componentProps.data.name) {
                 instance[subField] = stateData.name;
               }
-            }
+            },
           );
         }
       });
@@ -324,7 +324,7 @@ function powerVsInstanceSave(vtl) {
     config.updateChild(
       ["json", vtl ? "vtl" : "power_instances"],
       componentProps.data.name,
-      stateData
+      stateData,
     );
   };
 }
@@ -345,7 +345,7 @@ function powerVsInstanceDelete(vtl) {
     deleteSapVolumes(config, componentProps);
     config.carve(
       ["json", vtl ? "vtl" : "power_instances"],
-      componentProps.data.name
+      componentProps.data.name,
     );
   };
 }
@@ -384,7 +384,7 @@ function initPowerVsInstance(store) {
         "storage_option",
         "pi_ibmi_rds_users",
       ],
-      "power_instances"
+      "power_instances",
     ),
     schema: powerVsInstanceSchema(),
   });

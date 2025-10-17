@@ -77,13 +77,13 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.vpn_gateways,
       "connections",
-      "name"
+      "name",
     );
   } else if (field === "origins" || field === "health_checks") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.cis_glbs,
       field,
-      "name"
+      "name",
     );
   } else if (field === "cis") {
     allOtherNames = splat(componentProps.craig.store.json.cis, "name");
@@ -91,43 +91,43 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.cis,
       "dns_records",
-      "name"
+      "name",
     );
   } else if (contains(["prefix_filters", "gre_tunnels"], field)) {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.transit_gateways,
       field,
-      "name"
+      "name",
     );
   } else if (field === "appid_key") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.appid,
       "keys",
-      "name"
+      "name",
     );
   } else if (field === "encryption_keys") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.key_management,
       "keys",
-      "name"
+      "name",
     );
   } else if (field === "volume") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.vsi,
       "volumes",
-      "name"
+      "name",
     );
   } else if (field === "worker_pools") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.clusters,
       "worker_pools",
-      "name"
+      "name",
     );
   } else if (field === "opaque_secrets") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.clusters,
       "opaque_secrets",
-      "name"
+      "name",
     );
   } else if (contains(["secrets_group", "secrets_groups"], field)) {
     componentProps.craig.store.json.clusters.forEach((cluster) => {
@@ -140,13 +140,13 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
         secretsManager.secrets_groups.forEach((group) => {
           allOtherNames.push(group.name);
         });
-      }
+      },
     );
   } else if (field === "certificates") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.secrets_manager,
       field,
-      "name"
+      "name",
     );
   } else if (
     field === "arbitrary_secret_name" ||
@@ -156,19 +156,19 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
   } else if (field === "access_groups") {
     allOtherNames = splat(
       componentProps.craig.store.json.access_groups,
-      "name"
+      "name",
     );
   } else if (field === "policies" || field === "dynamic_policies") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.access_groups,
       field,
-      "name"
+      "name",
     );
   } else if (field === "buckets" || field === "cos_keys") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.object_storage,
       field === "cos_keys" ? "keys" : "buckets",
-      "name"
+      "name",
     );
   } else if (field === "acls") {
     // all of the extra ifs and elses here are to prevent order card from
@@ -184,7 +184,7 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
   } else if (field === "security_groups") {
     allOtherNames = splat(
       componentProps.craig.store.json.security_groups,
-      "name"
+      "name",
     );
     componentProps.craig.store.json.vpcs.forEach((network) => {
       if (!isNullOrEmptyString(network.default_security_group_name)) {
@@ -199,7 +199,7 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     });
     if (componentProps.craig.store.json.routing_tables)
       allOtherNames = allOtherNames.concat(
-        splat(componentProps.craig.store.json.routing_tables, "name")
+        splat(componentProps.craig.store.json.routing_tables, "name"),
       );
   } else if (field === "acl_rules") {
     let craigRef =
@@ -222,12 +222,12 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.routing_tables,
       "routes",
-      "name"
+      "name",
     );
   } else if (field === "load_balancers") {
     allOtherNames = splat(
       componentProps.craig.store.json.load_balancers,
-      "name"
+      "name",
     );
   } else if (field === "subnet_name") {
     new revision(componentProps.craig.store.json)
@@ -241,19 +241,19 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     componentProps.craig.store.json.cbr_rules.forEach((rule) =>
       rule.contexts.forEach((context) => {
         allOtherNames.push(context.name);
-      })
+      }),
     );
   } else if (field === "resource_attributes") {
     componentProps.craig.store.json.cbr_rules.forEach((rule) =>
       rule.resource_attributes.forEach((attribute) => {
         allOtherNames.push(attribute.name);
-      })
+      }),
     );
   } else if (field === "tags") {
     componentProps.craig.store.json.cbr_rules.forEach((rule) =>
       rule.tags.forEach((tag) => {
         allOtherNames.push(tag.name);
-      })
+      }),
     );
   } else if (field === "cbr_zones") {
     allOtherNames = splat(componentProps.craig.store.json.cbr_zones, "name");
@@ -261,19 +261,19 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     componentProps.craig.store.json.cbr_zones.forEach((zone) =>
       zone.exclusions.forEach((exclusion) => {
         allOtherNames.push(exclusion.name);
-      })
+      }),
     );
   } else if (field === "addresses") {
     componentProps.craig.store.json.cbr_zones.forEach((zone) =>
       zone.addresses.forEach((address) => {
         allOtherNames.push(address.name);
-      })
+      }),
     );
   } else if (field === "vpn_server_routes") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.vpn_servers,
       "routes",
-      "name"
+      "name",
     );
   } else if (field === "dns") {
     allOtherNames = splat(componentProps.craig.store.json.dns, "name");
@@ -281,50 +281,50 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.dns,
       "zones",
-      "name"
+      "name",
     );
   } else if (field === "records") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.dns,
       "records",
-      "name"
+      "name",
     );
   } else if (field === "custom_resolvers") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.dns,
       "custom_resolvers",
-      "name"
+      "name",
     );
   } else if (field === "power_vs_ssh_keys") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.power,
       "ssh_keys",
-      "name"
+      "name",
     );
   } else if (field === "network") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.power,
       "network",
-      "name"
+      "name",
     );
   } else if (field === "cloud_connections") {
     allOtherNames = nestedSplat(
       componentProps.craig.store.json.power,
       "cloud_connections",
-      "name"
+      "name",
     );
   } else if (field === "classic_sg_rules") {
     allOtherNames = splat(
       new revision(componentProps.craig.store.json).child(
         "classic_security_groups",
-        componentProps.arrayParentName
+        componentProps.arrayParentName,
       ).data.classic_sg_rules,
-      "name"
+      "name",
     );
   } else if (componentProps) {
     allOtherNames = splat(
       componentProps.craig.store.json[field === "vpc_name" ? "vpcs" : field],
-      "name"
+      "name",
     );
   }
 
@@ -338,7 +338,7 @@ function hasDuplicateName(field, stateData, componentProps, overrideField) {
     )
       allOtherNames.splice(
         allOtherNames.indexOf(componentProps.data[stateField]),
-        1
+        1,
       );
     return contains(allOtherNames, stateData[stateField]);
   } else return false; // prevent order card from crashing
@@ -487,13 +487,13 @@ function invalidNameText(field, craig) {
         return invalidNameText("security_groups")(
           stateData,
           componentProps,
-          field
+          field,
         );
       } else {
         return invalidNameText("routing_tables")(
           stateData,
           componentProps,
-          field
+          field,
         );
       }
     };
@@ -588,8 +588,8 @@ function invalidPort(rule, isSecurityGroup) {
     (rule.ruleProtocol === "icmp"
       ? ["type", "code"]
       : isSecurityGroup
-      ? ["port_min", "port_max"]
-      : ["port_min", "port_max", "source_port_min", "source_port_max"]
+        ? ["port_min", "port_max"]
+        : ["port_min", "port_max", "source_port_min", "source_port_max"]
     ).forEach((type) => {
       // check for rule[type] for craig form rule[rule]
       let value = rule.rule ? rule.rule[type] : rule[type];
@@ -714,17 +714,17 @@ function networkingRulePortField(max, source) {
     invalid: invalidTcpOrUdpPort,
     size: "small",
     invalidText: unconditionalInvalidText(
-      "Enter a whole number between 1 and 65536"
+      "Enter a whole number between 1 and 65536",
     ),
     hideWhen: hideWhenNotAllIcmp,
     onInputChange: onRuleFieldInputChange(
       max && source
         ? "source_port_max"
         : source
-        ? "source_port_min"
-        : max
-        ? "port_max"
-        : "port_min"
+          ? "source_port_min"
+          : max
+            ? "port_max"
+            : "port_min",
     ),
     helperText: unconditionalInvalidText(""),
     onRender: function (stateData) {
@@ -733,10 +733,10 @@ function networkingRulePortField(max, source) {
         max && source
           ? "source_port_max"
           : source
-          ? "source_port_min"
-          : max
-          ? "port_max"
-          : "port_min";
+            ? "source_port_min"
+            : max
+              ? "port_max"
+              : "port_min";
       if (
         stateData[ruleType] &&
         stateData[ruleType][ruleField] &&
@@ -758,7 +758,7 @@ function networkingRuleTypeField() {
     default: "",
     invalid: invalidIcmpCodeOrType,
     invalidText: unconditionalInvalidText(
-      "Enter a whole number between 0 and 254"
+      "Enter a whole number between 0 and 254",
     ),
     hideWhen: hideWhenTcpOrUdp,
     onInputChange: onRuleFieldInputChange("type"),
@@ -781,7 +781,7 @@ function networkingRuleCodeField() {
     default: "",
     invalid: invalidIcmpCodeOrType,
     invalidText: unconditionalInvalidText(
-      "Enter a whole number between 0 and 255"
+      "Enter a whole number between 0 and 255",
     ),
     hideWhen: hideWhenTcpOrUdp,
     onInputChange: onRuleFieldInputChange("code"),
@@ -813,7 +813,7 @@ function domainField() {
             .oneOrMore()
             .set("a-z")
             .stringEnd()
-            .done("g")
+            .done("g"),
         ) === null
       );
     },
@@ -853,7 +853,7 @@ function classicVlanFilter(type) {
         if (vlan.datacenter === stateData.datacenter && vlan.type === type)
           return vlan;
       }),
-      "name"
+      "name",
     );
   };
 }

@@ -15,9 +15,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a gw has an invalid domain", () => {
@@ -33,9 +33,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a gw has no datacenter", () => {
@@ -52,9 +52,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a gw has no network speed", () => {
@@ -72,9 +72,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a gw has no public bandwidth", () => {
@@ -93,9 +93,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a gw has no package key name", () => {
@@ -115,9 +115,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a gw has no os key name", () => {
@@ -138,9 +138,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a gw has no process key name", () => {
@@ -162,9 +162,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a gw has no private_vlan", () => {
@@ -188,9 +188,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a gw has no public_vlan", () => {
@@ -214,9 +214,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a gw has no ssh key", () => {
@@ -241,9 +241,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a gw has no disk key names", () => {
@@ -269,9 +269,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a gw has memory that is not whole number", () => {
@@ -298,9 +298,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a gw has memory that is whole number not in range", () => {
@@ -327,9 +327,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return false if a gw has no public_vlan and private_network_only is true", () => {
@@ -357,9 +357,9 @@ describe("classic_gateways", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   describe("invalidText", () => {
@@ -367,14 +367,14 @@ describe("classic_gateways", () => {
       assert.deepEqual(
         craig.classic_gateways.domain.invalidText(),
         "Enter a valid domain",
-        "it should return text"
+        "it should return text",
       );
     });
     it("should return invalid text for memory", () => {
       assert.deepEqual(
         craig.classic_gateways.memory.invalidText(),
         "Memory must be a whole number between 64 and 1024",
-        "it should return text"
+        "it should return text",
       );
     });
   });

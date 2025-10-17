@@ -28,7 +28,7 @@ function wizard(wizardJson, json) {
       power_vs_high_availability:
         wizardJson.power_vs_high_availability || false,
     },
-    json._options
+    json._options,
   );
   if (!wizardJson.use_atracker) {
     // remove atracker and connected resources
@@ -86,7 +86,7 @@ function wizard(wizardJson, json) {
     carve(
       json.object_storage[defaultCosIndex].buckets,
       "name",
-      `${missingVpc}-bucket`
+      `${missingVpc}-bucket`,
     );
     // remove rg
     carve(json.resource_groups, "name", `${missingVpc}-rg`);
@@ -103,7 +103,7 @@ function wizard(wizardJson, json) {
     ["vpcs", "virtual_private_endpoints", "security_groups"].forEach(
       (field) => {
         json[field] = [];
-      }
+      },
     );
     // remove rgs
     json.resource_groups.pop();
@@ -153,7 +153,7 @@ function wizard(wizardJson, json) {
       "vpn-and-waf",
       false,
       wizardJson.zones,
-      true
+      true,
     );
     json.vpcs[0].is_edge_vpc = true;
   }

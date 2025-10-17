@@ -21,20 +21,20 @@ export const SubnetServiceMap = (props) => {
     return field === "fortigate_vnf" || field === "f5_vsi"
       ? AppConnectivity
       : field === "load_balancers"
-      ? LoadBalancerVpc
-      : field === "vpn_servers"
-      ? ServerProxy
-      : field === "security_groups"
-      ? Security
-      : field === "ssh_keys"
-      ? Password
-      : field === "vpn_gateways"
-      ? GatewayVpn
-      : field === "vsi"
-      ? BareMetalServer_02
-      : field === "clusters"
-      ? IbmCloudKubernetesService
-      : IbmCloudVpcEndpoints;
+        ? LoadBalancerVpc
+        : field === "vpn_servers"
+          ? ServerProxy
+          : field === "security_groups"
+            ? Security
+            : field === "ssh_keys"
+              ? Password
+              : field === "vpn_gateways"
+                ? GatewayVpn
+                : field === "vsi"
+                  ? BareMetalServer_02
+                  : field === "clusters"
+                    ? IbmCloudKubernetesService
+                    : IbmCloudVpcEndpoints;
   }
   let craig = props.craig;
   let vpc = props.vpc;
@@ -73,12 +73,12 @@ export const SubnetServiceMap = (props) => {
                     "fortigate_vnf",
                     "f5_vsi",
                   ],
-                  field
+                  field,
                 ) || item.vpc === null
                   ? 1 // 1 if not itterated
                   : item[
                       field === "vsi" ? "vsi_per_subnet" : "workers_per_subnet"
-                    ]
+                    ],
               )}
               subnet={subnet}
               vpc={vpc}
@@ -102,7 +102,7 @@ export const SubnetServiceMap = (props) => {
           </HoverClassNameWrapper>
         );
       }
-    })
+    }),
   );
 };
 

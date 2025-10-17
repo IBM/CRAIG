@@ -17,7 +17,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["main.tf"],
         slzNetworkFiles["main.tf"],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct flow_logs.tf", () => {
@@ -25,7 +25,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["flow_logs.tf"],
         slzNetworkFiles["flow_logs.tf"],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct clusters.tf", () => {
@@ -33,7 +33,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["clusters.tf"],
         slzNetworkFiles["clusters.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct transit_gateways.tf", () => {
@@ -41,7 +41,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["transit_gateways.tf"],
         slzNetworkFiles["transit_gateways.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct transit_gateways.tf", () => {
@@ -51,7 +51,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["transit_gateways.tf"],
         null,
-        "it should be null"
+        "it should be null",
       );
     });
     it("should return correct vpn_gateways.tf", () => {
@@ -59,7 +59,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["vpn_gateways.tf"],
         slzNetworkFiles["vpn_gateways.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct vpn_gateways.tf", () => {
@@ -69,7 +69,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["vpn_gateways.tf"],
         null,
-        "it should be null"
+        "it should be null",
       );
     });
     it("should return correct vpn_gateways.tf", () => {
@@ -79,7 +79,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["virtual_servers.tf"],
         null,
-        "it should be null"
+        "it should be null",
       );
     });
     it("should return correct craig.json", () => {
@@ -89,7 +89,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["craig.json"],
         slzNetworkFiles["craig.json"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct vpn_servers.tf", () => {
@@ -97,7 +97,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["vpn_servers.tf"],
         slzNetworkFiles["vpn_servers.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct vpn_servers.tf with empty vpn_servers", () => {
@@ -114,7 +114,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["vpn_servers.tf"],
         slzNetworkFiles["vpn_servers_no_route.tf"],
-        "it should be null"
+        "it should be null",
       );
     });
     it("should return correct virtual_private_endpoints.tf", () => {
@@ -122,7 +122,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["virtual_private_endpoints.tf"],
         slzNetworkFiles["virtual_private_endpoints.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct versions.tf", () => {
@@ -130,7 +130,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["versions.tf"],
         slzNetworkFiles["versions.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct secrets_manager.tf", () => {
@@ -147,7 +147,7 @@ describe("configToFilesJson", () => {
       assert.deepEqual(
         actualData["secrets_manager.tf"],
         '##############################################################################\n# Key Management Authorizations\n##############################################################################\n\nresource "ibm_iam_authorization_policy" "secrets_manager_to_slz_kms_kms_policy" {\n  source_service_name         = "secrets-manager"\n  description                 = "Allow Secets Manager instance to read from KMS instance"\n  target_service_name         = "kms"\n  target_resource_instance_id = ibm_resource_instance.slz_kms.guid\n  roles = [\n    "Reader"\n  ]\n}\n\n##############################################################################\n\n##############################################################################\n# Secrets Manager Secrets Manager\n##############################################################################\n\nresource "ibm_resource_instance" "secrets_manager_secrets_manager" {\n  name              = "${var.prefix}-secrets-manager"\n  location          = var.region\n  plan              = "standard"\n  service           = "secrets-manager"\n  resource_group_id = ibm_resource_group.slz_service_rg.id\n  parameters = {\n    kms_key = ibm_kms_key.slz_kms_slz_slz_key_key.crn\n  }\n  timeouts {\n    create = "1h"\n    delete = "1h"\n  }\n  tags = [\n    "slz",\n    "landing-zone"\n  ]\n  depends_on = [\n    ibm_iam_authorization_policy.secrets_manager_to_slz_kms_kms_policy\n  ]\n}\n\n##############################################################################\n',
-        "it should create file"
+        "it should create file",
       );
     });
     it("should add variable for imported certificated", () => {
@@ -232,7 +232,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
 
 ##############################################################################
 `,
-        "it should return correct variables"
+        "it should return correct variables",
       );
     });
     it("should return correct secrets_manager.tf when no instances present", () => {
@@ -242,7 +242,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
       assert.deepEqual(
         actualData["secrets_manager.tf"],
         null,
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct object_storage.tf", () => {
@@ -250,7 +250,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
       assert.deepEqual(
         actualData["object_storage.tf"],
         slzNetworkFiles["object_storage.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct key_management.tf", () => {
@@ -258,7 +258,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
       assert.deepEqual(
         actualData["key_management.tf"],
         slzNetworkFiles["key_management.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct resource_groups.tf", () => {
@@ -266,7 +266,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
       assert.deepEqual(
         actualData["resource_groups.tf"],
         slzNetworkFiles["resource_groups.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct ssh_keys.tf", () => {
@@ -274,7 +274,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
       assert.deepEqual(
         actualData["ssh_keys.tf"],
         slzNetworkFiles["ssh_keys.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct variables.tf when no ssh keys are present", () => {
@@ -284,7 +284,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
       assert.deepEqual(
         actualData["variables.tf"],
         slzNetworkFiles["variables.tf"].replace(/variable\s"slz_ssh[^#]+/, ""),
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct variables.tf without ssh key variable when it's using data", () => {
@@ -299,7 +299,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
       assert.deepEqual(
         actualData["variables.tf"],
         slzNetworkFiles["variables.tf"].replace(/variable\s"slz_ssh[^#]+/, ""),
-        "it should create file without ssh key variable"
+        "it should create file without ssh key variable",
       );
     });
     it("should return correct appid.tf", () => {
@@ -325,7 +325,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
       assert.deepEqual(
         actualData["appid.tf"],
         slzNetworkFiles["appid.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct event_streams.tf", () => {
@@ -344,7 +344,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
       assert.deepEqual(
         actualData["event_streams.tf"],
         slzNetworkFiles["event_streams.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct observability.tf", () => {
@@ -381,7 +381,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
             instance: true,
           },
         },
-        nw
+        nw,
       );
       let actualData = configToFilesJson(nw);
       assert.deepEqual(
@@ -525,7 +525,7 @@ resource "ibm_resource_key" "sysdig_key" {
 
 ##############################################################################
 `,
-        "it should return corer"
+        "it should return corer",
       );
       assert.deepEqual(
         actualData["versions.tf"],
@@ -550,7 +550,7 @@ terraform {
 
 ##############################################################################
 `,
-        "it should return data"
+        "it should return data",
       );
     });
     it("should return correct observability.tf when logdna enabled but not atracker", () => {
@@ -587,7 +587,7 @@ terraform {
             instance: true,
           },
         },
-        nw
+        nw,
       );
       let actualData = configToFilesJson(nw);
       assert.deepEqual(
@@ -670,7 +670,7 @@ resource "ibm_resource_key" "sysdig_key" {
 
 ##############################################################################
 `,
-        "it should return corer"
+        "it should return corer",
       );
       assert.deepEqual(
         actualData["versions.tf"],
@@ -695,7 +695,7 @@ terraform {
 
 ##############################################################################
 `,
-        "it should return data"
+        "it should return data",
       );
     });
     it("should return correct versions.tf with logdna archive but no atracker archive", () => {
@@ -732,7 +732,7 @@ terraform {
             instance: true,
           },
         },
-        nw
+        nw,
       );
       let actualData = configToFilesJson(nw);
       assert.deepEqual(
@@ -758,7 +758,7 @@ terraform {
 
 ##############################################################################
 `,
-        "it should return data"
+        "it should return data",
       );
     });
     it("should return correct load_balancers.tf", () => {
@@ -792,7 +792,7 @@ terraform {
       assert.deepEqual(
         actualData["load_balancers.tf"],
         slzNetworkFiles["load_balancers.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct dns.tf", () => {
@@ -844,7 +844,7 @@ terraform {
       assert.deepEqual(
         actualData["dns.tf"],
         slzNetworkFiles["dns.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct cbr.tf", () => {
@@ -925,7 +925,7 @@ terraform {
       assert.deepEqual(
         actualData["cbr.tf"],
         slzNetworkFiles["cbr.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct icd.tf when no instances present", () => {
@@ -935,7 +935,7 @@ terraform {
       assert.deepEqual(
         actualData["icd.tf"],
         null,
-        "it should not create icd file"
+        "it should not create icd file",
       );
     });
     it("should return correct icd.tf", () => {
@@ -969,7 +969,7 @@ data "ibm_resource_instance" "icd_psql" {
 
 ##############################################################################
 `,
-        "it should create file"
+        "it should create file",
       );
     });
   });
@@ -979,7 +979,7 @@ data "ibm_resource_instance" "icd_psql" {
       assert.deepEqual(
         actualData.management_vpc["main.tf"],
         slzNetworkFiles.management_vpc["main.tf"],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct management vpc variables", () => {
@@ -987,7 +987,7 @@ data "ibm_resource_instance" "icd_psql" {
       assert.deepEqual(
         actualData.management_vpc["variables.tf"],
         slzNetworkFiles.management_vpc["variables.tf"],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct management vpc outputs", () => {
@@ -995,7 +995,7 @@ data "ibm_resource_instance" "icd_psql" {
       assert.deepEqual(
         actualData.management_vpc["outputs.tf"],
         slzNetworkFiles.management_vpc["outputs.tf"],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct management acl", () => {
@@ -1003,7 +1003,7 @@ data "ibm_resource_instance" "icd_psql" {
       assert.deepEqual(
         actualData.management_vpc["acl_management_management.tf"],
         slzNetworkFiles.management_vpc["acl_management_management.tf"],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct management sg", () => {
@@ -1011,7 +1011,7 @@ data "ibm_resource_instance" "icd_psql" {
       assert.deepEqual(
         actualData.management_vpc["sg_management_vpe_sg.tf"],
         slzNetworkFiles.management_vpc["sg_management_vpe_sg.tf"],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct management rg", () => {
@@ -1039,7 +1039,7 @@ data "ibm_resource_instance" "icd_psql" {
       assert.deepEqual(
         actualData.management_vpc["rt_routing_table.tf"],
         slzNetworkFiles.management_vpc["rt_routing_table.tf"],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct versions", () => {
@@ -1047,7 +1047,7 @@ data "ibm_resource_instance" "icd_psql" {
       assert.deepEqual(
         actualData.management_vpc["versions.tf"],
         slzNetworkFiles.management_vpc["versions.tf"],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     describe("edge vpc module cases", () => {
@@ -1073,7 +1073,7 @@ data "ibm_resource_instance" "icd_psql" {
         assert.deepEqual(
           actualData.management_vpc["main.tf"],
           '##############################################################################\n# Management VPC\n##############################################################################\n\nresource "ibm_is_vpc" "management_vpc" {\n  name                        = "${var.prefix}-management-vpc"\n  resource_group              = var.slz_management_rg_id\n  tags                        = var.tags\n  no_sg_acl_rules             = true\n  address_prefix_management   = "manual"\n  default_network_acl_name    = null\n  default_security_group_name = null\n  default_routing_table_name  = null\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vsi_zone_1_prefix" {\n  name = "${var.prefix}-management-vsi-zone-1"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.10.10.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vsi_zone_2_prefix" {\n  name = "${var.prefix}-management-vsi-zone-2"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-2"\n  cidr = "10.10.20.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vsi_zone_3_prefix" {\n  name = "${var.prefix}-management-vsi-zone-3"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-3"\n  cidr = "10.10.30.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vpe_zone_1_prefix" {\n  name = "${var.prefix}-management-vpe-zone-1"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.20.10.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vpe_zone_2_prefix" {\n  name = "${var.prefix}-management-vpe-zone-2"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-2"\n  cidr = "10.20.20.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vpe_zone_3_prefix" {\n  name = "${var.prefix}-management-vpe-zone-3"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-3"\n  cidr = "10.20.30.0/24"\n}\n\nresource "ibm_is_vpc_address_prefix" "management_vpn_zone_1_prefix" {\n  name = "${var.prefix}-management-vpn-zone-1"\n  vpc  = ibm_is_vpc.management_vpc.id\n  zone = "${var.region}-1"\n  cidr = "10.30.10.0/24"\n}\n\nresource "ibm_is_public_gateway" "management_gateway_zone_1" {\n  name           = "${var.prefix}-management-gateway-zone-1"\n  vpc            = ibm_is_vpc.management_vpc.id\n  resource_group = var._id\n  zone           = "${var.region}-1"\n  tags           = var.tags\n}\n\nresource "ibm_is_public_gateway" "management_gateway_zone_2" {\n  name           = "${var.prefix}-management-gateway-zone-2"\n  vpc            = ibm_is_vpc.management_vpc.id\n  resource_group = var._id\n  zone           = "${var.region}-2"\n  tags           = var.tags\n}\n\nresource "ibm_is_public_gateway" "management_gateway_zone_3" {\n  name           = "${var.prefix}-management-gateway-zone-3"\n  vpc            = ibm_is_vpc.management_vpc.id\n  resource_group = var._id\n  zone           = "${var.region}-3"\n  tags           = var.tags\n}\n\nresource "ibm_is_subnet" "management_vsi_zone_1" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vsi-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vpn_zone_1" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vpn-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpn_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vsi_zone_2" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vsi-zone-2"\n  zone            = "${var.region}-2"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_zone_2_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vsi_zone_3" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vsi-zone-3"\n  zone            = "${var.region}-3"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vsi_zone_3_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vpe_zone_1" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vpe-zone-1"\n  zone            = "${var.region}-1"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpe_zone_1_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vpe_zone_2" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vpe-zone-2"\n  zone            = "${var.region}-2"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpe_zone_2_prefix.cidr\n}\n\nresource "ibm_is_subnet" "management_vpe_zone_3" {\n  vpc             = ibm_is_vpc.management_vpc.id\n  name            = "${var.prefix}-management-vpe-zone-3"\n  zone            = "${var.region}-3"\n  resource_group  = var.slz_management_rg_id\n  tags            = var.tags\n  network_acl     = ibm_is_network_acl.management_management_acl.id\n  ipv4_cidr_block = ibm_is_vpc_address_prefix.management_vpe_zone_3_prefix.cidr\n}\n\n##############################################################################\n',
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       it("should return correct management vpc variables when subnets are in more than one resource group", () => {
@@ -1120,7 +1120,7 @@ variable "slz_workload_rg_id" {
 
 ##############################################################################
 `,
-          "it should return correct data"
+          "it should return correct data",
         );
       });
     });
@@ -1131,14 +1131,14 @@ variable "slz_workload_rg_id" {
       assert.deepEqual(
         actualData["f5_big_ip.tf"],
         f5NetworkFiles["f5_big_ip.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return correct f5_user_data.yaml", () => {
       assert.deepEqual(
         actualData["f5_user_data.yaml"],
         f5NetworkFiles["f5_user_data.yaml"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should add tmos admin password variable", () => {
@@ -1199,7 +1199,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
       assert.deepEqual(
         actualData["variables.tf"],
         variables,
-        "it should create file"
+        "it should create file",
       );
     });
   });
@@ -1207,7 +1207,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
     let task = () => configToFilesJson();
     assert.throws(
       task,
-      "TypeError: Cannot read properties of undefined (reading 'f5_vsi'"
+      "TypeError: Cannot read properties of undefined (reading 'f5_vsi'",
     );
   });
   describe("power vs", () => {
@@ -1216,7 +1216,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
       assert.deepEqual(
         actualData["power_infrastructure.tf"],
         powerNwFiles["power_infrastructure.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
     it("should return power instances config when provided", () => {
@@ -1224,7 +1224,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
       assert.deepEqual(
         actualData["power_instances.tf"],
         powerNwFiles["power_instances.tf"],
-        "it should create file"
+        "it should create file",
       );
     });
   });

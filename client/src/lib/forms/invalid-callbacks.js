@@ -52,7 +52,7 @@ function invalidSubnetTierName(stateData, componentProps) {
     (splatContains(
       componentProps.craig.store.subnetTiers[componentProps.vpc_name],
       "name",
-      stateData.name
+      stateData.name,
     ) &&
       stateData.name !== componentProps.data.name) ||
     invalidNewResourceName(stateData.name)
@@ -141,7 +141,7 @@ function cidrBlocksOverlap(cidrA, cidrB) {
   // generate all ips from first to last and store in array for cidr blocks
   var smallerIps = generateIpRange(
     smallCidr.firstAddress,
-    smallCidr.lastAddress
+    smallCidr.lastAddress,
   );
   var biggerIps = generateIpRange(bigCidr.firstAddress, bigCidr.lastAddress);
 

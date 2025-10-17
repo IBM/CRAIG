@@ -22,7 +22,7 @@ function powerVsWorkspaceSchema() {
        */
       helperText: function powerVsWorkspaceHelperText(
         stateData,
-        componentProps
+        componentProps,
       ) {
         return stateData.use_data
           ? stateData.name

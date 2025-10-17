@@ -81,12 +81,12 @@ describe("vpn_servers", () => {
       assert.deepEqual(
         craig.store.json.vpn_servers[0].subnets,
         ["vsi-zone-1"],
-        "it should delete unfound subnet"
+        "it should delete unfound subnet",
       );
       assert.deepEqual(
         craig.store.json.vpn_servers[0].additional_prefixes,
         [],
-        "it should set additional prefixes"
+        "it should set additional prefixes",
       );
     });
   });
@@ -129,7 +129,7 @@ describe("vpn_servers", () => {
           routes: [],
           additional_prefixes: [],
         },
-        "it should create server"
+        "it should create server",
       );
     });
     it("should save a vpn server", () => {
@@ -173,7 +173,7 @@ describe("vpn_servers", () => {
           data: {
             name: "vpn-server",
           },
-        }
+        },
       );
       let expectedData = {
         name: "new-vpn-server",
@@ -219,7 +219,7 @@ describe("vpn_servers", () => {
           data: {
             name: "vpn-server",
           },
-        }
+        },
       );
       assert.deepEqual(craig.store.json.vpn_servers, []);
     });
@@ -249,7 +249,7 @@ describe("vpn_servers", () => {
           {
             innerFormProps: { arrayParentName: "vpn-server" },
             arrayData: craig.store.json.vpn_servers[0].routes,
-          }
+          },
         );
         assert.deepEqual(craig.store.json.vpn_servers[0].routes[0], {
           name: "route",
@@ -263,14 +263,14 @@ describe("vpn_servers", () => {
           {
             innerFormProps: { arrayParentName: "vpn-server" },
             arrayData: craig.store.json.vpn_servers[0].routes,
-          }
+          },
         );
         craig.vpn_servers.routes.save(
           { name: "route-new", action: "drop", destination: "" },
           {
             arrayParentName: "vpn-server",
             data: { name: "route" },
-          }
+          },
         );
         assert.deepEqual(craig.store.json.vpn_servers[0].routes[0], {
           name: "route-new",
@@ -284,11 +284,11 @@ describe("vpn_servers", () => {
           {
             innerFormProps: { arrayParentName: "vpn-server" },
             arrayData: craig.store.json.vpn_servers[0].routes,
-          }
+          },
         );
         craig.vpn_servers.routes.delete(
           {},
-          { arrayParentName: "vpn-server", data: { name: "route" } }
+          { arrayParentName: "vpn-server", data: { name: "route" } },
         );
         assert.deepEqual(craig.store.json.vpn_servers[0].routes, []);
       });
@@ -299,21 +299,21 @@ describe("vpn_servers", () => {
       assert.deepEqual(
         craig.vpn_servers.protocol.onRender({ protocol: "tcp" }),
         "TCP",
-        "it should render correctly"
+        "it should render correctly",
       );
     });
     it("should return protocol on input change", () => {
       assert.deepEqual(
         craig.vpn_servers.protocol.onInputChange({ protocol: "TCP" }),
         "tcp",
-        "it should render correctly"
+        "it should render correctly",
       );
     });
     it("should return protocol null on render", () => {
       assert.deepEqual(
         craig.vpn_servers.protocol.onRender({}),
         "",
-        "it should render correctly"
+        "it should render correctly",
       );
     });
     describe("vpnServersWorkspaceHelperText", () => {
@@ -331,10 +331,10 @@ describe("vpn_servers", () => {
                   },
                 },
               },
-            }
+            },
           ),
           "toad-vpn-server-frog",
-          "it should return correct helper text"
+          "it should return correct helper text",
         );
       });
     });
@@ -345,7 +345,7 @@ describe("vpn_servers", () => {
       assert.deepEqual(
         craig.vpn_servers.vpc.onInputChange(data),
         "frog",
-        "it should return vpc"
+        "it should return vpc",
       );
       assert.deepEqual(
         data,
@@ -354,29 +354,29 @@ describe("vpn_servers", () => {
           security_groups: [],
           subnets: [],
         },
-        "it should set vpc values"
+        "it should set vpc values",
       );
     });
     it("should render method correctly", () => {
       assert.deepEqual(
         craig.vpn_servers.method.onRender({ method: "INSECURE" }),
         "INSECURE - Developer Certificate",
-        "it should return correct method"
+        "it should return correct method",
       );
       assert.deepEqual(
         craig.vpn_servers.method.onRender({ method: "both" }),
         "Username and Certificate",
-        "it should return correct method"
+        "it should return correct method",
       );
       assert.deepEqual(
         craig.vpn_servers.method.onRender({ method: "byo" }),
         "Bring Your Own Certificate",
-        "it should return correct method"
+        "it should return correct method",
       );
       assert.deepEqual(
         craig.vpn_servers.method.onRender({ method: "username" }),
         "Username",
-        "it should return correct method"
+        "it should return correct method",
       );
     });
     it("should handle method input change correctly", () => {
@@ -385,50 +385,50 @@ describe("vpn_servers", () => {
           method: "INSECURE - Developer Certificate",
         }),
         "INSECURE",
-        "it should return correct method"
+        "it should return correct method",
       );
       assert.deepEqual(
         craig.vpn_servers.method.onInputChange({
           method: "Username and Certificate",
         }),
         "both",
-        "it should return correct method"
+        "it should return correct method",
       );
       assert.deepEqual(
         craig.vpn_servers.method.onInputChange({
           method: "Bring Your Own Certificate",
         }),
         "byo",
-        "it should return correct method"
+        "it should return correct method",
       );
       assert.deepEqual(
         craig.vpn_servers.method.onInputChange({ method: "Username" }),
         "username",
-        "it should return correct method"
+        "it should return correct method",
       );
     });
     it("should not have invalid secrets manager when method is certificate", () => {
       assert.isFalse(
         craig.vpn_servers.secrets_manager.invalid({ method: "certificate" }),
-        "it should be valid"
+        "it should be valid",
       );
     });
     it("should have invalid secrets manager when method is byo and none selected", () => {
       assert.isTrue(
         craig.vpn_servers.secrets_manager.invalid({ method: "byo" }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should hide secrets manager when no method", () => {
       assert.isTrue(
         craig.vpn_servers.secrets_manager.hideWhen({ method: "" }),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
     it("should hide secrets manager when method and not byo", () => {
       assert.isTrue(
         craig.vpn_servers.secrets_manager.hideWhen({ method: "certificate" }),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
     it("should return addition prefix as string on render", () => {
@@ -437,13 +437,13 @@ describe("vpn_servers", () => {
           additional_prefixes: [],
         }),
         "",
-        "it should return string"
+        "it should return string",
       );
     });
     it("should only check match if dns ips undefined", () => {
       assert.isFalse(
         craig.vpn_servers.client_dns_server_ips.invalid({}),
-        "it should be false"
+        "it should be false",
       );
     });
     it("should return array on input change", () => {
@@ -452,21 +452,21 @@ describe("vpn_servers", () => {
           additional_prefixes: "",
         }),
         [""],
-        "it should return string"
+        "it should return string",
       );
       assert.deepEqual(
         craig.vpn_servers.additional_prefixes.onInputChange({
           additional_prefixes: "1.2.3.4/5,",
         }),
         ["1.2.3.4/5", ""],
-        "it should return string"
+        "it should return string",
       );
     });
     it("should get groups for secrets manager", () => {
       assert.deepEqual(
         craig.vpn_servers.secrets_manager.groups({}, { craig: craig }),
         [],
-        "it should return groups"
+        "it should return groups",
       );
     });
   });

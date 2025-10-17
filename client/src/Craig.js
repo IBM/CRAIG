@@ -168,8 +168,8 @@ class Craig extends React.Component {
         projectData,
         updateNotification(window.location.pathname, message),
         noProjectSave,
-        footerToggle
-      )
+        footerToggle,
+      ),
     );
   }
 
@@ -237,7 +237,7 @@ class Craig extends React.Component {
       projects,
       stateData,
       componentProps,
-      Date.now()
+      Date.now(),
     );
   }
 
@@ -284,7 +284,7 @@ class Craig extends React.Component {
               () => {
                 this.setItem("craigProjects", projects);
                 resolve();
-              }
+              },
             );
           },
           // project reject callback
@@ -295,9 +295,9 @@ class Craig extends React.Component {
               workspaceAction: "create",
             });
             console.error(err);
-          }
+          },
         );
-      }
+      },
     );
   }
 
@@ -312,7 +312,7 @@ class Craig extends React.Component {
     let projects = this.getProject(stateData, componentProps);
     this.saveAndSendNotification(
       `Successfully saved project ${stateData.name}`,
-      true
+      true,
     );
     window.localStorage.setItem("craigProjects", JSON.stringify(projects));
 
@@ -324,8 +324,8 @@ class Craig extends React.Component {
         stateData,
         componentProps,
         setCurrentProject,
-        callback
-      )
+        callback,
+      ),
     );
   }
 
@@ -354,7 +354,7 @@ class Craig extends React.Component {
           stateData,
           componentProps,
           setCurrentProject,
-          callback
+          callback,
         );
       })
       .catch((err) => {
@@ -367,7 +367,7 @@ class Craig extends React.Component {
           () => {
             console.error(err);
             this.onError(`Create failed with error: ${err}`);
-          }
+          },
         );
       });
   }
@@ -412,7 +412,7 @@ class Craig extends React.Component {
           },
           onProjectSelectCallback(projects, this, craig, name, message, () => {
             if (callback) callback(invalidItems);
-          })
+          }),
         );
       };
 
@@ -463,14 +463,14 @@ class Craig extends React.Component {
                 let powerWorkspace = getObjectFromArray(
                   craig.store.json.power,
                   "name",
-                  workspace.name
+                  workspace.name,
                 );
                 powerWorkspace.images.forEach((image) => {
                   if (
                     !splatContains(
                       foundImages,
                       "imageID",
-                      image.imageID || image.pi_image_id
+                      image.imageID || image.pi_image_id,
                     )
                   ) {
                     invalidItems.power_images.push({
@@ -498,7 +498,7 @@ class Craig extends React.Component {
                       !splatContains(
                         foundImages,
                         "imageID",
-                        image.imageID || image.pi_image_id
+                        image.imageID || image.pi_image_id,
                       ) &&
                       !workspace.use_data &&
                       workspace.zone === zone
@@ -647,7 +647,7 @@ class Craig extends React.Component {
             splatContains(
               this.state.invalidItems.power_images,
               "workspace",
-              workspace.name
+              workspace.name,
             )
           ) {
             // get a list of image objects for this workspace
@@ -656,7 +656,7 @@ class Craig extends React.Component {
                 if (image.workspace === workspace.name) {
                   return image;
                 }
-              }
+              },
             );
 
             // set image names to filter out images
@@ -687,7 +687,7 @@ class Craig extends React.Component {
               ? splatContains(
                   this.state.invalidItems[item],
                   "vsi",
-                  resource.name
+                  resource.name,
                 )
               : contains(this.state.invalidItems[item], resource.name)
           ) {
@@ -783,9 +783,9 @@ class Craig extends React.Component {
                   this.state.projects[this.state.store.project_name]
                     .project_name,
                   "",
-                  this.afterValidation
+                  this.afterValidation,
                 );
-              }
+              },
             );
           }}
         >

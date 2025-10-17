@@ -129,13 +129,13 @@ function codeMirrorGetDisplay(json, jsonInCodeMirror, path, toTf, jsonField) {
         maskFieldsExpStep2ReplaceTmosAdminPassword,
         json.f5_vsi[0]?.tmos_admin_password
           ? "tmos_admin_password%%%%"
-          : "tmos_admin_password"
+          : "tmos_admin_password",
       )
       .replace(
         maskFieldsExpStep3ReplaceLicensePassword,
         json.f5_vsi[0]?.license_password !== "null"
           ? "license_password%%%%"
-          : "license_password"
+          : "license_password",
       )
       .replace(maskFieldsExpStep4HideValue, '": "****************************')
       .replace(maskFieldsExpStep5CleanUp, "public_key"); // remove any extraneous %%%% from setting fields to null

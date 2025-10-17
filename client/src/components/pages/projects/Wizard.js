@@ -138,7 +138,7 @@ class Wizard extends React.Component {
       .concat(
         this.state.fs_cloud
           ? []
-          : ["jp-tok", "jp-osa", "au-syd", "ca-tor", "br-sao"]
+          : ["jp-tok", "jp-osa", "au-syd", "ca-tor", "br-sao"],
       )
       .sort(azsort);
 
@@ -436,7 +436,7 @@ class Wizard extends React.Component {
                         "ca-tor",
                         "jp-osa",
                       ],
-                      this.state.region
+                      this.state.region,
                     ) || isEmpty(this.state.power_vs_zones)
                   }
                   invalidText={
@@ -453,7 +453,7 @@ class Wizard extends React.Component {
                         "ca-tor",
                         "jp-osa",
                       ],
-                      this.state.region
+                      this.state.region,
                     )
                       ? `The region ${this.state.region} does not have any available Power VS zones`
                       : "Select at least one Availability Zone"

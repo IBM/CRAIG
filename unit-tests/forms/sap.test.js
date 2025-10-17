@@ -15,7 +15,7 @@ describe("sap hana functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct memory"
+        "it should return correct memory",
       );
     });
     it("should return correct auto calculated size for profile ush1-4x128", () => {
@@ -24,7 +24,7 @@ describe("sap hana functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct memory"
+        "it should return correct memory",
       );
     });
   });
@@ -35,7 +35,7 @@ describe("sap hana functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct memory"
+        "it should return correct memory",
       );
     });
   });
@@ -46,7 +46,7 @@ describe("sap hana functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct memory"
+        "it should return correct memory",
       );
     });
     it("should return the correct value for profile bh1-120x12000", () => {
@@ -55,7 +55,7 @@ describe("sap hana functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct memory"
+        "it should return correct memory",
       );
     });
   });
@@ -66,7 +66,7 @@ describe("sap hana functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct memory"
+        "it should return correct memory",
       );
     });
     it("should return the correct value for profile bh1-120x12000", () => {
@@ -75,7 +75,7 @@ describe("sap hana functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct memory"
+        "it should return correct memory",
       );
     });
   });
@@ -195,7 +195,7 @@ describe("sap hana functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return expected volumes"
+        "it should return expected volumes",
       );
       let totalSize = 0;
       actualData.forEach((volume) => {
@@ -323,7 +323,7 @@ describe("sap hana functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return expected volumes"
+        "it should return expected volumes",
       );
     });
   });

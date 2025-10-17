@@ -42,7 +42,7 @@ export class DynamicSubnetTierForm extends React.Component {
             }
           : getSubnetTierStateData(
               subnetTier,
-              this.props.craig.store.json.vpcs[this.props.vpcIndex]
+              this.props.craig.store.json.vpcs[this.props.vpcIndex],
             ),
       formName: "subnetTiers",
       craig: this.props.craig,
@@ -75,7 +75,7 @@ export class DynamicSubnetTierForm extends React.Component {
           "f5-bastion",
           "f5-external",
         ],
-        innerFormProps.data.name
+        innerFormProps.data.name,
       );
     return (
       <CraigToggleForm

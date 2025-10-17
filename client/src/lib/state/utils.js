@@ -143,8 +143,8 @@ function updateNetworkingRule(isAcl, rule, params) {
     (params.ruleProtocol === "icmp"
       ? ["type", "code"]
       : isAcl
-      ? ["port_min", "port_max", "source_port_min", "source_port_max"]
-      : ["port_min", "port_max"]
+        ? ["port_min", "port_max", "source_port_min", "source_port_max"]
+        : ["port_min", "port_max"]
     ).forEach((field) => {
       if (params[field]) {
         rule[params.ruleProtocol][field] = parseInt(params[field]);
@@ -203,7 +203,7 @@ function buildSubnetTiers(vpcObject) {
       let subnetOrderCidr = parseInt(
         // replace everything that is not the zone determined portion of the CIDR
         // and convert to number
-        subnet.cidr.replace(/\.\d+\/\d+/g, "").replace(/10\.\d+\./g, "")
+        subnet.cidr.replace(/\.\d+\/\d+/g, "").replace(/10\.\d+\./g, ""),
       );
       if (smallestZoneCidr === 0) {
         // if just initialized, set to subnet order cidr
@@ -262,7 +262,7 @@ function saveAdvancedSubnetTier(
   tierData,
   vpcName,
   newTierName,
-  vpcIndex
+  vpcIndex,
 ) {
   tierData.networkAcl = "-";
   tierData.zones = undefined;
@@ -275,7 +275,7 @@ function saveAdvancedSubnetTier(
       let foundSubnets = data.subnets.filter((subnet) =>
         componentProps.data.advanced
           ? subnet.tier === newTierName
-          : subnet.name.startsWith(oldTierName)
+          : subnet.name.startsWith(oldTierName),
       );
       let nextTierSubnets = [];
       // for each subnet
@@ -306,7 +306,7 @@ function saveAdvancedSubnetTier(
                     if (resource.subnets[i].startsWith(oldTierName)) {
                       resource.subnets[i] = resource.subnets[i].replace(
                         oldTierName,
-                        stateData.name
+                        stateData.name,
                       );
                     }
                   }
@@ -317,7 +317,7 @@ function saveAdvancedSubnetTier(
                 if (cluster.subnets[i].startsWith(oldTierName)) {
                   cluster.subnets[i] = cluster.subnets[i].replace(
                     oldTierName,
-                    stateData.name
+                    stateData.name,
                   );
                 }
               }
@@ -326,7 +326,7 @@ function saveAdvancedSubnetTier(
                   if (pool.subnets[i].startsWith(oldTierName)) {
                     pool.subnets[i] = pool.subnets[i].replace(
                       oldTierName,
-                      stateData.name
+                      stateData.name,
                     );
                   }
                 }
@@ -338,7 +338,7 @@ function saveAdvancedSubnetTier(
                   if (subnet.startsWith(oldTierName)) {
                     resolver.subnets[index] = resolver.subnets[index].replace(
                       oldTierName,
-                      stateData.name
+                      stateData.name,
                     );
                   }
                 });
@@ -429,8 +429,8 @@ function resourceGroupsField(small, options) {
     invalid: options?.noHideWhen
       ? fieldIsNullOrEmptyString("resource_group", true)
       : options?.invalid
-      ? options.invalid
-      : fieldIsNullOrEmptyString("resource_group"),
+        ? options.invalid
+        : fieldIsNullOrEmptyString("resource_group"),
     invalidText: selectInvalidText("resource group"),
     type: "select",
     groups: function (stateData, componentProps) {
@@ -539,7 +539,7 @@ function kebabCaseInput(field) {
  * @returns
  */
 function hideWhenUseData(stateData) {
-  return stateData.use_data;
+  return stateData.use_data || stateData?.cluster_security_group;
 }
 
 /**
@@ -572,10 +572,10 @@ function sshKeySchema(fieldName) {
                   return sshKey;
                 }
               }),
-              "public_key"
+              "public_key",
             ).filter((pubKey) => {
               if (pubKey !== "NONE") return pubKey;
-            })
+            }),
           );
       });
       return contains(otherPublicKeys, stateData.public_key);
@@ -589,11 +589,11 @@ function sshKeySchema(fieldName) {
               return sshKey;
             }
           }),
-          "public_key"
+          "public_key",
         ).filter((pubKey) => {
           // remove none keys
           if (pubKey !== "NONE") return pubKey;
-        })
+        }),
       );
       return contains(otherPublicKeys, stateData.public_key);
     }
@@ -610,11 +610,11 @@ function sshKeySchema(fieldName) {
           fieldName === "power_vs_ssh_keys"
           ? "Provide a unique SSH public key for this workspace"
           : !validSshKey(stateData.public_key) &&
-            stateData.public_key !== "NONE"
-          ? "Provide a unique SSH public key that does not exist in the IBM Cloud account in your region"
-          : invalidSshKey(stateData, componentProps)
-          ? "SSH Public Key in use"
-          : "";
+              stateData.public_key !== "NONE"
+            ? "Provide a unique SSH public key that does not exist in the IBM Cloud account in your region"
+            : invalidSshKey(stateData, componentProps)
+              ? "SSH Public Key in use"
+              : "";
       },
       hideWhen: hideWhenFieldFalse("use_data", true),
     },
@@ -678,7 +678,7 @@ function subnetMultiSelect(options) {
     },
     onInputChange: options?.onInputChange,
     invalidText: unconditionalInvalidText(
-      options?.invalidText ? options.invalidText : "Select at least one subnet"
+      options?.invalidText ? options.invalidText : "Select at least one subnet",
     ),
     groups: function (stateData, componentProps) {
       if (isNullOrEmptyString(stateData.vpc, true)) {
@@ -687,9 +687,9 @@ function subnetMultiSelect(options) {
         return splat(
           new revision(componentProps.craig.store.json).child(
             "vpcs",
-            stateData.vpc
+            stateData.vpc,
           ).data.subnets,
-          "name"
+          "name",
         );
       }
     },
@@ -716,7 +716,7 @@ function securityGroupsMultiselect() {
             return sg;
           }
         }),
-        "name"
+        "name",
       );
     },
     forceUpdateKey: forceUpdateOnVpcChange,
@@ -744,8 +744,8 @@ function fieldIsNotWholeNumber(field, min, max) {
     return Number(stateData[field]) % 1 !== 0
       ? true
       : !isNullOrEmptyString(stateData[field])
-      ? !isInRange(Number(stateData[field]), min, max)
-      : true;
+        ? !isInRange(Number(stateData[field]), min, max)
+        : true;
   };
 }
 
@@ -764,7 +764,7 @@ function timeToLive(small) {
         : fieldIsNotWholeNumber("ttl", 300, 2147483647)(stateData);
     },
     invalidText: unconditionalInvalidText(
-      "Enter a whole number between 300 and 2147483647"
+      "Enter a whole number between 300 and 2147483647",
     ),
     placeholder: "300",
     size: small ? "small" : undefined,
@@ -797,7 +797,7 @@ function ipCidrListTextArea(field, options) {
           getObjectFromArray(
             componentProps.craig.store.json.vpn_gateways,
             "name",
-            componentProps.arrayParentName
+            componentProps.arrayParentName,
           ).policy_mode !== true
         ) {
           return false;
@@ -807,17 +807,17 @@ function ipCidrListTextArea(field, options) {
       return isNullOrEmptyString(stateData[field], true) && !options.strict
         ? false
         : // prevent empty array from passing regex
-        options.strict && isEmpty(stateData[field])
-        ? true
-        : isIpStringInvalid(
-            // when additional prefixes is not array, check as string
-            isArray(stateData[field])
-              ? stateData[field].join(",")
-              : stateData[field]
-          );
+          options.strict && isEmpty(stateData[field])
+          ? true
+          : isIpStringInvalid(
+              // when additional prefixes is not array, check as string
+              isArray(stateData[field])
+                ? stateData[field].join(",")
+                : stateData[field],
+            );
     },
     invalidText: unconditionalInvalidText(
-      "Enter a valid comma separated list of IPV4 CIDR blocks"
+      "Enter a valid comma separated list of IPV4 CIDR blocks",
     ),
     onRender: function (stateData) {
       return isNullOrEmptyString(stateData[field], true)
@@ -835,7 +835,7 @@ function ipCidrListTextArea(field, options) {
           getObjectFromArray(
             componentProps.craig.store.json.vpn_gateways,
             "name",
-            componentProps.arrayParentName
+            componentProps.arrayParentName,
           ).policy_mode !== true
         ) {
           return true;
@@ -919,7 +919,7 @@ function powerVsStorageOptions(isVolume, hideWhen) {
     groups: function (stateData) {
       return contains(
         ["None", undefined, null],
-        stateData?.pi_placement_group_id
+        stateData?.pi_placement_group_id,
       )
         ? ["None", "Storage Pool", "Affinity", "Anti-Affinity"]
         : ["None", "Storage Pool"];
@@ -932,7 +932,7 @@ function powerVsStorageOptions(isVolume, hideWhen) {
      */
     disabled: function storageChangeDisabledCallback(
       stateData,
-      componentProps
+      componentProps,
     ) {
       if (componentProps.isModal) return false;
       let isInUse = false;
@@ -1008,8 +1008,8 @@ function powerVsStorageType(isVolume, hideWhen) {
       return isNullOrEmptyString(stateData[storageField])
         ? ""
         : stateData[storageField] === "tier5k"
-        ? "Fixed IOPs"
-        : capitalize(stateData[storageField].split(/(?=\d)/).join("-"));
+          ? "Fixed IOPs"
+          : capitalize(stateData[storageField].split(/(?=\d)/).join("-"));
     },
     onInputChange: function (stateData) {
       return stateData[storageField] === "Fixed IOPs"
@@ -1107,7 +1107,7 @@ function powerVsAffinityVolumesFilter(stateData, componentProps) {
     componentProps.craig.store.json.power_volumes.filter((volume) => {
       if (volume.workspace === stateData.workspace) return volume;
     }),
-    "name"
+    "name",
   );
 }
 
@@ -1121,7 +1121,7 @@ function powerVsAffinityInstancesFilter(stateData, componentProps) {
     componentProps.craig.store.json.power_instances.filter((instance) => {
       if (instance.workspace === stateData.workspace) return instance;
     }),
-    "name"
+    "name",
   );
 }
 
@@ -1135,7 +1135,7 @@ function powerAffinityVolume() {
         stateData,
         "Affinity",
         "Volume",
-        "pi_affinity_volume"
+        "pi_affinity_volume",
       );
     },
     labelText: "Affinity Volume",
@@ -1159,7 +1159,7 @@ function powerAffinityInstance() {
         stateData,
         "Affinity",
         "Instance",
-        "pi_affinity_instance"
+        "pi_affinity_instance",
       );
     },
     labelText: "Affinity Instance",
@@ -1185,7 +1185,7 @@ function powerAntiAffinityVolume() {
         stateData,
         "Anti-Affinity",
         "Volume",
-        "pi_anti_affinity_volume"
+        "pi_anti_affinity_volume",
       );
     },
     invalidText: powerVsInstanceInvalidText("an anti affinity volume"),
@@ -1208,7 +1208,7 @@ function powerAntiAffinityInstance() {
         stateData,
         "Anti-Affinity",
         "Instance",
-        "pi_anti_affinity_instance"
+        "pi_anti_affinity_instance",
       );
     },
     invalidText: powerVsInstanceInvalidText("an anti affinity instance"),
@@ -1271,8 +1271,8 @@ function cbrValuePlaceholder(type) {
   return type === "ipAddress"
     ? "x.x.x.x"
     : type === "ipRange"
-    ? "x.x.x.x-x.x.x.x"
-    : `my-cbr-zone-${type}`;
+      ? "x.x.x.x-x.x.x.x"
+      : `my-cbr-zone-${type}`;
 }
 
 function cbrTitleCase(field) {
@@ -1292,14 +1292,14 @@ function cbrSaveType(field) {
     return stateData[field] === "IP Address"
       ? "ipAddress"
       : stateData[field] === "IP Range"
-      ? "ipRange"
-      : stateData[field] === "Service Ref"
-      ? "serviceRef"
-      : stateData[field] === "Subnet"
-      ? "subnet"
-      : stateData[field] === "Vpc"
-      ? "vpc"
-      : "";
+        ? "ipRange"
+        : stateData[field] === "Service Ref"
+          ? "serviceRef"
+          : stateData[field] === "Subnet"
+            ? "subnet"
+            : stateData[field] === "Vpc"
+              ? "vpc"
+              : "";
   };
 }
 

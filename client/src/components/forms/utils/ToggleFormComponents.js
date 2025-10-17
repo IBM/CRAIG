@@ -165,10 +165,10 @@ const ToggleFormIcon = (props) => {
         props.hoverText
           ? props.hoverText
           : props.open
-          ? "Close"
-          : props.type === "add"
-          ? "Configure Resource"
-          : "Open"
+            ? "Close"
+            : props.type === "add"
+              ? "Configure Resource"
+              : "Open"
       }
     >
       <i

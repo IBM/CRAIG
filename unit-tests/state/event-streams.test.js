@@ -21,7 +21,7 @@ describe("event_streams", () => {
       assert.deepEqual(
         craig.store.json.event_streams,
         [],
-        "it should have event_streams initialized"
+        "it should have event_streams initialized",
       );
     });
   });
@@ -40,13 +40,13 @@ describe("event_streams", () => {
             encryption_key: null,
           },
         ],
-        "it should create event_streams"
+        "it should create event_streams",
       );
     });
     it("should save an event_streams instance", () => {
       craig.event_streams.save(
         { resource_group: "service-rg" },
-        { data: { name: "default" } }
+        { data: { name: "default" } },
       );
       assert.deepEqual(
         craig.store.json.event_streams,
@@ -58,7 +58,7 @@ describe("event_streams", () => {
             encryption_key: null,
           },
         ],
-        "it should create event_streams"
+        "it should create event_streams",
       );
     });
     it("should delete an event_streams instance", () => {
@@ -66,7 +66,7 @@ describe("event_streams", () => {
       assert.deepEqual(
         craig.store.json.event_streams,
         [],
-        "it should create event_streams"
+        "it should create event_streams",
       );
     });
   });
@@ -75,14 +75,14 @@ describe("event_streams", () => {
       it("should be hidden when plan is not enterprise", () => {
         assert.isTrue(
           craig.event_streams.throughput.hideWhen({ plan: "lite" }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should return correct groups for throughput", () => {
         assert.deepEqual(
           craig.event_streams.throughput.groups,
           ["150MB/s", "300MB/s", "450MB/s"],
-          "it should return throughput types"
+          "it should return throughput types",
         );
       });
       it("should return true if event streams plan is enterprise and form has invalid throughput", () => {
@@ -99,8 +99,8 @@ describe("event_streams", () => {
             },
             {
               craig: craig,
-            }
-          )
+            },
+          ),
         );
       });
       it("should return true if event streams plan is not enterprise and form has invalid throughput", () => {
@@ -117,8 +117,8 @@ describe("event_streams", () => {
             },
             {
               craig: craig,
-            }
-          )
+            },
+          ),
         );
       });
     });
@@ -126,7 +126,7 @@ describe("event_streams", () => {
       it("should be hidden when plan is not enterprise", () => {
         assert.isTrue(
           craig.event_streams.private_ip_allowlist.hideWhen({ plan: "lite" }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should return true if event streams plan is enterprise and form has invalid private_ip_allowlist", () => {
@@ -143,8 +143,8 @@ describe("event_streams", () => {
             },
             {
               craig: craig,
-            }
-          )
+            },
+          ),
         );
         assert.isFalse(
           craig.event_streams.private_ip_allowlist.invalid(
@@ -159,8 +159,8 @@ describe("event_streams", () => {
             },
             {
               craig: craig,
-            }
-          )
+            },
+          ),
         );
       });
     });

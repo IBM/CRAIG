@@ -28,7 +28,7 @@ resource "ibm_security_group_rule" "classic_security_group_classic_sg_rule_allow
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should return the correct data for a classic security group rule with all protocol", () => {
@@ -49,7 +49,7 @@ resource "ibm_security_group_rule" "classic_security_group_classic_sg_rule_allow
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should return the correct data for a classic security group rule with no port range or rule protocol", () => {
@@ -70,7 +70,7 @@ resource "ibm_security_group_rule" "classic_security_group_classic_sg_rule_allow
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
   });

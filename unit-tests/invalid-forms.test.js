@@ -44,7 +44,7 @@ describe("invalidForms", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return failing list of forms"
+      "it should return failing list of forms",
     );
   });
   it("should return a list of disabled components when no components fail", () => {
@@ -58,7 +58,7 @@ describe("invalidForms", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return failing list of forms"
+      "it should return failing list of forms",
     );
   });
   it("should return a list of disabled components when sub components fail", () => {
@@ -83,7 +83,7 @@ describe("invalidForms", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return failing list of forms"
+      "it should return failing list of forms",
     );
   });
   it("should return a list of disabled components when sub components fail", () => {
@@ -109,7 +109,7 @@ describe("invalidForms", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return failing list of forms"
+      "it should return failing list of forms",
     );
     // dynamic policies and cbr exclusions and dns custom resolvers
     updatedState.store.json.access_groups[0].policies = [];
@@ -134,7 +134,7 @@ describe("invalidForms", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return failing list of forms"
+      "it should return failing list of forms",
     );
     // cbr rules contexts, dns records
     updatedState.store.json.cbr_zones[0].exclusions = [];
@@ -160,7 +160,7 @@ describe("invalidForms", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return failing list of forms"
+      "it should return failing list of forms",
     );
     // cbr resource attributes
     updatedState.store.json.cbr_rules[0].contexts = [];
@@ -173,7 +173,7 @@ describe("invalidForms", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return failing list of forms"
+      "it should return failing list of forms",
     );
     // tags
     updatedState.store.json.cbr_rules[0].resource_attributes = [];
@@ -186,7 +186,7 @@ describe("invalidForms", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return failing list of forms"
+      "it should return failing list of forms",
     );
   });
   it("should return a list of disabled components when no components invalid and vpc has default acl name", () => {
@@ -203,7 +203,7 @@ describe("invalidForms", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return failing list of forms"
+      "it should return failing list of forms",
     );
     updatedState.store.json.vpcs[0].default_network_acl_name = null;
     updatedState.store.json.vpcs[0].default_routing_table_name = null;
@@ -397,7 +397,7 @@ describe("invalidForms", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return failing list of forms"
+      "it should return failing list of forms",
     );
   });
   it("should not show power as disabled when valid", () => {
@@ -698,7 +698,7 @@ describe("invalidForms", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return failing list of forms"
+      "it should return failing list of forms",
     );
   });
 });

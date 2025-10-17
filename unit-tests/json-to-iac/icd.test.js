@@ -66,7 +66,7 @@ resource "ibm_iam_authorization_policy" "icd_to_kms_kms_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -128,7 +128,7 @@ resource "ibm_iam_authorization_policy" "icd_to_kms_kms_policy" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_instance" "icd_db" {
@@ -164,7 +164,7 @@ resource "ibm_resource_instance" "icd_db" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create the correct icd instance from data", () => {
@@ -224,7 +224,7 @@ resource "ibm_resource_instance" "icd_db" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 data "ibm_resource_instance" "icd_db" {
@@ -236,7 +236,7 @@ data "ibm_resource_instance" "icd_db" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -509,7 +509,7 @@ resource "ibm_resource_instance" "icd_etcd" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return nothing when no data is provided", () => {
@@ -562,7 +562,7 @@ resource "ibm_resource_instance" "icd_etcd" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

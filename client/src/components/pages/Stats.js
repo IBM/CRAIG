@@ -28,10 +28,10 @@ class Stats extends React.Component {
       index === 0
         ? "clones"
         : index === 1
-        ? "views"
-        : index === 2
-        ? "refs"
-        : undefined;
+          ? "views"
+          : index === 2
+            ? "refs"
+            : undefined;
     this.setState({ type: currentTab });
   }
 

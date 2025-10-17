@@ -46,7 +46,7 @@ describe("routing_tables", () => {
           name: "frog",
         },
       }),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a routing table has an invalid vpc", () => {
@@ -72,7 +72,7 @@ describe("routing_tables", () => {
           name: "frog",
         },
       }),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a routing table route has an invalid name", () => {
@@ -102,7 +102,7 @@ describe("routing_tables", () => {
           routes: [],
         },
       }),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a routing table route has an invalid zone", () => {
@@ -133,7 +133,7 @@ describe("routing_tables", () => {
           routes: [],
         },
       }),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a routing table route has an invalid destination", () => {
@@ -165,7 +165,7 @@ describe("routing_tables", () => {
           routes: [],
         },
       }),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a routing table route has an invalid next hop", () => {
@@ -199,7 +199,7 @@ describe("routing_tables", () => {
           routes: [],
         },
       }),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a routing table route has an invalid next hop as cidr block", () => {
@@ -233,7 +233,7 @@ describe("routing_tables", () => {
           routes: [],
         },
       }),
-      "it should be true"
+      "it should be true",
     );
   });
 });

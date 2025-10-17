@@ -15,9 +15,9 @@ describe("clusters", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a cluster has an invalid duplicate name", () => {
@@ -35,9 +35,9 @@ describe("clusters", () => {
           data: {
             name: "mm",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a cluster is openshift and has no cos", () => {
@@ -54,9 +54,9 @@ describe("clusters", () => {
           data: {
             name: "mm",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a cluster is openshift and has cos but invalid subnets", () => {
@@ -75,9 +75,9 @@ describe("clusters", () => {
           data: {
             name: "mm",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   describe("worker_pools", () => {
@@ -93,9 +93,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a cluster worker pool has no flavor", () => {
@@ -111,9 +111,9 @@ describe("clusters", () => {
             data: {
               name: "aaaa",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a cluster worker pool has no subnets", () => {
@@ -129,9 +129,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a cluster worker pool has empty subnets", () => {
@@ -148,9 +148,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
   });
@@ -190,9 +190,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a cluster opaque secret has an invalid name", () => {
@@ -207,9 +207,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a cluster secrets group has an invalid name", () => {
@@ -225,9 +225,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a secrets group is an invalid duplicate name", () => {
@@ -260,9 +260,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if arbitrary secret is an invalid duplicate name", () => {
@@ -297,9 +297,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if username password secret is an invalid duplicate name", () => {
@@ -337,9 +337,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if secrets manager is empty", () => {
@@ -359,9 +359,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if labels are empty", () => {
@@ -381,9 +381,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a secret label is invalid", () => {
@@ -399,9 +399,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if no expiration date is selected", () => {
@@ -425,9 +425,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return false if user_pass secret and arbitrary secret have diff names", () => {
@@ -454,9 +454,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
     it("should return true if arbitrary secret description is invalid", () => {
@@ -482,9 +482,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if username password secret description is invalid", () => {
@@ -510,9 +510,9 @@ describe("clusters", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
   });

@@ -34,7 +34,7 @@ function ibmIsSecurityGroup(sg, config) {
             "${",
             getObjectFromArray(config.vpcs, "name", sg.vpc).use_data
               ? "${data."
-              : "${"
+              : "${",
           ),
           resource_group: `\${var.${snakeCase(sg.resource_group)}_id}`,
           tags: getTags(config),
@@ -59,7 +59,7 @@ function formatSecurityGroup(sg, config) {
     sg.use_data ? "data" : "resource",
     "ibm_is_security_group",
     group.name,
-    group.data
+    group.data,
   );
 }
 
@@ -90,13 +90,16 @@ function formatSecurityGroup(sg, config) {
 function ibmIsSecurityGroupRule(rule, config) {
   let sgAddress = `${rule.vpc} vpc ${rule.sg} sg`;
   let sgRule = {
-    group: tfRef(
-      "ibm_is_security_group",
-      snakeCase(sgAddress),
-      "id",
-      config?.security_groups &&
-        getObjectFromArray(config.security_groups, "name", rule.sg).use_data
-    ),
+    group: rule.cluster_security_group
+      ? rule.cluster_sg_id_ref
+      : tfRef(
+          "ibm_is_security_group",
+          snakeCase(sgAddress),
+          "id",
+          config?.security_groups &&
+            getObjectFromArray(config.security_groups, "name", rule.sg)
+              .use_data,
+        ),
     remote: rule.source,
     direction: rule.direction,
   };
@@ -136,7 +139,7 @@ function formatSgRule(rule, config) {
     "resource",
     "ibm_is_security_group_rule",
     data.name,
-    data.data
+    data.data,
   );
 }
 
@@ -150,9 +153,11 @@ function formatSgRule(rule, config) {
 function sgTf(config) {
   let tf = "";
   config.security_groups.forEach((group) => {
-    let blockData = formatSecurityGroup(group, config);
-    group.rules.forEach((rule) => (blockData += formatSgRule(rule)));
-    tf += tfBlock("Security Group " + group.name, blockData) + "\n";
+    if (group.cluster_security_group !== true) {
+      let blockData = formatSecurityGroup(group, config);
+      group.rules.forEach((rule) => (blockData += formatSgRule(rule)));
+      tf += tfBlock("Security Group " + group.name, blockData) + "\n";
+    }
   });
   return tfDone(tf);
 }

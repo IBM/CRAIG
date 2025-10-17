@@ -14,13 +14,13 @@ describe("dynamicCraigFormGroupsProps", () => {
             groups: ["hi"],
           },
         },
-        0
+        0,
       ),
       {
         key: "-group-0",
         noMarginBottom: true,
       },
-      "it should return correct props"
+      "it should return correct props",
     );
   });
   it("should return correct props if name, no subForms, and is last", () => {
@@ -34,13 +34,13 @@ describe("dynamicCraigFormGroupsProps", () => {
             name: "frog",
           },
         },
-        0
+        0,
       ),
       {
         key: "frog-group-0",
         noMarginBottom: true,
       },
-      "it should return correct props"
+      "it should return correct props",
     );
   });
   it("should return correct props if name, with subForms, and is last", () => {
@@ -59,13 +59,13 @@ describe("dynamicCraigFormGroupsProps", () => {
             name: "frog",
           },
         },
-        0
+        0,
       ),
       {
         key: "frog-group-0",
         noMarginBottom: false,
       },
-      "it should return correct props"
+      "it should return correct props",
     );
   });
   it("should return correct props if name, with subForms length 0, and is last", () => {
@@ -80,13 +80,13 @@ describe("dynamicCraigFormGroupsProps", () => {
             name: "frog",
           },
         },
-        0
+        0,
       ),
       {
         key: "frog-group-0",
         noMarginBottom: true,
       },
-      "it should return correct props"
+      "it should return correct props",
     );
   });
   it("should return for next to last group when all are hidden", () => {
@@ -110,13 +110,13 @@ describe("dynamicCraigFormGroupsProps", () => {
             name: "frog",
           },
         },
-        0
+        0,
       ),
       {
         key: "frog-group-0",
         noMarginBottom: true,
       },
-      "it should return correct props"
+      "it should return correct props",
     );
   });
   it("should return for middle group when all are hidden", () => {
@@ -145,13 +145,13 @@ describe("dynamicCraigFormGroupsProps", () => {
             name: "frog",
           },
         },
-        1
+        1,
       ),
       {
         key: "frog-group-1",
         noMarginBottom: true,
       },
-      "it should return correct props"
+      "it should return correct props",
     );
   });
   it("should return for next to last group for subnets", () => {
@@ -178,14 +178,14 @@ describe("dynamicCraigFormGroupsProps", () => {
             name: "frog",
           },
         },
-        0
+        0,
       ),
       {
         key: "frog-group-0",
         noMarginBottom: false,
         className: "marginBottomSmall",
       },
-      "it should return correct props"
+      "it should return correct props",
     );
   });
   it("should return for next to last group when all are not hidden", () => {
@@ -212,13 +212,13 @@ describe("dynamicCraigFormGroupsProps", () => {
             name: "frog",
           },
         },
-        0
+        0,
       ),
       {
         key: "frog-group-0",
         noMarginBottom: false,
       },
-      "it should return correct props"
+      "it should return correct props",
     );
   });
   it("should return for dns when record not srv and row is 2", () => {
@@ -275,13 +275,13 @@ describe("dynamicCraigFormGroupsProps", () => {
           use_vsi: false,
           vpc: "management",
           vsi: "management-server-1-2",
-        }
+        },
       ),
       {
         key: "frog-group-2",
         noMarginBottom: true,
       },
-      "it should return correct props"
+      "it should return correct props",
     );
   });
   it("should return for dns when record not srv and row is 1", () => {
@@ -338,13 +338,13 @@ describe("dynamicCraigFormGroupsProps", () => {
           use_vsi: false,
           vpc: "management",
           vsi: "management-server-1-2",
-        }
+        },
       ),
       {
         key: "frog-group-1",
         noMarginBottom: false,
       },
-      "it should return correct props"
+      "it should return correct props",
     );
   });
   it("should return for cos when no activity_tracking", () => {
@@ -405,12 +405,12 @@ describe("dynamicCraigFormGroupsProps", () => {
         },
       },
       4,
-      {}
+      {},
     );
     assert.deepEqual(
       actualData,
       { key: "frog-group-4", noMarginBottom: true },
-      "it should have correct data"
+      "it should have correct data",
     );
   });
   it("should return for cos when activity_tracking", () => {
@@ -474,7 +474,7 @@ describe("dynamicCraigFormGroupsProps", () => {
       4,
       {
         activity_tracking: true,
-      }
+      },
     );
     assert.deepEqual(
       actualData,
@@ -483,7 +483,7 @@ describe("dynamicCraigFormGroupsProps", () => {
         noMarginBottom: true,
         className: "subForm marginBottomNone",
       },
-      "it should have correct data"
+      "it should have correct data",
     );
   });
   it("should return for cos when activity_tracking and metrics monitoring for metrics", () => {
@@ -548,7 +548,7 @@ describe("dynamicCraigFormGroupsProps", () => {
       {
         activity_tracking: true,
         metrics_monitoring: true,
-      }
+      },
     );
     assert.deepEqual(
       actualData,
@@ -557,7 +557,7 @@ describe("dynamicCraigFormGroupsProps", () => {
         noMarginBottom: true,
         className: "subForm marginBottomNone",
       },
-      "it should have correct data"
+      "it should have correct data",
     );
   });
   it("should return for cos when activity_tracking and metrics monitoring for activity tracking", () => {
@@ -622,7 +622,7 @@ describe("dynamicCraigFormGroupsProps", () => {
       {
         activity_tracking: true,
         metrics_monitoring: true,
-      }
+      },
     );
     assert.deepEqual(
       actualData,
@@ -631,7 +631,7 @@ describe("dynamicCraigFormGroupsProps", () => {
         noMarginBottom: false,
         className: "subForm",
       },
-      "it should have correct data"
+      "it should have correct data",
     );
   });
 });

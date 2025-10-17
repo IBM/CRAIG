@@ -76,7 +76,7 @@ describe("object_storage", () => {
       assert.deepEqual(
         craig.store.json.object_storage,
         expectedData,
-        "it should have cos"
+        "it should have cos",
       );
     });
   });
@@ -103,7 +103,7 @@ describe("object_storage", () => {
       assert.deepEqual(
         craig.store.json.object_storage[2],
         expectedData,
-        "it should create new cos"
+        "it should create new cos",
       );
     });
   });
@@ -111,12 +111,12 @@ describe("object_storage", () => {
     it("should update a cos instance in place", () => {
       craig.object_storage.save(
         { name: "cos", use_data: true },
-        { data: { name: "atracker-cos" } }
+        { data: { name: "atracker-cos" } },
       );
       assert.deepEqual(
         craig.store.json.object_storage[0].use_data,
         true,
-        "it should create new cos"
+        "it should create new cos",
       );
     });
     it("should update a cos instance in place and update vpc and cluster cos names", () => {
@@ -124,17 +124,17 @@ describe("object_storage", () => {
       assert.deepEqual(
         craig.store.json.object_storage[1].name,
         "todd",
-        "it should create new cos"
+        "it should create new cos",
       );
       assert.deepEqual(
         craig.store.json.vpcs[0].cos,
         "todd",
-        "it should update vpc cos name"
+        "it should update vpc cos name",
       );
       assert.deepEqual(
         craig.store.json.clusters[0].cos,
         "todd",
-        "it should update cluster cos name"
+        "it should update cluster cos name",
       );
     });
     it("should update a cos instance in place with same name", () => {
@@ -142,7 +142,7 @@ describe("object_storage", () => {
       assert.deepEqual(
         craig.store.json.object_storage[1].name,
         "cos",
-        "it should create new cos"
+        "it should create new cos",
       );
     });
   });
@@ -152,7 +152,7 @@ describe("object_storage", () => {
       assert.deepEqual(
         craig.store.json.object_storage.length,
         1,
-        "it should create new cos"
+        "it should create new cos",
       );
     });
   });
@@ -161,26 +161,26 @@ describe("object_storage", () => {
       assert.deepEqual(
         craig.store.cosBuckets,
         ["atracker-bucket", "management-bucket", "workload-bucket"],
-        "it should have all the buckets"
+        "it should have all the buckets",
       );
     });
     it("should create a list of storage keys", () => {
       assert.deepEqual(
         craig.store.cosKeys,
         ["cos-bind-key"],
-        "it should have all the keys"
+        "it should have all the keys",
       );
     });
     it("should remove unfound kms key from buckets after deletion", () => {
       craig.key_management.keys.delete(
         {},
-        { arrayParentName: "kms", data: { name: "atracker-key" } }
+        { arrayParentName: "kms", data: { name: "atracker-key" } },
       );
       craig.update();
       assert.deepEqual(
         craig.store.json.object_storage[0].buckets[0].kms_key,
         null,
-        "it should have all the keys"
+        "it should have all the keys",
       );
     });
     it("should remove unfound kms instance from cos and buckets after deletion", () => {
@@ -189,12 +189,12 @@ describe("object_storage", () => {
       assert.deepEqual(
         craig.store.json.object_storage[0].buckets[0].kms_key,
         null,
-        "it should have all the keys"
+        "it should have all the keys",
       );
       assert.deepEqual(
         craig.store.json.object_storage[0].kms,
         null,
-        "it should have correct kms"
+        "it should have correct kms",
       );
     });
     it("should default cos plan to `standard` on update if none is specified", () => {
@@ -220,7 +220,7 @@ describe("object_storage", () => {
       assert.deepEqual(
         craig.store.json.object_storage[2],
         expectedData,
-        "it should create new cos"
+        "it should create new cos",
       );
     });
     it("should not automatically change existing cos plans to `standard` on update", () => {
@@ -246,7 +246,7 @@ describe("object_storage", () => {
       assert.deepEqual(
         craig.store.json.object_storage[2],
         expectedData,
-        "it should create new cos"
+        "it should create new cos",
       );
     });
   });
@@ -259,7 +259,7 @@ describe("object_storage", () => {
             name: "test",
           }),
           "test",
-          "it should display data"
+          "it should display data",
         );
       });
       it("should return text without object-storage or random suffix if using data", () => {
@@ -270,7 +270,7 @@ describe("object_storage", () => {
             name: "frog",
           }),
           "frog",
-          "it should not include suffix or object-storage"
+          "it should not include suffix or object-storage",
         );
       });
       it("should return text if not using data and with random suffix", () => {
@@ -287,10 +287,10 @@ describe("object_storage", () => {
                   },
                 },
               },
-            }
+            },
           ),
           "test-test-object-storage-<random-suffix>",
-          "it should display data"
+          "it should display data",
         );
       });
       it("should return text if not using data and without random suffix", () => {
@@ -307,10 +307,10 @@ describe("object_storage", () => {
                   },
                 },
               },
-            }
+            },
           ),
           "test-test-object-storage",
-          "it should display data"
+          "it should display data",
         );
       });
     });
@@ -319,13 +319,13 @@ describe("object_storage", () => {
         assert.deepEqual(
           craig.object_storage.kms.groups({}, { craig: newState() }),
           ["kms", "NONE (Insecure)"],
-          "it should return list of key protect instances"
+          "it should return list of key protect instances",
         );
       });
       it("should be invalid when empty string", () => {
         assert.isTrue(
           craig.object_storage.kms.invalid({ kms: "" }),
-          "it should not be valid"
+          "it should not be valid",
         );
       });
       it("should return correct value on input change", () => {
@@ -334,12 +334,12 @@ describe("object_storage", () => {
             kms: "NONE (Insecure)",
           }),
           null,
-          "it should return correct data"
+          "it should return correct data",
         );
         assert.deepEqual(
           craig.object_storage.kms.onInputChange({ kms: "frog" }),
           "frog",
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       it("should return correct value on render change", () => {
@@ -348,12 +348,12 @@ describe("object_storage", () => {
             kms: null,
           }),
           "NONE (Insecure)",
-          "it should return correct data"
+          "it should return correct data",
         );
         assert.deepEqual(
           craig.object_storage.kms.onRender({ kms: "frog" }),
           "frog",
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       it("should return correct value on input change", () => {
@@ -362,14 +362,14 @@ describe("object_storage", () => {
             kms_key: "NONE (Insecure)",
           }),
           null,
-          "it should return correct data"
+          "it should return correct data",
         );
         assert.deepEqual(
           craig.object_storage.buckets.kms_key.onInputChange({
             kms_key: "frog",
           }),
           "frog",
-          "it should return correct data"
+          "it should return correct data",
         );
       });
     });
@@ -389,7 +389,7 @@ describe("object_storage", () => {
           {
             innerFormProps: { arrayParentName: "atracker-cos" },
             arrayData: craig.store.json.object_storage[0].buckets,
-          }
+          },
         );
         let expectedData = {
           endpoint: "public",
@@ -402,7 +402,7 @@ describe("object_storage", () => {
         assert.deepEqual(
           craig.store.json.object_storage[0].buckets[1],
           expectedData,
-          "it should make new bucket"
+          "it should make new bucket",
         );
       });
     });
@@ -423,7 +423,7 @@ describe("object_storage", () => {
           {
             arrayParentName: "cos",
             data: { name: "management-bucket" },
-          }
+          },
         );
         let expectedData = {
           endpoint: "public",
@@ -436,7 +436,7 @@ describe("object_storage", () => {
         assert.deepEqual(
           craig.store.json.object_storage[1].buckets[0],
           expectedData,
-          "it should make new bucket"
+          "it should make new bucket",
         );
       });
       it("should update a atracker collector bucket name when bucket changed", () => {
@@ -454,12 +454,12 @@ describe("object_storage", () => {
           {
             arrayParentName: "atracker-cos",
             data: { name: "atracker-bucket" },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.atracker.collector_bucket_name,
           "todd",
-          "it should be todd"
+          "it should be todd",
         );
       });
       it("should update a bucket in a specified instance with same name", () => {
@@ -477,7 +477,7 @@ describe("object_storage", () => {
           {
             arrayParentName: "cos",
             data: { name: "management-bucket" },
-          }
+          },
         );
         let expectedData = {
           endpoint: "public",
@@ -490,7 +490,7 @@ describe("object_storage", () => {
         assert.deepEqual(
           craig.store.json.object_storage[1].buckets[0],
           expectedData,
-          "it should make new bucket"
+          "it should make new bucket",
         );
       });
     });
@@ -498,12 +498,12 @@ describe("object_storage", () => {
       it("should delete bucket", () => {
         craig.object_storage.buckets.delete(
           {},
-          { arrayParentName: "cos", data: { name: "management-bucket" } }
+          { arrayParentName: "cos", data: { name: "management-bucket" } },
         );
         assert.deepEqual(
           craig.store.json.object_storage[1].buckets.length,
           1,
-          "should delete bucket"
+          "should delete bucket",
         );
       });
     });
@@ -547,10 +547,10 @@ describe("object_storage", () => {
               },
               arrayParentName: "test",
               parent: {},
-            }
+            },
           ),
           "test-test-yes",
-          "it should have correct helper text"
+          "it should have correct helper text",
         );
         assert.deepEqual(
           craig.object_storage.buckets.name.helperText(
@@ -571,16 +571,16 @@ describe("object_storage", () => {
               parent: {
                 use_random_suffix: true,
               },
-            }
+            },
           ),
           "test-test-yes-<random-suffix>",
-          "it should have correct helper text with random suffix"
+          "it should have correct helper text with random suffix",
         );
       });
       it("should hide activity_tracking_crn", () => {
         assert.isTrue(
           craig.object_storage.buckets.activity_tracking_crn.hideWhen({}),
-          "it should be hidden"
+          "it should be hidden",
         );
         assert.isTrue(
           craig.object_storage.buckets.activity_tracking_crn.hideWhen(
@@ -597,15 +597,15 @@ describe("object_storage", () => {
                   },
                 },
               },
-            }
+            },
           ),
-          "it should be hidden when creating atracker instance"
+          "it should be hidden when creating atracker instance",
         );
       });
       it("should have invalid activity_tracking_crn", () => {
         assert.isFalse(
           craig.object_storage.buckets.activity_tracking_crn.invalid({}),
-          "it should not be invalid"
+          "it should not be invalid",
         );
         assert.isFalse(
           craig.object_storage.buckets.activity_tracking_crn.invalid(
@@ -622,9 +622,9 @@ describe("object_storage", () => {
                   },
                 },
               },
-            }
+            },
           ),
-          "it should not be invalid when creating atracker instance"
+          "it should not be invalid when creating atracker instance",
         );
         assert.isTrue(
           craig.object_storage.buckets.activity_tracking_crn.invalid(
@@ -641,15 +641,15 @@ describe("object_storage", () => {
                   },
                 },
               },
-            }
+            },
           ),
-          "it should be invalid when not creating instance"
+          "it should be invalid when not creating instance",
         );
       });
       it("should hide metrics_monitoring_crn", () => {
         assert.isTrue(
           craig.object_storage.buckets.metrics_monitoring_crn.hideWhen({}),
-          "it should be hidden"
+          "it should be hidden",
         );
         assert.isTrue(
           craig.object_storage.buckets.metrics_monitoring_crn.hideWhen(
@@ -666,15 +666,15 @@ describe("object_storage", () => {
                   },
                 },
               },
-            }
+            },
           ),
-          "it should be hidden when creating atracker instance"
+          "it should be hidden when creating atracker instance",
         );
       });
       it("should have invalid metrics_monitoring_crn", () => {
         assert.isFalse(
           craig.object_storage.buckets.metrics_monitoring_crn.invalid({}),
-          "it should not be invalid"
+          "it should not be invalid",
         );
         assert.isFalse(
           craig.object_storage.buckets.metrics_monitoring_crn.invalid(
@@ -691,9 +691,9 @@ describe("object_storage", () => {
                   },
                 },
               },
-            }
+            },
           ),
-          "it should not be invalid when creating atracker instance"
+          "it should not be invalid when creating atracker instance",
         );
         assert.isTrue(
           craig.object_storage.buckets.metrics_monitoring_crn.invalid(
@@ -710,15 +710,15 @@ describe("object_storage", () => {
                   },
                 },
               },
-            }
+            },
           ),
-          "it should be invalid when not creating instance"
+          "it should be invalid when not creating instance",
         );
       });
       it("should hide read data events when activity tracking is not enabled", () => {
         assert.isTrue(
           craig.object_storage.buckets.read_data_events.hideWhen({}),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should return an empty array if kms is falsy", () => {
@@ -729,10 +729,10 @@ describe("object_storage", () => {
               isModal: false,
               arrayParentName: "cosName2",
               craig: craig,
-            }
+            },
           ),
           ["NONE (Insecure)"],
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       it("should return an empty array if kms is falsy", () => {
@@ -743,10 +743,10 @@ describe("object_storage", () => {
               isModal: false,
               arrayParentName: "cosName1",
               craig: craig,
-            }
+            },
           ),
           ["key1", "NONE (Insecure)"],
-          "it should return correct data"
+          "it should return correct data",
         );
       });
     });
@@ -771,10 +771,10 @@ describe("object_storage", () => {
               },
               arrayParentName: "test",
               parent: {},
-            }
+            },
           ),
           "test-test-key-yes",
-          "it should have correct helper text"
+          "it should have correct helper text",
         );
       });
     });
@@ -789,7 +789,7 @@ describe("object_storage", () => {
           {
             innerFormProps: { arrayParentName: "cos" },
             arrayData: craig.store.json.object_storage[1].keys,
-          }
+          },
         );
         assert.deepEqual(craig.store.json.object_storage[1].keys, [
           {
@@ -810,7 +810,7 @@ describe("object_storage", () => {
         craig.store.json.atracker.cos_key = "cos-bind-key";
         craig.object_storage.keys.save(
           { name: "todd" },
-          { data: { name: "cos-bind-key" }, arrayParentName: "atracker-cos" }
+          { data: { name: "cos-bind-key" }, arrayParentName: "atracker-cos" },
         );
         assert.deepEqual(craig.store.json.object_storage[0].keys, [
           {
@@ -823,7 +823,7 @@ describe("object_storage", () => {
         assert.deepEqual(
           craig.store.json.atracker.cos_key,
           "todd",
-          "it should be todd"
+          "it should be todd",
         );
       });
       it("should update a cos key not atracker", () => {
@@ -836,11 +836,11 @@ describe("object_storage", () => {
           {
             innerFormProps: { arrayParentName: "cos" },
             arrayData: craig.store.json.object_storage[1].keys,
-          }
+          },
         );
         craig.object_storage.keys.save(
           { name: "todd" },
-          { data: { name: "boo" }, arrayParentName: "cos" }
+          { data: { name: "boo" }, arrayParentName: "cos" },
         );
         assert.deepEqual(craig.store.json.object_storage[1].keys, [
           {
@@ -856,7 +856,7 @@ describe("object_storage", () => {
           {
             name: "cos-bind-key",
           },
-          { data: { name: "cos-bind-key" }, arrayParentName: "atracker-cos" }
+          { data: { name: "cos-bind-key" }, arrayParentName: "atracker-cos" },
         );
         assert.deepEqual(craig.store.json.object_storage[0].keys, [
           {
@@ -872,7 +872,7 @@ describe("object_storage", () => {
       it("should delete a cos key in a specified instance", () => {
         craig.object_storage.keys.delete(
           {},
-          { arrayParentName: "atracker-cos", data: { name: "cos-bind-key" } }
+          { arrayParentName: "atracker-cos", data: { name: "cos-bind-key" } },
         );
         assert.deepEqual(craig.store.json.object_storage[0].keys, []);
       });
@@ -882,12 +882,12 @@ describe("object_storage", () => {
         assert.deepEqual(
           craig.object_storage.buckets.kms_key.onRender({ kms_key: null }),
           "NONE (Insecure)",
-          "it should return correct value"
+          "it should return correct value",
         );
         assert.deepEqual(
           craig.object_storage.buckets.kms_key.onRender({ kms_key: "toad" }),
           "toad",
-          "it should return correct value"
+          "it should return correct value",
         );
       });
     });
@@ -912,9 +912,9 @@ describe("object_storage", () => {
             data: {
               name: "test",
             },
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
     it("should return true if a object storage instance has an invalid resource group", () => {
@@ -937,9 +937,9 @@ describe("object_storage", () => {
             data: {
               name: "test",
             },
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
   });
@@ -968,9 +968,9 @@ describe("object_storage", () => {
             data: {
               name: "test",
             },
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
   });
@@ -1000,9 +1000,9 @@ describe("object_storage", () => {
             data: {
               name: "test",
             },
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
   });

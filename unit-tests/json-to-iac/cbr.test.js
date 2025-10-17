@@ -42,7 +42,7 @@ describe("cbr", () => {
             },
           ],
         },
-        craigJson
+        craigJson,
       );
       let expectedData = `
 resource "ibm_cbr_zone" "slz_foo_cbr_name_zone" {
@@ -82,7 +82,7 @@ resource "ibm_cbr_zone" "slz_foo_cbr_name_zone" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create terraform code for cbr zone with null values", () => {
@@ -113,7 +113,7 @@ resource "ibm_cbr_zone" "slz_foo_cbr_name_zone" {
             },
           ],
         },
-        craigJson
+        craigJson,
       );
       let expectedData = `
 resource "ibm_cbr_zone" "slz_foo_cbr_name_zone" {
@@ -144,7 +144,7 @@ resource "ibm_cbr_zone" "slz_foo_cbr_name_zone" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -184,7 +184,7 @@ resource "ibm_cbr_zone" "slz_foo_cbr_name_zone" {
             },
           ],
         },
-        craigJson
+        craigJson,
       );
       let expectedData = `
 resource "ibm_cbr_rule" "slz_cbr_rule_test" {
@@ -224,7 +224,7 @@ resource "ibm_cbr_rule" "slz_cbr_rule_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create terraform code for cbr rule with no sub objects", () => {
@@ -243,7 +243,7 @@ resource "ibm_cbr_rule" "slz_cbr_rule_test" {
             },
           ],
         },
-        craigJson
+        craigJson,
       );
       let expectedData = `
 resource "ibm_cbr_rule" "slz_cbr_rule_test" {
@@ -265,7 +265,7 @@ resource "ibm_cbr_rule" "slz_cbr_rule_test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

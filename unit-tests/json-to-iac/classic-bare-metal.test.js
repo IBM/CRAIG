@@ -27,7 +27,7 @@ describe("classic bare metal", () => {
           _options: {
             tags: ["hello", "world"],
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_compute_bare_metal" "name" {
@@ -53,7 +53,7 @@ resource "ibm_compute_bare_metal" "name" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct bare metal tf"
+        "it should return correct bare metal tf",
       );
     });
   });
@@ -104,7 +104,7 @@ resource "ibm_compute_bare_metal" "test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct bare metal tf"
+        "it should return correct bare metal tf",
       );
     });
     it("should format a bare metal server", () => {
@@ -150,7 +150,7 @@ resource "ibm_compute_bare_metal" "test" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct bare metal tf"
+        "it should return correct bare metal tf",
       );
     });
   });

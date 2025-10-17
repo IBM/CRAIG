@@ -105,7 +105,7 @@ function initIcdStore(store) {
     delete: icdDelete,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "service", "resource_group", "memory", "disk", "cpu"],
-      "icd"
+      "icd",
     ),
     schema: {
       use_data: {
@@ -180,7 +180,7 @@ function initIcdStore(store) {
           return invalidNumberCheck(stateData.memory, 1, 112);
         },
         invalidText: unconditionalInvalidText(
-          "RAM must be a whole number with minimum of 1GB and a maximum 112GB per member"
+          "RAM must be a whole number with minimum of 1GB and a maximum 112GB per member",
         ),
       },
       disk: {
@@ -191,7 +191,7 @@ function initIcdStore(store) {
           return invalidNumberCheck(stateData.disk, 5, 4096);
         },
         invalidText: unconditionalInvalidText(
-          "Disk must be a whole number with minimum of 5GB and a maximum 4096GB per member"
+          "Disk must be a whole number with minimum of 5GB and a maximum 4096GB per member",
         ),
       },
       cpu: {
@@ -202,7 +202,7 @@ function initIcdStore(store) {
           return invalidNumberCheck(stateData.cpu, 0, 28);
         },
         invalidText: unconditionalInvalidText(
-          "Using dedicated cores requires a minimum of 0 cores and a maximum of 28 cores per member. For shared CPU, select 0 cores."
+          "Using dedicated cores requires a minimum of 0 cores and a maximum of 28 cores per member. For shared CPU, select 0 cores.",
         ),
       },
       encryption_key: {

@@ -21,7 +21,7 @@ describe("load_balancers", () => {
       assert.deepEqual(
         craig.store.json.load_balancers,
         [],
-        "it should return data"
+        "it should return data",
       );
     });
   });
@@ -83,7 +83,7 @@ describe("load_balancers", () => {
       assert.deepEqual(
         craig.store.json.load_balancers[0],
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
     it("should remove a unfound subnets after deletion", () => {
@@ -117,7 +117,7 @@ describe("load_balancers", () => {
           data: {
             name: "vsi-zone-1",
           },
-        }
+        },
       );
       craig.vpcs.subnets.delete(
         {},
@@ -126,13 +126,13 @@ describe("load_balancers", () => {
           data: {
             name: "vsi-zone-2",
           },
-        }
+        },
       );
       craig.update();
       assert.deepEqual(
         craig.store.json.load_balancers[0],
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
     it("should remove a unfound security and resource groups after deletion", () => {
@@ -165,7 +165,7 @@ describe("load_balancers", () => {
       assert.deepEqual(
         craig.store.json.load_balancers[0],
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
     it("should remove a unfound target vsi and subnets after deletion", () => {
@@ -198,13 +198,13 @@ describe("load_balancers", () => {
           data: {
             name: "management-server",
           },
-        }
+        },
       );
       craig.update();
       assert.deepEqual(
         craig.store.json.load_balancers[0],
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
   });
@@ -301,12 +301,12 @@ describe("load_balancers", () => {
           data: {
             name: "lb-1",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.load_balancers,
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
   });
@@ -361,7 +361,7 @@ describe("load_balancers", () => {
       assert.deepEqual(
         craig.store.json.load_balancers[0],
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
   });
@@ -371,25 +371,25 @@ describe("load_balancers", () => {
         craig.load_balancers.port.invalid({
           port: "",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
       assert.isTrue(
         craig.load_balancers.port.invalid({
           port: "1.2",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
       assert.isTrue(
         craig.load_balancers.port.invalid({
           port: "-1",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should hide persistance cookie name when session_persistence_type is not app_cookie", () => {
       assert.isTrue(
         craig.load_balancers.session_persistence_app_cookie_name.hideWhen({}),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
     it("should not hide persistance cookie name when session_persistence_type is app_cookie", () => {
@@ -397,7 +397,7 @@ describe("load_balancers", () => {
         craig.load_balancers.session_persistence_app_cookie_name.hideWhen({
           session_persistence_type: "app_cookie",
         }),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
     it("should correctly handle session persistance type on input change", () => {
@@ -406,7 +406,7 @@ describe("load_balancers", () => {
           session_persistence_type: "HTTP Cookie",
         }),
         "http_cookie",
-        "it should change on input change"
+        "it should change on input change",
       );
     });
     it("should return correct render for session_persistence_type", () => {
@@ -415,27 +415,27 @@ describe("load_balancers", () => {
           session_persistence_type: "source_ip",
         }),
         "Source IP",
-        "it should return correct text"
+        "it should return correct text",
       );
       assert.deepEqual(
         craig.load_balancers.session_persistence_type.onRender({
           session_persistence_type: "http_cookie",
         }),
         "HTTP Cookie",
-        "it should return correct text"
+        "it should return correct text",
       );
       assert.deepEqual(
         craig.load_balancers.session_persistence_type.onRender({
           session_persistence_type: "",
         }),
         "",
-        "it should return correct text"
+        "it should return correct text",
       );
     });
     it("should not have session_persistence_type as invalid", () => {
       assert.isFalse(
         craig.load_balancers.session_persistence_type.invalid(),
-        "it should be false"
+        "it should be false",
       );
     });
     it("should render proxy_protocol correctly", () => {
@@ -444,31 +444,31 @@ describe("load_balancers", () => {
           proxy_protocol: "V2",
         }),
         "v2",
-        "it should return correct data"
+        "it should return correct data",
       );
       assert.deepEqual(
         craig.load_balancers.proxy_protocol.onInputChange({}),
         "",
-        "it should return correct data"
+        "it should return correct data",
       );
       assert.deepEqual(
         craig.load_balancers.proxy_protocol.onRender({
           proxy_protocol: "disabled",
         }),
         "Disabled",
-        "it should render correctly"
+        "it should render correctly",
       );
       assert.deepEqual(
         craig.load_balancers.proxy_protocol.onRender({
           proxy_protocol: "disabled",
         }),
         "Disabled",
-        "it should render correctly"
+        "it should render correctly",
       );
       assert.deepEqual(
         craig.load_balancers.proxy_protocol.onRender({ proxy_protocol: "v1" }),
         "V1",
-        "it should render correctly"
+        "it should render correctly",
       );
     });
     it("should return correct invalid text for health delay", () => {
@@ -478,7 +478,7 @@ describe("load_balancers", () => {
           health_timeout: "5",
         }),
         "Must be greater than Health Timeout value",
-        "it should return correct invalid text"
+        "it should return correct invalid text",
       );
       assert.deepEqual(
         craig.load_balancers.health_delay.invalidText({
@@ -486,7 +486,7 @@ describe("load_balancers", () => {
           health_timeout: "5",
         }),
         "Must be a whole number between 5 and 3000",
-        "it should return correct invalid text"
+        "it should return correct invalid text",
       );
     });
     it("should render listener protocol", () => {
@@ -495,12 +495,12 @@ describe("load_balancers", () => {
           listener_protocol: "https",
         }),
         "HTTPS",
-        "it should return correct value"
+        "it should return correct value",
       );
       assert.deepEqual(
         craig.load_balancers.listener_protocol.onRender({}),
         "",
-        "it should return correct value"
+        "it should return correct value",
       );
     });
     it("should handle algoritm on input change", () => {
@@ -509,7 +509,7 @@ describe("load_balancers", () => {
           algorithm: "Round Robin",
         }),
         "round_robin",
-        "it should return correct value"
+        "it should return correct value",
       );
     });
     it("should have invalid target_vsi if none selected", () => {
@@ -517,59 +517,59 @@ describe("load_balancers", () => {
         craig.load_balancers.target_vsi.invalid({
           target_vsi: [],
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should return correct groups for target vsi", () => {
       assert.deepEqual(
         craig.load_balancers.target_vsi.groups({}),
         [],
-        "it should be empty"
+        "it should be empty",
       );
       assert.deepEqual(
         craig.load_balancers.target_vsi.groups(
           { vpc: "workload" },
-          { craig: craig }
+          { craig: craig },
         ),
         [],
-        "it should be empty"
+        "it should be empty",
       );
       assert.deepEqual(
         craig.load_balancers.target_vsi.groups(
           { vpc: "management" },
-          { craig: craig }
+          { craig: craig },
         ),
         ["management-server"],
-        "it should have server"
+        "it should have server",
       );
     });
     it("should return type on render", () => {
       assert.deepEqual(
         craig.load_balancers.type.onRender({ type: "" }),
         "",
-        "it should return correct data"
+        "it should return correct data",
       );
       assert.deepEqual(
         craig.load_balancers.type.onRender({ type: "private" }),
         "Private (NLB)",
-        "it should return correct data"
+        "it should return correct data",
       );
       assert.deepEqual(
         craig.load_balancers.type.onRender({ type: "public" }),
         "Public (ALB)",
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return type on input change", () => {
       assert.deepEqual(
         craig.load_balancers.type.onInputChange({ type: "Public (ALB)" }),
         "public",
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should set subnets and security groups on vpc change", () => {
       let data = {};
-      craig.load_balancers.vpc.onStateChange(data, {}, "vpc"),
+      (craig.load_balancers.vpc.onStateChange(data, {}, "vpc"),
         assert.deepEqual(
           data,
           {
@@ -577,15 +577,15 @@ describe("load_balancers", () => {
             subnets: [],
             vpc: "vpc",
           },
-          "it should set values"
-        );
+          "it should set values",
+        ));
     });
     it("should add subnets for vsi deployment", () => {
       let actualData = {};
       craig.load_balancers.target_vsi.onStateChange(
         actualData,
         { craig: craig },
-        ["management-server"]
+        ["management-server"],
       );
       assert.deepEqual(
         actualData,
@@ -593,44 +593,44 @@ describe("load_balancers", () => {
           target_vsi: ["management-server"],
           subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
         },
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct invalid values for connection_limit", () => {
       assert.isFalse(
         craig.load_balancers.connection_limit.invalid({}),
-        "it should be valid when no connection limit"
+        "it should be valid when no connection limit",
       );
       assert.isTrue(
         craig.load_balancers.connection_limit.invalid({
           connection_limit: "-12",
         }),
-        "it should be invalid when not in range"
+        "it should be invalid when not in range",
       );
     });
     it("should return correct invalid values for health_delay", () => {
       assert.isTrue(
         craig.load_balancers.health_delay.invalid({}),
-        "it should be invalid when unfound"
+        "it should be invalid when unfound",
       );
       assert.isTrue(
         craig.load_balancers.health_delay.invalid({
           health_delay: "5.5",
         }),
-        "it should be invalid when not whole number"
+        "it should be invalid when not whole number",
       );
       assert.isTrue(
         craig.load_balancers.health_delay.invalid({
           health_delay: "-12",
         }),
-        "it should be invalid when not in range"
+        "it should be invalid when not in range",
       );
       assert.isTrue(
         craig.load_balancers.health_delay.invalid({
           health_delay: "12",
           health_timeout: "12",
         }),
-        "it should be invalid when in range and less or equal to than health_timeout"
+        "it should be invalid when in range and less or equal to than health_timeout",
       );
     });
   });

@@ -90,7 +90,7 @@ export const ToolTipWrapper = (props) => {
     props.field === undefined
   ) {
     throw new Error(
-      "ToolTipWrapper expects `props.labelText` or `props.field` when rendering labelText to be provided, got neither. To not render label text, use the `noLabelText` prop."
+      "ToolTipWrapper expects `props.labelText` or `props.field` when rendering labelText to be provided, got neither. To not render label text, use the `noLabelText` prop.",
     );
   }
   // remove label text from components where it is not valid param

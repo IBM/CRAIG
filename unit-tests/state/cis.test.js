@@ -39,7 +39,7 @@ describe("cis", () => {
             dns_records: [],
           },
         ],
-        "it should create a new cis instance"
+        "it should create a new cis instance",
       );
     });
   });
@@ -64,12 +64,12 @@ describe("cis", () => {
           data: {
             name: "cis",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.cis[0].name,
         "aaaa",
-        "it should update the instance"
+        "it should update the instance",
       );
     });
   });
@@ -92,12 +92,12 @@ describe("cis", () => {
             domains: [],
             dns_records: [],
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.cis,
         [],
-        "it should create a new cis instance"
+        "it should create a new cis instance",
       );
     });
   });
@@ -123,7 +123,7 @@ describe("cis", () => {
             innerFormProps: {
               arrayParentName: "cis",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis,
@@ -142,7 +142,7 @@ describe("cis", () => {
               dns_records: [],
             },
           ],
-          "it should add domain"
+          "it should add domain",
         );
       });
     });
@@ -165,7 +165,7 @@ describe("cis", () => {
             innerFormProps: {
               arrayParentName: "cis",
             },
-          }
+          },
         );
         craig.cis.domains.save(
           {
@@ -178,7 +178,7 @@ describe("cis", () => {
             data: {
               domain: "example.com",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis,
@@ -197,7 +197,7 @@ describe("cis", () => {
               dns_records: [],
             },
           ],
-          "it should add domain"
+          "it should add domain",
         );
       });
     });
@@ -219,7 +219,7 @@ describe("cis", () => {
             innerFormProps: {
               arrayParentName: "cis",
             },
-          }
+          },
         );
         craig.cis.domains.delete(
           {
@@ -231,7 +231,7 @@ describe("cis", () => {
             data: {
               domain: "example.com",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis,
@@ -244,7 +244,7 @@ describe("cis", () => {
               dns_records: [],
             },
           ],
-          "it should add domain"
+          "it should add domain",
         );
       });
     });
@@ -258,9 +258,9 @@ describe("cis", () => {
             },
             {
               craig: craig,
-            }
+            },
           ),
-          "it should be disabled"
+          "it should be disabled",
         );
       });
       it("should be disabled when a domain has an invalid duplicate domain", () => {
@@ -280,7 +280,7 @@ describe("cis", () => {
             innerFormProps: {
               arrayParentName: "cis",
             },
-          }
+          },
         );
         craig.cis.domains.create(
           {
@@ -291,7 +291,7 @@ describe("cis", () => {
             innerFormProps: {
               arrayParentName: "cis",
             },
-          }
+          },
         );
         assert.isTrue(
           disableSave(
@@ -304,9 +304,9 @@ describe("cis", () => {
               data: {
                 domain: "egg.com",
               },
-            }
+            },
           ),
-          "it should be disabled"
+          "it should be disabled",
         );
       });
     });
@@ -336,7 +336,7 @@ describe("cis", () => {
             innerFormProps: {
               arrayParentName: "cis",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis,
@@ -358,7 +358,7 @@ describe("cis", () => {
               domains: [],
             },
           ],
-          "it should add domain"
+          "it should add domain",
         );
       });
     });
@@ -383,7 +383,7 @@ describe("cis", () => {
             innerFormProps: {
               arrayParentName: "cis",
             },
-          }
+          },
         );
         craig.cis.dns_records.save(
           {
@@ -396,7 +396,7 @@ describe("cis", () => {
           {
             arrayParentName: "cis",
             data: { name: "test-example" },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis,
@@ -418,7 +418,7 @@ describe("cis", () => {
               domains: [],
             },
           ],
-          "it should add domain"
+          "it should add domain",
         );
       });
     });
@@ -443,7 +443,7 @@ describe("cis", () => {
             innerFormProps: {
               arrayParentName: "cis",
             },
-          }
+          },
         );
         craig.cis.dns_records.delete(
           {
@@ -458,7 +458,7 @@ describe("cis", () => {
             data: {
               name: "test-example",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.cis,
@@ -471,7 +471,7 @@ describe("cis", () => {
               domains: [],
             },
           ],
-          "it should add domain"
+          "it should add domain",
         );
       });
     });
@@ -497,7 +497,7 @@ describe("cis", () => {
             innerFormProps: {
               arrayParentName: "frog",
             },
-          }
+          },
         );
         assert.isTrue(
           disableSave(
@@ -513,9 +513,9 @@ describe("cis", () => {
               innerFormProps: {
                 arrayParentName: "cis",
               },
-            }
+            },
           ),
-          "it should be disabled"
+          "it should be disabled",
         );
       });
       it("should not be disabled when ttl is empty string", () => {
@@ -545,9 +545,9 @@ describe("cis", () => {
               innerFormProps: {
                 arrayParentName: "cis",
               },
-            }
+            },
           ),
-          "it should be disabled"
+          "it should be disabled",
         );
       });
       it("should be disabled when ttl is not a whole number", () => {
@@ -574,9 +574,9 @@ describe("cis", () => {
               innerFormProps: {
                 arrayParentName: "cis",
               },
-            }
+            },
           ),
-          "it should be disabled"
+          "it should be disabled",
         );
       });
     });
@@ -602,9 +602,9 @@ describe("cis", () => {
               name: "",
             },
             craig: craig,
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
   });
@@ -616,9 +616,9 @@ describe("cis", () => {
             { domain: "sub.cis-terraform.com" },
             {
               craig: state(),
-            }
+            },
           ),
-          "it should be false"
+          "it should be false",
         );
       });
       it("should be invalid with spaces subdomains", () => {
@@ -627,9 +627,9 @@ describe("cis", () => {
             { domain: "sub.cis-  terraform.com" },
             {
               craig: state(),
-            }
+            },
           ),
-          "it should be false"
+          "it should be false",
         );
       });
     });
@@ -653,15 +653,15 @@ describe("cis", () => {
                 innerFormProps: {
                   arrayParentName: "cis",
                 },
-              }
+              },
             );
             assert.deepEqual(
               craig.cis.dns_records.domain.groups(
                 {},
-                { craig: craig, arrayParentName: "cis" }
+                { craig: craig, arrayParentName: "cis" },
               ),
               ["example.com"],
-              "it should return domains"
+              "it should return domains",
             );
           });
         });

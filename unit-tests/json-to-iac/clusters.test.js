@@ -28,10 +28,10 @@ describe("clusters", () => {
           workers_per_subnet: 2,
           private_endpoint: false,
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
   name                            = "\${var.prefix}-workload-cluster-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -74,7 +74,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster_cluster" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create terraform code for iks cluster with private endpoint", () => {
@@ -973,10 +973,10 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster_cluster" {
           },
           event_streams: [],
           load_balancers: [],
-        }
+        },
       );
       let expectedData = `
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -1017,7 +1017,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create terraform code for iks cluster with private endpoint with a bad kms ref", () => {
@@ -1879,10 +1879,10 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
           },
           event_streams: [],
           load_balancers: [],
-        }
+        },
       );
       let expectedData = `
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -1923,7 +1923,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create terraform code for iks cluster with private endpoint and imported subnet", () => {
@@ -2786,10 +2786,10 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
           },
           event_streams: [],
           load_balancers: [],
-        }
+        },
       );
       let expectedData = `
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -2830,7 +2830,7 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -2851,14 +2851,14 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
           vpc: "workload",
           workers_per_subnet: 2,
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
@@ -2879,7 +2879,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create terraform code for worker pool with imported subnet", () => {
@@ -2896,14 +2896,14 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
           vpc: "workload",
           workers_per_subnet: 2,
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
@@ -2924,7 +2924,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -2939,7 +2939,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
 # Workload Cluster
 ##############################################################################
 
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -2979,11 +2979,11 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
   }
 }
 
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
@@ -3002,11 +3002,37 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
 }
 
 ##############################################################################
+
+##############################################################################
+# Workload Cluster Security Group
+##############################################################################
+
+data "ibm_is_security_groups" "workload_security_groups" {
+  vpc_crn = ibm_container_vpc_cluster.workload_vpc_workload.crn
+  depends_on = [
+    ibm_container_vpc_cluster.workload_vpc_workload
+  ]
+}
+
+locals {
+  workload_security_group_id = [
+    for group in data.ibm_is_security_groups.workload_security_groups.security_groups :
+    group if group.name == "kube-\${ibm_container_vpc_cluster.workload_vpc_workload.id}"
+  ][0].id
+}
+
+resource "ibm_is_security_group_rule" "workload_vpc_workload_cluster_security_group_sg_rule_allow_ibm_inbound" {
+  group     = local.workload_security_group_id
+  remote    = "161.26.0.0/16"
+  direction = "inbound"
+}
+
+##############################################################################
 `;
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return cluster terraform with logging and monitoring integration", () => {
@@ -3017,7 +3043,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
 # Workload Cluster
 ##############################################################################
 
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -3057,11 +3083,11 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
   }
 }
 
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
@@ -3082,11 +3108,37 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
 ##############################################################################
 
 ##############################################################################
+# Workload Cluster Security Group
+##############################################################################
+
+data "ibm_is_security_groups" "workload_security_groups" {
+  vpc_crn = ibm_container_vpc_cluster.workload_vpc_workload.crn
+  depends_on = [
+    ibm_container_vpc_cluster.workload_vpc_workload
+  ]
+}
+
+locals {
+  workload_security_group_id = [
+    for group in data.ibm_is_security_groups.workload_security_groups.security_groups :
+    group if group.name == "kube-\${ibm_container_vpc_cluster.workload_vpc_workload.id}"
+  ][0].id
+}
+
+resource "ibm_is_security_group_rule" "workload_vpc_workload_cluster_security_group_sg_rule_allow_ibm_inbound" {
+  group     = local.workload_security_group_id
+  remote    = "161.26.0.0/16"
+  direction = "inbound"
+}
+
+##############################################################################
+
+##############################################################################
 # Workload Cluster Add Ons
 ##############################################################################
 
 resource "ibm_ob_logging" "workload_cluster_logging" {
-  cluster     = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster     = ibm_container_vpc_cluster.workload_vpc_workload.id
   instance_id = ibm_resource_instance.logdna.guid
   depends_on = [
     logdna_key.logdna_ingestion_key
@@ -3094,7 +3146,7 @@ resource "ibm_ob_logging" "workload_cluster_logging" {
 }
 
 resource "ibm_ob_monitoring" "workload_cluster_monitoring" {
-  cluster     = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster     = ibm_container_vpc_cluster.workload_vpc_workload.id
   instance_id = ibm_resource_instance.sysdig.guid
   depends_on = [
     ibm_resource_key.sysdig_key
@@ -3106,7 +3158,7 @@ resource "ibm_ob_monitoring" "workload_cluster_monitoring" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return cluster terraform with opaque secret", () => {
@@ -3153,7 +3205,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_secrets_manager_to_cont
 # Workload Cluster
 ##############################################################################
 
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -3193,11 +3245,11 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
   }
 }
 
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
@@ -3213,6 +3265,32 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
     name      = "\${var.region}-3"
     subnet_id = module.workload_vpc.subnet_vsi_zone_3_id
   }
+}
+
+##############################################################################
+
+##############################################################################
+# Workload Cluster Security Group
+##############################################################################
+
+data "ibm_is_security_groups" "workload_security_groups" {
+  vpc_crn = ibm_container_vpc_cluster.workload_vpc_workload.crn
+  depends_on = [
+    ibm_container_vpc_cluster.workload_vpc_workload
+  ]
+}
+
+locals {
+  workload_security_group_id = [
+    for group in data.ibm_is_security_groups.workload_security_groups.security_groups :
+    group if group.name == "kube-\${ibm_container_vpc_cluster.workload_vpc_workload.id}"
+  ][0].id
+}
+
+resource "ibm_is_security_group_rule" "workload_vpc_workload_cluster_security_group_sg_rule_allow_ibm_inbound" {
+  group     = local.workload_security_group_id
+  remote    = "161.26.0.0/16"
+  direction = "inbound"
 }
 
 ##############################################################################
@@ -3262,7 +3340,7 @@ resource "ibm_sm_username_password_secret" "secrets_manager_username_secret_secr
 }
 
 resource "ibm_container_ingress_secret_opaque" "workload_ingress_example" {
-  cluster          = ibm_container_vpc_cluster.workload_vpc_workload_cluster.name
+  cluster          = ibm_container_vpc_cluster.workload_vpc_workload.name
   secret_name      = "\${var.prefix}-ingress-example"
   secret_namespace = "ns"
   persistence      = true
@@ -3279,7 +3357,7 @@ resource "ibm_container_ingress_secret_opaque" "workload_ingress_example" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
       slzNetwork.clusters[0].opaque_secrets = [];
     });
@@ -3318,7 +3396,7 @@ resource "ibm_container_ingress_secret_opaque" "workload_ingress_example" {
 # Workload Cluster
 ##############################################################################
 
-resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
+resource "ibm_container_vpc_cluster" "workload_vpc_workload" {
   name                            = "\${var.prefix}-workload-cluster"
   vpc_id                          = module.workload_vpc.id
   resource_group_id               = ibm_resource_group.slz_workload_rg.id
@@ -3358,11 +3436,11 @@ resource "ibm_container_vpc_cluster" "workload_vpc_workload_cluster" {
   }
 }
 
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   entitlement       = "cloud_pak"
@@ -3378,6 +3456,32 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
     name      = "\${var.region}-3"
     subnet_id = module.workload_vpc.subnet_vsi_zone_3_id
   }
+}
+
+##############################################################################
+
+##############################################################################
+# Workload Cluster Security Group
+##############################################################################
+
+data "ibm_is_security_groups" "workload_security_groups" {
+  vpc_crn = ibm_container_vpc_cluster.workload_vpc_workload.crn
+  depends_on = [
+    ibm_container_vpc_cluster.workload_vpc_workload
+  ]
+}
+
+locals {
+  workload_security_group_id = [
+    for group in data.ibm_is_security_groups.workload_security_groups.security_groups :
+    group if group.name == "kube-\${ibm_container_vpc_cluster.workload_vpc_workload.id}"
+  ][0].id
+}
+
+resource "ibm_is_security_group_rule" "workload_vpc_workload_cluster_security_group_sg_rule_allow_ibm_inbound" {
+  group     = local.workload_security_group_id
+  remote    = "161.26.0.0/16"
+  direction = "inbound"
 }
 
 ##############################################################################
@@ -3427,7 +3531,7 @@ resource "ibm_sm_username_password_secret" "secrets_manager_username_secret_secr
 }
 
 resource "ibm_container_ingress_secret_opaque" "workload_ingress_example" {
-  cluster          = ibm_container_vpc_cluster.workload_vpc_workload_cluster.name
+  cluster          = ibm_container_vpc_cluster.workload_vpc_workload.name
   secret_name      = "\${var.prefix}-ingress-example"
   secret_namespace = "ns"
   persistence      = true
@@ -3444,7 +3548,7 @@ resource "ibm_container_ingress_secret_opaque" "workload_ingress_example" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
       slzNetwork.clusters[0].opaque_secrets = [];
     });
@@ -4340,15 +4444,15 @@ resource "ibm_container_ingress_secret_opaque" "workload_ingress_example" {
           },
           event_streams: [],
           load_balancers: [],
-        }
+        },
       );
 
       let expectedData = `
-resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool_pool" {
+resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_pool" {
   worker_pool_name  = "\${var.prefix}-workload-cluster-logging-pool"
   vpc_id            = module.workload_vpc.id
   resource_group_id = ibm_resource_group.slz_workload_rg.id
-  cluster           = ibm_container_vpc_cluster.workload_vpc_workload_cluster.id
+  cluster           = ibm_container_vpc_cluster.workload_vpc_workload.id
   flavor            = "bx2.16x64"
   worker_count      = 2
   zones {
@@ -4368,7 +4472,7 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

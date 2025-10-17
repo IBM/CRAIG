@@ -41,7 +41,7 @@ function copySecurityGroup(store, sourceSecurityGroup, destinationVpc) {
   let oldSg = new revision(store.store.json).child(
     "security_groups",
     sourceSecurityGroup,
-    "name"
+    "name",
   ).data;
   let sg = {};
   transpose(oldSg, sg);
@@ -75,7 +75,7 @@ function copyNetworkAcl(store, sourceVpc, aclName, destinationVpc) {
     rule.acl = acl.name;
   });
   getObjectFromArray(store.store.json.vpcs, "name", destinationVpc).acls.push(
-    acl
+    acl,
   );
   store.update();
 }
@@ -169,16 +169,16 @@ function getAllRuleNames(store, ruleSource, sourceName) {
       new revision(store.store.json)
         .child("vpcs", sourceName, "name")
         .child("acls", ruleSource, "name").data.rules,
-      "name"
+      "name",
     );
   } else if (ruleSource) {
     return splat(
       new revision(store.store.json).child(
         "security_groups",
         ruleSource,
-        "name"
+        "name",
       ).data.rules,
-      "name"
+      "name",
     );
   } else return [];
 }

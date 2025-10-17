@@ -14,8 +14,8 @@ function leftNavItemClassName(window, path, expanded, invalid, isHovering) {
     className += invalid
       ? "invalid-form-left-nav whiteFill "
       : expanded
-      ? "blueTileExpanded whiteFill "
-      : "blueTileRail whiteFill ";
+        ? "blueTileExpanded whiteFill "
+        : "blueTileRail whiteFill ";
   } else if (invalid) {
     className += "invalid-form-left-nav ";
     if (!isHovering) {

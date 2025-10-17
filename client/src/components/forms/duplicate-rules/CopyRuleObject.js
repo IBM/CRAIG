@@ -39,14 +39,14 @@ const CopyRuleObject = (props) => {
                     props.craig.store.json.security_groups.filter((sg) => {
                       if (!sg.use_data) return sg;
                     }),
-                    "name"
+                    "name",
                   )
                 : splat(
                     props.data.acls.filter((acl) => {
                       if (!acl.use_data) return acl;
                     }),
-                    "name"
-                  )
+                    "name",
+                  ),
             ),
             disabled: (stateData) => {
               return stateData.v2;
@@ -80,7 +80,7 @@ const CopyRuleObject = (props) => {
                 if (props.isSecurityGroup) {
                   return vpc;
                 } else if (vpc !== props.data.name) return vpc;
-              })
+              }),
             ),
             disabled: (stateData) => {
               return false;

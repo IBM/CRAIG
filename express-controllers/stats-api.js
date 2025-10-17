@@ -33,8 +33,8 @@ function statsRoutes(axios, controller) {
           paths.forEach((path) => {
             statsPromises.push(
               axios.get(
-                `https://raw.githubusercontent.com/IBM/CRAIG/traffic/${path}`
-              )
+                `https://raw.githubusercontent.com/IBM/CRAIG/traffic/${path}`,
+              ),
             );
           });
           return Promise.all(statsPromises);
@@ -54,8 +54,8 @@ function statsRoutes(axios, controller) {
           statsArray[1] == "site"
             ? "ref"
             : statsArray[2] == "views"
-            ? "views"
-            : "clones";
+              ? "views"
+              : "clones";
         statsArray.splice(0, 4);
         statsArray.forEach((item, index) => {
           if (index % 3 == 0) {

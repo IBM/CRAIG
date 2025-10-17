@@ -73,7 +73,7 @@ const validate = function (json) {
     component,
     addressName,
     componentAddress,
-    testParams
+    testParams,
   ) {
     let params = testParams || {}; // set test params
     // if override value is in the params object, not testing other ways results in an
@@ -89,7 +89,7 @@ const validate = function (json) {
         "Secrets Manager",
         "Security Compliance Center",
       ],
-      componentName
+      componentName,
     )
       ? "requires"
       : "require";
@@ -102,11 +102,11 @@ const validate = function (json) {
     // if testValue is null
     if (testValue === null) {
       throw new Error(
-        `${componentName} ${pluralRequire} a ${addressName}, ${parentName}${composedName} is null.`
+        `${componentName} ${pluralRequire} a ${addressName}, ${parentName}${composedName} is null.`,
       );
     } else if (testValue === undefined) {
       throw new Error(
-        `${componentName} requires a ${addressName}, ${componentAddress} missing from JSON.`
+        `${componentName} requires a ${addressName}, ${componentAddress} missing from JSON.`,
       );
     }
   }
@@ -129,7 +129,7 @@ const validate = function (json) {
       component,
       "resource group",
       "resource_group",
-      params
+      params,
     );
   }
 
@@ -144,14 +144,14 @@ const validate = function (json) {
     componentName,
     component,
     testParams,
-    overrideField
+    overrideField,
   ) {
     validationTest(
       componentName,
       component,
       "encryption key",
       overrideField,
-      testParams
+      testParams,
     );
   }
 
@@ -177,7 +177,7 @@ const validate = function (json) {
       throw new Error(
         `${componentName} require at least one subnet to provision, ${
           params?.parentName ? params.parentName + " " : ""
-        }\`${component.name}\` subnets is [].`
+        }\`${component.name}\` subnets is [].`,
       );
     }
   }
@@ -289,9 +289,9 @@ const validate = function (json) {
             splat(
               getObjectFromArray(json.key_management, "name", instance.kms)
                 .keys,
-              "name"
+              "name",
             ),
-            bucket.kms_key
+            bucket.kms_key,
           )
         ) {
           throw new Error(
@@ -299,8 +299,8 @@ const validate = function (json) {
               instance.name,
               bucket.name,
               instance.kms,
-              bucket.kms_key
-            )
+              bucket.kms_key,
+            ),
           );
         }
       });
@@ -407,17 +407,17 @@ const validate = function (json) {
       !contains(
         splat(
           getObjectFromArray(json.key_management, "name", cluster.kms).keys,
-          "name"
+          "name",
         ),
-        cluster.encryption_key
+        cluster.encryption_key,
       )
     ) {
       throw new Error(
         simpleErrors.invalidClusterEncryptionKey(
           cluster.name,
           cluster.kms,
-          cluster.encryption_key
-        )
+          cluster.encryption_key,
+        ),
       );
     }
 
@@ -478,7 +478,7 @@ const validate = function (json) {
       let sgObject = getObjectFromArray(json.security_groups, "name", sg);
       if (sgObject.vpc !== deployment.vpc) {
         throw new Error(
-          `Security Group ${sg} not in the same vpc as ${deployment.name}'s VPC, ${deployment.vpc}`
+          `Security Group ${sg} not in the same vpc as ${deployment.name}'s VPC, ${deployment.vpc}`,
         );
       }
       updateNetworkingRulesForCompatibility(sgObject?.rules);
@@ -504,8 +504,8 @@ const validate = function (json) {
           action === "setToNull"
             ? null
             : action === "setToEmptyList"
-            ? []
-            : false;
+              ? []
+              : false;
         // for each field to set
         componentFields[action].forEach((field) => {
           if (!containsKeys(instance, field)) {
@@ -532,7 +532,7 @@ const validate = function (json) {
       // add unfound list fields
       addUnfoundListFields(
         instance,
-        requiredOptionalFields.shallowComponents[component]
+        requiredOptionalFields.shallowComponents[component],
       );
       // if the component has nested components
       if (containsKeys(requiredOptionalFields.nestedComponents, component)) {
@@ -545,10 +545,10 @@ const validate = function (json) {
               // add unfound list fields
               addUnfoundListFields(
                 nestedInstance,
-                requiredOptionalFields.nestedComponents[component][subField]
+                requiredOptionalFields.nestedComponents[component][subField],
               );
             });
-          }
+          },
         );
       }
     });

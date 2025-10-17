@@ -40,8 +40,8 @@ describe("tabPanel", () => {
       await waitFor(() => {
         expect(
           screen.getByText(
-            "Import existing CRAIG.json data for terraform deployment." // expect this text is on the page, it will be if we have switched tabs
-          )
+            "Import existing CRAIG.json data for terraform deployment.", // expect this text is on the page, it will be if we have switched tabs
+          ),
         ).toBeInTheDocument();
       });
     });
@@ -59,15 +59,15 @@ describe("tabPanel", () => {
       await waitFor(() => {
         expect(
           screen.getByText(
-            "Import resource configuration from SLZ override.json file." // expect this text is on the page, it will be if we have switched tabs
-          )
+            "Import resource configuration from SLZ override.json file.", // expect this text is on the page, it will be if we have switched tabs
+          ),
         ).toBeInTheDocument();
       });
     });
     test("override json should be disabled until prefix typed", async () => {
       fireEvent.click(screen.getByRole("tab", { name: /Import SLZ JSON/i })); // before each import json test, switch to the import json tab
       expect(
-        screen.getByRole("textbox", { name: "import-json" })
+        screen.getByRole("textbox", { name: "import-json" }),
       ).toBeDisabled();
     });
     test("override json can be imported", async () => {
@@ -75,7 +75,7 @@ describe("tabPanel", () => {
       const user = userEvent.setup();
       await user.type(
         screen.getByLabelText(/Secure Landing Zone Prefix/i),
-        "slz"
+        "slz",
       );
       // use fireEvent here due to how userEvent works with typing - can't have _ in json
       fireEvent.change(screen.getByRole("textbox", { name: "import-json" }), {
@@ -91,13 +91,13 @@ describe("edge networking", () => {
     user.click(
       screen.getByRole("button", {
         name: "(optional)-transit-vpc-and-edge-networking-open-close",
-      })
+      }),
     );
     await waitFor(() => {
       expect(
         screen.getByRole("button", {
           name: "edge-networking-save",
-        }) // save button will exist if toggleform opened correctly
+        }), // save button will exist if toggleform opened correctly
       ).toBeInTheDocument();
     });
   });
@@ -107,20 +107,20 @@ describe("edge networking", () => {
     await user.click(
       screen.getByRole("button", {
         name: "(optional)-transit-vpc-and-edge-networking-open-close",
-      })
+      }),
     );
     // after form is opened, we expect save to be disabled
     expect(
-      screen.getByRole("button", { name: "edge-networking-save" })
+      screen.getByRole("button", { name: "edge-networking-save" }),
     ).toBeDisabled();
     await user.click(screen.getByLabelText(/Create a New Edge VPC/i)); // select edge
     await user.click(screen.getByLabelText(/Both VPN and WAF/i)); // select vpn-and-waf pattern
     await user.selectOptions(
       screen.getByLabelText(/Edge Networking Zones/i),
-      "1"
+      "1",
     );
     expect(
-      screen.getByRole("button", { name: "edge-networking-save" })
+      screen.getByRole("button", { name: "edge-networking-save" }),
     ).toBeEnabled();
   });
 });

@@ -14,7 +14,7 @@ const ObservabilityForm = (props) => {
         name="Observability"
         about={RenderDocs(
           "observability",
-          craig.store.json._options.template
+          craig.store.json._options.template,
         )()}
         form={
           <div>

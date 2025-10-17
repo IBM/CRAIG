@@ -86,20 +86,20 @@ function secretsManagerOnStoreUpdate(config) {
           ) {
             cert[field] = contains(
               ["ext_key_usage", "key_usage", "allowed_domains"],
-              field
+              field,
             )
               ? []
               : contains(
-                  [
-                    "auto_rotate",
-                    "client_flag",
-                    "server_flag",
-                    "allow_subdomains",
-                  ],
-                  field
-                )
-              ? false
-              : null;
+                    [
+                      "auto_rotate",
+                      "client_flag",
+                      "server_flag",
+                      "allow_subdomains",
+                    ],
+                    field,
+                  )
+                ? false
+                : null;
           } else if (
             field === "certificate_authority" &&
             cert.type === "template" &&
@@ -157,7 +157,7 @@ function secretsManagerSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "secrets_manager"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -217,7 +217,7 @@ function initSecretsManagerStore(store) {
     delete: secretsManagerDelete,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "resource_group", "encryption_key"],
-      "secrets_manager"
+      "secrets_manager",
     ),
     schema: {
       use_data: {
@@ -289,7 +289,7 @@ function initSecretsManagerStore(store) {
             "secrets_manager",
             "secrets_groups",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         save: function (config, stateData, componentProps) {
@@ -298,7 +298,7 @@ function initSecretsManagerStore(store) {
             "secrets_manager",
             "secrets_groups",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         delete: function (config, stateData, componentProps) {
@@ -306,13 +306,13 @@ function initSecretsManagerStore(store) {
             config,
             "secrets_manager",
             "secrets_groups",
-            componentProps
+            componentProps,
           );
         },
         shouldDisableSave: shouldDisableComponentSave(
           ["name"],
           "secrets_manager",
-          "secrets_groups"
+          "secrets_groups",
         ),
         schema: {
           name: nameField("secrets_groups"),
@@ -341,7 +341,7 @@ function initSecretsManagerStore(store) {
             "signing_method",
           ],
           "secrets_manager",
-          "certificates"
+          "certificates",
         ),
         create: function (config, stateData, componentProps) {
           pushToChildFieldModal(
@@ -349,7 +349,7 @@ function initSecretsManagerStore(store) {
             "secrets_manager",
             "certificates",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         save: function (config, stateData, componentProps) {
@@ -358,7 +358,7 @@ function initSecretsManagerStore(store) {
             "secrets_manager",
             "certificates",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         delete: function (config, stateData, componentProps) {
@@ -366,7 +366,7 @@ function initSecretsManagerStore(store) {
             config,
             "secrets_manager",
             "certificates",
-            componentProps
+            componentProps,
           );
         },
         schema: {
@@ -394,11 +394,11 @@ function initSecretsManagerStore(store) {
                 stateData.type === "template"
                 ? false
                 : (stateData.common_name || "").match(
-                    /([a-z0-9]+\.)+[a-z0-9]+/g
+                    /([a-z0-9]+\.)+[a-z0-9]+/g,
                   ) === null;
             },
             invalidText: unconditionalInvalidText(
-              "Common name must match the regular expression /([a-z0-9]+.)+[a-z0-9]+/g"
+              "Common name must match the regular expression /([a-z0-9]+.)+[a-z0-9]+/g",
             ),
             hideWhen: function (stateData) {
               // hide when
@@ -429,15 +429,15 @@ function initSecretsManagerStore(store) {
                 getObjectFromArray(
                   componentProps.craig.store.json.secrets_manager,
                   "name",
-                  secretsManagerName
+                  secretsManagerName,
                 ).secrets_groups,
-                "name"
+                "name",
               );
             },
             invalid: function (stateData) {
               return contains(
                 ["root_ca", "intermediate_ca", "template"],
-                stateData.type
+                stateData.type,
               )
                 ? false
                 : fieldIsNullOrEmptyString("secrets_group")(stateData);
@@ -459,7 +459,7 @@ function initSecretsManagerStore(store) {
                 : (stateData.country || "").match(/^[A-Z]{1,4}$/g) === null;
             },
             invalidText: selectInvalidText(
-              "Enter a valid country code. Must match regular expression /^[A-Z]{1,4}$/g"
+              "Enter a valid country code. Must match regular expression /^[A-Z]{1,4}$/g",
             ),
             hideWhen: hideWhenPrivateCert,
           },
@@ -488,7 +488,7 @@ function initSecretsManagerStore(store) {
               return invalidDescription(stateData.description || "");
             },
             invalidText: unconditionalInvalidText(
-              "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/."
+              "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/.",
             ),
             placeholder: "(Optional) Description",
             hideWhen: hideWhenRootCa,
@@ -502,7 +502,7 @@ function initSecretsManagerStore(store) {
               let secretsManager = getObjectFromArray(
                 componentProps.craig.store.json.secrets_manager,
                 "name",
-                secretsManagerName
+                secretsManagerName,
               );
               let rootCaNames = [];
 
@@ -627,7 +627,7 @@ function initSecretsManagerStore(store) {
                       .set("A-z0-9-_")
                       .set("A-z0-9-_")
                       .oneOrMore()
-                      .done("g")
+                      .done("g"),
                   ) === null
                 ) {
                   incorrectDomains = true;
@@ -639,7 +639,7 @@ function initSecretsManagerStore(store) {
             onRender: ipCidrListTextArea("allowed_domains").onRender,
             invalidText: unconditionalInvalidText("Add at least one domain"),
             helperText: unconditionalInvalidText(
-              "Enter a comma separated list of domains"
+              "Enter a comma separated list of domains",
             ),
           },
           certificate_authority: {
@@ -659,7 +659,7 @@ function initSecretsManagerStore(store) {
               let secretsManager = getObjectFromArray(
                 componentProps.craig.store.json.secrets_manager,
                 "name",
-                secretsManagerName
+                secretsManagerName,
               );
               let rootCaNames = [];
 
@@ -691,7 +691,7 @@ function initSecretsManagerStore(store) {
               let secretsManager = getObjectFromArray(
                 componentProps.craig.store.json.secrets_manager,
                 "name",
-                secretsManagerName
+                secretsManagerName,
               );
               let rootCaNames = [];
 
@@ -749,7 +749,7 @@ function initSecretsManagerStore(store) {
                 : false;
             },
             invalitText: unconditionalInvalidText(
-              "Enter a number between 1 and 365"
+              "Enter a number between 1 and 365",
             ),
             hideWhen: hideWhenCertNotPrivate,
           },

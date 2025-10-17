@@ -38,9 +38,9 @@ describe("power-utils", () => {
           assert.deepEqual(
             err,
             "This is an error!",
-            "should be the same error message"
+            "should be the same error message",
           );
-        }
+        },
       );
     });
     it("should return correct data", () => {
@@ -82,9 +82,9 @@ describe("power-utils", () => {
                 storageType: "tier3",
               },
             ],
-            "should be correct data"
+            "should be correct data",
           );
-        }
+        },
       );
     });
     it("should return correct hard-coded json", () => {
@@ -94,9 +94,9 @@ describe("power-utils", () => {
           assert.deepEqual(
             data["dal10"],
             powerImageMap["dal10"],
-            "should be correct data"
+            "should be correct data",
           );
-        }
+        },
       );
     });
   });
@@ -108,16 +108,16 @@ describe("power-utils", () => {
           assert.deepEqual(
             err,
             "This is an error!",
-            "should be the same error message"
+            "should be the same error message",
           );
-        }
+        },
       );
     });
     it("should return correct data", () => {
       let reactFetch = new mockFetch(false, ["foo1", "foo2", "foo3"]);
       return powerStoragePoolFetch(
         ["dal10", "dal12"],
-        reactFetch.fetchPromise
+        reactFetch.fetchPromise,
       ).then((data) => {
         assert.deepEqual(data["dal10"], ["foo1", "foo2", "foo3"]);
       });
@@ -129,9 +129,9 @@ describe("power-utils", () => {
           assert.deepEqual(
             data["dal10"],
             powerStoragePoolRegionMap["dal10"],
-            "should be correct data"
+            "should be correct data",
           );
-        }
+        },
       );
     });
   });
@@ -145,12 +145,12 @@ describe("power-utils", () => {
       ]);
       return await getImagesAndStoragePools(
         ["dal10"],
-        reactFetch.fetchPromise
+        reactFetch.fetchPromise,
       ).then((data) => {
         assert.deepEqual(
           data.pools["dal10"],
           ["Tier3-Flash-2", "Tier3-Flash-1", "Tier1-Flash-2", "Tier1-Flash-1"],
-          "should be the same data"
+          "should be the same data",
         );
       });
     });
@@ -174,7 +174,7 @@ describe("power-utils", () => {
       ]);
       return await getImagesAndStoragePools(
         ["dal10"],
-        reactFetch.fetchPromise
+        reactFetch.fetchPromise,
       ).then((data) => {
         assert.deepEqual(
           data.images["dal10"],
@@ -195,7 +195,7 @@ describe("power-utils", () => {
               storageType: "tier3",
             },
           ],
-          "should be the same data"
+          "should be the same data",
         );
       });
     });

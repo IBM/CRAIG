@@ -63,7 +63,7 @@ const CopyRule = (props) => {
                 !isNullOrEmptyString(stateData.ruleSource) &&
                 (contains(
                   stateData.destinationRuleNames,
-                  stateData.ruleCopyName
+                  stateData.ruleCopyName,
                 ) ||
                   isNullOrEmptyString(stateData.ruleCopyName))
               );
@@ -71,7 +71,7 @@ const CopyRule = (props) => {
             invalidText: (stateData) => {
               return contains(
                 stateData.destinationRuleNames,
-                stateData.ruleCopyName
+                stateData.ruleCopyName,
               )
                 ? `Duplicate rule name "${stateData.ruleCopyName}" in destination "${stateData.ruleDestination}"`
                 : "Select a rule";

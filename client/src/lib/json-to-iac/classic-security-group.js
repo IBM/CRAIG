@@ -19,7 +19,7 @@ function formatClassicSgRule(rule) {
     `classic security group ${rule.classic_sg} rule ${rule.name}`,
     {
       security_group_id: `\${ibm_security_group.classic_security_group_${snakeCase(
-        rule.classic_sg
+        rule.classic_sg,
       )}.id}`,
       direction: rule.direction === "inbound" ? "ingress" : "egress",
       port_range_min:
@@ -34,7 +34,7 @@ function formatClassicSgRule(rule) {
         rule.ruleProtocol && rule.ruleProtocol !== "all"
           ? rule.ruleProtocol
           : undefined,
-    }
+    },
   );
 }
 
@@ -61,8 +61,8 @@ function formatClassicSg(group) {
       {
         name: kebabName([group.name]),
         description: group.description,
-      }
-    ) + ruleTf
+      },
+    ) + ruleTf,
   );
 }
 

@@ -22,7 +22,7 @@ function shouldDisplayService(props, field, item) {
         "load_balancers",
         "virtual_private_endpoints",
       ],
-      field
+      field,
     )
   ) {
     return (

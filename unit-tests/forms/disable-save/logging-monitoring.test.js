@@ -16,7 +16,7 @@ describe("logdna", () => {
           name: "test",
         },
         craig: state(),
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -34,7 +34,7 @@ describe("logdna", () => {
           name: "test",
         },
         craig: state(),
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -52,7 +52,7 @@ describe("logdna", () => {
           name: "test",
         },
         craig: state(),
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -70,7 +70,7 @@ describe("logdna", () => {
           name: "test",
         },
         craig: state(),
-      }
+      },
     );
     assert.isFalse(actualData, "it should not be disabled");
   });
@@ -90,7 +90,7 @@ describe("sysdig", () => {
           name: "test",
         },
         craig: state(),
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -107,7 +107,7 @@ describe("sysdig", () => {
           name: "test",
         },
         craig: state(),
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -124,7 +124,7 @@ describe("sysdig", () => {
           name: "test",
         },
         craig: state(),
-      }
+      },
     );
     assert.isFalse(actualData, "it should not be disabled");
   });

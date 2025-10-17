@@ -21,9 +21,9 @@ describe("vpc", () => {
         },
         {
           craig: state(),
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if vpc does not have resource group", () => {
@@ -36,9 +36,9 @@ describe("vpc", () => {
         },
         {
           craig: state(),
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a vpc has an invalid name", () => {
@@ -55,9 +55,9 @@ describe("vpc", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a vpc has an invalid name", () => {
@@ -85,9 +85,9 @@ describe("vpc", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a vpc has an invalid default network acl name", () => {
@@ -118,9 +118,9 @@ describe("vpc", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a vpc has an invalid default security group name", () => {
@@ -153,9 +153,9 @@ describe("vpc", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a vpc has an invalid default routing table name", () => {
@@ -189,9 +189,9 @@ describe("vpc", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
 });

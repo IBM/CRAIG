@@ -71,9 +71,9 @@ function f5ImageLocals() {
       jsonToTf(
         JSON.stringify({
           locals: f5Images(),
-        })
+        }),
       ) +
-      "\n"
+      "\n",
   ).replace(/I\sD/g, "ID");
 }
 
@@ -184,18 +184,18 @@ EOD}`,
     do_dec1: !template.license_type
       ? `\${var.license_type == "byol" ? chomp(local.do_byol_license) : "null"}`
       : template.license_type === "byol"
-      ? "${chomp(local.do_byol_license)}"
-      : "null",
+        ? "${chomp(local.do_byol_license)}"
+        : "null",
     do_dec2: !template.license_type
       ? '${var.license_type == "regkeypool" ? chomp(local.do_regekypool) : local.do_dec1}'
       : template.license_type === "regkeypool"
-      ? "${chomp(local.do_regekypool)}"
-      : "${local.do_dec1}",
+        ? "${chomp(local.do_regekypool)}"
+        : "${local.do_dec1}",
     do_local_declaration: !template.license_type
       ? `\${var.license_type == "utilitypool" ? chomp(local.do_utilitypool) : local.do_dec2}`
       : template.license_type === "utilitypool"
-      ? "${chomp(local.do_utilitypool)}"
-      : "${local.do_dec2}",
+        ? "${chomp(local.do_utilitypool)}"
+        : "${local.do_dec2}",
   };
 }
 
@@ -213,11 +213,11 @@ function f5TemplateLocals(template) {
       jsonToTf(
         JSON.stringify({
           locals: f5Locals(template),
-        })
+        }),
       )
         .replace(/"\$\{(?=file)/g, "")
         .replace('f5_user_data.yaml")}"', 'f5_user_data.yaml")') +
-      "\n"
+      "\n",
   );
 }
 
@@ -248,7 +248,7 @@ function f5TemplateFile(template, config) {
   let workloadSubnet = getObjectFromArray(
     edgeVpc.subnets,
     "name",
-    `f5-management-zone-1`
+    `f5-management-zone-1`,
   );
   return {
     data: {
@@ -277,7 +277,7 @@ function f5TemplateFile(template, config) {
       },
     },
     name: `user_data_${snakeCase(
-      `${template.hostname} zone ${template.zone}`
+      `${template.hostname} zone ${template.zone}`,
     )}`,
   };
 }
@@ -310,9 +310,11 @@ function f5TemplateUserData(template, config, instanceName) {
     "data",
     "template_file",
     `user_data_${snakeCase(
-      instanceName ? instanceName : `${template.hostname} zone ${template.zone}`
+      instanceName
+        ? instanceName
+        : `${template.hostname} zone ${template.zone}`,
     )}`,
-    f5TemplateFile(template, config).data
+    f5TemplateFile(template, config).data,
   );
 }
 
@@ -327,7 +329,7 @@ function f5TemplateUserData(template, config, instanceName) {
  */
 function formatF5Vsi(vsi, config) {
   vsi.user_data = `\${data.template_file.user_data_${snakeCase(
-    vsi.name
+    vsi.name,
   )}.rendered}`;
   vsi.image = contains(vsi.image, "local")
     ? vsi.image // if this line isn't here coverage test fails

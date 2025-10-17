@@ -290,7 +290,7 @@ class LeftNav extends React.Component {
                 splatContains(
                   category.links,
                   "path",
-                  window.location.pathname
+                  window.location.pathname,
                 )) ||
               !isV2Page;
             return (
@@ -320,7 +320,7 @@ class LeftNav extends React.Component {
                             ? false
                             : contains(
                                 this.props.invalidForms,
-                                item.jsonField
+                                item.jsonField,
                               ) || contains(this.props.invalidForms, item.path)
                         }
                       />

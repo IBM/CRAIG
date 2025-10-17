@@ -118,7 +118,7 @@ function initIamStore(store) {
         "session_expiration_in_seconds",
         "session_invalidation_in_seconds",
       ],
-      "iam_account_settings"
+      "iam_account_settings",
     ),
     schema: {
       enable: {
@@ -147,7 +147,7 @@ function initIamStore(store) {
         default: "",
         placeholder: "(Optional) X.X.X.X, X.X.X.X/X, ...",
         invalidText: unconditionalInvalidText(
-          "Enter a comma separated list of IP addresses or CIDR blocks"
+          "Enter a comma separated list of IP addresses or CIDR blocks",
         ),
         invalid: function (stateData) {
           return stateData.allowed_ip_addresses
@@ -210,7 +210,7 @@ function initIamStore(store) {
         onRender: function (stateData) {
           return isNullOrEmptyString(
             stateData?.restrict_create_service_id,
-            true
+            true,
           )
             ? ""
             : iamItems[stateData.restrict_create_service_id].display;
@@ -227,7 +227,7 @@ function initIamStore(store) {
         default: null,
         invalid: fieldIsNullOrEmptyString(
           "restrict_create_platform_apikey",
-          true
+          true,
         ),
         invalidText: unconditionalInvalidText("Invalid"),
         type: "select",
@@ -236,7 +236,7 @@ function initIamStore(store) {
         onRender: function (stateData) {
           return isNullOrEmptyString(
             stateData?.restrict_create_platform_apikey,
-            true
+            true,
           )
             ? ""
             : iamItems[stateData.restrict_create_platform_apikey].display;
@@ -255,11 +255,11 @@ function initIamStore(store) {
           return isRangeInvalid(
             stateData.session_expiration_in_seconds,
             900,
-            86400
+            86400,
           );
         },
         invalidText: unconditionalInvalidText(
-          "Must be a whole number between 900 and 86400"
+          "Must be a whole number between 900 and 86400",
         ),
         labelText: "(Optional) Session Expiration (sec)",
         placeholder: "900",
@@ -270,11 +270,11 @@ function initIamStore(store) {
           return isRangeInvalid(
             stateData.session_invalidation_in_seconds,
             900,
-            86400
+            86400,
           );
         },
         invalidText: unconditionalInvalidText(
-          "Must be a whole number between 900 and 86400"
+          "Must be a whole number between 900 and 86400",
         ),
         labelText: "(Optional) Session Invalidation (sec)",
         placeholder: "900",
@@ -388,7 +388,7 @@ function accessGroupSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "access_groups"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -416,7 +416,7 @@ function accessGroupPolicyCreate(config, stateData, componentProps) {
     "access_groups",
     "policies",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -432,7 +432,7 @@ function accessGroupPolicySave(config, stateData, componentProps) {
     "access_groups",
     "policies",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -459,7 +459,7 @@ function accessGroupDynamicPolicyCreate(config, stateData, componentProps) {
     "access_groups",
     "dynamic_policies",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -475,7 +475,7 @@ function accessGroupDynamicPolicySave(config, stateData, componentProps) {
     "access_groups",
     "dynamic_policies",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -546,7 +546,7 @@ function initAccessGroups(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name"],
           "access_groups",
-          "policies"
+          "policies",
         ),
         schema: {
           name: nameField("policies", {
@@ -603,7 +603,7 @@ function initAccessGroups(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "identity_provider", "expiration"],
           "access_groups",
-          "dynamic_policies"
+          "dynamic_policies",
         ),
         schema: {
           name: nameField("dynamic_policies", {
@@ -619,7 +619,7 @@ function initAccessGroups(store) {
               return (stateData.identity_provider || "").length < 6;
             },
             invalidText: unconditionalInvalidText(
-              "Enter a valid identity provider"
+              "Enter a valid identity provider",
             ),
             size: "wide",
           },
@@ -634,7 +634,7 @@ function initAccessGroups(store) {
                 : fieldIsNotWholeNumber("expiration", 1, 24)(stateData);
             },
             invalidText: unconditionalInvalidText(
-              "If specified must be a number between 1 and 24"
+              "If specified must be a number between 1 and 24",
             ),
             tooltip: {
               content:

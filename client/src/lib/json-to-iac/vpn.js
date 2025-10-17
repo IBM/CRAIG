@@ -77,12 +77,12 @@ function formatVpnGatewayConnection(connection, gw) {
       vpn_gateway: tfRef("ibm_is_vpn_gateway", `${gw.vpc} ${gw.name} vpn gw`),
       peer_address: connection.peer_address,
       preshared_key: `\${var.${snakeCase(
-        gw.name + " " + connection.name
+        gw.name + " " + connection.name,
       )}_preshared_key}`,
       local_cidrs: connection.local_cidrs,
       peer_cidrs: connection.peer_cidrs,
       admin_state_up: connection.admin_state_up || undefined,
-    }
+    },
   );
 }
 
@@ -107,7 +107,7 @@ function vpnTf(config) {
           {
             name: `${kebabCase(gw.name)}-on-prem-${prefix.replace(
               /\.|\//g,
-              "-"
+              "-",
             )}`,
             vpc: gw.vpc,
             zone: (gw.subnet || "").replace(/.+(?=\d$)/g, ""),
@@ -115,7 +115,7 @@ function vpnTf(config) {
             prefix: prefix,
           },
           config,
-          true
+          true,
         );
       });
     }

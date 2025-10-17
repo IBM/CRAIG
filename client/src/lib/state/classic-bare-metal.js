@@ -33,7 +33,7 @@ function initClassicBareMetalStore(store) {
       config.updateChild(
         ["json", "classic_bare_metal"],
         componentProps.data.name,
-        stateData
+        stateData,
       );
     },
     delete: function (config, stateData, componentProps) {
@@ -54,7 +54,7 @@ function initClassicBareMetalStore(store) {
         "memory",
         "network_speed",
       ],
-      "classic_bare_metal"
+      "classic_bare_metal",
     ),
     schema: {
       name: nameField("classic_bare_metal", {
@@ -126,10 +126,10 @@ function initClassicBareMetalStore(store) {
           );
         },
         invalidText: unconditionalInvalidText(
-          "Enter a comma separated list of disk key names"
+          "Enter a comma separated list of disk key names",
         ),
         helperText: unconditionalInvalidText(
-          "Enter a comma separated list of disk key names"
+          "Enter a comma separated list of disk key names",
         ),
         onInputChange: onArrayInputChange("disk_key_names"),
         tooltip: {

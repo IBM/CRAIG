@@ -30,7 +30,7 @@ describe("power vs terraform", () => {
               name: "example",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_instance" "power_vs_workspace_example" {
@@ -54,7 +54,7 @@ resource "ibm_resource_instance" "power_vs_workspace_example" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct power vs workspace fromg data", () => {
@@ -74,7 +74,7 @@ resource "ibm_resource_instance" "power_vs_workspace_example" {
               name: "example",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 data "ibm_resource_instance" "power_vs_workspace_example" {
@@ -86,7 +86,7 @@ data "ibm_resource_instance" "power_vs_workspace_example" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
   });
@@ -102,7 +102,7 @@ data "ibm_resource_instance" "power_vs_workspace_example" {
           _options: {
             tags: ["hello", "world"],
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_key" "power_vs_ssh_key_keyname" {
@@ -115,7 +115,7 @@ resource "ibm_pi_key" "power_vs_ssh_key_keyname" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct power vs workspace ssh key from data", () => {
@@ -131,7 +131,7 @@ resource "ibm_pi_key" "power_vs_ssh_key_keyname" {
           _options: {
             tags: ["hello", "world"],
           },
-        }
+        },
       );
       let expectedData = `
 data "ibm_pi_key" "power_vs_ssh_key_keyname" {
@@ -143,7 +143,7 @@ data "ibm_pi_key" "power_vs_ssh_key_keyname" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct power vs workspace ssh keys when new key and workspace from data", () => {
@@ -159,7 +159,7 @@ data "ibm_pi_key" "power_vs_ssh_key_keyname" {
           _options: {
             tags: ["hello", "world"],
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_key" "power_vs_ssh_key_keyname" {
@@ -172,7 +172,7 @@ resource "ibm_pi_key" "power_vs_ssh_key_keyname" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
   });
@@ -203,7 +203,7 @@ resource "ibm_pi_network" "power_network_example_dev_nw" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should format pi network resource", () => {
@@ -232,7 +232,7 @@ resource "ibm_pi_network" "power_network_example_dev_nw" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should format pi network resource when workspace use data", () => {
@@ -262,7 +262,7 @@ resource "ibm_pi_network" "power_network_example_dev_nw" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should format pi network resource when workspace use data and network use data", () => {
@@ -287,7 +287,7 @@ data "ibm_pi_network" "power_network_example_dev_nw" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
   });
@@ -316,7 +316,7 @@ resource "ibm_pi_cloud_connection" "power_network_example_connection_dev_connect
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should format power cloud connection with workspace use data and classic connection", () => {
@@ -346,7 +346,7 @@ resource "ibm_pi_cloud_connection" "power_network_example_connection_dev_connect
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should format power cloud connection with workspace use data for cloud connection with vpc enabled", () => {
@@ -381,7 +381,7 @@ resource "ibm_pi_cloud_connection" "power_network_example_connection_dev_connect
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
   });
@@ -407,7 +407,7 @@ resource "ibm_pi_image" "power_image_example_sles15_sp3_sap" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should format power image with workspace from data", () => {
@@ -432,7 +432,7 @@ resource "ibm_pi_image" "power_image_example_sles15_sp3_sap" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should format power image with workspace from data and image from data", () => {
@@ -454,7 +454,7 @@ data "ibm_pi_image" "power_image_example_sles15_sp3_sap" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
   });
@@ -491,7 +491,7 @@ resource "time_sleep" "power_network_example_connection_dev_connection_sleep" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
   });
@@ -507,7 +507,7 @@ resource "time_sleep" "power_network_example_connection_dev_connection_sleep" {
           pi_cloud_connection_transit_enabled: true,
           zone: "dal10",
         },
-        "tgw"
+        "tgw",
       );
       let expectedData = `
 resource "ibm_tg_connection" "tgw_connection_power_network_example_connection_dev_connection" {
@@ -524,7 +524,7 @@ resource "ibm_tg_connection" "tgw_connection_power_network_example_connection_de
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
   });
@@ -547,7 +547,7 @@ resource "ibm_pi_cloud_connection_network_attach" "power_example_dev_connection_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return correct code for network attachment with workspace use data", () => {
@@ -569,7 +569,7 @@ resource "ibm_pi_cloud_connection_network_attach" "power_example_dev_connection_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
   });
@@ -626,7 +626,7 @@ resource "ibm_resource_instance" "power_vs_workspace_example" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return a power vs network configuration", () => {
@@ -844,7 +844,7 @@ resource "ibm_pi_cloud_connection_network_attach" "power_example_dev_connection_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return a power vs network configuration with no transit gateways", () => {
@@ -1034,7 +1034,7 @@ resource "ibm_pi_cloud_connection_network_attach" "power_example_dev_connection_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return a power vs network configuration with with multiple images and networks", () => {
@@ -1267,7 +1267,7 @@ resource "ibm_pi_cloud_connection_network_attach" "power_example_dev_connection_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
   });

@@ -52,7 +52,7 @@ function getSubnetTierData(config, stateData, componentProps) {
       // vpc index
       config.store.json.vpcs,
       "name",
-      componentProps.vpc_name
+      componentProps.vpc_name,
     ),
     zones: stateData.zones,
     oldTiers: config.store.subnetTiers[componentProps.vpc_name],
@@ -116,7 +116,7 @@ function deleteAdvancedTier(oldTiers, oldName, vpc) {
   let oldTierIndex = arraySplatIndex(
     oldTiers,
     "name",
-    oldName // componentProps.data.name
+    oldName, // componentProps.data.name
   );
   let oldTier = oldTiers[oldTierIndex];
   oldTier.subnets.forEach((name) => {
@@ -138,7 +138,7 @@ function deleteLegacySubnetTier(
   oldTierName,
   oldVpcName,
   vpcIndex,
-  useNewSubnetTiers
+  useNewSubnetTiers,
 ) {
   subnets.forEach((subnet) => {
     if (
@@ -152,7 +152,7 @@ function deleteLegacySubnetTier(
           "f5-external",
           "f5-bastion",
         ],
-        subnet.name.replace(/-zone-\d/g, "")
+        subnet.name.replace(/-zone-\d/g, ""),
       ) &&
       !subnet.tier &&
       !subnet.use_data
@@ -161,7 +161,7 @@ function deleteLegacySubnetTier(
         useNewSubnetTiers
           ? config.store.json.vpcs[0].subnetTiers
           : config.store.subnetTiers[oldVpcName],
-        "name"
+        "name",
       );
       if (!useNewSubnetTiers)
         splatTiers.splice(splatTiers.indexOf(oldTierName), 1);
@@ -169,7 +169,7 @@ function deleteLegacySubnetTier(
       let newCidr = formatCidrBlock(
         vpcIndex,
         subnet.zone, // zone number
-        splatTiers.indexOf(subnet.name.replace(/-zone-\d/g, ""))
+        splatTiers.indexOf(subnet.name.replace(/-zone-\d/g, "")),
       );
       subnet.cidr = newCidr;
     }
@@ -196,7 +196,7 @@ function updateAdvancedSubnetTier(
   oldTierName,
   vpcName,
   newTierName,
-  vpcIndex
+  vpcIndex,
 ) {
   tierData.advanced = true;
   saveAdvancedSubnetTier(
@@ -207,7 +207,7 @@ function updateAdvancedSubnetTier(
     tierData,
     vpcName,
     newTierName,
-    vpcIndex
+    vpcIndex,
   );
   // for each address prefix
   config.store.json.vpcs[vpcIndex].address_prefixes.forEach((prefix) => {
@@ -219,7 +219,7 @@ function updateAdvancedSubnetTier(
       carve(
         config.store.json.vpcs[vpcIndex].address_prefixes,
         "name",
-        prefix.name
+        prefix.name,
       );
     } else if (prefix.name.startsWith(oldTierName)) {
       // otherwise rename
@@ -252,12 +252,12 @@ function editSubnets(
   oldTierName,
   config,
   stateData,
-  componentProps
+  componentProps,
 ) {
   let validZones =
     zones === 0 || !zones ? [] : numberToZoneList(parseInt(zones));
   let currentZones = vpc.subnets.filter((subnet) =>
-    subnet.name.startsWith(oldTierName)
+    subnet.name.startsWith(oldTierName),
   ).length;
 
   while (currentZones < zones) {
@@ -296,8 +296,8 @@ function editSubnets(
           currentZones,
           false, //public gateway will update later if should be updated
           stateData.use_prefix, // prefix,
-          isEdgeVpcTier
-        )
+          isEdgeVpcTier,
+        ),
       );
       let newSubnet = vpc.subnets[vpc.subnets.length - 1];
       vpc.address_prefixes.push({
@@ -318,7 +318,7 @@ function editSubnets(
         // tier subnet index
         vpc.subnets,
         "name",
-        zoneSubnetName
+        zoneSubnetName,
       );
       // if the tier is found and the zone is not valid, remove the subnet
       if (tierIndex >= 0 && !contains(validZones, zone)) {
@@ -338,7 +338,7 @@ function editSubnets(
           let prefixRef = getObjectFromArray(
             vpc.address_prefixes,
             "name",
-            zoneSubnetName
+            zoneSubnetName,
           );
           prefixRef.name = newName;
         }
@@ -354,7 +354,7 @@ function editSubnets(
         if (
           contains(
             componentProps.craig.store.json.vpcs[vpcIndex].publicGateways,
-            vpc.subnets[i].zone
+            vpc.subnets[i].zone,
           )
         ) {
           vpc.subnets[tierIndex].public_gateway =
@@ -369,7 +369,7 @@ function editSubnets(
         if (resource.subnets[i].startsWith(oldTierName)) {
           resource.subnets[i] = resource.subnets[i].replace(
             oldTierName,
-            stateData.name
+            stateData.name,
           );
         }
       }
@@ -380,7 +380,7 @@ function editSubnets(
       if (cluster.subnets[i].startsWith(oldTierName)) {
         cluster.subnets[i] = cluster.subnets[i].replace(
           oldTierName,
-          stateData.name
+          stateData.name,
         );
       }
     }
@@ -389,7 +389,7 @@ function editSubnets(
         if (pool.subnets[i].startsWith(oldTierName)) {
           pool.subnets[i] = pool.subnets[i].replace(
             oldTierName,
-            stateData.name
+            stateData.name,
           );
         }
       }
@@ -400,7 +400,7 @@ function editSubnets(
       resolver.subnets.forEach((subnet, index) => {
         resolver.subnets[index] = resolver.subnets[index].replace(
           oldTierName,
-          stateData.name
+          stateData.name,
         );
       });
     });

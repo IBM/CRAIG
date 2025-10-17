@@ -49,7 +49,7 @@ describe("subnet row functions", () => {
             has_prefix: false,
           },
         ],
-        "it should return list of subnets for non-advanced tier"
+        "it should return list of subnets for non-advanced tier",
       );
     });
     it("should return a list of subnets for non-advanced subnet tier when out of order", () => {
@@ -161,7 +161,7 @@ describe("subnet row functions", () => {
             has_prefix: false,
           },
         ],
-        "it should return list of subnets for non-advanced tier"
+        "it should return list of subnets for non-advanced tier",
       );
     });
     it("should return a list of subnets for non-advanced subnet tier from JSON", () => {
@@ -201,7 +201,7 @@ describe("subnet row functions", () => {
             has_prefix: false,
           },
         ],
-        "it should return list of subnets for non-advanced tier"
+        "it should return list of subnets for non-advanced tier",
       );
     });
     it("should return a list of subnets for advanced subnet tier", () => {
@@ -218,7 +218,7 @@ describe("subnet row functions", () => {
             name: "vsi",
           },
           vpc_name: "management",
-        }
+        },
       );
       let actualData = getDisplayTierSubnetList({
         craig: craig,
@@ -259,7 +259,7 @@ describe("subnet row functions", () => {
             has_prefix: false,
           },
         ],
-        "it should return list of subnets for non-advanced tier"
+        "it should return list of subnets for non-advanced tier",
       );
     });
     it("should return a list of subnets for advanced subnet tier from JSON", () => {
@@ -277,7 +277,7 @@ describe("subnet row functions", () => {
             name: "vsi",
           },
           vpc_name: "management",
-        }
+        },
       );
       let actualData = getDisplayTierSubnetList({
         craig: craig,
@@ -321,7 +321,7 @@ describe("subnet row functions", () => {
             tier: "vsi",
           },
         ],
-        "it should return list of subnets for non-advanced tier"
+        "it should return list of subnets for non-advanced tier",
       );
     });
     it("should return a list of subnets for advanced subnet tier from JSON", () => {
@@ -339,7 +339,7 @@ describe("subnet row functions", () => {
             name: "vsi",
           },
           vpc_name: "management",
-        }
+        },
       );
       let actualData = getDisplayTierSubnetList({
         craig: craig,
@@ -369,7 +369,7 @@ describe("subnet row functions", () => {
             tier: "vsi",
           },
         ],
-        "it should return list of subnets for non-advanced tier"
+        "it should return list of subnets for non-advanced tier",
       );
     });
   });

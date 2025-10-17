@@ -43,7 +43,7 @@ function initVtlStore(store) {
         "pi_license_repository_capacity",
         "storage_option",
       ],
-      "vtl"
+      "vtl",
     ),
   });
 }

@@ -84,8 +84,8 @@ class EdgeNetworkingForm extends React.Component {
       edgeType: !this.props.craig.store.edge_pattern
         ? "none"
         : this.props.craig.store.edge_vpc_name === "edge"
-        ? "edge"
-        : "management",
+          ? "edge"
+          : "management",
       pattern: this.props.craig.store.edge_pattern || "",
       zones: this.props.craig.store.edge_pattern
         ? String(this.props.craig.store.edge_zones)
@@ -131,7 +131,7 @@ class EdgeNetworkingForm extends React.Component {
     this.props.craig.createEdgeVpc(
       this.state.pattern,
       this.state.edgeType === "management",
-      Number(this.state.zones)
+      Number(this.state.zones),
     );
     this.props.craig.f5.vsi.create(this.state);
     this.setState({
@@ -146,9 +146,9 @@ class EdgeNetworkingForm extends React.Component {
       this.state.zones === this.state.prevZones
       ? true
       : this.props.craig.store.edge_vpc_name !== undefined
-      ? this.state.zones === String(this.props.craig.store.edge_zones)
-      : contains([this.state.edgeType, this.state.pattern], "") ||
-        this.state.zones === "0";
+        ? this.state.zones === String(this.props.craig.store.edge_zones)
+        : contains([this.state.edgeType, this.state.pattern], "") ||
+          this.state.zones === "0";
   }
 
   render() {
@@ -238,7 +238,7 @@ class EdgeNetworkingForm extends React.Component {
                         this.props,
                         "edge-network-zones",
                         0,
-                        field
+                        field,
                       )}
                     >
                       <DynamicFormSelect

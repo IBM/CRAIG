@@ -14,9 +14,9 @@ describe("power vs volumes", () => {
             name: "test",
           },
           craig: state(),
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
   it("should be disabled when valid name and no workspace", () => {
@@ -31,7 +31,7 @@ describe("power vs volumes", () => {
           name: "egg",
         },
         craig: state(),
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -48,9 +48,9 @@ describe("power vs volumes", () => {
             name: "test",
           },
           craig: state(),
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
   it("should disable save for volume with an invalid capacity", () => {
@@ -66,9 +66,9 @@ describe("power vs volumes", () => {
             name: "test",
           },
           craig: state(),
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
 });

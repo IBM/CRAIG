@@ -66,7 +66,7 @@ export const PowerMap = (props) => {
           React.cloneElement(child, {
             power: power,
             powerIndex: actualPowerIndex,
-          })
+          }),
         )}
       </HoverClassNameWrapper>
     );

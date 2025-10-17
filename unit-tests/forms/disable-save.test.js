@@ -24,9 +24,9 @@ describe("disableSave", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a secrets group is an invalid duplicate name", () => {
@@ -59,9 +59,9 @@ describe("disableSave", () => {
             data: {
               name: "mm",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
   });
@@ -74,8 +74,8 @@ describe("disableSave", () => {
             {
               name: "@@@",
             },
-            { rules: [], data: { name: "" }, craig: state() }
-          )
+            { rules: [], data: { name: "" }, craig: state() },
+          ),
         );
       });
     });
@@ -91,9 +91,9 @@ describe("disableSave", () => {
             data: {
               name: "test",
             },
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
     it("should return true if an object storage bucket has an invalid name", () => {
@@ -106,9 +106,9 @@ describe("disableSave", () => {
             data: {
               name: "test",
             },
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
     it("should return true if an object storage key has an invalid name", () => {
@@ -122,9 +122,9 @@ describe("disableSave", () => {
               name: "test",
             },
             formName: "Service Credentials",
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
   });
@@ -160,7 +160,7 @@ describe("disableSave", () => {
       template.template_source = "";
       assert.isTrue(
         disableSave("f5_vsi_template", template, { craig: state() }),
-        "it should be true"
+        "it should be true",
       );
     });
   });
@@ -196,7 +196,7 @@ describe("disableSave", () => {
               name: "toad",
             },
             craig: tempCraig,
-          }
+          },
         );
         assert.isTrue(actualData, "it should be disabled");
       });
@@ -206,13 +206,13 @@ describe("disableSave", () => {
     it("should return true if ssh keys empty", () => {
       assert.isTrue(
         disableSave("f5_vsi", { ssh_keys: [] }, { craig: state() }),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should return true if no ssh keys", () => {
       assert.isTrue(
         disableSave("f5_vsi", {}, { craig: state() }),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
   });
@@ -228,9 +228,9 @@ describe("disableSave", () => {
               data: {
                 name: "test",
               },
-            }
+            },
           ),
-          "it should be false"
+          "it should be false",
         );
       });
     });
@@ -247,9 +247,9 @@ describe("disableSave", () => {
               local_tunnel_ip: "",
               zone: "",
             },
-            { craig: state() }
+            { craig: state() },
           ),
-          "it should be disabled"
+          "it should be disabled",
         );
       });
     });
@@ -280,9 +280,9 @@ describe("disableSave", () => {
                 name: "frog",
               },
               parent_name: "frog",
-            }
+            },
           ),
-          "it should be true"
+          "it should be true",
         );
       });
       it("should return false if a acl rule is valid in modal", () => {
@@ -311,9 +311,9 @@ describe("disableSave", () => {
               },
               parent_name: "frog",
               isModal: true,
-            }
+            },
           ),
-          "it should be true"
+          "it should be true",
         );
       });
     });
@@ -332,9 +332,9 @@ describe("disableSave", () => {
               },
               craig: state(),
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should not force forms open if it is not enabled", () => {
@@ -348,9 +348,9 @@ describe("disableSave", () => {
                 enable: false,
               },
             },
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
     it("should force forms open if save is disabled and it is enabled", () => {
@@ -366,9 +366,9 @@ describe("disableSave", () => {
               },
               craig: state(),
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should force a vpn gateway form open when a connection has an invalid peer address", () => {
@@ -387,8 +387,8 @@ describe("disableSave", () => {
                 ],
               },
             },
-          }
-        )
+          },
+        ),
       );
     });
     it("should not force a vpn gateway form open when a connection has a valid peer address", () => {
@@ -412,8 +412,8 @@ describe("disableSave", () => {
               },
               craig: new state(),
             },
-          }
-        )
+          },
+        ),
       );
     });
     it("should force a power vs form open when an ssh key is invalid", () => {
@@ -531,8 +531,8 @@ describe("disableSave", () => {
                 },
               },
             },
-          }
-        )
+          },
+        ),
       );
     });
   });
@@ -559,7 +559,7 @@ describe("disableSave", () => {
               name: "key",
             },
           },
-        })
+        }),
       );
     });
   });

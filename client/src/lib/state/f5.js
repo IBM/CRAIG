@@ -115,7 +115,7 @@ function f5VsiCreate(config, stateData) {
   }
   eachZone(zones || 3, (zone) => {
     config.store.json.f5_vsi.push(
-      newF5Vsi(config.store.edge_pattern, zone, useManagement, stateData)
+      newF5Vsi(config.store.edge_pattern, zone, useManagement, stateData),
     );
   });
 }
@@ -140,8 +140,8 @@ function f5VsiSave(config, stateData) {
         config.store.edge_pattern,
         zone,
         config.store.f5_on_management,
-        stateData
-      )
+        stateData,
+      ),
     );
   });
   if (!isNullOrEmptyString(template, true)) {
@@ -254,7 +254,7 @@ function initF5Store(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["ssh_keys", "resource_group", "zones"],
           "f5",
-          "vsi"
+          "vsi",
         ),
         schema: {
           zones: {
@@ -319,7 +319,7 @@ function initF5Store(store) {
             "app_id",
           ],
           "f5",
-          "template"
+          "template",
         ),
         schema: {
           license_type: {
@@ -341,13 +341,13 @@ function initF5Store(store) {
               align: "right",
             },
             invalidText: unconditionalInvalidText(
-              "Password must be at least 15 characters, contain one numeric, one uppercase, and one lowercase character."
+              "Password must be at least 15 characters, contain one numeric, one uppercase, and one lowercase character.",
             ),
             invalid: function (stateData) {
               return (
                 isNullOrEmptyString(stateData.tmos_admin_password, true) ||
                 stateData.tmos_admin_password.match(
-                  tmosAdminPasswordValidationExp
+                  tmosAdminPasswordValidationExp,
                 ) === null
               );
             },
@@ -424,10 +424,10 @@ function initF5Store(store) {
             default: "null",
             invalid: licenseTypeFieldCheck(
               "utilitypool",
-              "license_unit_of_measure"
+              "license_unit_of_measure",
             ),
             invalidText: unconditionalInvalidText(
-              "Enter a license unit of measure"
+              "Enter a license unit of measure",
             ),
             hideWhen: hideWhenNotLicenseType(["utilitypool"]),
             tooltip: {
@@ -439,7 +439,7 @@ function initF5Store(store) {
             default: "",
             invalid: licenseTypeFieldCheck(
               "utilitypool",
-              "license_sku_keyword_1"
+              "license_sku_keyword_1",
             ),
             hideWhen: hideWhenNotLicenseType(["utilitypool"]),
             invalidText: unconditionalInvalidText("Enter a license keyword"),
@@ -453,7 +453,7 @@ function initF5Store(store) {
             default: "",
             invalid: licenseTypeFieldCheck(
               "utilitypool",
-              "license_sku_keyword_2"
+              "license_sku_keyword_2",
             ),
             invalidText: unconditionalInvalidText("Enter a license keyword"),
             hideWhen: hideWhenNotLicenseType(["utilitypool"]),
@@ -467,7 +467,7 @@ function initF5Store(store) {
             default: "",
             invalid: fieldIsValidUrl("ts_declaration_url"),
             invalidText: unconditionalInvalidText(
-              "Enter a valid URL. Must end with a /"
+              "Enter a valid URL. Must end with a /",
             ),
             tooltip: {
               content:
@@ -480,7 +480,7 @@ function initF5Store(store) {
             default: "",
             invalid: fieldIsValidUrl("do_declaration_url"),
             invalidText: unconditionalInvalidText(
-              "Enter a valid URL. Must end with a /"
+              "Enter a valid URL. Must end with a /",
             ),
             tooltip: {
               content:
@@ -493,7 +493,7 @@ function initF5Store(store) {
             default: "",
             invalid: fieldIsValidUrl("as3_declaration_url"),
             invalidText: unconditionalInvalidText(
-              "Enter a valid URL. Must end with a /"
+              "Enter a valid URL. Must end with a /",
             ),
             tooltip: {
               content:
@@ -505,7 +505,7 @@ function initF5Store(store) {
             default: "",
             invalid: fieldIsValidUrl("phone_home_url"),
             invalidText: unconditionalInvalidText(
-              "Enter a valid URL. Must end with a /"
+              "Enter a valid URL. Must end with a /",
             ),
             tooltip: {
               content:
@@ -517,7 +517,7 @@ function initF5Store(store) {
             default: "",
             invalid: fieldIsValidUrl("tgstandby_url"),
             invalidText: unconditionalInvalidText(
-              "Enter a valid URL. Must end with a /"
+              "Enter a valid URL. Must end with a /",
             ),
             labelText: "TGStandby URL",
             tooltip: {
@@ -529,7 +529,7 @@ function initF5Store(store) {
             default: "",
             invalid: fieldIsValidUrl("tgrefresh_url"),
             invalidText: unconditionalInvalidText(
-              "Enter a valid URL. Must end with a /"
+              "Enter a valid URL. Must end with a /",
             ),
             tooltip: {
               content:
@@ -542,7 +542,7 @@ function initF5Store(store) {
             default: "",
             invalid: fieldIsValidUrl("tgactive_url"),
             invalidText: unconditionalInvalidText(
-              "Enter a valid URL. Must end with a /"
+              "Enter a valid URL. Must end with a /",
             ),
             tooltip: {
               content:

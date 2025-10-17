@@ -44,14 +44,14 @@ function ibmAtrackerTarget(config) {
           target_crn: cosRef(config.atracker.target_name),
           bucket: bucketRef(
             config.atracker.target_name,
-            config.atracker.bucket
+            config.atracker.bucket,
           ),
           api_key: tfRef(
             "ibm_resource_key",
             `${config.atracker.target_name + " object storage"} key ${
               config.atracker.cos_key
             }`,
-            "credentials.apikey"
+            "credentials.apikey",
           ),
         },
       ],
@@ -83,7 +83,7 @@ function ibmAtrackerRoute(config) {
           target_ids: [
             tfRef(
               "ibm_atracker_target",
-              `${config.atracker.name} ${config.atracker.type} target`
+              `${config.atracker.name} ${config.atracker.type} target`,
             ),
           ],
         },
@@ -110,7 +110,7 @@ function formatAtrackerRoute(config) {
     "resource",
     "ibm_atracker_route",
     route.name,
-    route.data
+    route.data,
   );
 }
 

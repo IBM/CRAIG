@@ -9,9 +9,9 @@ describe("subnets", () => {
           "subnet",
           { network_acl: null },
           { craig: state() },
-          state()
+          state(),
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if advanced subnet has invalid cidr", () => {
@@ -20,9 +20,9 @@ describe("subnets", () => {
           "subnet",
           { tier: "frog", cidr: "aaaa" },
           { craig: state() },
-          state()
+          state(),
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if advanced subnet has invalid cidr block (overlapping ok)", () => {
@@ -31,9 +31,9 @@ describe("subnets", () => {
           "subnet",
           { tier: "frog", cidr: "1.2.3.4/5" },
           { craig: state() },
-          state()
+          state(),
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if advanced subnet has invalid name", () => {
@@ -48,9 +48,9 @@ describe("subnets", () => {
             vpc_name: "management",
             craig: state(),
           },
-          state()
+          state(),
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if advanced subnet has invalid duplicate name", () => {
@@ -79,9 +79,9 @@ describe("subnets", () => {
             },
             vpc_name: "test",
             craig: tempCraig,
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if advanced subnet has null cidr", () => {
@@ -95,9 +95,9 @@ describe("subnets", () => {
             },
             vpc_name: "test",
             craig: state(),
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if advanced subnet has invalid network acl", () => {
@@ -111,9 +111,9 @@ describe("subnets", () => {
             },
             vpc_name: "test",
             craig: state(),
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
   });
@@ -139,9 +139,9 @@ describe("subnets", () => {
               name: "todd",
             },
             craig: tempCraig,
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should return false if subnet tier has same name as props", () => {
@@ -166,9 +166,9 @@ describe("subnets", () => {
               name: "frog",
             },
             craig: tempCraig,
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should return true if advanced subnet tier has no zones", () => {
@@ -198,9 +198,9 @@ describe("subnets", () => {
               name: "todd",
             },
             craig: tempCraig,
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
   });

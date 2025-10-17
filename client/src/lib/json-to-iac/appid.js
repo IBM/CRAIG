@@ -49,7 +49,7 @@ function formatAppidToKmsAuth(kmsName, config) {
     "resource",
     "ibm_iam_authorization_policy",
     auth.name,
-    auth.data
+    auth.data,
   );
 }
 
@@ -71,7 +71,7 @@ function ibmResourceKeyAppId(key, config) {
       resource_instance_id: resourceRef(
         key.appid,
         "id",
-        getObjectFromArray(config.appid, "name", key.appid).use_data
+        getObjectFromArray(config.appid, "name", key.appid).use_data,
       ),
       role: "Writer",
       tags: config._options.tags,
@@ -116,7 +116,7 @@ function ibmResourceInstanceAppId(instance, config) {
     appIdValues.parameters = {
       // paramters kms info need to be stringified json to work
       kms_info: `{\\"id\\": \\"${cdktfRef(
-        getKmsInstanceData(instance.kms, config).guid
+        getKmsInstanceData(instance.kms, config).guid,
       )}\\"}`,
       tek_id: encryptionKeyRef(instance.kms, instance.encryption_key, "crn"),
     };
@@ -140,7 +140,7 @@ function formatAppId(instance, config) {
     getResourceOrData(instance),
     "ibm_resource_instance",
     appid.name,
-    appid.data
+    appid.data,
   );
   ["facebook", "google", "saml"].forEach((idp) => {
     if (instance["disable_" + idp]) {
@@ -152,10 +152,10 @@ function formatAppId(instance, config) {
           tenant_id: resourceRef(
             instance.name,
             "guid",
-            useData(instance.use_data)
+            useData(instance.use_data),
           ),
           is_active: false,
-        }
+        },
       );
     }
   });

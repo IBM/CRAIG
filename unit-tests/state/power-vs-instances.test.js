@@ -20,7 +20,7 @@ describe("power_instances", () => {
       assert.deepEqual(
         craig.store.json.power_instances,
         [],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
   });
@@ -43,7 +43,7 @@ describe("power_instances", () => {
             zone: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
     });
     it("should create a new power vs instance with SAP and create volumes", () => {
@@ -67,7 +67,7 @@ describe("power_instances", () => {
             zone: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         craig.store.json.power_volumes,
@@ -181,7 +181,7 @@ describe("power_instances", () => {
             zone: undefined,
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
   });
@@ -206,7 +206,7 @@ describe("power_instances", () => {
           data: {
             name: "toad",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power_instances,
@@ -221,7 +221,7 @@ describe("power_instances", () => {
             zone: null,
           },
         ],
-        "it should save instance"
+        "it should save instance",
       );
     });
     it("should update power vs volume names when updating sap instance name", () => {
@@ -247,7 +247,7 @@ describe("power_instances", () => {
             sap: true,
             sap_profile: "ush1-4x128",
           },
-        }
+        },
       );
 
       assert.deepEqual(
@@ -265,7 +265,7 @@ describe("power_instances", () => {
             zone: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         craig.store.json.power_volumes,
@@ -384,7 +384,7 @@ describe("power_instances", () => {
             zone: undefined,
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
     it("should update power vs volume sizes when updating sap instance profile", () => {
@@ -411,7 +411,7 @@ describe("power_instances", () => {
             name: "frog",
             sap: true,
           },
-        }
+        },
       );
 
       assert.deepEqual(
@@ -429,7 +429,7 @@ describe("power_instances", () => {
             zone: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         craig.store.json.power_volumes,
@@ -557,7 +557,7 @@ describe("power_instances", () => {
             zone: "dal12",
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
     it("should create power vs volumes when converting non-sap instance to sap", () => {
@@ -582,7 +582,7 @@ describe("power_instances", () => {
             name: "frog",
             zone: "dal12",
           },
-        }
+        },
       );
 
       assert.deepEqual(
@@ -600,7 +600,7 @@ describe("power_instances", () => {
             zone: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         craig.store.json.power_volumes,
@@ -719,7 +719,7 @@ describe("power_instances", () => {
             zone: "dal12",
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
     it("should update power vs volume workspace when changing instance workspace", () => {
@@ -763,7 +763,7 @@ describe("power_instances", () => {
             sap_profile: "ush1-4x128",
             workspace: "frog",
           },
-        }
+        },
       );
 
       assert.deepEqual(
@@ -780,7 +780,7 @@ describe("power_instances", () => {
             zone: "dal12",
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         craig.store.json.power_volumes,
@@ -899,7 +899,7 @@ describe("power_instances", () => {
             zone: "dal12",
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
     it("should update power vs instance affinity values when deleting instance affinity source", () => {
@@ -966,7 +966,7 @@ describe("power_instances", () => {
             image: null,
           },
         ],
-        "it should return correct instances"
+        "it should return correct instances",
       );
     });
     it("should update power vs instance affinity values when deleting instance affinity source", () => {
@@ -1027,7 +1027,7 @@ describe("power_instances", () => {
             image: null,
           },
         ],
-        "it should return correct instances"
+        "it should return correct instances",
       );
     });
     it("should update power vs volume affinity values when deleting instance affinity source", () => {
@@ -1067,7 +1067,7 @@ describe("power_instances", () => {
       assert.deepEqual(
         craig.store.json.power_instances,
         [],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         craig.store.json.power_volumes,
@@ -1091,7 +1091,7 @@ describe("power_instances", () => {
             storage_option: "Anti-Affinity",
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
       craig.power_volumes.create({
         attachments: ["frog"],
@@ -1117,7 +1117,7 @@ describe("power_instances", () => {
             storage_option: "Affinity",
             pi_affinity_instance: "frog",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power_volumes,
@@ -1150,7 +1150,7 @@ describe("power_instances", () => {
             storage_option: "Anti-Affinity",
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
     it("should delete power vs volumes when converting sap volume to non-sap", () => {
@@ -1173,7 +1173,7 @@ describe("power_instances", () => {
             sap: true,
             name: "frog",
           },
-        }
+        },
       );
 
       assert.deepEqual(
@@ -1191,7 +1191,7 @@ describe("power_instances", () => {
             zone: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         craig.store.json.power_volumes,
@@ -1202,7 +1202,7 @@ describe("power_instances", () => {
             workspace: null,
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
     it("should update volume reference when changing a power vs instance name", () => {
@@ -1256,32 +1256,32 @@ describe("power_instances", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power_volumes[0].attachments,
         ["toad"],
-        "it should update name"
+        "it should update name",
       );
       assert.deepEqual(
         craig.store.json.power_volumes[0].pi_anti_affinity_instance,
         "toad",
-        "it should update name"
+        "it should update name",
       );
       assert.deepEqual(
         craig.store.json.power_volumes[1].pi_affinity_instance,
         "toad",
-        "it should update name"
+        "it should update name",
       );
       assert.deepEqual(
         craig.store.json.power_instances[1].pi_affinity_instance,
         "toad",
-        "it should update name"
+        "it should update name",
       );
       assert.deepEqual(
         craig.store.json.vtl[0].pi_anti_affinity_instance,
         "toad",
-        "it should update name"
+        "it should update name",
       );
     });
   });
@@ -1298,12 +1298,12 @@ describe("power_instances", () => {
           data: {
             name: "toad",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power_instances,
         [],
-        "it should delete instance"
+        "it should delete instance",
       );
     });
     it("should delete power vs volumes when deleting sap instance", () => {
@@ -1328,13 +1328,13 @@ describe("power_instances", () => {
             name: "frog",
             sap: true,
           },
-        }
+        },
       );
 
       assert.deepEqual(
         craig.store.json.power_instances,
         [],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         craig.store.json.power_volumes,
@@ -1345,7 +1345,7 @@ describe("power_instances", () => {
             workspace: null,
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
   });
@@ -1355,7 +1355,7 @@ describe("power_instances", () => {
     assert.deepEqual(
       craig.store.json.power_instances,
       [],
-      "it should initialize data"
+      "it should initialize data",
     );
   });
   describe("power_instances.onStoreUpdate", () => {
@@ -1368,7 +1368,7 @@ describe("power_instances", () => {
       });
       craig.power.network.create(
         { name: "test-network" },
-        { innerFormProps: { arrayParentName: "toad" } }
+        { innerFormProps: { arrayParentName: "toad" } },
       );
     });
     it("should update ssh key, network, image, primary_subnet, and workspace when unfound", () => {
@@ -1399,7 +1399,7 @@ describe("power_instances", () => {
             zone: null,
           },
         ],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
     it("should update ssh key, network, image, and primary_subnet when workspace is unfound", () => {
@@ -1430,7 +1430,7 @@ describe("power_instances", () => {
             zone: null,
           },
         ],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
     it("should update primary_subnet when network interface is unfound", () => {
@@ -1462,7 +1462,7 @@ describe("power_instances", () => {
             pi_storage_type: null,
           },
         ],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
     it("should not update image when still in existing workspace", () => {
@@ -1501,13 +1501,13 @@ describe("power_instances", () => {
             pi_storage_type: null,
           },
         ],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
     it("should not update ssh key when still in existing workspace", () => {
       craig.power.ssh_keys.create(
         { name: "test-key" },
-        { innerFormProps: { arrayParentName: "toad" } }
+        { innerFormProps: { arrayParentName: "toad" } },
       );
       craig.power_instances.create({
         name: "toad",
@@ -1544,7 +1544,7 @@ describe("power_instances", () => {
             pi_storage_type: null,
           },
         ],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
     it("should update image when no longer in existing workspace", () => {
@@ -1585,7 +1585,7 @@ describe("power_instances", () => {
             pi_shared_processor_pool: "None",
           },
         ],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
     it("should update processor pool when no longer in existing workspace", () => {
@@ -1640,7 +1640,7 @@ describe("power_instances", () => {
             pi_shared_processor_pool: "None",
           },
         ],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
   });
@@ -1649,7 +1649,7 @@ describe("power_instances", () => {
       it("should be false when is modal", () => {
         assert.isFalse(
           craig.power_instances.storage_option.disabled({}, { isModal: true }),
-          "it should be false for modal forms"
+          "it should be false for modal forms",
         );
       });
       it("should be true for an instance when it is used by another instance for anti-affinity", () => {
@@ -1784,7 +1784,7 @@ describe("power_instances", () => {
                 pi_affinity_volume: null,
               },
             ],
-          }
+          },
         );
         assert.isTrue(actualData, "it should be true");
       });
@@ -1902,7 +1902,7 @@ describe("power_instances", () => {
                 pi_affinity_instance: "oracle-1",
               },
             ],
-          }
+          },
         );
         assert.isTrue(actualData, "it should be true");
       });
@@ -2020,7 +2020,7 @@ describe("power_instances", () => {
                 pi_anti_affinity_instance: "oracle-1",
               },
             ],
-          }
+          },
         );
         assert.isTrue(actualData, "it should be true");
       });
@@ -2089,7 +2089,7 @@ describe("power_instances", () => {
                 pi_affinity_volume: "redo-1",
               },
             ],
-          }
+          },
         );
         assert.isTrue(actualData, "it should be true");
       });
@@ -2158,7 +2158,7 @@ describe("power_instances", () => {
                 pi_affinity_volume: null,
               },
             ],
-          }
+          },
         );
         assert.isTrue(actualData, "it should be true");
       });
@@ -2205,7 +2205,7 @@ describe("power_instances", () => {
               affinity_type: null,
             },
             power_instances: [],
-          }
+          },
         );
         assert.isTrue(actualData, "it should be true");
       });
@@ -2252,7 +2252,7 @@ describe("power_instances", () => {
               affinity_type: null,
             },
             power_instances: [],
-          }
+          },
         );
         assert.isTrue(actualData, "it should be true");
       });
@@ -2387,7 +2387,7 @@ describe("power_instances", () => {
                 pi_affinity_instance: "oracle-1",
               },
             ],
-          }
+          },
         );
         assert.isTrue(actualData, "it should be true");
       });
@@ -2398,7 +2398,7 @@ describe("power_instances", () => {
           craig.power_instances.sap.hideWhen({
             pi_shared_processor_pool: "frog",
           }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
     });
@@ -2407,13 +2407,13 @@ describe("power_instances", () => {
         it("should be true when is not sap", () => {
           assert.isTrue(
             craig.power_instances.sap_profile.hideWhen({ sap: false }),
-            "it should be hidden"
+            "it should be hidden",
           );
           assert.isTrue(
             craig.power_instances.sap_profile.hideWhen({
               pi_shared_processor_pool: "frog",
             }),
-            "it should be hidden"
+            "it should be hidden",
           );
         });
       });
@@ -2421,7 +2421,7 @@ describe("power_instances", () => {
         it("should be false when is not sap", () => {
           assert.isFalse(
             craig.power_instances.sap_profile.invalid({ sap: false }),
-            "it should be invalid"
+            "it should be invalid",
           );
         });
         it("should be true when is sap and not sap profile", () => {
@@ -2430,7 +2430,7 @@ describe("power_instances", () => {
               sap: true,
               sap_profile: "",
             }),
-            "it should be invalid"
+            "it should be invalid",
           );
         });
       });
@@ -2441,7 +2441,7 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.power_instances.workspace.groups({}, { craig: craig }),
             [],
-            "it should return list of workspaces"
+            "it should return list of workspaces",
           );
         });
       });
@@ -2472,7 +2472,7 @@ describe("power_instances", () => {
               workspace: "toad",
               zone: "dal12",
             },
-            "it should return list of workspaces"
+            "it should return list of workspaces",
           );
         });
       });
@@ -2492,20 +2492,20 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.power_instances.ssh_key.groups(
               { workspace: "" },
-              { craig: craig }
+              { craig: craig },
             ),
             [],
-            "it should return list of networks"
+            "it should return list of networks",
           );
         });
         it("should return groups when workspace", () => {
           assert.deepEqual(
             craig.power_instances.ssh_key.groups(
               { workspace: "toad" },
-              { craig: craig }
+              { craig: craig },
             ),
             ["(None)"],
-            "it should return list of networks"
+            "it should return list of networks",
           );
         });
       });
@@ -2516,10 +2516,10 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.power_instances.network.groups(
               { workspace: "" },
-              { craig: craig }
+              { craig: craig },
             ),
             [],
-            "it should return list of networks"
+            "it should return list of networks",
           );
         });
         it("should return groups when workspace", () => {
@@ -2532,10 +2532,10 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.power_instances.network.groups(
               { workspace: "toad" },
-              { craig: craig }
+              { craig: craig },
             ),
             [],
-            "it should return list of networks"
+            "it should return list of networks",
           );
         });
       });
@@ -2554,10 +2554,10 @@ describe("power_instances", () => {
                     },
                   },
                 },
-              }
+              },
             ),
             "hi-frog",
-            "it should return correct helper text"
+            "it should return correct helper text",
           );
           assert.deepEqual(
             craig.power_instances.name.helperText(
@@ -2573,10 +2573,10 @@ describe("power_instances", () => {
                     },
                   },
                 },
-              }
+              },
             ),
             "frog",
-            "it should return correct helper text"
+            "it should return correct helper text",
           );
         });
       });
@@ -2604,7 +2604,7 @@ describe("power_instances", () => {
               ],
               primary_subnet: "frog",
             },
-            "it should return new network, clear primary subnet"
+            "it should return new network, clear primary subnet",
           );
         });
         it("should return new networks when deleting one and update primary subnet with first network name value or empty string", () => {
@@ -2615,7 +2615,7 @@ describe("power_instances", () => {
           craig.power_instances.network.onStateChange(
             data,
             { craig: craig },
-            []
+            [],
           );
           assert.deepEqual(
             data,
@@ -2623,7 +2623,7 @@ describe("power_instances", () => {
               network: [],
               primary_subnet: "",
             },
-            "it should return a list of networks and clear primary subnet"
+            "it should return a list of networks and clear primary subnet",
           );
         });
       });
@@ -2634,7 +2634,7 @@ describe("power_instances", () => {
               network: [{ name: "frog" }],
             }),
             ["frog"],
-            "it should return a list of networks"
+            "it should return a list of networks",
           );
         });
       });
@@ -2645,7 +2645,7 @@ describe("power_instances", () => {
               workspace: "toad",
             }),
             "toad",
-            "it should have correct force update key"
+            "it should have correct force update key",
           );
         });
       });
@@ -2654,20 +2654,20 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.power_instances.network.invalidText(
               { workspace: "" },
-              { craig: craig }
+              { craig: craig },
             ),
             "Select a workspace",
-            "it should return list of workspaces"
+            "it should return list of workspaces",
           );
         });
         it("should return invalidText when no workspace", () => {
           assert.deepEqual(
             craig.power_instances.network.invalidText(
               { workspace: "a" },
-              { craig: craig }
+              { craig: craig },
             ),
             "Select at least one subnet",
-            "it should return list of workspaces"
+            "it should return list of workspaces",
           );
         });
       });
@@ -2675,13 +2675,13 @@ describe("power_instances", () => {
         it("should return invalid when empty", () => {
           assert.isTrue(
             craig.power_instances.network.invalid({ network: [] }),
-            "it should be true"
+            "it should be true",
           );
         });
         it("should return invalid when no network", () => {
           assert.isTrue(
             craig.power_instances.network.invalid({}),
-            "it should be true"
+            "it should be true",
           );
         });
         it("should return true when a network has an invalid ip address", () => {
@@ -2693,7 +2693,7 @@ describe("power_instances", () => {
                 },
               ],
             }),
-            "it should be true when incomplete"
+            "it should be true when incomplete",
           );
           assert.isTrue(
             craig.power_instances.network.invalid({
@@ -2703,7 +2703,7 @@ describe("power_instances", () => {
                 },
               ],
             }),
-            "it should be true when cidr"
+            "it should be true when cidr",
           );
         });
         it("should return false when not empty and valid", () => {
@@ -2715,7 +2715,7 @@ describe("power_instances", () => {
                 },
               ],
             }),
-            "it should be false"
+            "it should be false",
           );
         });
       });
@@ -2732,7 +2732,7 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.power_instances.primary_subnet.groups(data, { craig: craig }),
             [],
-            "it should return list of networks"
+            "it should return list of networks",
           );
         });
         it("should return groups when network", () => {
@@ -2745,7 +2745,7 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.power_instances.primary_subnet.groups(data, { craig: craig }),
             ["frog"],
-            "it should return list of networks"
+            "it should return list of networks",
           );
         });
       });
@@ -2757,7 +2757,7 @@ describe("power_instances", () => {
               primary_subnet: "",
             }),
             "",
-            "it should return a list of networks"
+            "it should return a list of networks",
           );
         });
         it("should return first string in network if no primary subnet selected", () => {
@@ -2767,7 +2767,7 @@ describe("power_instances", () => {
               primary_subnet: "",
             }),
             "frog",
-            "it should return a list of networks"
+            "it should return a list of networks",
           );
         });
         it("should return primary subnet if already selected", () => {
@@ -2777,7 +2777,7 @@ describe("power_instances", () => {
               primary_subnet: "frog",
             }),
             "frog",
-            "it should return a list of networks"
+            "it should return a list of networks",
           );
         });
       });
@@ -2790,7 +2790,7 @@ describe("power_instances", () => {
           craig.power_instances.primary_subnet.onStateChange(
             data,
             { craig: craig },
-            "turtle"
+            "turtle",
           );
           assert.deepEqual(
             data,
@@ -2808,7 +2808,7 @@ describe("power_instances", () => {
               ],
               primary_subnet: "turtle",
             },
-            "it should return new network and update primary subnet"
+            "it should return new network and update primary subnet",
           );
         });
         it("should update primary subnet when no network", () => {
@@ -2823,7 +2823,7 @@ describe("power_instances", () => {
               network: [],
               primary_subnet: "",
             },
-            "it should return empty primary subnet"
+            "it should return empty primary subnet",
           );
         });
       });
@@ -2832,20 +2832,20 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.power_instances.primary_subnet.invalidText(
               { workspace: "" },
-              { craig: craig }
+              { craig: craig },
             ),
             "Select a workspace",
-            "it should return invalid text"
+            "it should return invalid text",
           );
         });
         it("should return invalidText when no network", () => {
           assert.deepEqual(
             craig.power_instances.primary_subnet.invalidText(
               { workspace: "a", network: [] },
-              { craig: craig }
+              { craig: craig },
             ),
             "Select at least one subnet",
-            "it should return invalid text"
+            "it should return invalid text",
           );
         });
       });
@@ -2868,20 +2868,20 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.power_instances.image.groups(
               { workspace: "" },
-              { craig: craig }
+              { craig: craig },
             ),
             [],
-            "it should return list of networks"
+            "it should return list of networks",
           );
         });
         it("should return groups when workspace", () => {
           assert.deepEqual(
             craig.power_instances.image.groups(
               { workspace: "toad" },
-              { craig: craig }
+              { craig: craig },
             ),
             ["7100-05-09"],
-            "it should return list of images"
+            "it should return list of images",
           );
         });
         it("should return groups when workspace", () => {
@@ -2890,7 +2890,7 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.vtl.image.groups({ workspace: "toad" }, { craig: craig }),
             ["VTL"],
-            "it should return list of images"
+            "it should return list of images",
           );
         });
       });
@@ -2900,10 +2900,10 @@ describe("power_instances", () => {
         assert.deepEqual(
           craig.power_instances.pi_shared_processor_pool.groups(
             {},
-            { craig: craig }
+            { craig: craig },
           ),
           ["None"],
-          "it should return correct array"
+          "it should return correct array",
         );
         craig.power.create({
           name: "example",
@@ -2929,10 +2929,10 @@ describe("power_instances", () => {
             {
               workspace: "example",
             },
-            { craig: craig }
+            { craig: craig },
           ),
           ["None", "test"],
-          "it should return correct array"
+          "it should return correct array",
         );
       });
       it("should be hidden when sap", () => {
@@ -2940,7 +2940,7 @@ describe("power_instances", () => {
           craig.power_instances.pi_shared_processor_pool.hideWhen({
             sap: true,
           }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should modify state data on input change", () => {
@@ -2961,7 +2961,7 @@ describe("power_instances", () => {
             pi_shared_processor_pool: "None",
           }),
           "None",
-          "it should return correct data"
+          "it should return correct data",
         );
         let actualData = {
           pi_shared_processor_pool: "test",
@@ -2969,7 +2969,7 @@ describe("power_instances", () => {
         craig.power_instances.pi_shared_processor_pool.onInputChange(
           actualData,
           "target",
-          { craig: craig }
+          { craig: craig },
         );
         assert.deepEqual(
           actualData,
@@ -2979,7 +2979,7 @@ describe("power_instances", () => {
             sap: false,
             sap_profile: null,
           },
-          "it should return correct data"
+          "it should return correct data",
         );
       });
     });
@@ -2989,14 +2989,14 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.power_instances.pi_proc_type.groups({}),
             ["Shared", "Capped", "Dedicated"],
-            "it should return groups"
+            "it should return groups",
           );
           assert.deepEqual(
             craig.power_instances.pi_proc_type.groups({
               pi_shared_processor_pool: "pool",
             }),
             ["Shared", "Capped"],
-            "it should return groups when using shared pool"
+            "it should return groups when using shared pool",
           );
         });
       });
@@ -3007,7 +3007,7 @@ describe("power_instances", () => {
               pi_proc_type: "",
             }),
             "",
-            "it should render correct text"
+            "it should render correct text",
           );
         });
         it("should return capitalized name on render", () => {
@@ -3016,7 +3016,7 @@ describe("power_instances", () => {
               pi_proc_type: "shared",
             }),
             "Shared",
-            "it should render correct text"
+            "it should render correct text",
           );
         });
       });
@@ -3027,7 +3027,7 @@ describe("power_instances", () => {
               pi_proc_type: "Shared",
             }),
             "shared",
-            "it should render correct text"
+            "it should render correct text",
           );
         });
       });
@@ -3036,11 +3036,11 @@ describe("power_instances", () => {
       it("should handle invalid cases for value and return correct invalid text", () => {
         assert.isFalse(
           craig.power_instances.pi_processors.invalid({ sap: true }),
-          "it should be false for sap"
+          "it should be false for sap",
         );
         assert.isTrue(
           craig.power_instances.pi_processors.invalid({ pi_processors: "" }),
-          "it should be true when empty string"
+          "it should be true when empty string",
         );
         assert.isTrue(
           craig.power_instances.pi_processors.invalid({
@@ -3048,7 +3048,7 @@ describe("power_instances", () => {
             pi_proc_type: "dedicated",
             pi_sys_type: "e980",
           }),
-          "it should be true when dedicated and not whole number"
+          "it should be true when dedicated and not whole number",
         );
         assert.deepEqual(
           craig.power_instances.pi_processors.invalidText({
@@ -3057,21 +3057,21 @@ describe("power_instances", () => {
             pi_sys_type: "e980",
           }),
           "Must be a whole number between 1 and 17.",
-          "it should have correct invalid text"
+          "it should have correct invalid text",
         );
         assert.isTrue(
           craig.power_instances.pi_processors.invalid({
             pi_processors: "0",
             pi_proc_type: "dedicated",
           }),
-          "it should be true when dedicated and out of range"
+          "it should be true when dedicated and out of range",
         );
         assert.isTrue(
           craig.power_instances.pi_processors.invalid({
             pi_processors: "1000",
             pi_proc_type: "dedicated",
           }),
-          "it should be true when dedicated and out of range"
+          "it should be true when dedicated and out of range",
         );
         assert.deepEqual(
           craig.power_instances.pi_processors.invalidText({
@@ -3079,32 +3079,32 @@ describe("power_instances", () => {
             pi_proc_type: "dedicated",
           }),
           "Must be a whole number between 1 and 13.",
-          "it should have correct invalid text"
+          "it should have correct invalid text",
         );
         assert.isTrue(
           craig.power_instances.pi_processors.invalid({
             pi_processors: "0",
           }),
-          "it should be true when out of range"
+          "it should be true when out of range",
         );
         assert.deepEqual(
           craig.power_instances.pi_processors.invalidText({
             pi_processors: "0",
           }),
           "Must be a number between 0.25 and 13.75.",
-          "it should have correct invalid text"
+          "it should have correct invalid text",
         );
         assert.isTrue(
           craig.power_instances.pi_processors.invalid({
             pi_processors: "1000",
           }),
-          "it should be true when out of range"
+          "it should be true when out of range",
         );
       });
       it("should return true when sap", () => {
         assert.isTrue(
           craig.power_instances.pi_processors.hideWhen({ sap: true }),
-          "it should be true when sap"
+          "it should be true when sap",
         );
       });
     });
@@ -3112,20 +3112,20 @@ describe("power_instances", () => {
       it("should return true when sap", () => {
         assert.isTrue(
           craig.power_instances.pi_memory.hideWhen({ sap: true }),
-          "it should be true when sap"
+          "it should be true when sap",
         );
       });
       it("should handle invalid and invalidText cases for memory", () => {
         assert.isFalse(
           craig.power_instances.pi_memory.invalid({ sap: true }),
-          "it should be false for sap"
+          "it should be false for sap",
         );
         assert.isTrue(
           craig.power_instances.pi_memory.invalid({
             pi_memory: "fff",
             pi_sys_type: "e980",
           }),
-          "it should be true when not number"
+          "it should be true when not number",
         );
         assert.deepEqual(
           craig.power_instances.pi_memory.invalidText({
@@ -3133,30 +3133,30 @@ describe("power_instances", () => {
             pi_sys_type: "e980",
           }),
           "Must be a whole number between 2 and 15400.",
-          "it should have correct invalid text"
+          "it should have correct invalid text",
         );
         assert.isTrue(
           craig.power_instances.pi_memory.invalid({ pi_memory: "9999999" }),
-          "it should be true when out of range"
+          "it should be true when out of range",
         );
         assert.deepEqual(
           craig.power_instances.pi_memory.invalidText({ pi_memory: "fff" }),
           "Must be a whole number between 2 and 934.",
-          "it should have correct invalid text"
+          "it should have correct invalid text",
         );
         assert.isTrue(
           craig.power_instances.pi_memory.invalid({
             pi_memory: "-10",
             pi_license_repository_capacity: "1",
           }),
-          "it should be true when out of range and vtl"
+          "it should be true when out of range and vtl",
         );
         assert.isTrue(
           craig.power_instances.pi_memory.invalid({
             pi_memory: "1",
             pi_license_repository_capacity: "16",
           }),
-          "it should be true when out of range and vtl"
+          "it should be true when out of range and vtl",
         );
         assert.deepEqual(
           craig.power_instances.pi_memory.invalidText({
@@ -3164,7 +3164,7 @@ describe("power_instances", () => {
             pi_license_repository_capacity: "1",
           }),
           "Must be a whole number between 2 and 934. For FalconStor VTL Instances, memory must be greater than or equal to 18.",
-          "it should have correct invalid text"
+          "it should have correct invalid text",
         );
       });
     });
@@ -3185,7 +3185,7 @@ describe("power_instances", () => {
             pi_placement_group_id: "frog",
             storage_option: "None",
           },
-          "it should modify data"
+          "it should modify data",
         );
       });
       it("should correctly set value of storage option related fields on state change with None placement group", () => {
@@ -3198,7 +3198,7 @@ describe("power_instances", () => {
           {
             pi_placement_group_id: "None",
           },
-          "it should modify data"
+          "it should modify data",
         );
       });
       it("should correctly generate groups", () => {
@@ -3229,10 +3229,10 @@ describe("power_instances", () => {
             {},
             {
               craig: craig,
-            }
+            },
           ),
           ["None"],
-          "it should return groups"
+          "it should return groups",
         );
         assert.deepEqual(
           craig.power_instances.pi_placement_group_id.groups(
@@ -3241,10 +3241,10 @@ describe("power_instances", () => {
             },
             {
               craig: craig,
-            }
+            },
           ),
           ["None", "test"],
-          "it should return groups"
+          "it should return groups",
         );
       });
     });
@@ -3253,14 +3253,14 @@ describe("power_instances", () => {
         assert.deepEqual(
           craig.power_instances.storage_option.groups({}),
           ["None", "Storage Pool", "Affinity", "Anti-Affinity"],
-          "it should return correct groups"
+          "it should return correct groups",
         );
         assert.deepEqual(
           craig.power_instances.storage_option.groups({
             pi_placement_group_id: "frog",
           }),
           ["None", "Storage Pool"],
-          "it should return correct groups when using placement group"
+          "it should return correct groups when using placement group",
         );
       });
       describe("power_instances.storage_option.onStateChange", () => {
@@ -3333,7 +3333,7 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.power_instances.storage_option.invalidText({ workspace: "" }),
             "Select a workspace",
-            "it should be equal"
+            "it should be equal",
           );
         });
         it("should return correct text when workspace is selected", () => {
@@ -3342,7 +3342,7 @@ describe("power_instances", () => {
               workspace: "foo",
             }),
             "Select a storage option",
-            "it should be equal"
+            "it should be equal",
           );
         });
       });
@@ -3353,7 +3353,7 @@ describe("power_instances", () => {
           zone: "frog",
         }),
         "/api/power/frog/system_pools",
-        "it should be equal"
+        "it should be equal",
       );
     });
     it("should disable sys type when shared processor pool", () => {
@@ -3361,13 +3361,13 @@ describe("power_instances", () => {
         craig.power_instances.pi_sys_type.disabled({
           pi_shared_processor_pool: "true",
         }),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should hide sys type when no workspace", () => {
       assert.isTrue(
         craig.power_instances.pi_sys_type.hideWhen({}),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
     it("should not hide sys type when workspace", () => {
@@ -3375,7 +3375,7 @@ describe("power_instances", () => {
         craig.power_instances.pi_sys_type.hideWhen({
           workspace: "yes",
         }),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
     describe("power_instances.pi_storage_type", () => {
@@ -3386,13 +3386,13 @@ describe("power_instances", () => {
               zone: "dal10",
             }),
             `/api/power/dal10/storage-tiers`,
-            "it should return list of tiers"
+            "it should return list of tiers",
           );
         });
         it("should hidden when no zone", () => {
           assert.isTrue(
             craig.power_instances.pi_storage_type.hideWhen({}),
-            "it should not be hidden"
+            "it should not be hidden",
           );
         });
         it("should not be hidden when type is tier-1", () => {
@@ -3402,7 +3402,7 @@ describe("power_instances", () => {
               pi_storage_type: "tier1",
             }),
             "Tier-1",
-            "it should return correct text"
+            "it should return correct text",
           );
         });
         it("should render for tier5k", () => {
@@ -3412,7 +3412,7 @@ describe("power_instances", () => {
               pi_storage_type: "tier5k",
             }),
             "Fixed IOPs",
-            "it should return correct text"
+            "it should return correct text",
           );
         });
         it("should render for tier5k", () => {
@@ -3422,7 +3422,7 @@ describe("power_instances", () => {
               pi_storage_type: "tier5k",
             }),
             "Fixed IOPs",
-            "it should return correct text"
+            "it should return correct text",
           );
         });
         it("should return value for tier5k", () => {
@@ -3432,7 +3432,7 @@ describe("power_instances", () => {
               pi_storage_type: "Fixed IOPs",
             }),
             "tier5k",
-            "it should return correct text"
+            "it should return correct text",
           );
         });
         it("should not be hidden when type is not selected", () => {
@@ -3442,7 +3442,7 @@ describe("power_instances", () => {
               pi_storage_type: "",
             }),
             "",
-            "it should return correct text"
+            "it should return correct text",
           );
         });
       });
@@ -3454,7 +3454,7 @@ describe("power_instances", () => {
               pi_storage_type: "Tier-1",
             }),
             "tier1",
-            "it should return correct text"
+            "it should return correct text",
           );
         });
       });
@@ -3466,7 +3466,7 @@ describe("power_instances", () => {
             craig.power_instances.pi_storage_pool.hideWhen({
               storage_option: "Storage Pool",
             }),
-            "it should be shown"
+            "it should be shown",
           );
         });
       });
@@ -3475,10 +3475,10 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.power_instances.pi_storage_pool.apiEndpoint(
               { zone: "us-south" },
-              { craig: craig }
+              { craig: craig },
             ),
             "/api/power/us-south/storage-pools",
-            "it should return api endpoint"
+            "it should return api endpoint",
           );
         });
       });
@@ -3490,7 +3490,7 @@ describe("power_instances", () => {
             craig.power_instances.affinity_type.hideWhen({
               storage_option: "Affinity",
             }),
-            "it should be shown"
+            "it should be shown",
           );
         });
       });
@@ -3501,7 +3501,7 @@ describe("power_instances", () => {
               affinity_type: null,
             }),
             "",
-            "it should be empty string"
+            "it should be empty string",
           );
         });
         it("should return type when affinity type is null", () => {
@@ -3510,7 +3510,7 @@ describe("power_instances", () => {
               affinity_type: "Affinity",
             }),
             "Affinity",
-            "it should be empty string"
+            "it should be empty string",
           );
         });
       });
@@ -3521,7 +3521,7 @@ describe("power_instances", () => {
               storage_option: "Affinity",
               affinity_type: "",
             }),
-            "it should be invalid"
+            "it should be invalid",
           );
         });
       });
@@ -3532,7 +3532,7 @@ describe("power_instances", () => {
               storage_option: "Affinity",
             }),
             "Select an Affinity option",
-            "it should return correct invalid text"
+            "it should return correct invalid text",
           );
         });
       });
@@ -3543,7 +3543,7 @@ describe("power_instances", () => {
           assert.deepEqual(
             craig.power_instances.ip_address.invalidText(),
             "Invalid IP address",
-            "It should return correct error text"
+            "It should return correct error text",
           );
         });
       });
@@ -3559,9 +3559,9 @@ describe("power_instances", () => {
                 ],
               },
               {},
-              0
+              0,
             ),
-            "it should not be invalid"
+            "it should not be invalid",
           );
         });
         it("should return true if not ipv4 string", () => {
@@ -3575,9 +3575,9 @@ describe("power_instances", () => {
                 ],
               },
               {},
-              0
+              0,
             ),
-            "it should not be invalid"
+            "it should not be invalid",
           );
         });
         it("should return true if cidr block", () => {
@@ -3591,9 +3591,9 @@ describe("power_instances", () => {
                 ],
               },
               {},
-              0
+              0,
             ),
-            "it should not be invalid"
+            "it should not be invalid",
           );
         });
       });
@@ -3629,10 +3629,10 @@ describe("power_instances", () => {
                     },
                   },
                 },
-              }
+              },
             ),
             ["hi", "hi"],
-            "it should return fultered list of groups"
+            "it should return fultered list of groups",
           );
         });
         it("should return list of groups", () => {
@@ -3660,10 +3660,10 @@ describe("power_instances", () => {
                     },
                   },
                 },
-              }
+              },
             ),
             ["hi"],
-            "it should return fultered list of groups"
+            "it should return fultered list of groups",
           );
         });
       });
@@ -3699,10 +3699,10 @@ describe("power_instances", () => {
                     },
                   },
                 },
-              }
+              },
             ),
             ["hi", "hi"],
-            "it should return fultered list of groups"
+            "it should return fultered list of groups",
           );
         });
         it("should return list of groups", () => {
@@ -3734,10 +3734,10 @@ describe("power_instances", () => {
                     },
                   },
                 },
-              }
+              },
             ),
             ["hi", "hi"],
-            "it should return fultered list of groups"
+            "it should return fultered list of groups",
           );
         });
       });
@@ -3748,7 +3748,7 @@ describe("power_instances", () => {
               storage_option: "Anti-Affinity",
               affinity_type: "Volume",
             }),
-            "It should be shown"
+            "It should be shown",
           );
         });
         it("should be true when storage option is anti-affinity and type is volume", () => {
@@ -3757,7 +3757,7 @@ describe("power_instances", () => {
               storage_option: "Affinity",
               affinity_type: "Volume",
             }),
-            "It should be shown"
+            "It should be shown",
           );
         });
       });
@@ -3766,31 +3766,31 @@ describe("power_instances", () => {
       it("should hide toggle when image is not ibmi", () => {
         assert.isTrue(
           craig.power_instances.pi_ibmi_css.hideWhen({}),
-          "it should be hidden"
+          "it should be hidden",
         );
         assert.isTrue(
           craig.power_instances.pi_ibmi_css.hideWhen({
             image: "other",
           }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should return invalid for pi_ibmi_rds_users", () => {
         assert.isFalse(
           craig.power_instances.pi_ibmi_rds_users.invalid({}),
-          "it should be false when no state object"
+          "it should be false when no state object",
         );
         assert.isTrue(
           craig.power_instances.pi_ibmi_rds_users.invalid({
             pi_ibmi_rds_users: "aaa",
           }),
-          "it should be true when not a number"
+          "it should be true when not a number",
         );
         assert.isTrue(
           craig.power_instances.pi_ibmi_rds_users.invalid({
             pi_ibmi_rds_users: "-1",
           }),
-          "it should be true when not in range"
+          "it should be true when not in range",
         );
       });
     });

@@ -92,8 +92,8 @@ export class JSONModal extends React.Component {
           this.props.import
             ? "Import as New Project"
             : this.state.readOnlyJSON
-            ? `Preview Configuration`
-            : `Override Configuration`
+              ? `Preview Configuration`
+              : `Override Configuration`
         }
         primaryButtonText={this.props.import ? "Create Project" : "Done"}
         primaryButtonDisabled={
@@ -111,7 +111,7 @@ export class JSONModal extends React.Component {
               if (shouldClose) {
                 this.props.onClose();
               }
-            }
+            },
           );
         }}
       >

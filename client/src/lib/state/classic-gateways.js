@@ -40,7 +40,7 @@ function classicGatewayOnStoreUpdate(config) {
           !splatContains(
             config.store.json.classic_vlans,
             "name",
-            gateway[field]
+            gateway[field],
           )
         ) {
           gateway[field] = null;
@@ -49,7 +49,7 @@ function classicGatewayOnStoreUpdate(config) {
           !splatContains(
             config.store.json.classic_ssh_keys,
             "name",
-            gateway.ssh_key
+            gateway.ssh_key,
           )
         )
           gateway.ssh_key = null;
@@ -85,7 +85,7 @@ function classicGatewaySave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "classic_gateways"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -126,7 +126,7 @@ function initClassicGateways(store) {
         "disk_key_names",
         "memory",
       ],
-      "classic_gateways"
+      "classic_gateways",
     ),
     schema: {
       name: nameField("classic_gateways", {
@@ -160,7 +160,7 @@ function initClassicGateways(store) {
           return !isWholeNumber(mem) || !isInRange(mem, 64, 1024);
         },
         invalidText: unconditionalInvalidText(
-          "Memory must be a whole number between 64 and 1024"
+          "Memory must be a whole number between 64 and 1024",
         ),
         size: "small",
       },
@@ -199,7 +199,7 @@ function initClassicGateways(store) {
         groups: function (stateData, componentProps) {
           return splat(
             componentProps.craig.store.json.classic_ssh_keys,
-            "name"
+            "name",
           );
         },
         size: "small",

@@ -40,7 +40,7 @@ describe("event streams", () => {
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_instance" "event_streams_es" {
@@ -65,7 +65,7 @@ resource "ibm_resource_instance" "event_streams_es" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format event streams instance without optional fields", () => {
@@ -99,7 +99,7 @@ resource "ibm_resource_instance" "event_streams_es" {
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_instance" "event_streams_es" {
@@ -121,7 +121,7 @@ resource "ibm_resource_instance" "event_streams_es" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -190,7 +190,7 @@ resource "ibm_resource_instance" "event_streams_es" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format event streams without parameters if plan is not enterprise", () => {
@@ -251,7 +251,7 @@ resource "ibm_resource_instance" "event_streams_es" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

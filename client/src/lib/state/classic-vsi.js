@@ -31,7 +31,7 @@ function initClassicVsi(store) {
       config.updateChild(
         ["json", "classic_vsi"],
         componentProps.data.name,
-        stateData
+        stateData,
       );
     },
     delete: function (config, stateData, componentProps) {
@@ -45,7 +45,7 @@ function initClassicVsi(store) {
               !splatContains(
                 config.store.json.classic_vlans,
                 "name",
-                vsi[field]
+                vsi[field],
               )
             )
               vsi[field] = null;
@@ -61,14 +61,14 @@ function initClassicVsi(store) {
                   splatContains(
                     config.store.json.classic_security_groups,
                     "name",
-                    item
+                    item,
                   )
                 ) {
                   nextSgs[field].push(item);
                 }
               });
               vsi[field] = nextSgs[field];
-            }
+            },
           );
           let nextSshKeys = [];
           vsi.ssh_keys.forEach((key) => {
@@ -97,7 +97,7 @@ function initClassicVsi(store) {
         "public_security_groups",
         "ssh_keys",
       ],
-      "classic_vsi"
+      "classic_vsi",
     ),
     schema: {
       name: nameField("classic_vsi", {
@@ -148,7 +148,7 @@ function initClassicVsi(store) {
         groups: function (stateData, componentProps) {
           return splat(
             componentProps.craig.store.json.classic_ssh_keys,
-            "name"
+            "name",
           );
         },
       },
@@ -163,12 +163,12 @@ function initClassicVsi(store) {
           );
         },
         invalidText: unconditionalInvalidText(
-          "Select at least one security group"
+          "Select at least one security group",
         ),
         groups: function (stateData, componentProps) {
           return splat(
             componentProps.craig.store.json.classic_security_groups,
-            "name"
+            "name",
           );
         },
       },
@@ -184,12 +184,12 @@ function initClassicVsi(store) {
           );
         },
         invalidText: unconditionalInvalidText(
-          "Select at least one security group"
+          "Select at least one security group",
         ),
         groups: function (stateData, componentProps) {
           return splat(
             componentProps.craig.store.json.classic_security_groups,
-            "name"
+            "name",
           );
         },
         hideWhen: hideWhenFieldFalse("private_network_only", true),

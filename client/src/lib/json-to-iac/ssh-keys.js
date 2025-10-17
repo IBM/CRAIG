@@ -46,7 +46,7 @@ function formatSshKey(key, config) {
     getResourceOrData(key),
     "ibm_is_ssh_key",
     sshKey.name,
-    sshKey.data
+    sshKey.data,
   );
 }
 

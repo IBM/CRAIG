@@ -16,7 +16,7 @@ describe("transit gateway", () => {
           resource_group: "slz-service-rg",
           global: false,
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_tg_gateway" "transit_gateway" {
@@ -33,7 +33,7 @@ resource "ibm_tg_gateway" "transit_gateway" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correctly formatted transit gateway from data", () => {
@@ -44,7 +44,7 @@ resource "ibm_tg_gateway" "transit_gateway" {
           global: false,
           use_data: true,
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 data "ibm_tg_gateway" "data_transit_gateway" {
@@ -54,7 +54,7 @@ data "ibm_tg_gateway" "data_transit_gateway" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -72,7 +72,7 @@ data "ibm_tg_gateway" "data_transit_gateway" {
             },
           ],
         }.connections[0],
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
@@ -89,7 +89,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correctly formatted transit gateway connection with tgw from data", () => {
@@ -111,7 +111,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
           resource_group: "slz-service-rg",
           global: false,
           use_data: true,
-        }
+        },
       );
       let expectedData = `
 resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
@@ -128,7 +128,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correctly formatted transit gateway when connecting a vpc via crn", () => {
@@ -148,7 +148,7 @@ resource "ibm_tg_connection" "transit_gateway_to_management_connection" {
             },
           ],
         }.connections[1],
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_tg_connection" "transit_gateway_to_aaaa_aaaaaaaa_aaaa_aaaa_aaaa_aaaaaaaaaaaa_connection" {
@@ -165,7 +165,7 @@ resource "ibm_tg_connection" "transit_gateway_to_aaaa_aaaaaaaa_aaaa_aaaa_aaaa_aa
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correctly formatted transit gateway when connected to power", () => {
@@ -181,7 +181,7 @@ resource "ibm_tg_connection" "transit_gateway_to_aaaa_aaaaaaaa_aaaa_aaaa_aaaa_aa
             },
           ],
         }.connections[0],
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_tg_connection" "transit_gateway_to_power_workspace_dev_connection" {
@@ -198,7 +198,7 @@ resource "ibm_tg_connection" "transit_gateway_to_power_workspace_dev_connection"
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should correctly format a tgw connection with a GRE tunnel", () => {
@@ -219,7 +219,7 @@ resource "ibm_tg_connection" "transit_gateway_to_power_workspace_dev_connection"
             },
           ],
         }.gre_tunnels[0],
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
@@ -240,7 +240,7 @@ resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should correctly format a tgw connection with a GRE tunnel with empty string asn", () => {
@@ -261,7 +261,7 @@ resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
             },
           ],
         }.gre_tunnels[0],
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
@@ -281,7 +281,7 @@ resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should correctly format a tgw connection with a GRE tunnel with empty string asn and name instead of gateway", () => {
@@ -302,7 +302,7 @@ resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
             },
           ],
         }.gre_tunnels[0],
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
@@ -322,7 +322,7 @@ resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -340,7 +340,7 @@ resource "ibm_tg_connection" "transit_gateway_to_gw_unbound_gre_connection" {
           },
         ],
       }.connections[0],
-      slzNetwork
+      slzNetwork,
     );
     let expectedData = `
 resource "ibm_tg_connection" "transit_gateway_to_classic_connection" {
@@ -368,7 +368,7 @@ resource "ibm_tg_connection" "transit_gateway_to_classic_connection" {
           le: 0,
           ge: 32,
         },
-        { use_data: false }
+        { use_data: false },
       );
       let expectedData = `
 resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_management_connection_filter" {
@@ -383,7 +383,7 @@ resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_ma
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct filter"
+        "it should return correct filter",
       );
     });
     it("should return a vpc prefix filter with tgw from data", () => {
@@ -398,7 +398,7 @@ resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_ma
           le: 0,
           ge: 32,
         },
-        { use_data: true }
+        { use_data: true },
       );
       let expectedData = `
 resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_management_connection_filter" {
@@ -413,7 +413,7 @@ resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_ma
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct filter"
+        "it should return correct filter",
       );
     });
     it("should return a power prefix filter", () => {
@@ -428,7 +428,7 @@ resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_ma
           le: 0,
           ge: 32,
         },
-        { use_data: false }
+        { use_data: false },
       );
       let expectedData = `
 resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_power_workspace_dev_connection_filter" {
@@ -443,7 +443,7 @@ resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_po
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct filter"
+        "it should return correct filter",
       );
     });
     it("should return a gre tunnel filter", () => {
@@ -458,7 +458,7 @@ resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_po
           le: 0,
           ge: 32,
         },
-        { use_data: false }
+        { use_data: false },
       );
       let expectedData = `
 resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_gw_unbound_gre_connection_filter" {
@@ -473,7 +473,7 @@ resource "ibm_tg_connection_prefix_filter" "my_cool_filter_transit_gateway_to_gw
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct filter"
+        "it should return correct filter",
       );
     });
   });
@@ -522,7 +522,7 @@ resource "ibm_tg_connection" "transit_gateway_to_workload_connection" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correctly formatted transit gateway with prefix filters", () => {
@@ -629,7 +629,7 @@ resource "ibm_tg_connection_prefix_filter" "my_cool_filter_2_transit_gateway_to_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return terraform for multiple transit gateways", () => {
@@ -760,7 +760,7 @@ resource "ibm_tg_connection" "m_to_management_connection" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should create correct tf for multiple tgw"
+        "it should create correct tf for multiple tgw",
       );
     });
   });

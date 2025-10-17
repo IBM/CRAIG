@@ -27,7 +27,7 @@ describe("docs to markdown", () => {
       assert.deepEqual(
         distinct(pagesWithInvalidTables),
         [],
-        "no pages should have invalid tables"
+        "no pages should have invalid tables",
       );
     });
   });
@@ -84,7 +84,7 @@ describe("docs to markdown", () => {
       };
       let expectedData = fs.readFileSync(
         "./unit-tests/data-files/component-text.md",
-        "utf8"
+        "utf8",
       );
       let actualData = docsToMd(componentData);
       assert.deepEqual(actualData, expectedData, "it should create markdown");
@@ -96,7 +96,7 @@ describe("docs to markdown", () => {
       fs.writeFileSync("dev.md", actualData);
       let expectedData = fs.readFileSync(
         "./unit-tests/data-files/slz.md",
-        "utf-8"
+        "utf-8",
       );
       assert.deepEqual(actualData, expectedData, "it should return docs");
     });

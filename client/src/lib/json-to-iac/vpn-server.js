@@ -38,21 +38,21 @@ function ibmIsVpnServer(server, craig) {
     server.bring_your_own_cert || server.method === "byo"
       ? // reference for BYO certificate
         `\${ibm_sm_imported_certificate.${snakeCase(
-          `${server.vpc} vpn server ${server.name}`
+          `${server.vpc} vpn server ${server.name}`,
         )}_imported_certificate.crn}`
       : server.DANGER_developer_certificate || server.method === "INSECURE"
-      ? // reference for auto generated developer certificate
-        `\${ibm_sm_imported_certificate.DANGER_${snakeCase(
-          `${server.vpc} vpn server ${server.name} dev cert`
-        )}.crn}`
-      : false;
+        ? // reference for auto generated developer certificate
+          `\${ibm_sm_imported_certificate.DANGER_${snakeCase(
+            `${server.vpc} vpn server ${server.name} dev cert`,
+          )}.crn}`
+        : false;
 
   // vpn server data
   let serverData = {
     certificate_crn:
       overrideCert ||
       `\${var.${snakeCase(
-        `${server.vpc} vpn server ${server.name} certificate_crn`
+        `${server.vpc} vpn server ${server.name} certificate_crn`,
       )}}`,
     client_authentication: [
       {
@@ -84,12 +84,12 @@ function ibmIsVpnServer(server, craig) {
         (getObjectFromArray(serverVpcSubnets, "name", subnet)?.use_data
           ? "import_"
           : "subnet_") + snakeCase(subnet)
-      }_id}`
+      }_id}`,
     );
   });
   server.security_groups.forEach((group) => {
     serverData["security_groups"].push(
-      `\${module.${snakeCase(server.vpc)}_vpc.${snakeCase(group)}_id}`
+      `\${module.${snakeCase(server.vpc)}_vpc.${snakeCase(group)}_id}`,
     );
   });
   if (
@@ -100,10 +100,10 @@ function ibmIsVpnServer(server, craig) {
       overrideCert && server.method === "certificate"
         ? overrideCert.replace(/imported(?=\w+\.crn)/, "client_ca_imported")
         : overrideCert
-        ? overrideCert.replace(/imported(?=\w+\.crn)/, "client_ca_imported")
-        : `\${var.${snakeCase(
-            `${server.vpc} vpn server ${server.name} client_ca_crn`
-          )}}`;
+          ? overrideCert.replace(/imported(?=\w+\.crn)/, "client_ca_imported")
+          : `\${var.${snakeCase(
+              `${server.vpc} vpn server ${server.name} client_ca_crn`,
+            )}}`;
   } else {
     serverData.client_authentication[0].identity_provider = "iam";
   }
@@ -138,7 +138,7 @@ function ibmIsVpnServerRoute(server, route) {
     action: route.action,
     destination: route.destination,
     vpn_server: `\${ibm_is_vpn_server.${snakeCase(
-      server.vpc
+      server.vpc,
     )}_vpn_server_${snakeCase(server.name)}.id}`,
   };
   return {
@@ -164,7 +164,7 @@ function DANGER_formatDevRsaCertificate(server, config) {
       `danger ${server.vpc} vpn ${server.name} ${key}`,
       {
         algorithm: "RSA",
-      }
+      },
     );
   });
   dangerCertTf += jsonToTfPrint(
@@ -174,7 +174,7 @@ function DANGER_formatDevRsaCertificate(server, config) {
     {
       is_ca_certificate: true,
       private_key_pem: `\${tls_private_key.DANGER_${snakeCase(
-        `${server.vpc} vpn ${server.name} ca key`
+        `${server.vpc} vpn ${server.name} ca key`,
       )}.private_key_pem}`,
       validity_period_hours: `\${3 * 365 * 24}`,
       subject: [
@@ -184,7 +184,7 @@ function DANGER_formatDevRsaCertificate(server, config) {
         },
       ],
       allowed_uses: ["cert_signing", "crl_signing"],
-    }
+    },
   );
 
   ["client", "server"].forEach((certRequest) => {
@@ -194,7 +194,7 @@ function DANGER_formatDevRsaCertificate(server, config) {
       `danger ${server.vpc} vpn ${server.name} ${certRequest} request`,
       {
         private_key_pem: `\${tls_private_key.DANGER_${snakeCase(
-          `${server.vpc} vpn ${server.name} ${certRequest} key`
+          `${server.vpc} vpn ${server.name} ${certRequest} key`,
         )}.private_key_pem}`,
         subject: [
           {
@@ -202,7 +202,7 @@ function DANGER_formatDevRsaCertificate(server, config) {
             organization: "My, Inc",
           },
         ],
-      }
+      },
     );
   });
 
@@ -213,13 +213,13 @@ function DANGER_formatDevRsaCertificate(server, config) {
       `danger ${server.vpc} vpn ${server.name} ${signedCert} cert`,
       {
         cert_request_pem: `\${tls_cert_request.${snakeCase(
-          `danger ${server.vpc} vpn ${server.name} ${signedCert} request`
+          `danger ${server.vpc} vpn ${server.name} ${signedCert} request`,
         )}.cert_request_pem}`,
         ca_private_key_pem: `\${tls_private_key.${snakeCase(
-          `danger ${server.vpc} vpn ${server.name} ca key`
+          `danger ${server.vpc} vpn ${server.name} ca key`,
         )}.private_key_pem}`,
         ca_cert_pem: `\${tls_self_signed_cert.${snakeCase(
-          `danger ${server.vpc} vpn ${server.name} ca cert`
+          `danger ${server.vpc} vpn ${server.name} ca cert`,
         )}.cert_pem}`,
         validity_period_hours: `\${3 * 365 * 24}`,
         allowed_uses: [
@@ -227,7 +227,7 @@ function DANGER_formatDevRsaCertificate(server, config) {
           "digital_signature",
           signedCert + "_auth",
         ],
-      }
+      },
     );
   });
 
@@ -243,31 +243,31 @@ function DANGER_formatDevRsaCertificate(server, config) {
           ? "data."
           : ""
       }ibm_resource_instance.${snakeCase(
-        server.secrets_manager
+        server.secrets_manager,
       )}_secrets_manager.guid}`,
       region: varDotRegion,
       name: kebabName([server.vpc, server.name, "server", "dev", "cert"]),
       description: `DANGER - INSECURE - FOR DEVELOPMENT USE ONLY - Secret for \${var.prefix} ${titleCase(
-        `${server.vpc} ${server.name} server`
+        `${server.vpc} ${server.name} server`,
       )} authentication`,
       certificate: `\${tls_locally_signed_cert.${snakeCase(
-        `danger ${server.vpc} vpn ${server.name} server cert`
+        `danger ${server.vpc} vpn ${server.name} server cert`,
       )}.cert_pem}`,
       private_key: `\${tls_private_key.${snakeCase(
-        `danger ${server.vpc} vpn ${server.name} server key`
+        `danger ${server.vpc} vpn ${server.name} server key`,
       )}.private_key_pem}`,
       intermediate: `\${tls_self_signed_cert.${snakeCase(
-        `danger ${server.vpc} vpn ${server.name} ca cert`
+        `danger ${server.vpc} vpn ${server.name} ca cert`,
       )}.cert_pem}`,
-    }
+    },
   );
 
   return tfBlock(
     "danger-zone-dev-only",
-    dangerCertTf.replace(/danger/g, "DANGER")
+    dangerCertTf.replace(/danger/g, "DANGER"),
   ).replace(
     "Danger Zone Dev Only",
-    "DANGER ZONE - DEVELOPMENT ONLY - DO NOT USE IN PRODUCTION"
+    "DANGER ZONE - DEVELOPMENT ONLY - DO NOT USE IN PRODUCTION",
   );
 }
 
@@ -293,26 +293,26 @@ function formatVpnServer(server, config) {
               splatContains(
                 config.secrets_manager,
                 "name",
-                server.secrets_manager
+                server.secrets_manager,
               ) &&
               new revision(config).child(
                 "secrets_manager",
-                server.secrets_manager
+                server.secrets_manager,
               ).data.use_data
                 ? "data."
                 : ""
             }ibm_resource_instance.${snakeCase(
-              server.secrets_manager
+              server.secrets_manager,
             )}_secrets_manager.guid}`,
             region: varDotRegion,
             name: kebabName([server.vpc, server.name, "server", "cert"]),
             description: `Secret for \${var.prefix} ${titleCase(
-              server.vpc + " " + server.name
+              server.vpc + " " + server.name,
             )} Server authentication`,
             certificate: `\${var.${data.name}_cert_pem}`,
             private_key: `\${var.${data.name}_private_key_pem}`,
             intermediate: `\${var.${data.name}_intermediate_pem}`,
-          }
+          },
         ) +
         jsonToTfPrint(
           "resource",
@@ -323,16 +323,16 @@ function formatVpnServer(server, config) {
               splatContains(
                 config.secrets_manager,
                 "name",
-                server.secrets_manager
+                server.secrets_manager,
               ) &&
               new revision(config).child(
                 "secrets_manager",
-                server.secrets_manager
+                server.secrets_manager,
               ).data.use_data
                 ? "data."
                 : ""
             }ibm_resource_instance.${snakeCase(
-              server.secrets_manager
+              server.secrets_manager,
             )}_secrets_manager.guid}`,
             region: varDotRegion,
             name: kebabName([
@@ -343,16 +343,16 @@ function formatVpnServer(server, config) {
               "cert",
             ]),
             description: `Secret for \${var.prefix} ${titleCase(
-              server.vpc + " " + server.name
+              server.vpc + " " + server.name,
             )} Server Client CA authentication`,
             certificate: `\${var.${data.name}_client_ca_cert_pem}`,
             private_key: `\${var.${data.name}_client_ca_private_key_pem}`,
             intermediate: `\${var.${data.name}_intermediate_pem}`,
-          }
+          },
         )
       : server.DANGER_developer_certificate || server.method === "INSECURE"
-      ? DANGER_formatDevRsaCertificate(server, config)
-      : "";
+        ? DANGER_formatDevRsaCertificate(server, config)
+        : "";
 
   return (
     certData +
@@ -373,7 +373,7 @@ function formatVpnServerRoute(server, route, config) {
     "resource",
     "ibm_is_vpn_server_route",
     data.name,
-    data.data
+    data.data,
   );
 }
 
@@ -399,7 +399,7 @@ function vpnServerTf(config) {
         description: "Allow VPN Server instance to read from Secrets Manager",
         target_service_name: "secrets-manager",
         roles: ["SecretsReader"],
-      }
+      },
     );
   }
   config.vpn_servers.forEach((server) => {
@@ -413,12 +413,12 @@ function vpnServerTf(config) {
             cidr: prefix,
             name: `vpn-${kebabCase(server.name)}-on-prem-${prefix.replace(
               /\.|\//g,
-              "-"
+              "-",
             )}`,
             vpn_server: server,
           },
           config,
-          true
+          true,
         );
       });
     }

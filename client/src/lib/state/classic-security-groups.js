@@ -40,18 +40,18 @@ function portRangeField(max) {
         (stateData.ruleProtocol === "icmp" && dataRef === "0") // 0 is falsy
         ? false
         : isNullOrEmptyString(dataRef, true) || !Number(dataRef) // NaN results are falsy
-        ? true
-        : stateData.ruleProtocol === "icmp"
-        ? !validPortRange(max ? "code" : "type", Number(dataRef))
-        : !validPortRange("port_min", Number(dataRef));
+          ? true
+          : stateData.ruleProtocol === "icmp"
+            ? !validPortRange(max ? "code" : "type", Number(dataRef))
+            : !validPortRange("port_min", Number(dataRef));
     },
     invalidText: function (stateData) {
       return isNullOrEmptyString(stateData.ruleProtocol, true) ||
         stateData.ruleProtocol === "all"
         ? ""
         : stateData.ruleProtocol === "icmp"
-        ? `Enter a whole number between 0 and ${max ? "255" : "254"}`
-        : "Enter a whole number between 1 and 65535";
+          ? `Enter a whole number between 0 and ${max ? "255" : "254"}`
+          : "Enter a whole number between 1 and 65535";
     },
   };
 }
@@ -84,18 +84,18 @@ function initClassicSecurityGroups(store) {
       config.updateChild(
         ["json", "classic_security_groups"],
         componentProps.data.name,
-        stateData
+        stateData,
       );
     },
     delete: function (config, stateData, componentProps) {
       config.carve(
         ["json", "classic_security_groups"],
-        componentProps.data.name
+        componentProps.data.name,
       );
     },
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "description"],
-      "classic_security_groups"
+      "classic_security_groups",
     ),
     schema: {
       name: nameField("classic_security_groups"),
@@ -107,7 +107,7 @@ function initClassicSecurityGroups(store) {
           return invalidDescription(stateData.description);
         },
         invalidText: unconditionalInvalidText(
-          "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/."
+          "Invalid description. Must match the regex expression /^[a-zA-Z0-9]+$/.",
         ),
         placeholder: "(Optional) Description",
       },
@@ -120,7 +120,7 @@ function initClassicSecurityGroups(store) {
             "classic_security_groups",
             "classic_sg_rules",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         save: function (config, stateData, componentProps) {
@@ -129,7 +129,7 @@ function initClassicSecurityGroups(store) {
             "classic_security_groups",
             "classic_sg_rules",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         delete: function (config, stateData, componentProps) {
@@ -137,7 +137,7 @@ function initClassicSecurityGroups(store) {
             config,
             "classic_security_groups",
             "classic_sg_rules",
-            componentProps
+            componentProps,
           );
         },
         shouldDisableSave: shouldDisableComponentSave(
@@ -149,7 +149,7 @@ function initClassicSecurityGroups(store) {
             "port_range_max",
           ],
           "classic_security_groups",
-          "classic_sg_rules"
+          "classic_sg_rules",
         ),
         schema: {
           name: nameField("classic_sg_rules"),
@@ -174,8 +174,8 @@ function initClassicSecurityGroups(store) {
               return isNullOrEmptyString(stateData.ruleProtocol, true)
                 ? ""
                 : stateData.ruleProtocol === "all"
-                ? "All"
-                : stateData.ruleProtocol.toUpperCase();
+                  ? "All"
+                  : stateData.ruleProtocol.toUpperCase();
             },
           },
           port_range_min: portRangeField(),

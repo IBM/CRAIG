@@ -35,7 +35,7 @@ function dynamicToggleProps(props) {
     props.parentProps,
     "props.handleInputChange",
     "Function",
-    props.handleInputChange
+    props.handleInputChange,
   );
   // check params for disabled
   let isDisabled = disabledReturnsBooleanCheck(props, "dynamicToggleProps");
@@ -44,13 +44,13 @@ function dynamicToggleProps(props) {
   let labelA = dynamicSubnetToggle
       ? "Manual Address Management"
       : props.field.useOnOff
-      ? "Off"
-      : "False",
+        ? "Off"
+        : "False",
     labelB = dynamicSubnetToggle
       ? "CRAIG Managed Network Addresses"
       : props.field.useOnOff
-      ? "On"
-      : "True",
+        ? "On"
+        : "True",
     labelText = props.field.tooltip ? " " : props.field.labelText,
     id = kebabCase(props.name) + "-toggle-" + props.propsName,
     className =

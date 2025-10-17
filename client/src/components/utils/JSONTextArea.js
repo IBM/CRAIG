@@ -6,10 +6,10 @@ export const JSONTextArea = (props) => {
   let label = props.big
     ? ""
     : props.override
-    ? "Override JSON"
-    : props.readOnly
-    ? "Preview JSON"
-    : "Custom JSON";
+      ? "Override JSON"
+      : props.readOnly
+        ? "Preview JSON"
+        : "Custom JSON";
 
   return (
     <div

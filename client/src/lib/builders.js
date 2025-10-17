@@ -22,7 +22,7 @@ function buildSubnet(
   zone,
   addPublicGateway,
   addPrefix,
-  isEdgeVpc
+  isEdgeVpc,
 ) {
   // create a subnet based on vpc, tier, index, and zone
   return {

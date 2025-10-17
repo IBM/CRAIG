@@ -29,7 +29,7 @@ describe("vpn_gateways", () => {
             vpc: "management",
           },
         ],
-        "it should create vpn gateway"
+        "it should create vpn gateway",
       );
     });
   });
@@ -48,7 +48,7 @@ describe("vpn_gateways", () => {
       assert.deepEqual(
         craig.store.json.vpn_gateways,
         expectedData,
-        "it should update gateways"
+        "it should update gateways",
       );
     });
     it("should remove unfound subnet name if vpc exists", () => {
@@ -59,12 +59,12 @@ describe("vpn_gateways", () => {
           data: {
             name: "vpn-zone-1",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.vpn_gateways[0].subnet,
         null,
-        "it should update gateways"
+        "it should update gateways",
       );
     });
     it("should remove unfound resource groups", () => {
@@ -72,7 +72,7 @@ describe("vpn_gateways", () => {
       assert.deepEqual(
         craig.store.json.vpn_gateways[0].resource_group,
         null,
-        "it should update gateways"
+        "it should update gateways",
       );
     });
   });
@@ -82,7 +82,7 @@ describe("vpn_gateways", () => {
       assert.deepEqual(
         craig.store.json.vpn_gateways,
         [],
-        "it should delete the gw"
+        "it should delete the gw",
       );
     });
   });
@@ -98,12 +98,12 @@ describe("vpn_gateways", () => {
           data: {
             name: "management-gateway",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.vpn_gateways[0].vpc,
         "workload",
-        "it should change the gw"
+        "it should change the gw",
       );
     });
     it("should update a vpn gateway with same name different everything else", () => {
@@ -118,7 +118,7 @@ describe("vpn_gateways", () => {
           data: {
             name: "management-gateway",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.vpn_gateways,
@@ -131,7 +131,7 @@ describe("vpn_gateways", () => {
             connections: [],
           },
         ],
-        "it should change the gw"
+        "it should change the gw",
       );
     });
   });
@@ -151,7 +151,7 @@ describe("vpn_gateways", () => {
           vpc: "management",
           connections: [],
         },
-        "it should add the gw"
+        "it should add the gw",
       );
     });
   });
@@ -165,20 +165,20 @@ describe("vpn_gateways", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return the correct data"
+        "it should return the correct data",
       );
     });
     describe("additional_prefixes", () => {
       it("should be valid when is undefined or empty string", () => {
         assert.isFalse(
           craig.vpn_gateways.additional_prefixes.invalid({}),
-          "it should be valid"
+          "it should be valid",
         );
         assert.isFalse(
           craig.vpn_gateways.additional_prefixes.invalid({
             additional_prefixes: "",
           }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should be invalid when not a list of CIDR blocks", () => {
@@ -186,7 +186,7 @@ describe("vpn_gateways", () => {
           craig.vpn_gateways.additional_prefixes.invalid({
             additional_prefixes: "aaa",
           }),
-          "it should not be valid"
+          "it should not be valid",
         );
       });
       it("should be invalid when not a list of CIDR blocks", () => {
@@ -194,21 +194,21 @@ describe("vpn_gateways", () => {
           craig.vpn_gateways.additional_prefixes.invalid({
             additional_prefixes: ["aaa"],
           }),
-          "it should not be valid"
+          "it should not be valid",
         );
       });
       it("should return empty string on render if is undefined or empty string", () => {
         assert.deepEqual(
           craig.vpn_gateways.additional_prefixes.onRender({}),
           "",
-          "it should be valid"
+          "it should be valid",
         );
         assert.deepEqual(
           craig.vpn_gateways.additional_prefixes.onRender({
             additional_prefixes: "",
           }),
           "",
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should render as string when array", () => {
@@ -217,21 +217,21 @@ describe("vpn_gateways", () => {
             additional_prefixes: ["1.2.3.4/5", "2.3.4.5/6"],
           }),
           "1.2.3.4/5,2.3.4.5/6",
-          "it should return string"
+          "it should return string",
         );
       });
       it("should return empty array on input change if is undefined or empty string", () => {
         assert.deepEqual(
           craig.vpn_gateways.additional_prefixes.onInputChange({}),
           [],
-          "it should be valid"
+          "it should be valid",
         );
         assert.deepEqual(
           craig.vpn_gateways.additional_prefixes.onInputChange({
             additional_prefixes: "",
           }),
           [],
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should return array on input change when string when array", () => {
@@ -240,7 +240,7 @@ describe("vpn_gateways", () => {
             additional_prefixes: "1.2.3.4/5,2.3.4.5/6",
           }),
           ["1.2.3.4/5", "2.3.4.5/6"],
-          "it should return string"
+          "it should return string",
         );
       });
     });
@@ -249,14 +249,14 @@ describe("vpn_gateways", () => {
         assert.deepEqual(
           craig.vpn_gateways.subnet.groups({}),
           [],
-          "it should return empty array"
+          "it should return empty array",
         );
       });
       it("should return correct groups when vpc", () => {
         assert.deepEqual(
           craig.vpn_gateways.subnet.groups(
             { vpc: "management" },
-            { craig: craig }
+            { craig: craig },
           ),
           [
             "vsi-zone-1",
@@ -267,7 +267,7 @@ describe("vpn_gateways", () => {
             "vpe-zone-2",
             "vpe-zone-3",
           ],
-          "it should return empty array"
+          "it should return empty array",
         );
       });
     });
@@ -289,7 +289,7 @@ describe("vpn_gateways", () => {
           innerFormProps: {
             arrayParentName: "management-gateway",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.vpn_gateways[0].connections,
@@ -301,7 +301,7 @@ describe("vpn_gateways", () => {
             peer_cidrs: ["10.10.20.10/24"],
           },
         ],
-        "it should create connection"
+        "it should create connection",
       );
     });
     it("should update a connection", () => {
@@ -315,7 +315,7 @@ describe("vpn_gateways", () => {
           innerFormProps: {
             arrayParentName: "management-gateway",
           },
-        }
+        },
       );
       craig.vpn_gateways.connections.save(
         {
@@ -328,7 +328,7 @@ describe("vpn_gateways", () => {
           data: {
             name: "connection-1",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.vpn_gateways[0].connections,
@@ -340,7 +340,7 @@ describe("vpn_gateways", () => {
             peer_cidrs: ["10.10.20.10/24"],
           },
         ],
-        "it should create connection"
+        "it should create connection",
       );
     });
     it("should delete a connection", () => {
@@ -354,7 +354,7 @@ describe("vpn_gateways", () => {
           innerFormProps: {
             arrayParentName: "management-gateway",
           },
-        }
+        },
       );
       craig.vpn_gateways.connections.delete(
         {
@@ -367,25 +367,25 @@ describe("vpn_gateways", () => {
           data: {
             name: "connection-1",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.vpn_gateways[0].connections,
         [],
-        "it should create connection"
+        "it should create connection",
       );
     });
     describe("schema", () => {
       it("should be disabled when invalid name", () => {
         assert.isTrue(
           disableSave("connections", { name: "@@" }, { craig: craig }),
-          "it should be disabled"
+          "it should be disabled",
         );
       });
       it("should be invalid when peer address not on object", () => {
         assert.isTrue(
           craig.vpn_gateways.connections.peer_address.invalid({}),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should be valid when peer address is cidr", () => {
@@ -393,7 +393,7 @@ describe("vpn_gateways", () => {
           craig.vpn_gateways.connections.peer_address.invalid({
             peer_address: "131.239.211.196",
           }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should be valid when peer address is valid ip", () => {
@@ -401,16 +401,16 @@ describe("vpn_gateways", () => {
           craig.vpn_gateways.connections.peer_address.invalid({
             peer_address: "1.2.3.4/5",
           }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should be disabled when peer cidrs is empty", () => {
         assert.isTrue(
           craig.vpn_gateways.connections.peer_cidrs.invalid(
             { peer_cidrs: [] },
-            { craig: craig }
+            { craig: craig },
           ),
-          "it should be disabled"
+          "it should be disabled",
         );
       });
       it("should handle invalid for peer cidrs when parent is policy based", () => {
@@ -419,18 +419,18 @@ describe("vpn_gateways", () => {
         assert.isTrue(
           craig.vpn_gateways.connections.peer_cidrs.invalid(
             { peer_cidrs: [] },
-            { craig: craig, arrayParentName: "management-gateway" }
+            { craig: craig, arrayParentName: "management-gateway" },
           ),
-          "it should be valid"
+          "it should be valid",
         );
         craig.store.json.vpn_gateways[1].policy_mode = false;
         craig.store.json.vpn_gateways.unshift({ name: "um" });
         assert.isFalse(
           craig.vpn_gateways.connections.peer_cidrs.invalid(
             { peer_cidrs: [] },
-            { craig: craig, arrayParentName: "management-gateway" }
+            { craig: craig, arrayParentName: "management-gateway" },
           ),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should handle hideWhen for peer cidrs when parent is policy based", () => {
@@ -439,25 +439,25 @@ describe("vpn_gateways", () => {
         assert.isFalse(
           craig.vpn_gateways.connections.peer_cidrs.hideWhen(
             { peer_cidrs: [] },
-            { craig: craig, arrayParentName: "management-gateway" }
+            { craig: craig, arrayParentName: "management-gateway" },
           ),
-          "it should be valid"
+          "it should be valid",
         );
         craig.store.json.vpn_gateways[1].policy_mode = false;
         craig.store.json.vpn_gateways.unshift({ name: "um" });
         assert.isTrue(
           craig.vpn_gateways.connections.peer_cidrs.hideWhen(
             { peer_cidrs: [] },
-            { craig: craig, arrayParentName: "management-gateway" }
+            { craig: craig, arrayParentName: "management-gateway" },
           ),
-          "it should be invalid"
+          "it should be invalid",
         );
         assert.isFalse(
           craig.vpn_gateways.connections.peer_cidrs.hideWhen(
             { peer_cidrs: [] },
-            { craig: craig }
+            { craig: craig },
           ),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
     });

@@ -108,64 +108,132 @@ function disableSave(field, stateData, componentProps, craig) {
       contains(["network", "cloud_connections"], field)
         ? componentProps.craig.power[field]
         : isPowerSshKey
-        ? componentProps.craig.power.ssh_keys
-        : field === "volumes"
-        ? componentProps.craig.vsi.volumes
-        : field === "acl_rules" &&
-          (componentProps.isModal || componentProps.craig)
-        ? componentProps.craig.vpcs.acls.rules
-        : field === "acl_rules"
-        ? componentProps.innerFormProps.craig.vpcs.acls.rules
-        : field === "subnet" && craig // only used for icse-react-assets subnet form
-        ? craig.vpcs.subnets
-        : field === "subnet"
-        ? componentProps.craig.vpcs.subnets
-        : field === "subnetTier"
-        ? componentProps.craig.vpcs.subnetTiers
-        : field === "acls"
-        ? componentProps.craig.vpcs[field]
-        : contains(["zones", "records", "custom_resolvers"], field)
-        ? componentProps.craig.dns[field]
-        : field === "vpn_server_routes"
-        ? componentProps.craig.vpn_servers.routes
-        : field === "encryption_keys"
-        ? componentProps.craig.key_management.keys
-        : contains(["worker_pools", "opaque_secrets"], field)
-        ? componentProps.craig.clusters[field]
-        : field === "sg_rules"
-        ? componentProps.craig.security_groups.rules
-        : contains(["addresses", "exclusions"], field)
-        ? componentProps.craig.cbr_zones[field]
-        : contains(["contexts", "resource_attributes", "tags"], field)
-        ? componentProps.craig.cbr_rules[field]
-        : contains(["gre_tunnels", "prefix_filters"], field)
-        ? componentProps.craig.transit_gateways[field]
-        : contains(["routes"], field)
-        ? componentProps.craig.routing_tables[field]
-        : contains(["domains", "dns_records"], field)
-        ? componentProps.craig.cis[field]
-        : field === "buckets" ||
-          componentProps?.formName === "Service Credentials"
-        ? componentProps.craig.object_storage[
-            field === "buckets" ? field : "keys"
-          ]
-        : field === "keys"
-        ? componentProps.craig.appid.keys
-        : contains(["policies", "dynamic_policies"], field)
-        ? componentProps.craig.access_groups[field]
-        : contains(["f5_vsi_template", "f5_vsi"], field)
-        ? componentProps.craig.f5[
-            field === "f5_vsi_template" ? "template" : "vsi"
-          ]
-        : contains(["origins", "glbs", "health_checks"], field)
-        ? componentProps.craig.cis_glbs[field]
-        : field === "connections"
-        ? componentProps.craig.vpn_gateways.connections
-        : field === "classic_sg_rules"
-        ? componentProps.craig.classic_security_groups.classic_sg_rules
-        : contains(["secrets_groups", "certificates"], field)
-        ? componentProps.craig.secrets_manager[field]
-        : componentProps.craig[field]
+          ? componentProps.craig.power.ssh_keys
+          : field === "volumes"
+            ? componentProps.craig.vsi.volumes
+            : field === "acl_rules" &&
+                (componentProps.isModal || componentProps.craig)
+              ? componentProps.craig.vpcs.acls.rules
+              : field === "acl_rules"
+                ? componentProps.innerFormProps.craig.vpcs.acls.rules
+                : field === "subnet" && craig // only used for icse-react-assets subnet form
+                  ? craig.vpcs.subnets
+                  : field === "subnet"
+                    ? componentProps.craig.vpcs.subnets
+                    : field === "subnetTier"
+                      ? componentProps.craig.vpcs.subnetTiers
+                      : field === "acls"
+                        ? componentProps.craig.vpcs[field]
+                        : contains(
+                              ["zones", "records", "custom_resolvers"],
+                              field,
+                            )
+                          ? componentProps.craig.dns[field]
+                          : field === "vpn_server_routes"
+                            ? componentProps.craig.vpn_servers.routes
+                            : field === "encryption_keys"
+                              ? componentProps.craig.key_management.keys
+                              : contains(
+                                    ["worker_pools", "opaque_secrets"],
+                                    field,
+                                  )
+                                ? componentProps.craig.clusters[field]
+                                : field === "sg_rules"
+                                  ? componentProps.craig.security_groups.rules
+                                  : contains(["addresses", "exclusions"], field)
+                                    ? componentProps.craig.cbr_zones[field]
+                                    : contains(
+                                          [
+                                            "contexts",
+                                            "resource_attributes",
+                                            "tags",
+                                          ],
+                                          field,
+                                        )
+                                      ? componentProps.craig.cbr_rules[field]
+                                      : contains(
+                                            ["gre_tunnels", "prefix_filters"],
+                                            field,
+                                          )
+                                        ? componentProps.craig.transit_gateways[
+                                            field
+                                          ]
+                                        : contains(["routes"], field)
+                                          ? componentProps.craig.routing_tables[
+                                              field
+                                            ]
+                                          : contains(
+                                                ["domains", "dns_records"],
+                                                field,
+                                              )
+                                            ? componentProps.craig.cis[field]
+                                            : field === "buckets" ||
+                                                componentProps?.formName ===
+                                                  "Service Credentials"
+                                              ? componentProps.craig
+                                                  .object_storage[
+                                                  field === "buckets"
+                                                    ? field
+                                                    : "keys"
+                                                ]
+                                              : field === "keys"
+                                                ? componentProps.craig.appid
+                                                    .keys
+                                                : contains(
+                                                      [
+                                                        "policies",
+                                                        "dynamic_policies",
+                                                      ],
+                                                      field,
+                                                    )
+                                                  ? componentProps.craig
+                                                      .access_groups[field]
+                                                  : contains(
+                                                        [
+                                                          "f5_vsi_template",
+                                                          "f5_vsi",
+                                                        ],
+                                                        field,
+                                                      )
+                                                    ? componentProps.craig.f5[
+                                                        field ===
+                                                        "f5_vsi_template"
+                                                          ? "template"
+                                                          : "vsi"
+                                                      ]
+                                                    : contains(
+                                                          [
+                                                            "origins",
+                                                            "glbs",
+                                                            "health_checks",
+                                                          ],
+                                                          field,
+                                                        )
+                                                      ? componentProps.craig
+                                                          .cis_glbs[field]
+                                                      : field === "connections"
+                                                        ? componentProps.craig
+                                                            .vpn_gateways
+                                                            .connections
+                                                        : field ===
+                                                            "classic_sg_rules"
+                                                          ? componentProps.craig
+                                                              .classic_security_groups
+                                                              .classic_sg_rules
+                                                          : contains(
+                                                                [
+                                                                  "secrets_groups",
+                                                                  "certificates",
+                                                                ],
+                                                                field,
+                                                              )
+                                                            ? componentProps
+                                                                .craig
+                                                                .secrets_manager[
+                                                                field
+                                                              ]
+                                                            : componentProps
+                                                                .craig[field]
     ).shouldDisableSave(stateData, componentProps);
   } else return false;
 }
@@ -210,7 +278,7 @@ function forceShowForm(stateData, componentProps) {
     openForm = disableSave(
       componentProps.submissionFieldName,
       componentProps.innerFormProps?.data,
-      componentProps.innerFormProps
+      componentProps.innerFormProps,
     );
   }
 
@@ -230,8 +298,8 @@ function disableSshKeyDelete(componentProps) {
   ["vsi", "teleport_vsi", "f5_vsi"].forEach((vsi) => {
     allVsiSshKeys = distinct(
       allVsiSshKeys.concat(
-        flatten(splat(componentProps.craig.store.json[vsi], "ssh_keys"))
-      )
+        flatten(splat(componentProps.craig.store.json[vsi], "ssh_keys")),
+      ),
     );
   });
   return contains(allVsiSshKeys, componentProps.innerFormProps.data.name);

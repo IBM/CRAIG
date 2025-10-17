@@ -1961,35 +1961,35 @@ describe("slzToCraig", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz")._options,
       expectedData._options,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create resource groups", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").resource_groups,
       expectedData.resource_groups,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create key management", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").key_management,
       expectedData.key_management,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create object storage", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").object_storage,
       expectedData.object_storage,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create secrets manager", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").secrets_manager,
       expectedData.secrets_manager,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should not create secrets manager if not enabled in slz", () => {
@@ -1997,14 +1997,14 @@ describe("slzToCraig", () => {
     assert.deepEqual(
       slzToCraig(slzDupe, "slz").secrets_manager,
       [],
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create atracker", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").atracker,
       expectedData.atracker,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create atracker when no cos key is found and set ref to null", () => {
@@ -2012,59 +2012,59 @@ describe("slzToCraig", () => {
     assert.deepEqual(
       slzToCraig(slzDupe, "slz").atracker.cos_key,
       null,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create vpcs", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").vpcs[0],
       expectedData.vpcs[0],
-      "it should return correct options"
+      "it should return correct options",
     );
     assert.deepEqual(
       slzToCraig(slz, "slz").vpcs[1],
       expectedData.vpcs[1],
-      "it should return correct options"
+      "it should return correct options",
     );
     assert.deepEqual(
       slzToCraig(slz, "slz").vpcs[2],
       expectedData.vpcs[2],
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create virtual_private_endpoints", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").virtual_private_endpoints,
       expectedData.virtual_private_endpoints,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create security_groups", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").security_groups,
       expectedData.security_groups,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create vpn_gateways", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").vpn_gateways,
       expectedData.vpn_gateways,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create ssh_keys", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").ssh_keys,
       expectedData.ssh_keys,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create transit_gateways", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").transit_gateways,
       expectedData.transit_gateways,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should not create transit_gateways when not enabled", () => {
@@ -2072,14 +2072,14 @@ describe("slzToCraig", () => {
     assert.deepEqual(
       slzToCraig(slzDupe, "slz").transit_gateways,
       [],
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create clusters", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").clusters,
       expectedData.clusters,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create iks cluster", () => {
@@ -2118,21 +2118,21 @@ describe("slzToCraig", () => {
           private_endpoint: true,
         },
       ],
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create vsi", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").vsi,
       expectedData.vsi,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create appid", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").appid,
       expectedData.appid,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should not create appid when disabled in slz", () => {
@@ -2140,63 +2140,63 @@ describe("slzToCraig", () => {
     assert.deepEqual(
       slzToCraig(slzDupe, "slz").appid,
       [],
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create teleport_vsi", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").teleport_vsi,
       expectedData.teleport_vsi,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should create f5_vsi", () => {
     assert.deepEqual(
       slzToCraig(slz, "slz").f5_vsi,
       expectedData.f5_vsi,
-      "it should return correct options"
+      "it should return correct options",
     );
   });
   it("should correctly return json for minimum valid slz json", () => {
     assert.deepEqual(
       slzToCraig(slzMin, "slz").vpcs,
       craigFromMin.vpcs,
-      "it should return correct options"
+      "it should return correct options",
     );
     assert.deepEqual(
       slzToCraig(slzMin, "slz").virtual_private_endpoints,
       craigFromMin.virtual_private_endpoints,
-      "it should return correct options"
+      "it should return correct options",
     );
     assert.deepEqual(
       slzToCraig(slzMin, "slz").security_groups,
       craigFromMin.security_groups,
-      "it should return correct options"
+      "it should return correct options",
     );
     assert.deepEqual(
       slzToCraig(slzMin, "slz").vpn_gateways,
       craigFromMin.vpn_gateways,
-      "it should return correct options"
+      "it should return correct options",
     );
     assert.deepEqual(
       slzToCraig(slzMin, "slz").ssh_keys,
       craigFromMin.ssh_keys,
-      "it should return correct options"
+      "it should return correct options",
     );
     assert.deepEqual(
       slzToCraig(slzMin, "slz").transit_gateways,
       craigFromMin.transit_gateways,
-      "it should return correct options"
+      "it should return correct options",
     );
     assert.deepEqual(
       slzToCraig(slzMin, "slz").vsi,
       craigFromMin.vsi,
-      "it should return correct options"
+      "it should return correct options",
     );
     assert.deepEqual(
       slzToCraig(slzMin, "slz"),
       craigFromMin,
-      "it should return correct options"
+      "it should return correct options",
     );
     let task = () => {
       return configToFilesJson(slzToCraig(slzDupe, "slz"));

@@ -27,30 +27,30 @@ function dynamicMultiSelectProps(props, fetchedData) {
     (stateValue && stateValue?.length === 0 && props.field.optional) ||
     contains(
       ["power_connections", "accept_routes_from_resource_type"],
-      props.name
+      props.name,
     )
       ? false
       : // force network to not display as invalid when ip is invalid
-      stateValue?.length > 0 && props.name === "network"
-      ? false
-      : invalidReturnsBooleanCheck(props, "dynamicMultiSelectProps") === false
-      ? false
-      : stateValue?.length > 0
-      ? invalidReturnsBooleanCheck(props, "dynamicMultiSelectProps")
-      : true;
+        stateValue?.length > 0 && props.name === "network"
+        ? false
+        : invalidReturnsBooleanCheck(props, "dynamicMultiSelectProps") === false
+          ? false
+          : stateValue?.length > 0
+            ? invalidReturnsBooleanCheck(props, "dynamicMultiSelectProps")
+            : true;
 
   let groups = groupsEvaluatesToArrayCheck(
     props,
     "dynamicMultiSelectProps",
-    stateValue
+    stateValue,
   );
 
   // hide text when tooltip so that multiple name labels are not rendered
   let labelText = props.field.tooltip
     ? null
     : isDisabled && props.field.type === "fetchMultiSelect"
-    ? `Loading ${props.field.labelText || props.name}...` // Add Loading... while values are being fetched
-    : titleCase(props.field.labelText || props.name);
+      ? `Loading ${props.field.labelText || props.name}...` // Add Loading... while values are being fetched
+      : titleCase(props.field.labelText || props.name);
   let dynamicKeyProp = props.field.forceUpdateKey
     ? props.field.forceUpdateKey(props.parentState)
     : undefined;

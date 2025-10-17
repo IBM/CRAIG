@@ -100,7 +100,7 @@ class Navigation extends React.Component {
         let error = downloadContent(
           this.props.json,
           this.props.project?.name,
-          imageBlob
+          imageBlob,
         );
         if (error) {
           console.error(error);

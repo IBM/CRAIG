@@ -12,8 +12,8 @@ function getServices(craig, services) {
   services.forEach((field) => {
     serviceResourceGroups = distinct(
       serviceResourceGroups.concat(
-        splat(craig.store.json[field], "resource_group")
-      )
+        splat(craig.store.json[field], "resource_group"),
+      ),
     );
   });
 
@@ -21,7 +21,7 @@ function getServices(craig, services) {
   serviceResourceGroups = distinct(
     serviceResourceGroups
       .concat(craig.store.json.sysdig.resource_group)
-      .concat(craig.store.json.logdna.resource_group)
+      .concat(craig.store.json.logdna.resource_group),
   );
 
   serviceResourceGroups = serviceResourceGroups.sort(azsort).sort((a) => {

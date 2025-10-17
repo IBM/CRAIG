@@ -17,7 +17,7 @@ function newState() {
 beforeEach(() => {
   let craig = newState();
   render(
-    <FormPage url="/form/resourceGroups" craig={craig} form="resourceGroups" />
+    <FormPage url="/form/resourceGroups" craig={craig} form="resourceGroups" />,
   );
 });
 
@@ -27,7 +27,7 @@ describe("resource groups", () => {
     user.click(
       screen.getByRole("button", {
         name: "service-rg-open-close",
-      })
+      }),
     );
   });
   describe("create", () => {
@@ -36,7 +36,7 @@ describe("resource groups", () => {
       await user.click(
         screen.getByRole("button", {
           name: "resource-groups-add",
-        })
+        }),
       );
       let nameInput = screen.getByRole("textbox", {
         name: /Name/i,
@@ -56,18 +56,18 @@ describe("resource groups", () => {
       await user.click(
         screen.getByRole("button", {
           name: "service-rg-open-close",
-        })
+        }),
       );
       let nameInput = screen.getByRole("textbox", { name: /Name/i });
       await user.clear(nameInput); // clear first
       await user.type(nameInput, "new-name");
       expect(
-        screen.getByRole("button", { name: "service-rg-save" }) // save should be enabled
+        screen.getByRole("button", { name: "service-rg-save" }), // save should be enabled
       ).toBeEnabled();
       await user.click(
         screen.getByRole("button", {
           name: "service-rg-save", // save
-        })
+        }),
       );
       waitFor(() => {
         expect(screen.getByText("new-name")).toBeInTheDocument(); // this is the new label
@@ -80,12 +80,12 @@ describe("resource groups", () => {
       await user.click(
         screen.getByRole("button", {
           name: "service-rg-open-close",
-        })
+        }),
       );
       await user.click(
         screen.getByRole("button", {
           name: /service\-rg\-delete/i,
-        })
+        }),
       );
       waitFor(() => {
         expect(screen.getByText("service-rg")).not.toBeInTheDocument();

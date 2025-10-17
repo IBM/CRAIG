@@ -87,7 +87,7 @@ function transitGatewayOnStoreUpdate(config) {
           !splatContains(
             config.store.json.classic_gateways,
             "name",
-            tunnel.gateway
+            tunnel.gateway,
           )
         )
           tunnel.gateway = null;
@@ -113,7 +113,7 @@ function transitGatewaySave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "transit_gateways"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -149,7 +149,7 @@ function transitGatewayShouldDisableSave(config, stateData, componentProps) {
     if (!saveShouldBeDisabled) {
       saveShouldBeDisabled = config.transit_gateways[field].invalid(
         stateData,
-        componentProps
+        componentProps,
       );
     }
   });
@@ -235,7 +235,7 @@ function powerConnectionGroups(stateData, componentProps) {
       )
         return workspace;
     }),
-    "name"
+    "name",
   );
 }
 
@@ -251,7 +251,7 @@ function greTunnelCreate(config, stateData, componentProps) {
     "transit_gateways",
     "gre_tunnels",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -264,21 +264,21 @@ function greTunnelCreate(config, stateData, componentProps) {
 function greTunnelSave(config, stateData, componentProps) {
   let tgw = new revision(config.store.json).child(
     "transit_gateways",
-    componentProps.arrayParentName
+    componentProps.arrayParentName,
   ).data;
   if (componentProps.data.name) {
     new revision(tgw).updateChild(
       "gre_tunnels",
       componentProps.data.name,
       "name",
-      stateData
+      stateData,
     );
   } else {
     new revision(tgw).updateChild(
       "gre_tunnels",
       componentProps.data.gateway,
       "gateway",
-      stateData
+      stateData,
     );
   }
 }
@@ -379,7 +379,7 @@ function initTransitGateway(store) {
             stateData.connections.filter((connection) => {
               if (connection.vpc) return connection;
             }),
-            "vpc"
+            "vpc",
           );
         },
         onStateChange: onConnectionStateChange("vpc", "vpc_connections"),
@@ -397,7 +397,7 @@ function initTransitGateway(store) {
             stateData.connections.filter((connection) => {
               if (connection.power) return connection;
             }),
-            "power"
+            "power",
           );
         },
         onStateChange: onConnectionStateChange("power", "power_connections"),
@@ -439,7 +439,7 @@ function initTransitGateway(store) {
             "remote_gateway_ip",
           ],
           "transit_gateways",
-          "gre_tunnels"
+          "gre_tunnels",
         ),
         schema: greTunnelSchema(),
       },
@@ -450,7 +450,7 @@ function initTransitGateway(store) {
             "transit_gateways",
             "prefix_filters",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         save: function (config, stateData, componentProps) {
@@ -459,7 +459,7 @@ function initTransitGateway(store) {
             "transit_gateways",
             "prefix_filters",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         delete: function (config, stateData, componentProps) {
@@ -467,13 +467,13 @@ function initTransitGateway(store) {
             config,
             "transit_gateways",
             "prefix_filters",
-            componentProps
+            componentProps,
           );
         },
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "connection_type", "target", "action", "prefix"],
           "transit_gateways",
-          "prefix_filters"
+          "prefix_filters",
         ),
         schema: prefixFiltersSchema(),
       },

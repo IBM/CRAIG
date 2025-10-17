@@ -68,14 +68,14 @@ class NetworkingRuleOrderCard extends React.Component {
     swapArrayElements(
       resource.rules,
       index,
-      direction === "down" ? index + 1 : index - 1
+      direction === "down" ? index + 1 : index - 1,
     );
     let component =
       this.props.parentProps.form.jsonField === "classic_security_groups"
         ? this.props.parentProps.craig.classis_security_groups
         : this.props.parentProps.form.jsonField === "security_groups"
-        ? this.props.parentProps.craig.security_groups
-        : this.props.parentProps.craig.vpcs.acls;
+          ? this.props.parentProps.craig.security_groups
+          : this.props.parentProps.craig.vpcs.acls;
 
     component.save(resource, {
       craig: this.props.parentProps.craig,
@@ -108,72 +108,74 @@ class NetworkingRuleOrderCard extends React.Component {
             "classic_security_groups")) === false
         ? {}
         : this.props.parentProps.form.jsonField === "classic_security_groups"
-        ? {
-            groups: [
-              {
-                name: craig.classic_security_groups.classic_sg_rules.name,
-                direction:
-                  craig.classic_security_groups.classic_sg_rules.direction,
-              },
-              {
-                ruleProtocol:
-                  craig.classic_security_groups.classic_sg_rules.ruleProtocol,
-              },
-              {
-                port_range_min:
-                  craig.classic_security_groups.classic_sg_rules.port_range_min,
-                port_range_max:
-                  craig.classic_security_groups.classic_sg_rules.port_range_max,
-              },
-            ],
-          }
-        : isSecurityGroup
-        ? {
-            groups: [
-              {
-                name: craig.security_groups.rules.name,
-                direction: craig.security_groups.rules.direction,
-                source: craig.security_groups.rules.source,
-              },
-              {
-                ruleProtocol: craig.security_groups.rules.ruleProtocol,
-              },
-              {
-                port_min: craig.security_groups.rules.port_min,
-                port_max: craig.security_groups.rules.port_max,
-              },
-              {
-                type: craig.security_groups.rules.type,
-                code: craig.security_groups.rules.code,
-              },
-            ],
-          }
-        : {
-            groups: [
-              {
-                name: craig.vpcs.acls.rules.name,
-                action: craig.vpcs.acls.rules.action,
-                direction: craig.vpcs.acls.rules.direction,
-              },
-              {
-                source: craig.vpcs.acls.rules.source,
-                destination: craig.vpcs.acls.rules.destination,
-                ruleProtocol: craig.vpcs.acls.rules.ruleProtocol,
-              },
-              {
-                port_min: craig.vpcs.acls.rules.port_min,
-                port_max: craig.vpcs.acls.rules.port_max,
-              },
-              {
-                source_port_min: craig.vpcs.acls.rules.source_port_min,
-                source_port_max: craig.vpcs.acls.rules.source_port_max,
-              },
-              {
-                type: craig.vpcs.acls.rules.type,
-                code: craig.vpcs.acls.rules.code,
-              },
-            ],
-          };
+          ? {
+              groups: [
+                {
+                  name: craig.classic_security_groups.classic_sg_rules.name,
+                  direction:
+                    craig.classic_security_groups.classic_sg_rules.direction,
+                },
+                {
+                  ruleProtocol:
+                    craig.classic_security_groups.classic_sg_rules.ruleProtocol,
+                },
+                {
+                  port_range_min:
+                    craig.classic_security_groups.classic_sg_rules
+                      .port_range_min,
+                  port_range_max:
+                    craig.classic_security_groups.classic_sg_rules
+                      .port_range_max,
+                },
+              ],
+            }
+          : isSecurityGroup
+            ? {
+                groups: [
+                  {
+                    name: craig.security_groups.rules.name,
+                    direction: craig.security_groups.rules.direction,
+                    source: craig.security_groups.rules.source,
+                  },
+                  {
+                    ruleProtocol: craig.security_groups.rules.ruleProtocol,
+                  },
+                  {
+                    port_min: craig.security_groups.rules.port_min,
+                    port_max: craig.security_groups.rules.port_max,
+                  },
+                  {
+                    type: craig.security_groups.rules.type,
+                    code: craig.security_groups.rules.code,
+                  },
+                ],
+              }
+            : {
+                groups: [
+                  {
+                    name: craig.vpcs.acls.rules.name,
+                    action: craig.vpcs.acls.rules.action,
+                    direction: craig.vpcs.acls.rules.direction,
+                  },
+                  {
+                    source: craig.vpcs.acls.rules.source,
+                    destination: craig.vpcs.acls.rules.destination,
+                    ruleProtocol: craig.vpcs.acls.rules.ruleProtocol,
+                  },
+                  {
+                    port_min: craig.vpcs.acls.rules.port_min,
+                    port_max: craig.vpcs.acls.rules.port_max,
+                  },
+                  {
+                    source_port_min: craig.vpcs.acls.rules.source_port_min,
+                    source_port_max: craig.vpcs.acls.rules.source_port_max,
+                  },
+                  {
+                    type: craig.vpcs.acls.rules.type,
+                    code: craig.vpcs.acls.rules.code,
+                  },
+                ],
+              };
     let rulesField =
       this.props.parentProps.form.jsonField === "classic_security_groups"
         ? "classic_sg_rules"
@@ -198,16 +200,16 @@ class NetworkingRuleOrderCard extends React.Component {
             isClassicSg
               ? "classic_sg_rules"
               : isSecurityGroup
-              ? "sg_rules"
-              : "acl_rules"
+                ? "sg_rules"
+                : "acl_rules"
           }
           onRequestClose={this.handleModalToggle}
           onRequestSubmit={(stateData) => {
             let resource = isClassicSg
               ? craig.classic_security_groups
               : isSecurityGroup
-              ? craig.security_groups
-              : craig.vpcs.acls;
+                ? craig.security_groups
+                : craig.vpcs.acls;
             resource[rulesField].create(stateData, {
               parent_name: this.props.parentProps.data.name,
               vpc_name: this.props.parentProps.data.vpc,
@@ -232,10 +234,10 @@ class NetworkingRuleOrderCard extends React.Component {
                   isClassicSg
                     ? "classic_sg_rules"
                     : isSecurityGroup
-                    ? "sg_rules"
-                    : "acl_rules",
+                      ? "sg_rules"
+                      : "acl_rules",
                   this.state,
-                  this.props
+                  this.props,
                 ) === false
               ) {
                 this.props.enableModal();
@@ -298,15 +300,15 @@ class NetworkingRuleOrderCard extends React.Component {
                     isClassicSg
                       ? craig.classic_security_groups.classic_sg_rules.delete
                       : isSecurityGroup
-                      ? craig.security_groups.rules.delete
-                      : craig.vpcs.acls.rules.delete
+                        ? craig.security_groups.rules.delete
+                        : craig.vpcs.acls.rules.delete
                   }
                   onSave={
                     isClassicSg
                       ? craig.classic_security_groups.classic_sg_rules.save
                       : isSecurityGroup
-                      ? craig.security_groups.rules.save
-                      : craig.vpcs.acls.rules.save
+                        ? craig.security_groups.rules.save
+                        : craig.vpcs.acls.rules.save
                   }
                   onShowToggle={() => {
                     this.openForm(ruleIndex);
@@ -318,8 +320,8 @@ class NetworkingRuleOrderCard extends React.Component {
                     isClassicSg
                       ? "classic_sg_rules"
                       : isSecurityGroup
-                      ? "sg_rules"
-                      : "acl_rules"
+                        ? "sg_rules"
+                        : "acl_rules"
                   }
                   tabPanel={{
                     hideAbout: true,
@@ -352,7 +354,7 @@ class NetworkingRuleOrderCard extends React.Component {
                   }}
                 />
               );
-            }
+            },
           )
         )}
       </>

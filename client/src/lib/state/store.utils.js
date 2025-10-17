@@ -37,7 +37,7 @@ function updateSubChild(
   subField,
   stateData,
   componentProps,
-  callback
+  callback,
 ) {
   new revision(config.store.json)
     .child(field, componentProps.arrayParentName)
@@ -76,7 +76,7 @@ function pushToChildFieldModal(
   field,
   subField,
   stateData,
-  componentProps
+  componentProps,
 ) {
   let parentName = componentProps.innerFormProps.arrayParentName;
   pushToChildField(config, field, subField, stateData, {

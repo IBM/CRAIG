@@ -110,7 +110,7 @@ function formatAtrackerInstance(config) {
     "resource",
     "ibm_resource_instance",
     instance.name,
-    instance.data
+    instance.data,
   );
 }
 
@@ -130,7 +130,7 @@ function formatLogdnaInstance(config) {
     "resource",
     "ibm_resource_instance",
     instance.name,
-    instance.data
+    instance.data,
   );
 }
 
@@ -150,7 +150,7 @@ function formatSysdigInstance(config) {
     "resource",
     "ibm_resource_instance",
     instance.name,
-    instance.data
+    instance.data,
   );
 }
 
@@ -188,12 +188,12 @@ function formatLogdnaArchive(config) {
         bucket: bucketRef(
           config.logdna.cos,
           config.logdna.bucket,
-          "bucket_name"
+          "bucket_name",
         ),
         endpoint: bucketRef(
           config.logdna.cos,
           config.logdna.bucket,
-          `s3_endpoint_${config._options.endpoints}`
+          `s3_endpoint_${config._options.endpoints}`,
         ),
         resourceinstanceid: cosRef(config.logdna.cos),
       },
@@ -216,12 +216,12 @@ function formatAtrackerArchive(config) {
         bucket: bucketRef(
           config.atracker.target_name,
           config.atracker.bucket,
-          "bucket_name"
+          "bucket_name",
         ),
         endpoint: bucketRef(
           config.atracker.target_name,
           config.atracker.bucket,
-          `s3_endpoint_${config._options.endpoints}`
+          `s3_endpoint_${config._options.endpoints}`,
         ),
         resourceinstanceid: cosRef(config.atracker.target_name),
       },
@@ -248,7 +248,7 @@ function formatLogdnaProvider(alias) {
             },
           ],
         },
-      })
+      }),
     ) +
     "\n"
   );
@@ -336,7 +336,7 @@ function loggingMonitoringTf(config) {
           "ibm_resource_instance",
           secretsManager.name + "_secrets_manager",
           "guid",
-          secretsManager.use_data
+          secretsManager.use_data,
         )
       : "${ERROR: Unfound Ref}";
     tf +=
@@ -353,7 +353,7 @@ function loggingMonitoringTf(config) {
             name: "${var.prefix}-observability-secret-group",
             description:
               "Secrets manager group to store the observability credentials",
-          }
+          },
         ) +
           (config.logdna.store_secrets
             ? jsonToTfPrint(
@@ -368,7 +368,7 @@ function loggingMonitoringTf(config) {
                   payload: "${logdna_key.logdna_ingestion_key.key}",
                   secret_group_id:
                     "${ibm_sm_secret_group.observability_secret_group.secret_group_id}",
-                }
+                },
               )
             : "") +
           (config.sysdig.store_secrets
@@ -385,9 +385,9 @@ function loggingMonitoringTf(config) {
                     '${ibm_resource_key.sysdig_key.credentials["Sysdig Access Key"]}',
                   secret_group_id:
                     "${ibm_sm_secret_group.observability_secret_group.secret_group_id}",
-                }
+                },
               )
-            : "")
+            : ""),
       );
   }
 

@@ -79,7 +79,7 @@ export const AclMap = (props) => {
               vpc: vpc,
               vpc_index: props.vpc_index,
               acl: acl,
-            })
+            }),
           )}
         </HoverClassNameWrapper>
       );

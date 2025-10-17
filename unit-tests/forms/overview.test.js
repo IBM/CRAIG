@@ -151,7 +151,7 @@ describe("overview", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return a map of services with no rg", () => {
@@ -160,7 +160,7 @@ describe("overview", () => {
       craig.icd.create({ name: "default" });
       craig.icd.save(
         { resource_group: "service-rg" },
-        { data: { name: "default" } }
+        { data: { name: "default" } },
       );
       let actualData = getServices(craig, [
         "appid",
@@ -326,7 +326,7 @@ describe("overview", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return a map of services with no rg", () => {
@@ -336,7 +336,7 @@ describe("overview", () => {
       craig.icd.create({ name: "default" });
       craig.icd.save(
         { resource_group: "service-rg" },
-        { data: { name: "default" } }
+        { data: { name: "default" } },
       );
       let actualData = getServices(craig, [
         "appid",
@@ -502,7 +502,7 @@ describe("overview", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return a map of services with atracker when instance is true", () => {
@@ -512,7 +512,7 @@ describe("overview", () => {
       craig.icd.create({ name: "default" });
       craig.icd.save(
         { resource_group: "service-rg" },
-        { data: { name: "default" } }
+        { data: { name: "default" } },
       );
       craig.store.json.atracker.instance = true;
       let actualData = getServices(craig, [
@@ -694,7 +694,7 @@ describe("overview", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return a map of services with scc when enabled", () => {
@@ -704,7 +704,7 @@ describe("overview", () => {
       craig.icd.create({ name: "default" });
       craig.icd.save(
         { resource_group: "service-rg" },
-        { data: { name: "default" } }
+        { data: { name: "default" } },
       );
       craig.store.json.atracker.instance = true;
       let actualData = getServices(craig, [
@@ -888,7 +888,7 @@ describe("overview", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

@@ -27,7 +27,7 @@ describe("setup wizard", () => {
         cos_vpe: true,
         power_vs_high_availability: false,
       },
-      wizardState.store.json
+      wizardState.store.json,
     );
     let expectedData = {
       iam_account_settings: {
@@ -812,6 +812,13 @@ describe("setup wizard", () => {
           ],
         },
         {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
+        {
           vpc: "management",
           name: "management-vsi",
           resource_group: "management-rg",
@@ -960,7 +967,7 @@ describe("setup wizard", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return the default config"
+      "it should return the default config",
     );
   });
   it("should return default config with fs and hpcs", () => {
@@ -978,7 +985,7 @@ describe("setup wizard", () => {
         cos_vpe: true,
         key_management_service: "Bring Your Own HPCS",
       },
-      wizardState.store.json
+      wizardState.store.json,
     );
     let expectedData = {
       iam_account_settings: {
@@ -1762,6 +1769,13 @@ describe("setup wizard", () => {
           ],
         },
         {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
+        {
           vpc: "management",
           name: "management-vsi",
           resource_group: "management-rg",
@@ -1911,7 +1925,7 @@ describe("setup wizard", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return the default config"
+      "it should return the default config",
     );
   });
   it("should return default config with only workload vpc", () => {
@@ -1928,7 +1942,7 @@ describe("setup wizard", () => {
         use_atracker: false,
         cos_vpe: true,
       },
-      wizardState.store.json
+      wizardState.store.json,
     );
     let expectedData = {
       iam_account_settings: {
@@ -2358,6 +2372,13 @@ describe("setup wizard", () => {
               ruleProtocol: "tcp",
             },
           ],
+        },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
         },
       ],
       transit_gateways: [
@@ -2431,7 +2452,7 @@ describe("setup wizard", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return the default config"
+      "it should return the default config",
     );
   });
   it("should return default config with only workload vpc with no cos vpe", () => {
@@ -2448,7 +2469,7 @@ describe("setup wizard", () => {
         use_atracker: false,
         cos_vpe: false,
       },
-      wizardState.store.json
+      wizardState.store.json,
     );
     let expectedData = {
       iam_account_settings: {
@@ -2879,6 +2900,13 @@ describe("setup wizard", () => {
             },
           ],
         },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
       ],
       transit_gateways: [
         {
@@ -2942,7 +2970,7 @@ describe("setup wizard", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return the default config"
+      "it should return the default config",
     );
   });
   it("should return default config with only management vpc", () => {
@@ -2959,7 +2987,7 @@ describe("setup wizard", () => {
         use_atracker: false,
         cos_vpe: true,
       },
-      wizardState.store.json
+      wizardState.store.json,
     );
     let expectedData = {
       iam_account_settings: {
@@ -3397,6 +3425,13 @@ describe("setup wizard", () => {
           ],
         },
         {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
+        {
           vpc: "management",
           name: "management-vsi",
           resource_group: "management-rg",
@@ -3535,7 +3570,7 @@ describe("setup wizard", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return the default config"
+      "it should return the default config",
     );
   });
   it("should return default config with no vpcs", () => {
@@ -3552,7 +3587,7 @@ describe("setup wizard", () => {
         use_atracker: false,
         cos_vpe: true,
       },
-      wizardState.store.json
+      wizardState.store.json,
     );
     let expectedData = {
       iam_account_settings: {
@@ -3697,7 +3732,7 @@ describe("setup wizard", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return the default config"
+      "it should return the default config",
     );
   });
   it("should return default config with only management vpc and no tgw", () => {
@@ -3714,7 +3749,7 @@ describe("setup wizard", () => {
         use_atracker: false,
         cos_vpe: true,
       },
-      wizardState.store.json
+      wizardState.store.json,
     );
     let expectedData = {
       iam_account_settings: {
@@ -4152,6 +4187,13 @@ describe("setup wizard", () => {
           ],
         },
         {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
+        {
           vpc: "management",
           name: "management-vsi",
           resource_group: "management-rg",
@@ -4283,7 +4325,7 @@ describe("setup wizard", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return the default config"
+      "it should return the default config",
     );
   });
   it("should return default config with atracker and only workload vpc", () => {
@@ -4300,7 +4342,7 @@ describe("setup wizard", () => {
         use_atracker: true,
         cos_vpe: true,
       },
-      wizardState.store.json
+      wizardState.store.json,
     );
     let expectedData = {
       iam_account_settings: {
@@ -4766,6 +4808,13 @@ describe("setup wizard", () => {
             },
           ],
         },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
       ],
       transit_gateways: [
         {
@@ -4837,7 +4886,7 @@ describe("setup wizard", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return the default config"
+      "it should return the default config",
     );
   });
   it("should return default config with atracker and only workload vpc with fs cloud", () => {
@@ -4854,7 +4903,7 @@ describe("setup wizard", () => {
         use_atracker: true,
         cos_vpe: true,
       },
-      wizardState.store.json
+      wizardState.store.json,
     );
     let expectedData = {
       iam_account_settings: {
@@ -5323,6 +5372,13 @@ describe("setup wizard", () => {
               ruleProtocol: "tcp",
             },
           ],
+        },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
         },
       ],
       transit_gateways: [
@@ -5395,7 +5451,7 @@ describe("setup wizard", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return the default config"
+      "it should return the default config",
     );
   });
   it("should return default config with atracker and only workload vpc with fs cloud and only one zone", () => {
@@ -5411,7 +5467,7 @@ describe("setup wizard", () => {
         use_atracker: true,
         cos_vpe: true,
       },
-      wizardState.store.json
+      wizardState.store.json,
     );
     let expectedData = {
       power_shared_processor_pools: [],
@@ -5815,6 +5871,13 @@ describe("setup wizard", () => {
             },
           ],
         },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
       ],
       transit_gateways: [
         {
@@ -5886,7 +5949,7 @@ describe("setup wizard", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return the default config"
+      "it should return the default config",
     );
   });
   it("should return default config with atracker and only workload vpc with fs cloud and only one zone & power vs", () => {
@@ -5903,7 +5966,7 @@ describe("setup wizard", () => {
         cos_vpe: true,
         power_vs_zones: ["dal10"],
       },
-      wizardState.store.json
+      wizardState.store.json,
     );
     let expectedData = {
       cloud_logs: {
@@ -6312,6 +6375,13 @@ describe("setup wizard", () => {
             },
           ],
         },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
       ],
       transit_gateways: [
         {
@@ -6376,7 +6446,7 @@ describe("setup wizard", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return the default config"
+      "it should return the default config",
     );
   });
   it("should return default config with atracker and only workload vpc with fs cloud and only one zone & power vs & f5", () => {
@@ -6394,7 +6464,7 @@ describe("setup wizard", () => {
         power_vs_zones: ["dal10"],
         use_f5: true,
       },
-      wizardState.store.json
+      wizardState.store.json,
     );
     wizardState.update();
     let expectedData = {
@@ -7616,6 +7686,13 @@ describe("setup wizard", () => {
             },
           ],
         },
+        {
+          cluster_security_group: true,
+          name: "workload-cluster-security-group",
+          resource_group: "workload-rg",
+          rules: [],
+          vpc: "workload",
+        },
       ],
       transit_gateways: [
         {
@@ -7685,7 +7762,7 @@ describe("setup wizard", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return the default config"
+      "it should return the default config",
     );
   });
 });

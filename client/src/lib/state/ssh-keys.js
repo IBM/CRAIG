@@ -81,7 +81,7 @@ function sshKeySave(config, stateData, componentProps) {
       instance.ssh_keys.forEach((key) => {
         newSshKeys.push(
           // add either the key name or the new key name
-          stateData.name
+          stateData.name,
         );
       });
       // set ssh keys
@@ -114,7 +114,7 @@ function initSshKeyStore(store) {
     delete: sshKeyDelete,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "resource_group", "public_key"],
-      "ssh_keys"
+      "ssh_keys",
     ),
     schema: sshKeySchema("ssh_keys"),
   });

@@ -29,13 +29,13 @@ function initSharedProcessorPoolStore(store) {
       config.updateChild(
         ["json", "power_shared_processor_pools"],
         componentProps.data.name,
-        stateData
+        stateData,
       );
     },
     delete: function (config, stateData, componentProps) {
       config.carve(
         ["json", "power_shared_processor_pools"],
-        componentProps.data.name
+        componentProps.data.name,
       );
     },
     onStoreUpdate: function (config) {
@@ -56,7 +56,7 @@ function initSharedProcessorPoolStore(store) {
         "pi_shared_processor_pool_host_group",
         "pi_shared_processor_pool_reserved_cores",
       ],
-      "power_shared_processor_pools"
+      "power_shared_processor_pools",
     ),
     schema: {
       pi_shared_processor_pool_host_group: {
@@ -67,7 +67,7 @@ function initSharedProcessorPoolStore(store) {
         },
         default: "",
         invalid: fieldIsNullOrEmptyString(
-          "pi_shared_processor_pool_host_group"
+          "pi_shared_processor_pool_host_group",
         ),
         invalidText: selectInvalidText("system type"),
         groups: ["e880", "e980", "s922", "s1022"],
@@ -83,7 +83,7 @@ function initSharedProcessorPoolStore(store) {
         groups: powerVsWorkspaceGroups,
         onStateChange: function (stateData, componentProps) {
           let powerWorkspaceZone = new revision(
-            componentProps.craig.store.json
+            componentProps.craig.store.json,
           ).child("power", stateData.workspace).data.zone;
           stateData.zone = powerWorkspaceZone;
         },
@@ -95,7 +95,7 @@ function initSharedProcessorPoolStore(store) {
             ? true
             : invalidName("power_shared_processor_pools", componentProps.craig)(
                 stateData,
-                componentProps
+                componentProps,
               );
         },
         invalidText: function (stateData) {
@@ -112,11 +112,11 @@ function initSharedProcessorPoolStore(store) {
           return !isInRange(
             parseInt(stateData.pi_shared_processor_pool_reserved_cores),
             0,
-            1000
+            1000,
           );
         },
         invalidText: unconditionalInvalidText(
-          "Must be a whole number greater than 0"
+          "Must be a whole number greater than 0",
         ),
       },
     },

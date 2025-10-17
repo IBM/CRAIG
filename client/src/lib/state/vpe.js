@@ -53,7 +53,7 @@ function vpeOnStoreUpdate(config) {
       // delete unfound subnets and add to list
       vpe.subnets = deleteUnfoundArrayItems(
         config.store.subnets[vpe.vpc],
-        vpe.subnets
+        vpe.subnets,
       );
     } else {
       // set to null if does not exist
@@ -65,7 +65,7 @@ function vpeOnStoreUpdate(config) {
       config.store.securityGroups[vpe.vpc] === undefined // if there are no security groups for this vpc, looking up will result in undefined
         ? []
         : config.store.securityGroups[vpe.vpc],
-      vpe.security_groups
+      vpe.security_groups,
     );
     config.updateUnfoundResourceGroup(vpe);
   });
@@ -102,7 +102,7 @@ function vpeSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "virtual_private_endpoints"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -139,7 +139,7 @@ function initVpe(store) {
         "vpc",
         "instance",
       ],
-      "virtual_private_endpoints"
+      "virtual_private_endpoints",
     ),
     schema: {
       name: nameField("virtual_private_endpoints", {

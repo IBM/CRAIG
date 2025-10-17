@@ -14,9 +14,9 @@ describe("reusable fields", () => {
           {
             craig: new state(),
           },
-          {}
+          {},
         ),
-        "it should return data"
+        "it should return data",
       );
     });
     it("should not get a list if no id and parent name is provided for acl", () => {
@@ -29,9 +29,9 @@ describe("reusable fields", () => {
             id: "yes",
             parent_name: "hi",
           },
-          {}
+          {},
         ),
-        "it should return data"
+        "it should return data",
       );
     });
   });

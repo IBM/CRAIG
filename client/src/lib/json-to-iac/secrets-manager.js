@@ -53,11 +53,10 @@ function ibmIamAuthorizationPolicyK8sToSecretsManager(secretsManager, source) {
       target_service_name: "secrets-manager",
       roles: ["Manager"],
       description: `Allow Secets Manager instance ${secretsManager.name} to encrypt kubernetes service`,
-      [source
-        ? "source_resource_instance_id"
-        : "target_resource_instance_id"]: `\${ibm_resource_instance.${snakeCase(
-        secretsManager.name
-      )}_secrets_manager.guid}`,
+      [source ? "source_resource_instance_id" : "target_resource_instance_id"]:
+        `\${ibm_resource_instance.${snakeCase(
+          secretsManager.name,
+        )}_secrets_manager.guid}`,
       source_service_name: "containers-kubernetes",
     },
   };
@@ -74,7 +73,7 @@ function formatK8sToSecretsManagerAuth(secretsManager) {
     "resource",
     "ibm_iam_authorization_policy",
     data.name,
-    data.data
+    data.data,
   );
 }
 
@@ -87,7 +86,7 @@ function formatCisToSecretsManagerAuth(secretsManager) {
   let data = ibmIamAuthorizationPolicyK8sToSecretsManager(secretsManager, true);
   data.data.description = data.data.description.replace(
     "encrypt kubernetes",
-    "access CIS"
+    "access CIS",
   );
   data.data.target_service_name = "internet-svcs";
   data.data.source_service_name = "secrets-manager";
@@ -96,7 +95,7 @@ function formatCisToSecretsManagerAuth(secretsManager) {
     "resource",
     "ibm_iam_authorization_policy",
     data.name.replace("containers", "cloud_internet_services"),
-    data.data
+    data.data,
   );
 }
 
@@ -114,7 +113,7 @@ function formatSecretsManagerToKmsAuth(kmsName, config) {
     "resource",
     "ibm_iam_authorization_policy",
     auth.name,
-    auth.data
+    auth.data,
   );
 }
 
@@ -150,7 +149,7 @@ function ibmResourceInstanceSecretsManager(secretsManager, config) {
             : encryptionKeyRef(
                 secretsManager.kms,
                 secretsManager.encryption_key,
-                "crn"
+                "crn",
               ),
         },
         timeouts: timeouts("1h", "", "1h"),
@@ -164,8 +163,8 @@ function ibmResourceInstanceSecretsManager(secretsManager, config) {
     instance.depends_on = [
       cdktfRef(
         `ibm_iam_authorization_policy.secrets_manager_to_${snakeCase(
-          secretsManager.kms
-        )}_kms_policy`
+          secretsManager.kms,
+        )}_kms_policy`,
       ),
     ];
   }
@@ -193,7 +192,7 @@ function formatSecretsManagerInstance(secretsManager, config) {
     secretsManager.use_data ? "data" : "resource",
     "ibm_resource_instance",
     instance.name,
-    instance.data
+    instance.data,
   );
 }
 
@@ -211,20 +210,20 @@ function ibmSmKvSecret(secret) {
   let secretName = secret?.appid
     ? kebabCase(`appid ${secret.appid} key ${secret.key}`)
     : secret.key
-    ? secret.key
-    : secret.name;
+      ? secret.key
+      : secret.name;
   let data = {
     name: snakeCase(secret.secrets_manager + " " + secretName),
     data: {
       name: kebabName([secret.secrets_manager, secretName]),
       instance_id: `\${ibm_resource_instance.${snakeCase(
-        secret.secrets_manager
+        secret.secrets_manager,
       )}_secrets_manager.guid}`,
       region: varDotRegion,
       description: secret.description,
       secret_group_id: secret.secrets_group
         ? `\${ibm_sm_secret_group.${snakeCase(
-            secret.secrets_manager
+            secret.secrets_manager,
           )}_group_${snakeCase(secret.secrets_group)}.secret_group_id}`
         : undefined,
     },
@@ -251,7 +250,9 @@ function ibmSmKvSecret(secret) {
   } else {
     data.data.data = {
       credentials: `\${ibm_resource_key.${snakeCase(
-        secret.credential_instance + " object storage key " + secret.credentials
+        secret.credential_instance +
+          " object storage key " +
+          secret.credentials,
       )}.credentials}`,
     };
   }
@@ -288,7 +289,7 @@ function ibmSmSecretGroup(group) {
       name:
         "${var.prefix}-" + kebabCase(group.secrets_manager + " " + group.name),
       instance_id: `\${ibm_resource_instance.${snakeCase(
-        group.secrets_manager
+        group.secrets_manager,
       )}_secrets_manager.guid}`,
       description: group.description,
       region: varDotRegion,
@@ -323,7 +324,7 @@ function formatSecretsManagerK8sSecret(secret, config) {
    */
   function formatSecretVariableRef(ref) {
     return `\${var.${snakeCase(
-      `${secret.secrets_manager} ${secret.name} secret ${ref}`
+      `${secret.secrets_manager} ${secret.name} secret ${ref}`,
     )}}`;
   }
 
@@ -332,15 +333,15 @@ function formatSecretsManagerK8sSecret(secret, config) {
       "${var.prefix}-" +
         secret.secrets_manager +
         "-" +
-        secret.arbitrary_secret_name
+        secret.arbitrary_secret_name,
     ),
     instance_id: `\${ibm_resource_instance.${snakeCase(
-      secret.secrets_manager
+      secret.secrets_manager,
     )}_secrets_manager.guid}`,
     secret_group_id: cdktfRef(
       "ibm_sm_secret_group." +
         snakeCase(secret.secrets_manager + "_group_" + secret.secrets_group) +
-        ".secret_group_id"
+        ".secret_group_id",
     ),
     region: varDotRegion,
     endpoint_type: config._options.endpoints,
@@ -355,15 +356,15 @@ function formatSecretsManagerK8sSecret(secret, config) {
       "${var.prefix}-" +
         secret.secrets_manager +
         "-" +
-        secret.username_password_secret_name
+        secret.username_password_secret_name,
     ),
     instance_id: `\${ibm_resource_instance.${snakeCase(
-      secret.secrets_manager
+      secret.secrets_manager,
     )}_secrets_manager.guid}`,
     secret_group_id: cdktfRef(
       "ibm_sm_secret_group." +
         snakeCase(secret.secrets_manager + "_group_" + secret.secrets_group) +
-        ".secret_group_id"
+        ".secret_group_id",
     ),
     region: varDotRegion,
     endpoint_type: config._options.endpoints,
@@ -386,17 +387,17 @@ function formatSecretsManagerK8sSecret(secret, config) {
       "resource",
       "ibm_sm_arbitrary_secret",
       snakeCase(
-        `${secret.secrets_manager} ${secret.arbitrary_secret_name} secret`
+        `${secret.secrets_manager} ${secret.arbitrary_secret_name} secret`,
       ),
-      arbitrarySecretData
+      arbitrarySecretData,
     ) +
     jsonToTfPrint(
       "resource",
       "ibm_sm_username_password_secret",
       snakeCase(
-        `${secret.secrets_manager} ${secret.username_password_secret_name} secret`
+        `${secret.secrets_manager} ${secret.username_password_secret_name} secret`,
       ),
-      usernamePasswordSecret
+      usernamePasswordSecret,
     )
   );
 }
@@ -404,7 +405,7 @@ function formatSecretsManagerK8sSecret(secret, config) {
 function formatCertificate(cert) {
   let certJson = {
     instance_id: `\${ibm_resource_instance.${snakeCase(
-      cert.secrets_manager
+      cert.secrets_manager,
     )}_secrets_manager.guid}`,
     name: "${var.prefix}-" + cert.name,
     region: varDotRegion,
@@ -412,7 +413,7 @@ function formatCertificate(cert) {
     description: cert.description ? cert.description : undefined,
     secret_group_id: cert.secrets_group
       ? `\${ibm_sm_secret_group.${snakeCase(
-          cert.secrets_manager
+          cert.secrets_manager,
         )}_group_${snakeCase(cert.secrets_group)}.secret_group_id}`
       : undefined,
     max_ttl: cert.max_ttl ? cert.max_ttl : undefined,
@@ -463,9 +464,9 @@ function formatCertificate(cert) {
     ];
   } else if (cert.certificate_template) {
     certJson.certificate_template = `\${ibm_sm_private_certificate_configuration_template.${snakeCase(
-      cert.secrets_manager
+      cert.secrets_manager,
     )}_secrets_manager_template_configuration_${snakeCase(
-      cert.certificate_template
+      cert.certificate_template,
     )}.name}`;
     certJson.rotation = [
       {
@@ -476,9 +477,9 @@ function formatCertificate(cert) {
     ];
     certJson.depends_on = [
       `\${ibm_sm_private_certificate_configuration_template.${snakeCase(
-        cert.secrets_manager
+        cert.secrets_manager,
       )}_secrets_manager_template_configuration_${snakeCase(
-        cert.certificate_template
+        cert.certificate_template,
       )}}`,
     ];
   }
@@ -492,7 +493,7 @@ function formatCertificate(cert) {
       snakeCase(cert.type) +
       (cert.type === "private" ? "_certificate_" : "_configuration_") +
       snakeCase(cert.name),
-    certJson
+    certJson,
   );
 }
 
@@ -511,8 +512,8 @@ function secretsManagerTf(config) {
       config.secrets_manager.filter((instance) => {
         if (!instance.use_data) return instance;
       }),
-      "kms"
-    )
+      "kms",
+    ),
   );
   let kmstf = "";
   let totalKmsInstances = 0;

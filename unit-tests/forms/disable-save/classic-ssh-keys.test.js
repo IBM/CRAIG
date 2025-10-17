@@ -18,9 +18,9 @@ describe("classic ssh keys", () => {
           data: {
             name: "hi",
           },
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
   it("should return true if classic ssh key is in use and has invalid ssh public key", () => {
@@ -37,8 +37,8 @@ describe("classic ssh keys", () => {
           data: {
             name: "hi",
           },
-        }
-      )
+        },
+      ),
     );
   });
 });

@@ -43,7 +43,7 @@ describe("cluster api", () => {
           assert.deepEqual(
             testController.flavors,
             ["bx2.16x64", "bx2.2x8"],
-            "it should save flavors"
+            "it should save flavors",
           );
           assert.isTrue(testController.sendDataOnTokenValid.calledOnce);
         });
@@ -59,7 +59,7 @@ describe("cluster api", () => {
       testController.flavors = ["1234"];
       testController.token = "1234";
       testController.sendDataOnTokenValid = new sinon.spy(
-        testController.sendDataOnTokenValid
+        testController.sendDataOnTokenValid,
       );
       return testController
         .clusterFlavors({ params: { region: "us-south" } }, res)
@@ -71,7 +71,7 @@ describe("cluster api", () => {
     it("should respond with error", () => {
       let { axios } = initMockAxios(
         { response: "should return this when err" },
-        true
+        true,
       );
       let testController = new controller(axios);
       testController.sendDataOnTokenValid = sendDataOnTokenValid;
@@ -129,7 +129,7 @@ describe("cluster api", () => {
             "1.24.9 (Default)",
             "1.23.15",
             "4.11.17_openshift",
-          ])
+          ]),
         );
         assert.isTrue(testController.sendDataOnTokenValid.calledOnce);
       });
@@ -147,7 +147,7 @@ describe("cluster api", () => {
             "1.23.15",
             "4.11.17_openshift",
           ],
-          "it should have versions"
+          "it should have versions",
         );
         assert.isTrue(testController.sendDataOnTokenValid.calledOnce);
       });
@@ -160,7 +160,7 @@ describe("cluster api", () => {
       testController.versions = ["1234"];
       testController.token = "1234";
       testController.sendDataOnTokenValid = new sinon.spy(
-        testController.sendDataOnTokenValid
+        testController.sendDataOnTokenValid,
       );
       return testController.clusterVersions({}, res).then(() => {
         assert.isTrue(res.send.calledOnceWith(["1234"]));

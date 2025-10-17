@@ -8,10 +8,10 @@ export const Subnet = (props) => {
     props.small && props.imported
       ? "powerSubnetBox marginRight1Rem minWidth6Rem"
       : props.small && props.subnet
-      ? "subnetBoxSmall"
-      : props.subnet
-      ? "subnetBox" + (props.imported ? " marginRight1Rem" : "")
-      : "powerSubnetBox";
+        ? "subnetBoxSmall"
+        : props.subnet
+          ? "subnetBox" + (props.imported ? " marginRight1Rem" : "")
+          : "powerSubnetBox";
   let subnetName = props?.subnet?.name || "No Subnets Selected";
   return (
     <div
@@ -65,7 +65,7 @@ export const Subnet = (props) => {
             acl: props.acl,
             craig: props.craig,
             subnet: props.subnet,
-          })
+          }),
         )}
       </div>
     </div>

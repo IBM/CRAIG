@@ -26,7 +26,7 @@ function getAffinityName(vol, craig) {
 function getAntiAffinityName(vol, craig) {
   let isVolumeAffinity = isNullOrEmptyString(
     vol.pi_anti_affinity_instance,
-    true
+    true,
   );
   let volumeAffinityData =
     vol[
@@ -51,10 +51,10 @@ function getVolumeDisplayName(vol, craig) {
   return !vol?.storage_option || vol.storage_option === "Storage Type"
     ? titleCase(vol.pi_volume_type)
     : vol.storage_option === "Storage Pool"
-    ? titleCase(vol.pi_volume_pool)
-    : vol.storage_option === "Affinity"
-    ? getAffinityName(vol, craig)
-    : getAntiAffinityName(vol, craig);
+      ? titleCase(vol.pi_volume_pool)
+      : vol.storage_option === "Affinity"
+        ? getAffinityName(vol, craig)
+        : getAntiAffinityName(vol, craig);
 }
 
 module.exports = {

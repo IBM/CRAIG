@@ -35,7 +35,7 @@ describe("resource_groups", () => {
       assert.deepEqual(
         state.store.json.resource_groups,
         expectedData,
-        "it should have resource groups initialized"
+        "it should have resource groups initialized",
       );
     });
   });
@@ -73,7 +73,7 @@ describe("resource_groups", () => {
       assert.deepEqual(
         rgState.store.resourceGroups,
         ["management-rg", "workload-rg"],
-        "it should set resource groups"
+        "it should set resource groups",
       );
     });
     it("should delete a vpc resource group and update vpc to use the first resource group", () => {
@@ -81,7 +81,7 @@ describe("resource_groups", () => {
       assert.deepEqual(
         rgState.store.resourceGroups,
         ["service-rg", "workload-rg"],
-        "it should set resource groups"
+        "it should set resource groups",
       );
     });
   });
@@ -109,12 +109,12 @@ describe("resource_groups", () => {
           data: {
             name: "dev",
           },
-        }
+        },
       );
       assert.deepEqual(
         rgState.store.resourceGroups,
         expectedData,
-        "it should change the name"
+        "it should change the name",
       );
     });
     it("should change the name of a resource group in place and update", () => {
@@ -136,27 +136,27 @@ describe("resource_groups", () => {
           data: {
             name: "workload-rg",
           },
-        }
+        },
       );
       assert.deepEqual(
         rgState.store.resourceGroups,
         expectedData,
-        "it should change the name"
+        "it should change the name",
       );
       assert.deepEqual(
         rgState.store.json.clusters[0].resource_group,
         "frog-rg",
-        "it should change resource group"
+        "it should change resource group",
       );
       assert.deepEqual(
         rgState.store.json.logdna.resource_group,
         "frog-rg",
-        "it should update logdna resource group"
+        "it should update logdna resource group",
       );
       assert.deepEqual(
         rgState.store.json.power[0].resource_group,
         "frog-rg",
-        "it should update power resource group"
+        "it should update power resource group",
       );
     });
     it("should change the name of a resource group in place and update vpcs when not use prefix", () => {
@@ -168,7 +168,7 @@ describe("resource_groups", () => {
             name: "management-rg",
             use_data: false,
           },
-        }
+        },
       );
       assert.deepEqual(
         rgState.store.json.resource_groups[1],
@@ -177,7 +177,7 @@ describe("resource_groups", () => {
           name: "management-rg",
           use_data: true,
         },
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -209,7 +209,7 @@ describe("resource_groups", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       );
       assert.isTrue(actualData, "it should be true");
     });
@@ -236,7 +236,7 @@ describe("resource_groups", () => {
           data: {
             name: "egg",
           },
-        }
+        },
       );
       assert.isTrue(actualData, "it should be true");
     });
@@ -264,7 +264,7 @@ describe("resource_groups", () => {
           data: {
             name: "egg",
           },
-        }
+        },
       );
       assert.isTrue(actualData, "it should be true");
     });
@@ -292,12 +292,12 @@ describe("resource_groups", () => {
             data: {
               name: "frog",
             },
-          }
+          },
         );
         assert.deepEqual(
           actualData,
           "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
-          "it should return correct message"
+          "it should return correct message",
         );
       });
       it("should return the correct text when a duplicate name is passed", () => {
@@ -323,12 +323,12 @@ describe("resource_groups", () => {
             data: {
               name: "frog",
             },
-          }
+          },
         );
         assert.deepEqual(
           actualData,
           'Name "test" already in use',
-          "it should return correct message"
+          "it should return correct message",
         );
       });
       it("should return the correct helper text when using prefix", () => {
@@ -347,12 +347,12 @@ describe("resource_groups", () => {
                 },
               },
             },
-          }
+          },
         );
         assert.deepEqual(
           actualData,
           "iac-test",
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       it("should return the correct helper text when using data", () => {
@@ -371,12 +371,12 @@ describe("resource_groups", () => {
                 },
               },
             },
-          }
+          },
         );
         assert.deepEqual(
           actualData,
           "iac-test",
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       it("should return the correct helper text when not using prefix", () => {
@@ -395,7 +395,7 @@ describe("resource_groups", () => {
                 },
               },
             },
-          }
+          },
         );
         assert.deepEqual(actualData, "test", "it should return correct data");
       });

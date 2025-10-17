@@ -71,12 +71,12 @@ describe("craig app", () => {
       assert.deepEqual(
         craigState.store.project_name,
         "",
-        "it should reset data"
+        "it should reset data",
       );
       assert.deepEqual(
         craigApp.lastSaveAndSend,
         "Successfully cleared project selection",
-        "it should have correct message"
+        "it should have correct message",
       );
     });
   });
@@ -86,14 +86,14 @@ describe("craig app", () => {
         {}, // projects
         craigApp,
         craigState,
-        "project-name"
+        "project-name",
       );
 
       callback();
       assert.deepEqual(
         craigApp.lastSaveAndSend,
         `Project project-name successfully imported`,
-        "it should have correct message"
+        "it should have correct message",
       );
     });
     it("should update project name, json, projects when found, and call save and send notification with correct text", () => {
@@ -103,13 +103,13 @@ describe("craig app", () => {
         }, // projects
         craigApp,
         craigState,
-        "project-name"
+        "project-name",
       );
       callback();
       assert.deepEqual(
         craigApp.lastSaveAndSend,
         `Project project-name successfully imported`,
-        "it should have correct message"
+        "it should have correct message",
       );
     });
     it("should update project name, json, projects when found with json data, and call save and send notification with correct text", () => {
@@ -119,13 +119,13 @@ describe("craig app", () => {
         }, // projects
         craigApp,
         craigState,
-        "project-name"
+        "project-name",
       );
       callback();
       assert.deepEqual(
         craigApp.lastSaveAndSend,
         `Project project-name successfully imported`,
-        "it should have correct message"
+        "it should have correct message",
       );
     });
     it("should update project name, json, projects when found with project info, and call save and send notification with correct text", () => {
@@ -135,13 +135,13 @@ describe("craig app", () => {
         }, // projects
         craigApp,
         craigState,
-        "project-name"
+        "project-name",
       );
       callback();
       assert.deepEqual(
         craigApp.lastSaveAndSend,
         `Project project-name successfully imported`,
-        "it should have correct message"
+        "it should have correct message",
       );
     });
     it("should update project name, json, projects when found with project info, and call save and send notification with correct text and call callback", () => {
@@ -156,13 +156,13 @@ describe("craig app", () => {
         "message",
         () => {
           called = true;
-        }
+        },
       );
       callback();
       assert.deepEqual(
         craigApp.lastSaveAndSend,
         `message`,
-        "it should have correct message"
+        "it should have correct message",
       );
       assert.isTrue(called, "it should be called");
     });
@@ -176,11 +176,11 @@ describe("craig app", () => {
       assert.deepEqual(
         craigApp.lastSaveAndSend,
         "Successfully deleted project test",
-        "it should have correct data"
+        "it should have correct data",
       );
       assert.isTrue(
         craigApp.onProjectDeselect.calledOnce,
-        "it should call on project deselect"
+        "it should call on project deselect",
       );
     });
     it("should call deselect if not deleting currently selected project", () => {
@@ -190,11 +190,11 @@ describe("craig app", () => {
       assert.deepEqual(
         craigApp.lastSaveAndSend,
         "Successfully deleted project test",
-        "it should have correct data"
+        "it should have correct data",
       );
       assert.isFalse(
         craigApp.onProjectDeselect.calledOnce,
-        "it should call on project deselect"
+        "it should call on project deselect",
       );
     });
   });
@@ -210,7 +210,7 @@ describe("craig app", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct notification"
+        "it should return correct notification",
       );
     });
     it("should return notifcation for saving from root '/' and no message", () => {
@@ -224,7 +224,7 @@ describe("craig app", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct notification"
+        "it should return correct notification",
       );
     });
     it("should return notifcation for saving from /form/loadBalancer and no message", () => {
@@ -238,7 +238,7 @@ describe("craig app", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct notification"
+        "it should return correct notification",
       );
     });
   });
@@ -249,13 +249,13 @@ describe("craig app", () => {
         craigState,
         {},
         "hi",
-        true
+        true,
       );
       callback();
       assert.deepEqual(
         craigApp.lastNotification,
         "hi",
-        "it should send notification"
+        "it should send notification",
       );
     });
     it("should call not notify if footerToggle is true", () => {
@@ -265,13 +265,13 @@ describe("craig app", () => {
         {},
         "hi",
         true,
-        true
+        true,
       );
       callback();
       assert.deepEqual(
         craigApp.lastNotification,
         undefined,
-        "it should send notification"
+        "it should send notification",
       );
     });
     it("should call notify if noProjetSave is false and no projects", () => {
@@ -279,13 +279,13 @@ describe("craig app", () => {
         craigApp,
         craigState,
         {},
-        "hi"
+        "hi",
       );
       callback();
       assert.deepEqual(
         craigApp.lastNotification,
         "hi",
-        "it should send notification"
+        "it should send notification",
       );
     });
     it("should call notify if noProjetSave is false, projects exist, but no store project key name", () => {
@@ -295,13 +295,13 @@ describe("craig app", () => {
         {
           frog: {},
         },
-        "hi"
+        "hi",
       );
       callback();
       assert.deepEqual(
         craigApp.lastNotification,
         "hi",
-        "it should send notification"
+        "it should send notification",
       );
     });
     it("should call notify if noProjetSave is false, projects exist, with store project key name", () => {
@@ -312,18 +312,18 @@ describe("craig app", () => {
         {
           frog: {},
         },
-        "hi"
+        "hi",
       );
       callback();
       assert.deepEqual(
         craigApp.lastNotification,
         "hi",
-        "it should send notification"
+        "it should send notification",
       );
       assert.deepEqual(
         craigApp.lastSetItem,
         ["craigProjects", { frog: { json: craigState.store.json } }],
-        "it should set item"
+        "it should set item",
       );
     });
   });
@@ -341,16 +341,16 @@ describe("craig app", () => {
           project_name: "frog",
         },
         {},
-        true
+        true,
       );
 
       callback();
       assert.isTrue(
         craigApp.onProjectSelect.calledOnceWith(
           "frog",
-          `Successfully saved project frog`
+          `Successfully saved project frog`,
         ),
-        "it should send notification"
+        "it should send notification",
       );
     });
     it("should call saveAndSendNotification if not setting current project with same project name", () => {
@@ -365,14 +365,14 @@ describe("craig app", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       );
 
       callback();
       assert.deepEqual(
         craigApp.lastSaveAndSend,
         `Successfully saved project frog`,
-        "it should send notification"
+        "it should send notification",
       );
     });
     it("should call saveAndSendNotification if not setting current project with new project", () => {
@@ -387,14 +387,14 @@ describe("craig app", () => {
           data: {
             name: "",
           },
-        }
+        },
       );
 
       callback();
       assert.deepEqual(
         craigApp.lastSaveAndSend,
         `Successfully saved project frog`,
-        "it should send notification"
+        "it should send notification",
       );
     });
     it("should call saveAndSendNotification if not setting current project when changing name", () => {
@@ -409,19 +409,19 @@ describe("craig app", () => {
           data: {
             name: "egg",
           },
-        }
+        },
       );
 
       callback();
       assert.deepEqual(
         craigApp.lastSaveAndSend,
         `Successfully saved project frog`,
-        "it should send notification"
+        "it should send notification",
       );
       assert.deepEqual(
         craigState.store.project_name,
         "frog",
-        "it should set project name"
+        "it should set project name",
       );
     });
   });
@@ -434,7 +434,7 @@ describe("craig app", () => {
         {
           name: "frog",
           use_schematics: false,
-        }
+        },
       );
       assert.isFalse(actualData, "it should be false");
     });
@@ -446,7 +446,7 @@ describe("craig app", () => {
         {
           name: "frog",
           workspace_name: "ws",
-        }
+        },
       );
       assert.isTrue(actualData, "it should be true");
     });
@@ -472,7 +472,7 @@ describe("craig app", () => {
           use_template: true,
           template: "Empty Project",
         },
-        "it should set data"
+        "it should set data",
       );
     });
     it("should delete project data for schematics when not using schematics", () => {
@@ -511,7 +511,7 @@ describe("craig app", () => {
           use_template: true,
           template: "Empty Project",
         },
-        "it should set data"
+        "it should set data",
       );
     });
     it("should delete project data from projects when changing name", () => {
@@ -553,7 +553,7 @@ describe("craig app", () => {
             template: "Empty Project",
           },
         },
-        "it should set data"
+        "it should set data",
       );
     });
   });
@@ -571,7 +571,7 @@ describe("craig app", () => {
         },
         rejectSpy,
         () => {},
-        rejectCallbackSpy
+        rejectCallbackSpy,
       ).catch(() => {
         assert.isTrue(rejectSpy.calledOnce, "it should be called once");
         assert.isTrue(rejectCallbackSpy.calledOnce, "it should call spy once");
@@ -591,7 +591,7 @@ describe("craig app", () => {
         },
         rejectSpy,
         () => {},
-        () => {}
+        () => {},
       ).then(() => {
         assert.isTrue(rejectSpy.calledOnce, "it should be called once");
       });
@@ -610,7 +610,7 @@ describe("craig app", () => {
         },
         rejectSpy,
         () => {},
-        () => {}
+        () => {},
       ).then(() => {
         assert.isTrue(rejectSpy.calledOnce, "it should be called once");
       });
@@ -629,11 +629,11 @@ describe("craig app", () => {
         },
         () => {},
         resolveCallbackSpy,
-        () => {}
+        () => {},
       ).then(() => {
         assert.isTrue(
           resolveCallbackSpy.calledOnce,
-          "it should be called once"
+          "it should be called once",
         );
       });
     });
@@ -646,7 +646,7 @@ describe("craig app", () => {
         {},
         (shouldClose) => {
           assert.isFalse(shouldClose, "should be false");
-        }
+        },
       );
     });
     it("should import", () => {
@@ -661,9 +661,9 @@ describe("craig app", () => {
           assert.isTrue(shouldClose, "should be true");
           assert.isTrue(
             componentProps.onProjectSave.calledOnce,
-            "it should call on project save"
+            "it should call on project save",
           );
-        }
+        },
       );
     });
     it("should override json", () => {
@@ -675,7 +675,7 @@ describe("craig app", () => {
         assert.isTrue(shouldClose, "should be true");
         assert.isTrue(
           componentProps.onProjectSave.calledOnce,
-          "it should call on project save"
+          "it should call on project save",
         );
       });
     });
@@ -688,7 +688,7 @@ describe("craig app", () => {
         assert.isTrue(shouldClose, "should be true");
         assert.isTrue(
           componentProps.onProjectSave.notCalled,
-          "it should call on project save"
+          "it should call on project save",
         );
       });
     });
@@ -699,7 +699,7 @@ describe("craig app", () => {
       onRequestProjectImport({ json }, (project) => {
         assert.isTrue(
           project.name.startsWith("new-import-project-"),
-          "it should be true"
+          "it should be true",
         );
       });
     });
@@ -709,7 +709,7 @@ describe("craig app", () => {
         assert.equal(
           project.description,
           "Imported Project",
-          "it should be equal"
+          "it should be equal",
         );
       });
     });
@@ -729,7 +729,7 @@ describe("craig app", () => {
         { data: existingProject },
         (project) => {
           assert.deepEqual(project.json, stateData.json, "it should be equal");
-        }
+        },
       );
     });
     it("should not override name when overriding json in existing project", () => {
@@ -742,9 +742,9 @@ describe("craig app", () => {
           assert.deepEqual(
             project.name,
             existingProject.name,
-            "it should be equal"
+            "it should be equal",
           );
-        }
+        },
       );
     });
     it("should not override if no changes detected", () => {
@@ -758,7 +758,7 @@ describe("craig app", () => {
         { data: existingProject },
         (project) => {
           assert.deepEqual(project, undefined, "it should be undefined");
-        }
+        },
       );
     });
     it("should not override if json is undefined", () => {

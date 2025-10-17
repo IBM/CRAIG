@@ -275,9 +275,9 @@ function configToFilesJson(config, apiMode, templateTarMode) {
               /\$ALIASES/g,
               config?.atracker?.archive && config?.atracker?.enabled
                 ? "logdna.logdna, logdna.atracker"
-                : "logdna.logdna"
+                : "logdna.logdna",
             )
-          : ""
+          : "",
       ),
       "secrets_manager.tf":
         config.secrets_manager.length > 0 ? secretsManagerTf(config) : null,

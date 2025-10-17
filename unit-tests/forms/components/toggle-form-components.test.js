@@ -13,28 +13,28 @@ describe("toggle form component functions", () => {
       assert.deepEqual(
         primaryButtonClass(),
         "forceTertiaryButtonStyles marginRightSmall tertiaryButtonColors ",
-        "it should return correct props"
+        "it should return correct props",
       );
     });
     it("should return className when no delete button", () => {
       assert.deepEqual(
         primaryButtonClass({ noDeleteButton: true }),
         "forceTertiaryButtonStyles tertiaryButtonColors ",
-        "it should return correct props"
+        "it should return correct props",
       );
     });
     it("should return className when no delete button and disabled", () => {
       assert.deepEqual(
         primaryButtonClass({ noDeleteButton: true, disabled: true }),
         "forceTertiaryButtonStyles pointerEventsNone ",
-        "it should return correct props"
+        "it should return correct props",
       );
     });
     it("should return className when no delete button and className", () => {
       assert.deepEqual(
         primaryButtonClass({ noDeleteButton: true, className: "test" }),
         "forceTertiaryButtonStyles tertiaryButtonColors test",
-        "it should return correct props"
+        "it should return correct props",
       );
     });
   });
@@ -58,7 +58,7 @@ describe("toggle form component functions", () => {
             hoverText: "Add Resource",
           },
         },
-        "it should return correct props"
+        "it should return correct props",
       );
     });
     it("should return correct object with override hover text", () => {
@@ -79,7 +79,7 @@ describe("toggle form component functions", () => {
             hoverText: "override",
           },
         },
-        "it should return correct props"
+        "it should return correct props",
       );
     });
     it("should return correct object with override hover text disabled and inline", () => {
@@ -102,7 +102,7 @@ describe("toggle form component functions", () => {
             hoverText: "override",
           },
         },
-        "it should return correct props"
+        "it should return correct props",
       );
     });
   });
@@ -113,7 +113,7 @@ describe("toggle form component functions", () => {
           {
             name: "frog",
           },
-          true
+          true,
         ),
         {
           buttonClassName:
@@ -124,7 +124,7 @@ describe("toggle form component functions", () => {
             hoverText: "Delete Resource",
           },
         },
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct data with no props in Classic CRAIG", () => {
@@ -133,7 +133,7 @@ describe("toggle form component functions", () => {
           {
             name: "frog",
           },
-          false
+          false,
         ),
         {
           buttonClassName:
@@ -144,7 +144,7 @@ describe("toggle form component functions", () => {
             hoverText: "Delete frog",
           },
         },
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct data when disabled", () => {
@@ -154,7 +154,7 @@ describe("toggle form component functions", () => {
             disabled: true,
             name: "Resource",
           },
-          false
+          false,
         ),
         {
           buttonClassName:
@@ -165,7 +165,7 @@ describe("toggle form component functions", () => {
             hoverText: "Delete Resource",
           },
         },
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct data when disabled and disabled delete message", () => {
@@ -175,7 +175,7 @@ describe("toggle form component functions", () => {
             disabled: true,
             disableDeleteMessage: "no",
           },
-          false
+          false,
         ),
         {
           buttonClassName:
@@ -186,7 +186,7 @@ describe("toggle form component functions", () => {
             hoverText: "no",
           },
         },
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -199,7 +199,7 @@ describe("toggle form component functions", () => {
           titleClassName:
             "displayFlex alignItemsCenter widthOneHundredPercent marginBottomSmall fieldWidth",
         },
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return props for defaults when hidden", () => {
@@ -212,7 +212,7 @@ describe("toggle form component functions", () => {
           titleClassName:
             "displayFlex alignItemsCenter widthOneHundredPercent fieldWidth",
         },
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return props for defaults when toggleFormTitle", () => {
@@ -225,7 +225,7 @@ describe("toggle form component functions", () => {
           titleClassName:
             "displayFlex alignItemsCenter widthOneHundredPercent marginBottomSmall fieldWidth",
         },
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return props for defaults when subHeading", () => {
@@ -238,7 +238,7 @@ describe("toggle form component functions", () => {
           titleClassName:
             "displayFlex alignItemsCenter widthOneHundredPercent marginBottomSmall fieldWidth",
         },
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -257,12 +257,12 @@ describe("toggle form component functions", () => {
           hideFormTitleButton: true,
           hasBuiltInHeading: false,
           name: "hi",
-        }
+        },
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should pass heading when not subheading", () => {
@@ -283,12 +283,12 @@ describe("toggle form component functions", () => {
           shouldDisableSave: () => {
             return true;
           },
-        }
+        },
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

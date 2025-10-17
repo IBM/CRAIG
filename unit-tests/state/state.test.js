@@ -54,7 +54,7 @@ describe("state util functions", () => {
           "allow-lb-incoming-traffic-requests",
           "allow-lb-outgoing-traffic-requests",
         ],
-        "it should add non duplicate rules"
+        "it should add non duplicate rules",
       );
     });
   });
@@ -63,9 +63,9 @@ describe("state util functions", () => {
       craig.store.json.vpcs[1].acls = [];
       craig.copySecurityGroup("management-vpe", "workload");
       assert.deepEqual(
-        splat(craig.store.json.security_groups, "name")[3],
+        splat(craig.store.json.security_groups, "name")[4],
         "management-vpe-copy",
-        "it should copy"
+        "it should copy",
       );
     });
   });
@@ -76,7 +76,7 @@ describe("state util functions", () => {
       assert.deepEqual(
         splat(craig.store.json.vpcs[1].acls, "name"),
         ["management-copy"],
-        "it should copy"
+        "it should copy",
       );
     });
   });
@@ -87,12 +87,12 @@ describe("state util functions", () => {
         "management",
         "management",
         "allow-all-network-outbound",
-        "workload"
+        "workload",
       );
       assert.deepEqual(
         splat(craig.store.json.vpcs[1].acls[0].rules, "name"),
         ["allow-all-network-outbound"],
-        "it should copy"
+        "it should copy",
       );
     });
   });
@@ -103,7 +103,7 @@ describe("state util functions", () => {
       assert.deepEqual(
         splat(craig.store.json.security_groups[0].rules, "name"),
         ["allow-vpc-outbound"],
-        "it should copy"
+        "it should copy",
       );
     });
   });
@@ -246,7 +246,7 @@ describe("state util functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -261,7 +261,7 @@ describe("state util functions", () => {
       assert.deepEqual(
         craig.store.json,
         { ...hardSetData },
-        "it should set the store"
+        "it should set the store",
       );
       assert.deepEqual(
         craig.store.subnetTiers,
@@ -276,7 +276,7 @@ describe("state util functions", () => {
             { name: "vpe", zones: 3 },
           ],
         },
-        "it should set subnet tiers"
+        "it should set subnet tiers",
       );
     });
     it("should set JSON data if valid with routing tables", () => {
@@ -300,7 +300,7 @@ describe("state util functions", () => {
       assert.deepEqual(
         craig.store.json,
         expectedData,
-        "it should set the store"
+        "it should set the store",
       );
       assert.deepEqual(
         craig.store.subnetTiers,
@@ -315,7 +315,7 @@ describe("state util functions", () => {
             { name: "vpe", zones: 3 },
           ],
         },
-        "it should set subnet tiers"
+        "it should set subnet tiers",
       );
     });
     it("should hard set json data and set edge pattern when edge resources are found", () => {
@@ -2588,12 +2588,12 @@ describe("state util functions", () => {
       assert.deepEqual(
         craig.store.edge_vpc_name,
         "edge",
-        "it should update name"
+        "it should update name",
       );
       assert.deepEqual(
         craig.store.edge_zones,
         3,
-        "it should set correct number of zones"
+        "it should set correct number of zones",
       );
     });
     it("should set JSON data if valid with advanced subnet tiers", () => {
@@ -2626,7 +2626,7 @@ describe("state util functions", () => {
             { name: "vpe", zones: 3 },
           ],
         },
-        "it should set subnet tiers"
+        "it should set subnet tiers",
       );
     });
     it("should set JSON data if not valid but slz", () => {
@@ -2646,7 +2646,7 @@ describe("state util functions", () => {
             { name: "vpe", zones: 3 },
           ],
         },
-        "it should set subnet tiers"
+        "it should set subnet tiers",
       );
     });
     it("should convert permitted networks to vpcs on hard set", () => {
@@ -2691,7 +2691,7 @@ describe("state util functions", () => {
       });
       assert.isTrue(
         craig.store.json._options.dynamic_subnets,
-        "it should be true"
+        "it should be true",
       );
     });
     it("should set JSON data if valid", () => {
@@ -2708,7 +2708,7 @@ describe("state util functions", () => {
             { name: "vpe", zones: 3 },
           ],
         },
-        "it should set subnet tiers"
+        "it should set subnet tiers",
       );
     });
   });
@@ -2717,7 +2717,7 @@ describe("state util functions", () => {
       assert.deepEqual(
         craig.getAllRuleNames(),
         [],
-        "it should return an empty array"
+        "it should return an empty array",
       );
     });
     it("should return the names of all rules in a security group when no source acl name", () => {
@@ -2731,7 +2731,7 @@ describe("state util functions", () => {
           "allow-ibm-tcp-80-outbound",
           "allow-ibm-tcp-443-outbound",
         ],
-        "it should return correct rule names"
+        "it should return correct rule names",
       );
     });
     it("should return the names of all rules in an acl when two params are passed", () => {
@@ -2743,7 +2743,7 @@ describe("state util functions", () => {
           "allow-all-network-inbound",
           "allow-all-network-outbound",
         ],
-        "it should return correct rule names"
+        "it should return correct rule names",
       );
     });
   });
@@ -2752,27 +2752,27 @@ describe("state util functions", () => {
       assert.deepEqual(
         craig.getAllOtherGroups({ ruleSource: "" }),
         [],
-        "it should return empty array"
+        "it should return empty array",
       );
     });
     it("should return all other acl names if rule source and isAclForm", () => {
       assert.deepEqual(
         craig.getAllOtherGroups(
           { ruleSource: "management" },
-          { isAclForm: true }
+          { isAclForm: true },
         ),
         ["workload"],
-        "it should return empty array"
+        "it should return empty array",
       );
     });
     it("should return all other security groups if rule source and not isAclForm", () => {
       assert.deepEqual(
         craig.getAllOtherGroups(
           { ruleSource: "management-vpe" },
-          { isAclForm: false }
+          { isAclForm: false },
         ),
-        ["workload-vpe", "management-vsi"],
-        "it should return empty array"
+        ["workload-vpe", "workload-cluster-security-group", "management-vsi"],
+        "it should return empty array",
       );
     });
   });
@@ -2787,7 +2787,7 @@ describe("state util functions", () => {
             ref: "ibm_resource_key.atracker_cos_object_storage_key_cos_bind_key",
           },
         ],
-        "it should return correct data"
+        "it should return correct data",
       );
       craig.store.json.appid = [
         {
@@ -2807,7 +2807,7 @@ describe("state util functions", () => {
           ref: "ibm_resource_key.default_key_test",
         },
 
-        "it should return correct data with appid"
+        "it should return correct data with appid",
       );
       craig.store.json.logdna = {
         plan: "lite",
@@ -2842,7 +2842,7 @@ describe("state util functions", () => {
             key: "sysdig-key",
           },
         ],
-        "it should return correct data with appid"
+        "it should return correct data with appid",
       );
     });
   });

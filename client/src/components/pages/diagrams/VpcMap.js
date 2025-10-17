@@ -86,10 +86,10 @@ export const VpcMap = (props) => {
         let vpcIndex = props.noDeployments
           ? calcVpcIndex
           : vpc.name === null // if vpc name is null
-          ? -2 // set index to number that is unselecteable, -1 is used for none
-          : nullVpcResources // if null resources
-          ? calcVpcIndex - 1 // vpc index is -1
-          : calcVpcIndex; // otherwise use raw number
+            ? -2 // set index to number that is unselecteable, -1 is used for none
+            : nullVpcResources // if null resources
+              ? calcVpcIndex - 1 // vpc index is -1
+              : calcVpcIndex; // otherwise use raw number
         if (props.isSelected && props.isSelected(vpcIndex)) {
           vpcBoxClassName += " diagramBoxSelected";
           isRed = false;
@@ -131,7 +131,7 @@ export const VpcMap = (props) => {
               React.cloneElement(child, {
                 vpc: vpc,
                 vpc_index: vpcIndex,
-              })
+              }),
             )}
             <div
               className="displayFlex overrideGap alignItemsCenter"
@@ -233,8 +233,8 @@ export const VpcMap = (props) => {
                                           arraySplatIndex(
                                             vpc.subnets,
                                             "name",
-                                            subnet.name
-                                          )
+                                            subnet.name,
+                                          ),
                                         );
                                       }
                                     : undefined
@@ -256,7 +256,7 @@ export const VpcMap = (props) => {
                                           props.onImportedSubnetItemClick(
                                             vpcIndex,
                                             field,
-                                            itemIndex
+                                            itemIndex,
                                           );
                                         }
                                       : undefined

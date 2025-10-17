@@ -69,15 +69,15 @@ export const PowerSubnets = (props) => {
           instanceFilter(
             power.name,
             subnet.name,
-            subnet.name === "No Subnets Selected"
-          )
+            subnet.name === "No Subnets Selected",
+          ),
         );
         let subnetVtl = craig.store.json.vtl.filter(
           instanceFilter(
             power.name,
             subnet.name,
-            subnet.name === "No Subnets Selected"
-          )
+            subnet.name === "No Subnets Selected",
+          ),
         );
         return (
           <PowerSubnet

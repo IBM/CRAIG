@@ -20,7 +20,7 @@ describe("power_volumes", () => {
       assert.deepEqual(
         craig.store.json.power_volumes,
         [],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
   });
@@ -30,7 +30,7 @@ describe("power_volumes", () => {
     assert.deepEqual(
       craig.store.json.power_volumes,
       [],
-      "it should initialize data"
+      "it should initialize data",
     );
   });
   describe("power_volumes.onStoreUpdate", () => {
@@ -58,7 +58,7 @@ describe("power_volumes", () => {
             pi_volume_type: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
     });
     it("should update workspace zone found workspaces on store update", () => {
@@ -73,7 +73,7 @@ describe("power_volumes", () => {
             name: "example",
           },
           craig: state,
-        }
+        },
       );
       craig.power_volumes.create({
         name: "frog",
@@ -90,7 +90,7 @@ describe("power_volumes", () => {
             pi_volume_type: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
     });
     it("should remove unfound workspaces on store update", () => {
@@ -107,7 +107,7 @@ describe("power_volumes", () => {
             attachments: [],
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
     });
     it("should not remove found instances on store update", () => {
@@ -140,7 +140,7 @@ describe("power_volumes", () => {
             pi_volume_type: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
     });
     it("should remove unfound instances on store update", () => {
@@ -173,7 +173,7 @@ describe("power_volumes", () => {
             pi_volume_type: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
     });
   });
@@ -195,7 +195,7 @@ describe("power_volumes", () => {
               attachments: [],
             },
           ],
-          "it should create instance"
+          "it should create instance",
         );
       });
     });
@@ -209,7 +209,7 @@ describe("power_volumes", () => {
             data: {
               name: "frog",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.power_volumes,
@@ -220,7 +220,7 @@ describe("power_volumes", () => {
               attachments: [],
             },
           ],
-          "it should save instance"
+          "it should save instance",
         );
       });
     });
@@ -234,12 +234,12 @@ describe("power_volumes", () => {
             data: {
               name: "frog",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.power_volumes,
           [],
-          "it should delete instance"
+          "it should delete instance",
         );
       });
     });
@@ -251,7 +251,7 @@ describe("power_volumes", () => {
           workspace: null,
         }),
         "Select a workspace",
-        "it should return correct text"
+        "it should return correct text",
       );
     });
     it("should return correct invalid text when workspace", () => {
@@ -260,7 +260,7 @@ describe("power_volumes", () => {
           workspace: "ws",
         }),
         "Select an anti affinity instance",
-        "it should return correct text"
+        "it should return correct text",
       );
     });
     it("should change state when storage option changes", () => {
@@ -277,51 +277,51 @@ describe("power_volumes", () => {
           pi_anti_affinity_volume: null,
           pi_volume_pool: null,
         },
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should not have count as invalid when null or empty string", () => {
       assert.isFalse(
         craig.power_volumes.count.invalid({}),
-        "it should be valid"
+        "it should be valid",
       );
     });
     it("should have invalid count if less than 1", () => {
       assert.isTrue(
         craig.power_volumes.count.invalid({ count: "-12" }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should have invalid count if greater than 1 and not whole number", () => {
       assert.isTrue(
         craig.power_volumes.count.invalid({ count: "1.2" }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should disable workspace select when sap", () => {
       assert.isTrue(
         craig.power_volumes.workspace.disabled({}, { data: { sap: true } }),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should not disable workspace select when no sap as part of data object", () => {
       assert.isFalse(
         craig.power_volumes.workspace.disabled({}, { data: {} }),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should return storage pool select invalid text when no workspace", () => {
       assert.deepEqual(
         craig.power_volumes.pi_volume_pool.invalidText({}),
         "Select a workspace",
-        "it should return correct invalid text"
+        "it should return correct invalid text",
       );
     });
     it("should return storage pool select invalid text when workspace", () => {
       assert.deepEqual(
         craig.power_volumes.pi_volume_pool.invalidText({ workspace: "ok" }),
         "Select a storage pool",
-        "it should return correct invalid text"
+        "it should return correct invalid text",
       );
     });
     it("should not disable replication on input change when zone is replication enabled", () => {
@@ -352,7 +352,7 @@ describe("power_volumes", () => {
           data: { sap: true },
           craig: craig,
         },
-        "ws"
+        "ws",
       );
       assert.deepEqual(
         actualData,
@@ -365,7 +365,7 @@ describe("power_volumes", () => {
           workspace: "ws",
           zone: undefined,
         },
-        "it should reset data"
+        "it should reset data",
       );
     });
     it("should update volumes and toggle when changing state for enable volume sharing", () => {
@@ -379,7 +379,7 @@ describe("power_volumes", () => {
           pi_volume_shareable: true,
           attachments: [],
         },
-        "it should update attachments"
+        "it should update attachments",
       );
     });
     it("should have invalid pi_volume_size when out of range", () => {
@@ -387,7 +387,7 @@ describe("power_volumes", () => {
         craig.power_volumes.pi_volume_size.invalid({
           pi_volume_size: -1,
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should not disable volume size when sap and storage log", () => {
@@ -396,21 +396,21 @@ describe("power_volumes", () => {
           sap: true,
           name: "-sap-log-",
         }),
-        "it should not be disabled"
+        "it should not be disabled",
       );
     });
     it("should have correct type for attachments when sharable", () => {
       assert.deepEqual(
         craig.power_volumes.attachments.type({ pi_volume_shareable: true }),
         "multiselect",
-        "it should be multiselect"
+        "it should be multiselect",
       );
     });
     it("should have correct type for attachments when not sharable", () => {
       assert.deepEqual(
         craig.power_volumes.attachments.type({ pi_volume_shareable: false }),
         "select",
-        "it should be select"
+        "it should be select",
       );
     });
     it("should return the correct input change data for attachments when not sharable", () => {
@@ -420,7 +420,7 @@ describe("power_volumes", () => {
           attachments: "hi",
         }),
         ["hi"],
-        "it should return array"
+        "it should return array",
       );
     });
     it("should return the correct groups data for attachments when sharable", () => {
@@ -450,10 +450,10 @@ describe("power_volumes", () => {
           },
           {
             craig: craig,
-          }
+          },
         ),
         ["frog (VTL)"],
-        "it should return array"
+        "it should return array",
       );
     });
     it("should return the correct input change data for attachments when sharable", () => {
@@ -463,13 +463,13 @@ describe("power_volumes", () => {
           attachments: ["hi"],
         }),
         ["hi"],
-        "it should return array"
+        "it should return array",
       );
     });
     it("should not have attachments invalid", () => {
       assert.isFalse(
         craig.power_volumes.attachments.invalid(),
-        "it should not be invalid"
+        "it should not be invalid",
       );
     });
     it("should return correct power instances", () => {
@@ -508,10 +508,10 @@ describe("power_volumes", () => {
           },
           {
             craig: craig,
-          }
+          },
         ),
         ["", "frog"],
-        "it should return correct instances"
+        "it should return correct instances",
       );
     });
     it("should return correct power instances when no volume type", () => {
@@ -550,10 +550,10 @@ describe("power_volumes", () => {
           },
           {
             craig: craig,
-          }
+          },
         ),
         ["", "frog"],
-        "it should return correct instances"
+        "it should return correct instances",
       );
     });
     it("should not disable volume size not sap", () => {
@@ -562,7 +562,7 @@ describe("power_volumes", () => {
           sap: false,
           name: "-sap-log-",
         }),
-        "it should not be disabled"
+        "it should not be disabled",
       );
     });
     it("should disable volume size when sap and not a log", () => {
@@ -571,7 +571,7 @@ describe("power_volumes", () => {
           sap: true,
           name: "-sap-",
         }),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should not return volume groups without current volume", () => {
@@ -594,10 +594,10 @@ describe("power_volumes", () => {
                 },
               },
             },
-          }
+          },
         ),
         ["volume"],
-        "it should return list of groups"
+        "it should return list of groups",
       );
     });
     it("should be false for when the storage pool is replication enabled", () => {
@@ -606,7 +606,7 @@ describe("power_volumes", () => {
         zone: "us-east",
       };
       assert.isFalse(
-        craig.power_volumes.pi_replication_enabled.disabled(data, {})
+        craig.power_volumes.pi_replication_enabled.disabled(data, {}),
       );
     });
     it("should be false for when the storage pool is replication enabled and has additional text", () => {
@@ -615,7 +615,7 @@ describe("power_volumes", () => {
         zone: "us-east",
       };
       assert.isFalse(
-        craig.power_volumes.pi_replication_enabled.disabled(data, {})
+        craig.power_volumes.pi_replication_enabled.disabled(data, {}),
       );
     });
     it("should be true for when no pool selected", () => {
@@ -623,7 +623,7 @@ describe("power_volumes", () => {
         zone: "us-east",
       };
       assert.isTrue(
-        craig.power_volumes.pi_replication_enabled.disabled(data, {})
+        craig.power_volumes.pi_replication_enabled.disabled(data, {}),
       );
     });
     it("should be true for when the storage pool is not replication enabled", () => {
@@ -632,7 +632,7 @@ describe("power_volumes", () => {
         zone: "us-east",
       };
       assert.isTrue(
-        craig.power_volumes.pi_replication_enabled.disabled(data, {})
+        craig.power_volumes.pi_replication_enabled.disabled(data, {}),
       );
     });
     it("should be false for when the storage pool has no zone (no workspace selected)", () => {
@@ -640,7 +640,7 @@ describe("power_volumes", () => {
         pi_volume_pool: "Tier1-Flash-8",
       };
       assert.isTrue(
-        craig.power_volumes.pi_replication_enabled.disabled(data, {})
+        craig.power_volumes.pi_replication_enabled.disabled(data, {}),
       );
     });
     it("should be true for when the workspace's zone does not have replication enabled", () => {
@@ -649,7 +649,7 @@ describe("power_volumes", () => {
         zone: "eu-es",
       };
       assert.isTrue(
-        craig.power_volumes.pi_replication_enabled.disabled(data, {})
+        craig.power_volumes.pi_replication_enabled.disabled(data, {}),
       );
     });
 
@@ -661,7 +661,7 @@ describe("power_volumes", () => {
       assert.deepEqual(
         craig.power_volumes.pi_replication_enabled.forceUpdateKey(data),
         expectedData,
-        "should be equal"
+        "should be equal",
       );
     });
   });

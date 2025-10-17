@@ -34,7 +34,7 @@ function initCloudLogs(store) {
         !splatContains(
           config.store.json.object_storage,
           "name",
-          config.store.json.cloud_logs?.cos
+          config.store.json.cloud_logs?.cos,
         ) &&
         config.store.json.cloud_logs
       ) {
@@ -45,12 +45,12 @@ function initCloudLogs(store) {
         config.updateUnfound(
           "cosBuckets",
           config.store.json.cloud_logs,
-          "logs_bucket"
+          "logs_bucket",
         );
         config.updateUnfound(
           "cosBuckets",
           config.store.json.cloud_logs,
-          "metrics_bucket"
+          "metrics_bucket",
         );
       }
       if (config.store.json.cloud_logs)
@@ -69,7 +69,7 @@ function initCloudLogs(store) {
     },
     shouldDisableSave: shouldDisableComponentSave(
       ["resource_group", "cos", "logs_bucket", "metrics_bucket"],
-      "cloud_logs"
+      "cloud_logs",
     ),
     schema: {
       name: {
@@ -99,12 +99,12 @@ function initCloudLogs(store) {
         default: "(Disabled)",
         type: "select",
         invalidText: unconditionalInvalidText(
-          "Select an Object Storage Instance"
+          "Select an Object Storage Instance",
         ),
         invalid: fieldIsNullOrEmptyStringEnabled("cloud_logs"),
         groups: function (stateData, componentProps) {
           return ["(Disabled)"].concat(
-            splat(componentProps.craig.store.json.object_storage, "name")
+            splat(componentProps.craig.store.json.object_storage, "name"),
           );
         },
         labelText: "Object Storage",
@@ -121,7 +121,7 @@ function initCloudLogs(store) {
           let selectedCos = getObjectFromArray(
             componentProps.craig.store.json.object_storage,
             "name",
-            stateData.cos
+            stateData.cos,
           );
           return ["(Disabled)"].concat(splat(selectedCos.buckets, "name"));
         },
@@ -138,7 +138,7 @@ function initCloudLogs(store) {
           let selectedCos = getObjectFromArray(
             componentProps.craig.store.json.object_storage,
             "name",
-            stateData.cos
+            stateData.cos,
           );
           return ["(Disabled)"].concat(splat(selectedCos.buckets, "name"));
         },

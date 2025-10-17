@@ -18,7 +18,7 @@ describe("dynamicToolTipWrapperProps", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct props"
+      "it should return correct props",
     );
   });
   it("should return correct props with labelText and props name", () => {
@@ -39,12 +39,12 @@ describe("dynamicToolTipWrapperProps", () => {
       1,
       {
         labelText: "hi",
-      }
+      },
     );
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct props"
+      "it should return correct props",
     );
   });
   it("should return correct props with no labelText and props name", () => {
@@ -63,12 +63,12 @@ describe("dynamicToolTipWrapperProps", () => {
       },
       "key",
       1,
-      {}
+      {},
     );
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct props"
+      "it should return correct props",
     );
   });
 });

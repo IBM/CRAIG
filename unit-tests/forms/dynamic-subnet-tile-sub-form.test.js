@@ -61,7 +61,7 @@ describe("Dynamic Subnet Tile Form", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return subnet data"
+        "it should return subnet data",
       );
     });
     it("should return correct subnets when modal and advanced", () => {
@@ -100,7 +100,7 @@ describe("Dynamic Subnet Tile Form", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return subnet data"
+        "it should return subnet data",
       );
     });
     it("should return correct subnets when not advanced", () => {
@@ -155,7 +155,7 @@ describe("Dynamic Subnet Tile Form", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return subnet data"
+        "it should return subnet data",
       );
     });
     it("should return correct subnets when advanced", () => {
@@ -208,7 +208,7 @@ describe("Dynamic Subnet Tile Form", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return subnet data"
+        "it should return subnet data",
       );
     });
   });

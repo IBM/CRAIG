@@ -20,9 +20,9 @@ describe("reusable fields", () => {
             {
               craig: new state(),
             },
-            {}
+            {},
           ),
-          "it should return data"
+          "it should return data",
         );
       });
       it("should not get a list if no id and parent name is provided for acl", () => {
@@ -35,9 +35,9 @@ describe("reusable fields", () => {
               id: "yes",
               parent_name: "hi",
             },
-            {}
+            {},
           ),
-          "it should return data"
+          "it should return data",
         );
       });
     });
@@ -66,7 +66,7 @@ describe("reusable fields", () => {
               code: null,
             },
           },
-          "it should send correct data"
+          "it should send correct data",
         );
       });
       it("should set rule when no rule found", () => {
@@ -96,7 +96,7 @@ describe("reusable fields", () => {
               code: null,
             },
           },
-          "it should send correct data"
+          "it should send correct data",
         );
       });
     });
@@ -104,13 +104,13 @@ describe("reusable fields", () => {
       it("should be true when all", () => {
         assert.isTrue(
           hideWhenTcpOrUdp({ ruleProtocol: "all" }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should be true when icmp", () => {
         assert.isTrue(
           hideWhenTcpOrUdp({ ruleProtocol: "udp" }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
     });
@@ -118,13 +118,13 @@ describe("reusable fields", () => {
       it("should be true when all", () => {
         assert.isTrue(
           hideWhenNotAllIcmp({ ruleProtocol: "all" }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should be true when icmp", () => {
         assert.isTrue(
           hideWhenNotAllIcmp({ ruleProtocol: "icmp" }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
     });
@@ -134,7 +134,7 @@ describe("reusable fields", () => {
           invalidPort({
             ruleProtocol: "all",
           }),
-          "it should be false"
+          "it should be false",
         );
       });
       it("should return true if rule protocol is icmp and invalid field", () => {
@@ -145,7 +145,7 @@ describe("reusable fields", () => {
               code: 10000,
             },
           }),
-          "it should be false"
+          "it should be false",
         );
       });
       it("should return true if rule protocol is not icmp and invalid field", () => {
@@ -156,7 +156,7 @@ describe("reusable fields", () => {
               port_min: 1000000,
             },
           }),
-          "it should be false"
+          "it should be false",
         );
       });
       it("should return true if rule protocol is not icmp and invalid field and security group", () => {
@@ -168,9 +168,9 @@ describe("reusable fields", () => {
                 port_min: 1000000,
               },
             },
-            true
+            true,
           ),
-          "it should be false"
+          "it should be false",
         );
       });
       it("should return true if rule protocol is not icmp and invalid field and security group when no rule object", () => {
@@ -180,9 +180,9 @@ describe("reusable fields", () => {
               ruleProtocol: "udp",
               port_min: 1000000,
             },
-            true
+            true,
           ),
-          "it should be false"
+          "it should be false",
         );
       });
     });

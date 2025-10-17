@@ -13,9 +13,9 @@ describe("propsMatchState", () => {
           data: {
             fn: "egg",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if stateData and componentProps.data are the same", () => {
@@ -23,9 +23,9 @@ describe("propsMatchState", () => {
       propsMatchState(
         "resource_groups",
         { name: "test" },
-        { data: { name: "test" } }
+        { data: { name: "test" } },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if vpc uses data", () => {
@@ -41,9 +41,9 @@ describe("propsMatchState", () => {
             name: "test",
             use_data: true,
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if vpc and default_network_acl_name is empty string", () => {
@@ -62,9 +62,9 @@ describe("propsMatchState", () => {
             subnets: [],
             address_prefixes: [],
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if vpc and default_routing_table_name is null", () => {
@@ -83,9 +83,9 @@ describe("propsMatchState", () => {
             subnets: [],
             address_prefixes: [],
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if vpc and default_security_group_name is empty string", () => {
@@ -102,9 +102,9 @@ describe("propsMatchState", () => {
             subnets: [],
             address_prefixes: [],
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if vpc and default_network_acl_name is null", () => {
@@ -123,9 +123,9 @@ describe("propsMatchState", () => {
             subnets: [],
             address_prefixes: [],
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should set component props data show to statedata show when checking if props match for security group", () => {
@@ -133,15 +133,15 @@ describe("propsMatchState", () => {
       propsMatchState(
         "security_groups",
         { show: false },
-        { data: { show: true } }
+        { data: { show: true } },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should set component props data show to statedata show when checking if props match for security group when no show", () => {
     assert.isTrue(
       propsMatchState("security_groups", {}, { data: {} }),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should set component props data hide to statedata hide when checking if props match for subnet tier in dynamic form", () => {
@@ -154,9 +154,9 @@ describe("propsMatchState", () => {
           advancedSave: false,
           advanced: true,
         },
-        { data: {}, formName: "subnetTier" }
+        { data: {}, formName: "subnetTier" },
       ),
-      "it should be false"
+      "it should be false",
     );
   });
   it("should set component props data hide to statedata hide when checking if props match for subnet tier", () => {
@@ -169,9 +169,9 @@ describe("propsMatchState", () => {
           advancedSave: false,
           advanced: false,
         },
-        { data: {}, formName: "asdd" }
+        { data: {}, formName: "asdd" },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should set component props data hide to statedata hide when checking if props match for subnet tier", () => {
@@ -183,9 +183,9 @@ describe("propsMatchState", () => {
           showUnsavedChangesModal: undefined,
           advancedSave: false,
         },
-        { data: {} }
+        { data: {} },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should set component props data hide to statedata hide when checking if props match for subnet tier with modal form", () => {
@@ -204,9 +204,9 @@ describe("propsMatchState", () => {
             select_zones: undefined,
             hide: false,
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should set component props data archive value to statedata archive value for logdna instance if missing", () => {
@@ -235,9 +235,9 @@ describe("propsMatchState", () => {
             cos: "toad-cos",
             bucket: "toad-bucket",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return false is select_zones and subnets are different length", () => {
@@ -260,9 +260,9 @@ describe("propsMatchState", () => {
             select_zones: [1],
             subnets: [],
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   describe("power vs", () => {
@@ -277,8 +277,8 @@ describe("propsMatchState", () => {
             data: {
               zone: "toad",
             },
-          }
-        )
+          },
+        ),
       );
     });
     it("should set zone when field is not power", () => {
@@ -292,8 +292,8 @@ describe("propsMatchState", () => {
             data: {
               zone: "toad",
             },
-          }
-        )
+          },
+        ),
       );
     });
     it("should return false if power image names are different", () => {
@@ -309,9 +309,9 @@ describe("propsMatchState", () => {
               zone: "frog",
               imageNames: ["names"],
             },
-          }
+          },
         ),
-        "should not match"
+        "should not match",
       );
     });
     it("should remove attachments when field is power and attachments is non-empty", () => {
@@ -319,8 +319,8 @@ describe("propsMatchState", () => {
         propsMatchState(
           "power",
           { attachments: ["foo"] },
-          { data: { attachments: [] } }
-        )
+          { data: { attachments: [] } },
+        ),
       );
     });
     it("should do nothing to attachments when field is power and attachments is empty", () => {
@@ -328,8 +328,8 @@ describe("propsMatchState", () => {
         propsMatchState(
           "power",
           { attachments: [] },
-          { data: { attachments: [] } }
-        )
+          { data: { attachments: [] } },
+        ),
       );
     });
     it("should return true when field is options and state matches props.craig.store.json._options", () => {
@@ -374,8 +374,8 @@ describe("propsMatchState", () => {
             data: {
               name: "frog",
             },
-          }
-        )
+          },
+        ),
       );
     });
   });

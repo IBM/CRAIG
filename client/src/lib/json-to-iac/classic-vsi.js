@@ -19,7 +19,7 @@ function formatClassicVsi(vsi, config) {
     network_speed: Number(vsi.network_speed),
     private_network_only: vsi.private_network_only,
     private_vlan_id: `\${ibm_network_vlan.classic_vlan_${snakeCase(
-      vsi.private_vlan
+      vsi.private_vlan,
     )}.id}`,
     public_vlan_id: vsi.private_network_only
       ? undefined
@@ -30,19 +30,19 @@ function formatClassicVsi(vsi, config) {
   };
   vsi.private_security_groups.forEach((sg) => {
     vsiData.private_security_group_ids.push(
-      `\${ibm_security_group.classic_securtiy_group_${snakeCase(sg)}.id}`
+      `\${ibm_security_group.classic_securtiy_group_${snakeCase(sg)}.id}`,
     );
   });
   if (!vsi.private_network_only) {
     vsi.public_security_groups.forEach((sg) => {
       vsiData.public_security_group_ids.push(
-        `\${ibm_security_group.classic_securtiy_group_${snakeCase(sg)}.id}`
+        `\${ibm_security_group.classic_securtiy_group_${snakeCase(sg)}.id}`,
       );
     });
   }
   vsi.ssh_keys.forEach((key) => {
     vsiData.ssh_key_ids.push(
-      `\${ibm_compute_ssh_key.classic_ssh_key_${snakeCase(key)}.id}`
+      `\${ibm_compute_ssh_key.classic_ssh_key_${snakeCase(key)}.id}`,
     );
   });
   vsiData.tags = config._options.tags;
@@ -50,7 +50,7 @@ function formatClassicVsi(vsi, config) {
     "resource",
     "ibm_compute_vm_instance",
     `classic_vsi_${snakeCase(vsi.name)}`,
-    vsiData
+    vsiData,
   );
 }
 

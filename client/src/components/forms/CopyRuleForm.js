@@ -68,7 +68,7 @@ class CopyRuleForm extends React.Component {
         if (splatContains(vpc.acls, "name", value)) {
           nextState.destinationRuleNames = splat(
             getObjectFromArray(vpc.acls, "name", value).rules,
-            "name"
+            "name",
           );
           nextState.destinationRuleVpc = vpc.name;
         }
@@ -78,9 +78,9 @@ class CopyRuleForm extends React.Component {
         new revision(this.props.craig.store.json).child(
           "security_groups",
           value,
-          "name"
+          "name",
         ).data.rules,
-        "name"
+        "name",
       );
     }
     this.setState(nextState);
@@ -93,7 +93,7 @@ class CopyRuleForm extends React.Component {
   getAllRuleNames() {
     return this.props.craig.getAllRuleNames(
       this.state.ruleSource,
-      this.props.isAclForm ? this.props.data.name : null
+      this.props.isAclForm ? this.props.data.name : null,
     );
   }
 
@@ -117,7 +117,7 @@ class CopyRuleForm extends React.Component {
     return splatContains(
       getObjectFromArray(this.props.data.acls, "name", aclName).rules,
       "name",
-      name
+      name,
     )
       ? "✘"
       : "✔";
@@ -131,15 +131,15 @@ class CopyRuleForm extends React.Component {
             getObjectFromArray(
               this.props.craig.store.json.vpcs,
               "name",
-              this.state.destinationVpc
+              this.state.destinationVpc,
             ).acls,
             "name",
-            this.state.source + "-copy"
+            this.state.source + "-copy",
           )
         : splatContains(
             this.props.craig.store.json.security_groups,
             "name",
-            this.state.source + "-copy"
+            this.state.source + "-copy",
           );
       return isDuplicate;
     } catch (err) {
@@ -166,12 +166,12 @@ class CopyRuleForm extends React.Component {
       this.props.craig.copySgRule(
         this.state.ruleSource,
         this.state.ruleCopyName,
-        this.state.ruleDestination
+        this.state.ruleDestination,
       );
     } else if (this.props.isAclForm === false) {
       this.props.craig.copySecurityGroup(
         this.state.source,
-        this.state.destinationVpc
+        this.state.destinationVpc,
       );
     } else if (this.state.modalStyle === "addClusterRules") {
       let aclName = this.props.v2
@@ -183,13 +183,13 @@ class CopyRuleForm extends React.Component {
         this.props.data.name,
         this.state.ruleSource,
         this.state.ruleCopyName,
-        this.state.ruleDestination
+        this.state.ruleDestination,
       );
     } else {
       this.props.craig.copyNetworkAcl(
         this.props.data.name,
         this.state.source,
-        this.state.destinationVpc
+        this.state.destinationVpc,
       );
     }
     this.setState({
@@ -228,19 +228,19 @@ class CopyRuleForm extends React.Component {
             this.state.modalStyle === "copyRule"
               ? "Copy Rule"
               : this.state.modalStyle === "addClusterRules"
-              ? "Add Cluster Rules to ACL"
-              : this.props.isAclForm
-              ? "Copy Network ACL"
-              : "Copy Security Group"
+                ? "Add Cluster Rules to ACL"
+                : this.props.isAclForm
+                  ? "Copy Network ACL"
+                  : "Copy Security Group"
           }
           primaryButtonText={
             this.state.modalStyle === "copyRule"
               ? "Copy Rule"
               : this.state.modalStyle === "addClusterRules"
-              ? "Add Cluster Rules"
-              : this.props.isAclForm
-              ? "Copy Network ACL"
-              : "Copy Security Group"
+                ? "Add Cluster Rules"
+                : this.props.isAclForm
+                  ? "Copy Network ACL"
+                  : "Copy Security Group"
           }
           className="leftTextAlign"
           secondaryButtonText="Cancel"

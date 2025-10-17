@@ -68,7 +68,7 @@ describe("key_management", () => {
       assert.deepEqual(
         craig.store.json.key_management,
         expectedData,
-        "it should have key_management initialized as a list"
+        "it should have key_management initialized as a list",
       );
     });
   });
@@ -77,7 +77,7 @@ describe("key_management", () => {
       assert.deepEqual(
         craig.store.encryptionKeys,
         ["key", "atracker-key", "vsi-volume-key", "roks-key"],
-        "it should be set to keys"
+        "it should be set to keys",
       );
     });
   });
@@ -94,7 +94,7 @@ describe("key_management", () => {
           use_hs_crypto: true,
           authorize_vpc_reader_role: true,
         },
-        { data: { name: "frog" } }
+        { data: { name: "frog" } },
       );
       craig.store.json.key_management[0].keys = [];
       let expectedData = {
@@ -108,7 +108,7 @@ describe("key_management", () => {
       assert.deepEqual(
         craig.store.json.key_management[1],
         expectedData,
-        "it should update everything"
+        "it should update everything",
       );
     });
     it("should change the properties of the key management instance with no hs crypto", () => {
@@ -118,15 +118,15 @@ describe("key_management", () => {
           resource_group: null,
           authorize_vpc_reader_role: false,
         },
-        { data: { name: "kms" } }
+        { data: { name: "kms" } },
       );
       assert.isFalse(
         craig.store.json.key_management[0].use_hs_crypto,
-        "it should update everything"
+        "it should update everything",
       );
       assert.isFalse(
         craig.store.json.key_management[0].use_data,
-        "it should update everything"
+        "it should update everything",
       );
     });
   });
@@ -150,7 +150,7 @@ describe("key_management", () => {
           authorize_vpc_reader_role: false,
           keys: [],
         },
-        "it should return instance"
+        "it should return instance",
       );
     });
     it("should add a new key management system with no keys", () => {
@@ -164,7 +164,7 @@ describe("key_management", () => {
       assert.deepEqual(
         craig.store.json.key_management[1].keys,
         [],
-        "it should create keys"
+        "it should create keys",
       );
     });
   });
@@ -179,14 +179,14 @@ describe("key_management", () => {
       assert.deepEqual(
         craig.key_management.use_hs_crypto.onRender({ use_hs_crypto: true }),
         "HPCS",
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct name for key protect on render", () => {
       assert.deepEqual(
         craig.key_management.use_hs_crypto.onRender({ use_hs_crypto: false }),
         "Key Protect",
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should set state data for use hs crypto on input change", () => {
@@ -195,7 +195,7 @@ describe("key_management", () => {
       };
       assert.isTrue(
         craig.key_management.use_hs_crypto.onInputChange(data),
-        "it should return true"
+        "it should return true",
       );
       assert.deepEqual(
         data,
@@ -203,13 +203,13 @@ describe("key_management", () => {
           use_data: true,
           use_hs_crypto: "HPCS",
         },
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should disable use data when use hpcs is true", () => {
       assert.isTrue(
         craig.key_management.use_data.disabled({ use_hs_crypto: true }),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
   });
@@ -229,7 +229,7 @@ describe("key_management", () => {
           {
             innerFormProps: { arrayParentName: "kms" },
             arrayData: craig.store.json.key_management[0].keys,
-          }
+          },
         );
         let expectedData = {
           name: "all-new-key",
@@ -243,7 +243,7 @@ describe("key_management", () => {
         assert.deepEqual(
           craig.store.json.key_management[0].keys[4],
           expectedData,
-          "it should add key"
+          "it should add key",
         );
       });
     });
@@ -256,7 +256,7 @@ describe("key_management", () => {
             key_ring: "all-new-ring",
             rotation: 1,
           },
-          { arrayParentName: "kms", data: { name: "roks-key" } }
+          { arrayParentName: "kms", data: { name: "roks-key" } },
         );
         let expectedData = {
           name: "all-new-key",
@@ -270,7 +270,7 @@ describe("key_management", () => {
         assert.deepEqual(
           craig.store.json.key_management[0].keys[3],
           expectedData,
-          "it should update key"
+          "it should update key",
         );
       });
       it("should update an encryption key in place with same name", () => {
@@ -281,7 +281,7 @@ describe("key_management", () => {
             key_ring: "all-new-ring",
             rotation: 3,
           },
-          { arrayParentName: "kms", data: { name: "key" } }
+          { arrayParentName: "kms", data: { name: "key" } },
         );
         let expectedData = {
           name: "key",
@@ -295,7 +295,7 @@ describe("key_management", () => {
         assert.deepEqual(
           craig.store.json.key_management[0].keys[0],
           expectedData,
-          "it should update key"
+          "it should update key",
         );
       });
     });
@@ -303,12 +303,12 @@ describe("key_management", () => {
       it("should delete an encryption key", () => {
         craig.key_management.keys.delete(
           {},
-          { arrayParentName: "kms", data: { name: "key" } }
+          { arrayParentName: "kms", data: { name: "key" } },
         );
         assert.deepEqual(
           craig.store.encryptionKeys,
           ["atracker-key", "vsi-volume-key", "roks-key"],
-          "it should update key"
+          "it should update key",
         );
       });
     });
@@ -316,19 +316,19 @@ describe("key_management", () => {
       it("should not be hidden when use data", () => {
         assert.isUndefined(
           craig.key_management.resource_group.hideWhen,
-          "it should be undefined"
+          "it should be undefined",
         );
       });
       it("should not have invalid key ring when empty string", () => {
         assert.isFalse(
           craig.key_management.keys.key_ring.invalid({ key_ring: "" }),
-          "it should not be invalid"
+          "it should not be invalid",
         );
       });
       it("should have invalid key ring when bad name", () => {
         assert.isTrue(
           craig.key_management.keys.key_ring.invalid({ key_ring: "@@@" }),
-          "it should not be invalid"
+          "it should not be invalid",
         );
       });
       it("should have invalid endpoint when public and private", () => {
@@ -336,22 +336,22 @@ describe("key_management", () => {
           craig.key_management.keys.endpoint.invalid({
             endpoint: "public-and-private",
           }),
-          "it should be true"
+          "it should be true",
         );
       });
       it("should hide endpoint when craig is not public and private", () => {
         assert.isTrue(
           craig.key_management.keys.endpoint.hideWhen({}, { craig: craig }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should hide rotation when key is not root key", () => {
         assert.isTrue(
           craig.key_management.keys.rotation.hideWhen(
             { root_key: false },
-            { craig: craig }
+            { craig: craig },
           ),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
     });

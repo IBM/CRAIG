@@ -84,8 +84,8 @@ class StatefulTabs extends React.Component {
                   {this.props.secondTabName
                     ? this.props.secondTabName
                     : this.props.formName
-                    ? "Documentation"
-                    : "About"}
+                      ? "Documentation"
+                      : "About"}
                 </Tab>
                 {this.props.tfTabs ? <Tab>Terraform</Tab> : ""}
               </TabList>

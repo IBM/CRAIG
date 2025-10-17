@@ -29,8 +29,8 @@ class DynamicFetchSelect extends React.Component {
         // generate api endpoint based on state and props
         this.props.field.apiEndpoint(
           this.props.parentState,
-          this.props.parentProps
-        )
+          this.props.parentProps,
+        ),
       )
         .then((res) => res.json())
         .then((data) => {
@@ -53,7 +53,7 @@ class DynamicFetchSelect extends React.Component {
     return dynamicFetchSelectDataToGroups(
       this.state,
       this.props,
-      this._isMounted
+      this._isMounted,
     );
   }
 

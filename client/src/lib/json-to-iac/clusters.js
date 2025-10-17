@@ -27,6 +27,7 @@ const {
   formatSecretsManagerK8sSecret,
   formatSecretsManagerSecretGroup,
 } = require("./secrets-manager");
+const { formatSgRule } = require("./security-groups");
 
 /**
  * create tf for cluster
@@ -53,7 +54,7 @@ const {
  */
 function ibmContainerVpcCluster(cluster, config) {
   let data = {
-    name: `${cluster.vpc} vpc ${cluster.name} cluster`,
+    name: `${cluster.vpc} vpc ${cluster.name}`,
   };
   let clusterData = {
     name: kebabName([cluster.name, "cluster"]),
@@ -95,7 +96,7 @@ function ibmContainerVpcCluster(cluster, config) {
     clusterData.entitlement = cluster.entitlement;
     clusterData.cos_instance_crn = resourceRef(
       cluster.cos + " object storage",
-      "crn"
+      "crn",
     );
   }
 
@@ -125,7 +126,7 @@ function ibmContainerVpcWorkerPool(pool, config) {
   let vpcSubnets = new revision(config).child("vpcs", poolCluster.vpc).data
     .subnets;
   let data = {
-    name: `${pool.vpc} vpc ${pool.cluster} cluster ${pool.name} pool`,
+    name: `${pool.vpc} vpc ${pool.cluster} cluster ${pool.name}`,
   };
   let poolData = {
     worker_pool_name: kebabName([pool.cluster, "cluster", pool.name]),
@@ -133,7 +134,7 @@ function ibmContainerVpcWorkerPool(pool, config) {
     resource_group_id: rgIdRef(pool.resource_group, config),
     cluster: tfRef(
       "ibm_container_vpc_cluster",
-      `${pool.vpc} vpc ${pool.cluster} cluster`
+      `${pool.vpc} vpc ${pool.cluster}`,
     ),
     flavor: pool.flavor,
     worker_count: pool.workers_per_subnet,
@@ -170,7 +171,7 @@ function formatCluster(cluster, config) {
     "resource",
     "ibm_container_vpc_cluster",
     data.name,
-    data.data
+    data.data,
   );
 }
 
@@ -186,7 +187,7 @@ function formatWorkerPool(pool, config) {
     "resource",
     "ibm_container_vpc_worker_pool",
     data.name,
-    data.data
+    data.data,
   );
 }
 
@@ -234,6 +235,44 @@ function clusterTf(config) {
       blockData += formatWorkerPool(pool, config);
     });
     tf += tfBlock(cluster.name + " Cluster", blockData) + "\n";
+
+    let clusterSgTf =
+      jsonToTfPrint(
+        "data",
+        "ibm_is_security_groups",
+        cluster.name + " security groups",
+        {
+          vpc_crn: `\${ibm_container_vpc_cluster.${snakeCase(`${cluster.vpc} vpc ${cluster.name}`)}.crn}`,
+          depends_on: [
+            `\${ibm_container_vpc_cluster.${snakeCase(`${cluster.vpc} vpc ${cluster.name}`)}}`,
+          ],
+        },
+      ) +
+      "\nlocals {\n" +
+      `  ${snakeCase(cluster.name + " security group id")} = [\n` +
+      `    for group in data.ibm_is_security_groups.${snakeCase(cluster.name + " security groups")}.security_groups :\n` +
+      `    group if group.name == "kube-\${ibm_container_vpc_cluster.${snakeCase(`${cluster.vpc} vpc ${cluster.name}`)}.id}"\n` +
+      `  ][0].id\n` +
+      "}\n";
+
+    let clusterSg = config.security_groups.find((sg) => {
+      return (
+        sg.cluster_security_group &&
+        sg.name == cluster.name + "-cluster-security-group"
+      );
+    });
+
+    // prevent legacy clusters without rules
+    if (clusterSg?.rules)
+      clusterSg.rules.forEach((rule) => {
+        let newRule = { ...rule };
+        newRule.cluster_security_group = true;
+        newRule.cluster_sg_id_ref = `\${local.${snakeCase(cluster.name + " security group id")}}`;
+        clusterSgTf += formatSgRule(newRule, config);
+      });
+
+    tf += tfBlock(cluster.name + " Cluster Security Group", clusterSgTf) + "\n";
+
     let clusterAddonsTf = "";
     ["logging", "monitoring"].forEach((field) => {
       if (cluster[field])
@@ -243,8 +282,8 @@ function clusterTf(config) {
           `${cluster.name} cluster ${field}`,
           {
             cluster: `\${ibm_container_vpc_cluster.${snakeCase(
-              cluster.vpc
-            )}_vpc_${snakeCase(cluster.name)}_cluster.id}`,
+              cluster.vpc,
+            )}_vpc_${snakeCase(cluster.name)}.id}`,
             instance_id: `\${ibm_resource_instance.${
               field === "logging" ? "logdna" : "sysdig"
             }.guid}`,
@@ -253,7 +292,7 @@ function clusterTf(config) {
                 ? "${logdna_key.logdna_ingestion_key}"
                 : "${ibm_resource_key.sysdig_key}",
             ],
-          }
+          },
         );
     });
 
@@ -277,7 +316,7 @@ function clusterTf(config) {
             {
               cluster:
                 "${ibm_container_vpc_cluster." +
-                snakeCase(`${cluster.vpc} vpc ${cluster.name} cluster`) +
+                snakeCase(`${cluster.vpc} vpc ${cluster.name}`) +
                 ".name}",
               secret_name: `\${var.prefix}-ingress-` + secret.name,
               secret_namespace: secret.namespace,
@@ -285,20 +324,20 @@ function clusterTf(config) {
               fields: [
                 {
                   crn: `\${ibm_sm_arbitrary_secret.${snakeCase(
-                    `${secret.secrets_manager}_${secret.arbitrary_secret_name}_secret`
+                    `${secret.secrets_manager}_${secret.arbitrary_secret_name}_secret`,
                   )}.crn}`,
                 },
                 {
                   crn: `\${ibm_sm_username_password_secret.${snakeCase(
-                    `${secret.secrets_manager}_${secret.username_password_secret_name}_secret`
+                    `${secret.secrets_manager}_${secret.username_password_secret_name}_secret`,
                   )}.crn}`,
                 },
               ],
-            }
+            },
           );
         tf += tfBlock(
           `${cluster.name} Cluster Ingress ${secret.name}`,
-          ingressData
+          ingressData,
         );
       });
     }

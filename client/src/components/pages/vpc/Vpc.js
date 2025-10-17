@@ -383,7 +383,7 @@ class VpcDiagramPage extends React.Component {
               "Access Control Lists (ACLs)",
               "Subnets & Subnet Tiers",
             ],
-            craig
+            craig,
           )}
           tfTabs={[
             {
@@ -480,7 +480,7 @@ class VpcDiagramPage extends React.Component {
                         isSelected={(
                           vpcIndex,
                           tierIndex,
-                          allSubnetsHaveAcl
+                          allSubnetsHaveAcl,
                         ) => {
                           return (
                             this.state.vpcIndex === vpcIndex &&
@@ -506,10 +506,10 @@ class VpcDiagramPage extends React.Component {
                           this.state.subnetIndex > -1
                             ? "Imported Subnet for "
                             : this.state.aclIndex > -1
-                            ? "ACL for"
-                            : this.state.subnetTierIndex > -1
-                            ? "Subnet Tier for"
-                            : ""
+                              ? "ACL for"
+                              : this.state.subnetTierIndex > -1
+                                ? "Subnet Tier for"
+                                : ""
                         } ${
                           craig.store.json.vpcs[this.state.vpcIndex].name
                         } VPC`}
@@ -518,8 +518,8 @@ class VpcDiagramPage extends React.Component {
                           this.state.subnetIndex > -1
                             ? IbmCloudSubnets
                             : this.state.aclIndex > -1
-                            ? SubnetAclRules
-                            : VirtualPrivateCloud
+                              ? SubnetAclRules
+                              : VirtualPrivateCloud
                         }
                         isVpcPage={true}
                         children={

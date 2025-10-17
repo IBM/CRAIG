@@ -41,7 +41,7 @@ function formatCisDomain(domain) {
       domain: domain.domain,
       cis_id: tfRef("ibm_cis", domain.cis + " cis"),
       type: domain.type,
-    }
+    },
   );
 }
 
@@ -63,13 +63,13 @@ function formatCisDnsRecord(record) {
       domain: tfRef(
         "ibm_cis_domain",
         record.cis + " cis domain " + record.domain.replace(/\./g, "-"),
-        "domain_id"
+        "domain_id",
       ),
       name: record.name,
       type: record.type,
       content: record.content,
       ttl: isNullOrEmptyString(record.ttl) ? undefined : record.ttl,
-    }
+    },
   );
 }
 

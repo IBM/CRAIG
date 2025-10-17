@@ -6,7 +6,7 @@ describe("subnet service map functions", () => {
     it("should return true if the item vpc is null and no vpc is found", () => {
       assert.isTrue(
         shouldDisplayService({}, "vsi", { vpc: null }),
-        "it should render vsi"
+        "it should render vsi",
       );
     });
     it("should return true if the item has the matching vpc and contains the subnet", () => {
@@ -24,8 +24,8 @@ describe("subnet service map functions", () => {
           {
             vpc: "test",
             subnets: ["test-zone-1"],
-          }
-        )
+          },
+        ),
       );
     });
     it("should return true if the item has the matching vpc with no subnets & no subnet param", () => {
@@ -40,8 +40,8 @@ describe("subnet service map functions", () => {
           {
             vpc: "test",
             subnets: [],
-          }
-        )
+          },
+        ),
       );
     });
     it("should return true if a vpn gateway the matching vpc and matching subnet", () => {
@@ -59,8 +59,8 @@ describe("subnet service map functions", () => {
           {
             vpc: "test",
             subnet: "test-zone-1",
-          }
-        )
+          },
+        ),
       );
     });
     it("should return false if a vpn gateway the matching vpc but not matching subnet", () => {
@@ -78,8 +78,8 @@ describe("subnet service map functions", () => {
           {
             vpc: "test",
             subnet: "test-zone-2",
-          }
-        )
+          },
+        ),
       );
     });
     it("should return true if a vpn gateway the matching vpc and matching subnet", () => {
@@ -94,8 +94,8 @@ describe("subnet service map functions", () => {
           {
             vpc: "test",
             subnet: null,
-          }
-        )
+          },
+        ),
       );
     });
     it("should return true if a fortigate the matching vpc and matching primary subnet", () => {
@@ -113,8 +113,8 @@ describe("subnet service map functions", () => {
           {
             vpc: "test",
             primary_subnet: "test-zone-1",
-          }
-        )
+          },
+        ),
       );
     });
     it("should return true if a fortigate the matching vpc and matching secondary subnet", () => {
@@ -133,8 +133,8 @@ describe("subnet service map functions", () => {
             vpc: "test",
             primary_subnet: null,
             secondary_subnet: "test-zone-1",
-          }
-        )
+          },
+        ),
       );
     });
     it("should return false if the item does not have the matching vpc but contains the subnet", () => {
@@ -152,8 +152,8 @@ describe("subnet service map functions", () => {
           {
             vpc: "test2",
             subnets: ["test-zone-1"],
-          }
-        )
+          },
+        ),
       );
     });
     it("should return false if the item is unfound", () => {
@@ -167,8 +167,8 @@ describe("subnet service map functions", () => {
           "oops",
           {
             vpc: "hi",
-          }
-        )
+          },
+        ),
       );
     });
   });

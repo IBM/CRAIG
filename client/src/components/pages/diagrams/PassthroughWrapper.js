@@ -14,7 +14,7 @@ export const PassThroughWrapper = (props) => {
           acl: props.acl,
           power: props.power,
           powerIndex: props.powerIndex,
-        })
+        }),
       )}
     </div>
   );

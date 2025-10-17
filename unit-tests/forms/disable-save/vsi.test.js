@@ -36,9 +36,9 @@ describe("vsi", () => {
             data: {
               name: "aaaa",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a vsi volume has an invalid capacity", () => {
@@ -54,9 +54,9 @@ describe("vsi", () => {
             data: {
               name: "aaaa",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a vsi volume has an invalid decimal capacity", () => {
@@ -72,9 +72,9 @@ describe("vsi", () => {
             data: {
               name: "aaaa",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return false if a vsi volume has no capacity but is valid otherwise", () => {
@@ -91,9 +91,9 @@ describe("vsi", () => {
             data: {
               name: "aaaa",
             },
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
   });
@@ -104,7 +104,7 @@ describe("vsi", () => {
       disableSave("vsi", vsi, {
         craig: state(),
         data: { name: "vsi" },
-      })
+      }),
     );
   });
   it("should return true if vsi has empty resource group", () => {
@@ -114,7 +114,7 @@ describe("vsi", () => {
       disableSave("vsi", vsi, {
         craig: state(),
         data: { name: "vsi" },
-      })
+      }),
     );
   });
   it("should return true if vsi has empty vpc", () => {
@@ -124,7 +124,7 @@ describe("vsi", () => {
       disableSave("vsi", vsi, {
         craig: state(),
         data: { name: "vsi" },
-      })
+      }),
     );
   });
   it("should return true if vsi has empty image name", () => {
@@ -134,7 +134,7 @@ describe("vsi", () => {
       disableSave("vsi", vsi, {
         craig: state(),
         data: { name: "vsi" },
-      })
+      }),
     );
   });
   it("should return true if vsi has empty profile", () => {
@@ -144,7 +144,7 @@ describe("vsi", () => {
       disableSave("vsi", vsi, {
         craig: state(),
         data: { name: "vsi" },
-      })
+      }),
     );
   });
   it("should return true if vsi has empty encryption key", () => {
@@ -154,7 +154,7 @@ describe("vsi", () => {
       disableSave("vsi", vsi, {
         craig: state(),
         data: { name: "vsi" },
-      })
+      }),
     );
   });
   it("should return true if vsi has invalid vsis per subnet", () => {
@@ -164,7 +164,7 @@ describe("vsi", () => {
       disableSave("vsi", vsi, {
         craig: state(),
         data: { name: "vsi" },
-      })
+      }),
     );
   });
   it("should return true if vsi has invalid vsis per subnet", () => {
@@ -174,7 +174,7 @@ describe("vsi", () => {
       disableSave("vsi", vsi, {
         craig: state(),
         data: { name: "vsi" },
-      })
+      }),
     );
   });
   it("should return true if vsi has empty security groups", () => {
@@ -184,7 +184,7 @@ describe("vsi", () => {
       disableSave("vsi", vsi, {
         craig: state(),
         data: { name: "vsi" },
-      })
+      }),
     );
   });
   it("should return true if vsi has empty subnets", () => {
@@ -194,7 +194,7 @@ describe("vsi", () => {
       disableSave("vsi", vsi, {
         craig: state(),
         data: { name: "vsi" },
-      })
+      }),
     );
   });
   it("should return true if vsi has empty ssh keys", () => {
@@ -204,7 +204,7 @@ describe("vsi", () => {
       disableSave("vsi", vsi, {
         craig: state(),
         data: { name: "vsi" },
-      })
+      }),
     );
   });
   describe("f5_vsi_template", () => {
@@ -239,7 +239,7 @@ describe("vsi", () => {
       template.template_source = "";
       assert.isTrue(
         disableSave("f5_vsi_template", template, { craig: state() }),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if any fields are empty, based on license_type byol", () => {
@@ -248,7 +248,7 @@ describe("vsi", () => {
       template.byol_license_basekey = "";
       assert.isTrue(
         disableSave("f5_vsi_template", template, { craig: state() }),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if any fields are empty, based on license_type byol", () => {
@@ -257,7 +257,7 @@ describe("vsi", () => {
       template.license_pool = "";
       assert.isTrue(
         disableSave("f5_vsi_template", template, { craig: state() }),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if any fields are empty, based on license_type regkeypool", () => {
@@ -268,7 +268,7 @@ describe("vsi", () => {
       template.license_pool = "";
       assert.isTrue(
         disableSave("f5_vsi_template", template, { craig: state() }),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if any fields are empty, based on license_type utilitypool", () => {
@@ -280,8 +280,8 @@ describe("vsi", () => {
           "f5_vsi_template",
           template,
           { craig: state() },
-          "it should be true"
-        )
+          "it should be true",
+        ),
       );
     });
     it("should return true if any fields are empty, based on license_type utilitypool", () => {
@@ -293,8 +293,8 @@ describe("vsi", () => {
           "f5_vsi_template",
           template,
           { craig: state() },
-          "it should be true"
-        )
+          "it should be true",
+        ),
       );
     });
     it("should return true if any of the urls are invalid", () => {
@@ -302,14 +302,14 @@ describe("vsi", () => {
       template.ts_declaration_url = "not a url";
       assert.isTrue(
         disableSave("f5_vsi_template", template, { craig: state() }),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return false if all valid", () => {
       let template = Object.assign({}, example_template);
       assert.isFalse(
         disableSave("f5_vsi_template", template, { craig: state() }),
-        "it should be false"
+        "it should be false",
       );
     });
   });

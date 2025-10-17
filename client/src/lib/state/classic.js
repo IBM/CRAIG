@@ -52,7 +52,7 @@ function classicSshKeyUpdate(config, stateData, componentProps) {
   config.updateChild(
     ["json", "classic_ssh_keys"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -87,7 +87,7 @@ function classicVlanOnStoreUpdate(config) {
         !splatContains(
           config.store.json.classic_vlans,
           "name",
-          vlan.router_hostname
+          vlan.router_hostname,
         )
       ) {
         vlan.router_hostname = "";
@@ -117,7 +117,7 @@ function classicVlanUpdate(config, stateData, componentProps) {
   config.updateChild(
     ["json", "classic_vlans"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -144,7 +144,7 @@ function intiClassicInfrastructure(store) {
     delete: classicSshKeyDelete,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "public_key"],
-      "classic_ssh_keys"
+      "classic_ssh_keys",
     ),
     schema: sshKeySchema("classic_ssh_keys"),
   });
@@ -157,7 +157,7 @@ function intiClassicInfrastructure(store) {
     delete: classicVlanDelete,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "datacenter", "type"],
-      "classic_vlans"
+      "classic_vlans",
     ),
     schema: {
       name: nameField("classic_vlans"),

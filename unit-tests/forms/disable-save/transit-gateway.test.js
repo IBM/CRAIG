@@ -18,8 +18,8 @@ describe("tgw", () => {
             name: "frog",
           },
         },
-        "it should return true"
-      )
+        "it should return true",
+      ),
     );
   });
   it("should return true if tgw with no rg", () => {
@@ -36,9 +36,9 @@ describe("tgw", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return false if tgw enabled with direct crn connections", () => {
@@ -62,9 +62,9 @@ describe("tgw", () => {
             name: "frog",
           },
           parent_name: "frog",
-        }
+        },
       ),
-      "it should be false"
+      "it should be false",
     );
   });
   describe("gre tunnels", () => {
@@ -78,9 +78,9 @@ describe("tgw", () => {
             local_tunnel_ip: "",
             zone: "",
           },
-          { craig: craig }
+          { craig: craig },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
   });

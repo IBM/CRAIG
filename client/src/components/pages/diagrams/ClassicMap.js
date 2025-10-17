@@ -35,7 +35,7 @@ export const ClassicMap = (props) => {
           // clone react child
           React.cloneElement(child, {
             datacenter: datacenter,
-          })
+          }),
         )}
       </div>
     </HoverClassNameWrapper>

@@ -66,13 +66,13 @@ describe("text area", () => {
             value: "hello",
           },
         },
-        "it should evaluate correct data"
+        "it should evaluate correct data",
       );
       delete actualData.onChange;
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text area with null value", () => {
@@ -136,13 +136,13 @@ describe("text area", () => {
             value: "hello",
           },
         },
-        "it should evaluate correct data"
+        "it should evaluate correct data",
       );
       delete actualData.onChange;
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text area with tooltip and classname", () => {
@@ -208,13 +208,13 @@ describe("text area", () => {
             value: "hello",
           },
         },
-        "it should evaluate correct data"
+        "it should evaluate correct data",
       );
       delete actualData.onChange;
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
   });

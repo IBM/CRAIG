@@ -21,7 +21,7 @@ function formatClassicSshKey(sshKey) {
       provider: `\${ibm.classic}`,
       label: "${var.prefix}-" + sshKey.name,
       public_key: snakeCase(`\${var.classic_${sshKey.name}_public_key}`),
-    }
+    },
   );
 }
 
@@ -45,10 +45,10 @@ function formatClassicNetworkVlan(vlan, config) {
       router_hostname:
         vlan.router_hostname && !isNullOrEmptyString(vlan.router_hostname)
           ? `\${replace(ibm_network_vlan.classic_vlan_${snakeCase(
-              vlan.router_hostname
+              vlan.router_hostname,
             )}.router_hostname, "b", "f")}`
           : undefined,
-    }
+    },
   );
 }
 
@@ -63,8 +63,8 @@ function classicInfraTf(config) {
     // get list of distinct alphabetically sorted zones
     let classicZones = distinct(
       splat(config.classic_ssh_keys, "datacenter").concat(
-        splat(config.classic_vlans, "datacenter")
-      )
+        splat(config.classic_vlans, "datacenter"),
+      ),
     ).sort(azsort);
 
     classicZones.forEach((zone) => {

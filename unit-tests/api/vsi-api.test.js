@@ -34,22 +34,22 @@ describe("vsi api", () => {
       let testController = new controller(axios);
       testController.sendDataOnTokenValid = new sinon.spy(
         spyFns,
-        "sendDataOnTokenValid"
+        "sendDataOnTokenValid",
       );
       testController.getBearerToken = new sinon.spy(spyFns, "getBearerToken");
       return testController
         .vsiInstanceProfiles({ params: { region: "us-south" } }, res)
         .then(() => {
           assert.isTrue(
-            res.send.calledOnceWith(["bx2-2x8", "bx2-4x16", "bx2-8x32"])
+            res.send.calledOnceWith(["bx2-2x8", "bx2-4x16", "bx2-8x32"]),
           );
           assert.isTrue(
             testController.getBearerToken.calledOnce,
-            "should be true"
+            "should be true",
           );
           assert.isTrue(
             testController.sendDataOnTokenValid.calledOnce,
-            "should be true"
+            "should be true",
           );
         });
     });
@@ -63,12 +63,12 @@ describe("vsi api", () => {
           ],
           response: "response",
         },
-        true
+        true,
       );
       let testController = new controller(axios);
       testController.sendDataOnTokenValid = new sinon.spy(
         spyFns,
-        "sendDataOnTokenValid"
+        "sendDataOnTokenValid",
       );
       testController.getBearerToken = new sinon.spy(spyFns, "getBearerToken");
       return testController
@@ -77,11 +77,11 @@ describe("vsi api", () => {
           assert.isTrue(res.send.calledOnceWith("response"));
           assert.isTrue(
             testController.getBearerToken.calledOnce,
-            "should be true"
+            "should be true",
           );
           assert.isTrue(
             testController.sendDataOnTokenValid.calledOnce,
-            "should be true"
+            "should be true",
           );
         });
     });
@@ -153,7 +153,7 @@ describe("vsi api", () => {
       testController.getBearerToken = new sinon.spy(spyFns, "getBearerToken");
       testController.sendDataOnTokenValid = new sinon.spy(
         spyFns,
-        "sendDataOnTokenValid"
+        "sendDataOnTokenValid",
       );
       return testController
         .vsiImages({ params: { region: "us-south" } }, res)
@@ -171,11 +171,11 @@ describe("vsi api", () => {
                 "Windows Server 2016 Standard Edition (amd64) [windows-2016-amd64]",
               ],
             ],
-            "it should get images"
+            "it should get images",
           );
           assert.isTrue(
             testController.getBearerToken.calledTwice,
-            "should be true"
+            "should be true",
           );
           assert.isTrue(testController.sendDataOnTokenValid.calledOnce);
         });
@@ -213,13 +213,13 @@ describe("vsi api", () => {
           data: "should be returned on err",
         },
         true,
-        true
+        true,
       );
       let testController = new controller(axios);
       testController.getBearerToken = new sinon.spy(spyFns, "getBearerToken");
       testController.sendDataOnTokenValid = new sinon.spy(
         spyFns,
-        "sendDataOnTokenValid"
+        "sendDataOnTokenValid",
       );
       return testController
         .vsiImages({ params: { region: "us-south" } }, res)
@@ -227,7 +227,7 @@ describe("vsi api", () => {
           assert.isTrue(res.send.calledOnceWith("should be returned on err"));
           assert.isTrue(
             testController.getBearerToken.calledOnce,
-            "should be true"
+            "should be true",
           );
           assert.isTrue(testController.sendDataOnTokenValid.calledOnce);
         });
@@ -248,7 +248,7 @@ describe("vsi api", () => {
           assert.isTrue(res.send.calledOnce);
           assert.isTrue(
             res.send.calledOnceWith(["frog", "toad"]),
-            "it should get images"
+            "it should get images",
           );
           assert.isTrue(testController.getBearerToken.calledOnce);
         });
@@ -256,7 +256,7 @@ describe("vsi api", () => {
     it("should respond with error", () => {
       let { axios } = initMockAxios(
         { data: "should return this on err" },
-        true
+        true,
       );
       let testController = new controller(axios);
       testController.getBearerToken = new sinon.spy(spyFns, "getBearerToken");

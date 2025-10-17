@@ -55,7 +55,7 @@ function formatRoutingTable(table, config) {
     "resource",
     "ibm_is_vpc_routing_table",
     data.name,
-    data.data
+    data.data,
   );
 }
 
@@ -82,7 +82,7 @@ function ibmIsVpcRoutingTableRoute(route, config) {
       routing_table: tfRef(
         "ibm_is_vpc_routing_table",
         `${route.vpc}-vpc-${route.routing_table}-table`,
-        "routing_table"
+        "routing_table",
       ),
       zone: `${varDotRegion}-${route.zone}`,
       name: kebabName([route.vpc, route.routing_table, route.name, "route"]),
@@ -119,7 +119,7 @@ function formatRoutingTableRoute(route, config) {
     "resource",
     "ibm_is_vpc_routing_table_route",
     data.name,
-    data.data
+    data.data,
   );
 }
 

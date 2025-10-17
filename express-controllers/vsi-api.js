@@ -64,12 +64,12 @@ function vsiRoutes(axios, controller) {
         .then((response) => {
           response.data.images.forEach((element) => {
             controller.images.push(
-              element.operating_system.display_name + ` [${element.name}]`
+              element.operating_system.display_name + ` [${element.name}]`,
             );
           });
           if (response.data.total_count > 100) {
             let start_token = response.data.next.href.match(
-              /(?<=start=)[A-Za-z0-9]*/gm
+              /(?<=start=)[A-Za-z0-9]*/gm,
             );
             controller.imageGet(req, res, start_token);
           } else {

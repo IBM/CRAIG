@@ -11,8 +11,8 @@ export const ManageService = (props) => {
         (props.isSelected
           ? " serviceOpen"
           : props.resourceGroup === "No Resource Group"
-          ? " noRgService"
-          : "")
+            ? " noRgService"
+            : "")
       }
       onClick={() =>
         props.onClick({

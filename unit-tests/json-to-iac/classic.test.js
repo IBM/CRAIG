@@ -23,7 +23,7 @@ resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct ssh key"
+        "it should return correct ssh key",
       );
     });
   });
@@ -51,13 +51,13 @@ resource "ibm_network_vlan" "classic_vlan_vsrx_public" {
           _options: {
             tags: ["hello", "world"],
           },
-        }
+        },
       );
 
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct vlan"
+        "it should return correct vlan",
       );
     });
     it("should create a vlan with hostname reference", () => {
@@ -85,13 +85,13 @@ resource "ibm_network_vlan" "classic_vlan_vsrx_public" {
           _options: {
             tags: ["hello", "world"],
           },
-        }
+        },
       );
 
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct vlan"
+        "it should return correct vlan",
       );
     });
   });
@@ -214,7 +214,7 @@ resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic2" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct vlan"
+        "it should return correct vlan",
       );
     });
     it("should return correct ssh keys with no vlans", () => {
@@ -276,7 +276,7 @@ resource "ibm_compute_ssh_key" "classic_ssh_key_example_classic2" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct vlan"
+        "it should return correct vlan",
       );
     });
     it("should return correct classic vlans with no ssh keys", () => {
@@ -353,7 +353,7 @@ resource "ibm_network_vlan" "classic_vlan_vsrx_public2" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct vlan"
+        "it should return correct vlan",
       );
     });
   });

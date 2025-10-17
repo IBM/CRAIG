@@ -20,7 +20,7 @@ describe("dynamicHeadingProps", () => {
         key: "heading-heading",
         className: undefined,
       },
-      "it should return props"
+      "it should return props",
     );
   });
 });

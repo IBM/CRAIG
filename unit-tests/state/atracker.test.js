@@ -31,7 +31,7 @@ describe("atracker", () => {
       assert.deepEqual(
         craig.store.json.atracker,
         expectedData,
-        "it should have atracker"
+        "it should have atracker",
       );
     });
   });
@@ -39,12 +39,12 @@ describe("atracker", () => {
     it("should set cos_key to null if deleted", () => {
       craig.object_storage.keys.delete(
         {},
-        { arrayParentName: "atracker-cos", data: { name: "cos-bind-key" } }
+        { arrayParentName: "atracker-cos", data: { name: "cos-bind-key" } },
       );
       assert.deepEqual(
         craig.store.json.atracker.cos_key,
         null,
-        "it should be null"
+        "it should be null",
       );
     });
   });
@@ -60,7 +60,7 @@ describe("atracker", () => {
             arrayParentName: "cos",
             arrayData: craig.store.json.object_storage[0].keys,
           },
-        }
+        },
       );
       // save with different key
       craig.atracker.save({
@@ -71,7 +71,7 @@ describe("atracker", () => {
       assert.deepEqual(
         craig.store.json.atracker.cos_key,
         "frog",
-        "it should update"
+        "it should update",
       );
     });
     it("should update atracker target name when saving new bucket in different cos instance", () => {
@@ -109,7 +109,7 @@ describe("atracker", () => {
       assert.deepEqual(
         craig.store.json.atracker.target_name,
         "atracker",
-        "it should set target name"
+        "it should set target name",
       );
     });
   });
@@ -118,12 +118,12 @@ describe("atracker", () => {
       assert.deepEqual(
         craig.atracker.locations.groups({}, { craig: craig }),
         ["global", "us-south"],
-        "it should return correct groups"
+        "it should return correct groups",
       );
       assert.deepEqual(
         craig.atracker.locations.groups({}, {}),
         ["global", ""],
-        "it should return correct groups"
+        "it should return correct groups",
       );
     });
 
@@ -133,10 +133,10 @@ describe("atracker", () => {
           {},
           {
             craig: craig,
-          }
+          },
         ),
         "iac-us-south-atracker",
-        "it should return correct text"
+        "it should return correct text",
       );
     });
     it("should hide cos bucket when atracker is disabled", () => {
@@ -144,21 +144,21 @@ describe("atracker", () => {
     });
     it("should hide plan when atracker instance is false", () => {
       assert.isTrue(
-        craig.atracker.plan.hideWhen({ enabled: true, instance: false })
+        craig.atracker.plan.hideWhen({ enabled: true, instance: false }),
       );
     });
     it("should return the correct cos buckets", () => {
       assert.deepEqual(
         craig.atracker.bucket.groups({}, { craig: craig }),
         ["atracker-bucket", "management-bucket", "workload-bucket"],
-        "it should return list of cos buckets"
+        "it should return list of cos buckets",
       );
     });
     it("should return the correct resource groups", () => {
       assert.deepEqual(
         craig.atracker.resource_group.groups({}, { craig: craig }),
         ["service-rg", "management-rg", "workload-rg"],
-        "it should return list of resource groups"
+        "it should return list of resource groups",
       );
     });
     it("should have an invalid resource group if instance and enabled", () => {
@@ -168,9 +168,9 @@ describe("atracker", () => {
             instance: true,
             enabled: true,
           },
-          { craig: craig }
+          { craig: craig },
         ),
-        "it should return list of resource groups"
+        "it should return list of resource groups",
       );
     });
     it("should have an invalid plan if instance and enabled", () => {
@@ -180,16 +180,16 @@ describe("atracker", () => {
             instance: true,
             enabled: true,
           },
-          { craig: craig }
+          { craig: craig },
         ),
-        "it should return list of resource groups"
+        "it should return list of resource groups",
       );
     });
     it("should return the correct cos keys", () => {
       assert.deepEqual(
         craig.atracker.cos_key.groups({}, { craig: craig }),
         ["cos-bind-key"],
-        "it should return list of cos keys"
+        "it should return list of cos keys",
       );
     });
     describe("invalidText", () => {
@@ -197,35 +197,35 @@ describe("atracker", () => {
         assert.deepEqual(
           craig.atracker.resource_group.invalidText(),
           "Select a Resource Group",
-          "it should return text"
+          "it should return text",
         );
       });
       it("should return invalid text for bucket", () => {
         assert.deepEqual(
           craig.atracker.bucket.invalidText(),
           "Select an Object Storage bucket.",
-          "it should return text"
+          "it should return text",
         );
       });
       it("should return invalid text for cos_key", () => {
         assert.deepEqual(
           craig.atracker.cos_key.invalidText(),
           "Select an Object Storage key.",
-          "it should return text"
+          "it should return text",
         );
       });
       it("should return invalid text for locations", () => {
         assert.deepEqual(
           craig.atracker.locations.invalidText(),
           "Select at least one location.",
-          "it should return text"
+          "it should return text",
         );
       });
       it("should return invalid text for plan", () => {
         assert.deepEqual(
           craig.atracker.plan.invalidText(),
           "Select a plan.",
-          "it should return text"
+          "it should return text",
         );
       });
     });
@@ -239,9 +239,9 @@ describe("atracker", () => {
           },
           {
             craig: craig,
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
   });

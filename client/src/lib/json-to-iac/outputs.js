@@ -35,17 +35,17 @@ function outputsTf(config) {
     });
 
     config.security_groups.forEach((sg) => {
-      ["name", "id"].forEach((field) => {
-        if (sg.vpc === vpc.name) {
+      if (sg.vpc === vpc.name && sg.cluster_security_group !== true) {
+        ["name", "id"].forEach((field) => {
           outputs[
             snakeCase(vpc.name + " vpc security group " + sg.name + " " + field)
           ] = {
             value: `\${module.${snakeCase(vpc.name + " vpc")}.${snakeCase(
-              sg.name
+              sg.name,
             )}_${field}}`,
           };
-        }
-      });
+        });
+      }
     });
 
     tf +=
@@ -55,9 +55,9 @@ function outputsTf(config) {
           jsonToTf(
             JSON.stringify({
               output: outputs,
-            })
+            }),
           ) +
-          "\n"
+          "\n",
       ) + (config.vpcs[index + 1] ? "\n" : "");
   });
 
@@ -70,13 +70,13 @@ function outputsTf(config) {
           snakeCase(
             `${deployment.vpc} vpc ${deployment.name} vsi ${subnetIndex + 1} ${
               i + 1
-            } primary ip address`
+            } primary ip address`,
           )
         ] = {
           value: `\${ibm_is_instance.${snakeCase(
             `${deployment.vpc} vpc ${deployment.name} vsi ${subnetIndex + 1} ${
               i + 1
-            }`
+            }`,
           )}.primary_network_interface[0].primary_ip[0].address}`,
         };
         if (deployment.enable_floating_ip) {
@@ -84,13 +84,13 @@ function outputsTf(config) {
             snakeCase(
               `${deployment.vpc} vpc ${deployment.name} vsi ${
                 subnetIndex + 1
-              } ${i + 1} floating ip address`
+              } ${i + 1} floating ip address`,
             )
           ] = {
             value: `\${ibm_is_floating_ip.${snakeCase(
               `${deployment.vpc} vpc ${deployment.name} vsi ${
                 subnetIndex + 1
-              } ${i + 1} fip`
+              } ${i + 1} fip`,
             )}.address}`,
           };
         }
@@ -104,9 +104,9 @@ function outputsTf(config) {
           jsonToTf(
             JSON.stringify({
               output: deploymentOutputs,
-            })
+            }),
           ) +
-          "\n"
+          "\n",
       );
   });
 
@@ -120,7 +120,7 @@ function outputsTf(config) {
           value: `\${${
             workspace.use_data ? "data." : ""
           }ibm_resource_instance.power_vs_workspace_${snakeCase(
-            workspace.name
+            workspace.name,
           )}.${field}}`,
         };
     });
@@ -130,7 +130,7 @@ function outputsTf(config) {
         snakeCase(`power vs workspace ${workspace.name} ssh key ${sshKey.name}`)
       ] = {
         value: `\${${sshKey.use_data ? "data." : ""}ibm_pi_key.${snakeCase(
-          `power vs ssh key ${sshKey.name}`
+          `power vs ssh key ${sshKey.name}`,
         )}.pi_key_name}`,
       };
     });
@@ -139,11 +139,11 @@ function outputsTf(config) {
       ["name", "id"].forEach((field) => {
         outputs[
           snakeCase(
-            `power vs workspace ${nw.workspace} network ${nw.name} ${field}`
+            `power vs workspace ${nw.workspace} network ${nw.name} ${field}`,
           )
         ] = {
           value: `\${${nw.use_data ? "data." : ""}ibm_pi_network.${snakeCase(
-            `power network ${nw.workspace} ${nw.name}`
+            `power network ${nw.workspace} ${nw.name}`,
           )}.${field === "name" ? "pi_network_name" : field}}`,
         };
       });
@@ -157,9 +157,9 @@ function outputsTf(config) {
           jsonToTf(
             JSON.stringify({
               output: outputs,
-            })
+            }),
           ) +
-          "\n"
+          "\n",
       ) +
       (config.power[index + 1] ? "\n" : "");
   });
@@ -169,7 +169,7 @@ function outputsTf(config) {
   if (config.power_instances)
     config.power_instances.forEach((instance, index) => {
       let vsiRef = `${snakeCase(
-        instance.workspace
+        instance.workspace,
       )}_workspace_instance_${snakeCase(instance.name)}`;
       powerInstanceOutputs[vsiRef + "_primary_ip"] = {
         value: `\${ibm_pi_instance.${vsiRef}.pi_network[0].ip_address}`,
@@ -180,7 +180,9 @@ function outputsTf(config) {
       "\n" +
       tfBlock(
         "Power VS Instance Outputs",
-        "\n" + jsonToTf(JSON.stringify({ output: powerInstanceOutputs })) + "\n"
+        "\n" +
+          jsonToTf(JSON.stringify({ output: powerInstanceOutputs })) +
+          "\n",
       );
   }
 
@@ -192,7 +194,7 @@ function outputsTf(config) {
           snakeCase(`${cos.name} object storage bucket ${bucket.name} ${field}`)
         ] = {
           value: `\${ibm_cos_bucket.${snakeCase(
-            `${cos.name} object storage ${bucket.name} bucket`
+            `${cos.name} object storage ${bucket.name} bucket`,
           )}.${field}}`,
         };
       });
@@ -201,7 +203,7 @@ function outputsTf(config) {
       "\n" +
       tfBlock(
         `${cos.name} Object Storage Outputs`,
-        "\n" + jsonToTf(JSON.stringify({ output: cosOutputs })) + "\n"
+        "\n" + jsonToTf(JSON.stringify({ output: cosOutputs })) + "\n",
       );
   });
 
@@ -219,9 +221,9 @@ function outputsTf(config) {
                   sensitive: true,
                 },
               },
-            })
+            }),
           ) +
-          "\n"
+          "\n",
       );
   }
 

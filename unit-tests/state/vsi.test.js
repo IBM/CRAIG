@@ -26,7 +26,7 @@ describe("vsi", () => {
         },
         {
           isTeleport: false,
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.vsi[1],
@@ -49,12 +49,12 @@ describe("vsi", () => {
           volumes: [],
           reserved_ips: [],
         },
-        "it should return correct server"
+        "it should return correct server",
       );
       assert.deepEqual(
         craig.store.vsiList,
         ["management-server", "test-vsi"],
-        "it should set vsiList"
+        "it should set vsiList",
       );
     });
     it("should find kms based on key", () => {
@@ -66,7 +66,7 @@ describe("vsi", () => {
         },
         {
           isTeleport: false,
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.vsi[1],
@@ -89,12 +89,12 @@ describe("vsi", () => {
           volumes: [],
           reserved_ips: [],
         },
-        "it should return correct server"
+        "it should return correct server",
       );
       assert.deepEqual(
         craig.store.vsiList,
         ["management-server", "test-vsi"],
-        "it should set vsiList"
+        "it should set vsiList",
       );
     });
   });
@@ -102,7 +102,7 @@ describe("vsi", () => {
     it("should update vsi with reserved ips", () => {
       craig.vsi.save(
         { reserved_ips: [[], ["", "frog"]] },
-        { data: { name: "management-server" } }
+        { data: { name: "management-server" } },
       );
       assert.deepEqual(
         craig.store.json.vsi[0].reserved_ips,
@@ -111,13 +111,13 @@ describe("vsi", () => {
           ["", "frog"],
           ["", ""],
         ],
-        "it should have updated vsi"
+        "it should have updated vsi",
       );
     });
     it("should update in place with new name", () => {
       craig.vsi.create(
         { name: "todd", vpc: "management" },
-        { isTeleport: false }
+        { isTeleport: false },
       );
       craig.store.json.load_balancers.push({
         name: "lb",
@@ -133,12 +133,12 @@ describe("vsi", () => {
       });
       craig.vsi.save(
         { name: "test-vsi" },
-        { data: { name: "todd" }, isTeleport: false }
+        { data: { name: "todd" }, isTeleport: false },
       );
       assert.deepEqual(
         craig.store.json.vsi[1].name,
         "test-vsi",
-        "it should update in place"
+        "it should update in place",
       );
     });
     it("should update in place with same name", () => {
@@ -148,21 +148,21 @@ describe("vsi", () => {
           vpc: "management",
           security_groups: ["management-vsi"],
         },
-        { isTeleport: false }
+        { isTeleport: false },
       );
       craig.vsi.save(
         { name: "todd", vpc: "workload", security_groups: ["workload-vsi"] },
-        { data: { name: "todd" }, isTeleport: false }
+        { data: { name: "todd" }, isTeleport: false },
       );
       assert.deepEqual(
         craig.store.json.vsi[1].security_groups,
         [],
-        "it should update in place"
+        "it should update in place",
       );
       assert.deepEqual(
         craig.store.json.vsi[1].vpc,
         "workload",
-        "it should have correct data"
+        "it should have correct data",
       );
     });
     it("should update in place with same name when kms is null", () => {
@@ -172,7 +172,7 @@ describe("vsi", () => {
           vpc: "management",
           security_groups: ["management-vsi"],
         },
-        { isTeleport: false }
+        { isTeleport: false },
       );
       craig.vsi.save(
         {
@@ -181,17 +181,17 @@ describe("vsi", () => {
           security_groups: ["workload-vsi"],
           encryption_key: "key",
         },
-        { data: { name: "todd" }, isTeleport: false }
+        { data: { name: "todd" }, isTeleport: false },
       );
       assert.deepEqual(
         craig.store.json.vsi[1].kms,
         "kms",
-        "it should update in place"
+        "it should update in place",
       );
       assert.deepEqual(
         craig.store.json.vsi[1].encryption_key,
         "key",
-        "it should update in place"
+        "it should update in place",
       );
     });
     it("should update in place with network interfaces", () => {
@@ -200,7 +200,7 @@ describe("vsi", () => {
           name: "todd",
           vpc: "management",
         },
-        { isTeleport: false }
+        { isTeleport: false },
       );
       craig.vsi.save(
         {
@@ -218,7 +218,7 @@ describe("vsi", () => {
           ],
           volumes: [],
         },
-        { data: { name: "todd" }, isTeleport: false }
+        { data: { name: "todd" }, isTeleport: false },
       );
       assert.deepEqual(
         craig.store.json.vsi[1].network_interfaces,
@@ -232,7 +232,7 @@ describe("vsi", () => {
             security_groups: ["f5-external-sg"],
           },
         ],
-        "it should update in place"
+        "it should update in place",
       );
     });
     it("should update in place with image given image_name", () => {
@@ -241,7 +241,7 @@ describe("vsi", () => {
           name: "todd",
           vpc: "management",
         },
-        { isTeleport: false }
+        { isTeleport: false },
       );
       craig.vsi.save(
         {
@@ -249,12 +249,12 @@ describe("vsi", () => {
           vpc: "management",
           image_name: "Description name [id]",
         },
-        { data: { name: "todd" }, isTeleport: false }
+        { data: { name: "todd" }, isTeleport: false },
       );
       assert.deepEqual(
         craig.store.json.vsi[1].image_name,
         "Description name [id]",
-        "it should update in place"
+        "it should update in place",
       );
     });
   });
@@ -272,12 +272,12 @@ describe("vsi", () => {
           arrayParentName: "kms",
           data: { name: "vsi-volume-key" },
           isTeleport: false,
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.vsi[0].encryption_key,
         null,
-        "it should be null"
+        "it should be null",
       );
     });
     it("should set ssh keys to empty array when deleted", () => {
@@ -287,7 +287,7 @@ describe("vsi", () => {
           data: {
             name: "ssh-key",
           },
-        }
+        },
       );
       assert.deepEqual(craig.store.json.vsi[0].ssh_keys, [], "it should be []");
     });
@@ -297,7 +297,7 @@ describe("vsi", () => {
       assert.deepEqual(
         craig.store.json.vsi[0].security_groups,
         [],
-        "it should be []"
+        "it should be []",
       );
     });
     it("should set security groups when deleted", () => {
@@ -305,7 +305,7 @@ describe("vsi", () => {
       assert.deepEqual(
         craig.store.json.vsi[0].security_groups,
         [],
-        "it should be []"
+        "it should be []",
       );
     });
   });
@@ -320,129 +320,129 @@ describe("vsi", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return the correct data"
+        "it should return the correct data",
       );
     });
     it("should return api endpoint for image name with region", () => {
       assert.deepEqual(
         craig.vsi.image_name.apiEndpoint({}, { craig: craig }),
         "/api/vsi/us-south/images",
-        "it should return api endpoint"
+        "it should return api endpoint",
       );
     });
     it("should return api endpoint for snapshot name with region", () => {
       assert.deepEqual(
         craig.vsi.snapshot.apiEndpoint({}, { craig: craig }),
         "/api/vsi/us-south/snapshots",
-        "it should return api endpoint"
+        "it should return api endpoint",
       );
     });
     it("should hide image name when use snapshot", () => {
       assert.isTrue(
         craig.vsi.image_name.hideWhen({ use_snapshot: true }, { craig: craig }),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
     it("should not have invalid image name when use snapshot", () => {
       assert.isFalse(
         craig.vsi.image_name.invalid({ use_snapshot: true }, { craig: craig }),
-        "it should not be invalid"
+        "it should not be invalid",
       );
     });
     it("should not have invalid snapshot name when not using snapshot", () => {
       assert.isFalse(
         craig.vsi.snapshot.invalid({ use_snapshot: false }, { craig: craig }),
-        "it should not be invalid"
+        "it should not be invalid",
       );
     });
     it("should have invalid snapshot name when using snapshot", () => {
       assert.isTrue(
         craig.vsi.snapshot.invalid({ use_snapshot: true }, { craig: craig }),
-        "it should not be invalid"
+        "it should not be invalid",
       );
     });
     it("should not have invalid encryption key name when using snapshot", () => {
       assert.isFalse(
         craig.vsi.encryption_key.invalid(
           { use_snapshot: true },
-          { craig: craig }
+          { craig: craig },
         ),
-        "it should not be invalid"
+        "it should not be invalid",
       );
     });
     it("should hide snapshot when not using snapshot", () => {
       assert.isTrue(
         craig.vsi.snapshot.hideWhen({ use_snapshot: false }, { craig: craig }),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
     it("should return api endpoint for profile with region", () => {
       assert.deepEqual(
         craig.vsi.profile.apiEndpoint({}, { craig: craig }),
         "/api/vsi/us-south/instanceProfiles",
-        "it should return api endpoint"
+        "it should return api endpoint",
       );
     });
     it("should return list of ssh keys", () => {
       assert.deepEqual(
         craig.vsi.ssh_keys.groups({}, { craig: craig }),
         ["ssh-key"],
-        "it should return ssh keys"
+        "it should return ssh keys",
       );
     });
     it("should not have invalid reserved ips when not found", () => {
       assert.isFalse(
         craig.vsi.reserved_ips.invalid({}, { subnet: 0 }),
-        "it should be valid when not found on object"
+        "it should be valid when not found on object",
       );
     });
     it("should not have invalid reserved ip when empty string", () => {
       assert.isFalse(
         craig.vsi.reserved_ips.invalid(
           { reserved_ips: [[""]] },
-          { subnet: 0, vsi: 0 }
+          { subnet: 0, vsi: 0 },
         ),
-        "it should be valid when item is empty string"
+        "it should be valid when item is empty string",
       );
     });
     it("should have invalid reserved ip when not ipv4 address", () => {
       assert.isTrue(
         craig.vsi.reserved_ips.invalid(
           { reserved_ips: [["AAA"]] },
-          { subnet: 0, vsi: 0 }
+          { subnet: 0, vsi: 0 },
         ),
-        "it should be invalid"
+        "it should be invalid",
       );
       assert.isTrue(
         craig.vsi.reserved_ips.invalid(
           { reserved_ips: [["1.2.3.4/5"]] },
-          { subnet: 0, vsi: 0 }
+          { subnet: 0, vsi: 0 },
         ),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should have a valid reserved ip when an ip address", () => {
       assert.isFalse(
         craig.vsi.reserved_ips.invalid(
           { reserved_ips: [["1.2.3.4"]] },
-          { subnet: 0, vsi: 0 }
+          { subnet: 0, vsi: 0 },
         ),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should render reserved ips", () => {
       assert.deepEqual(
         craig.vsi.reserved_ips.onRender({}),
         "",
-        "it should return empty string"
+        "it should return empty string",
       );
       assert.deepEqual(
         craig.vsi.reserved_ips.onRender(
           { reserved_ips: [[""]] },
-          { subnet: 0, vsi: 0 }
+          { subnet: 0, vsi: 0 },
         ),
         "",
-        "it should return empty string"
+        "it should return empty string",
       );
     });
     it("should update reserved ips when invalid vsi per subnet", () => {
@@ -458,7 +458,7 @@ describe("vsi", () => {
       assert.deepEqual(
         nextState.reserved_ips,
         [],
-        "it should add additional subnets"
+        "it should add additional subnets",
       );
     });
     it("should update reserved ips when changing vsi per subnet and adding additional vsi", () => {
@@ -477,7 +477,7 @@ describe("vsi", () => {
           ["", "", ""],
           ["", "", ""],
         ],
-        "it should add additional vsi"
+        "it should add additional vsi",
       );
     });
     it("should update reserved ips when changing vsi per subnet and adding vsi with existing ips", () => {
@@ -496,7 +496,7 @@ describe("vsi", () => {
           ["", "1.2.3.4", ""],
           ["", "", ""],
         ],
-        "it should maintain items in place"
+        "it should maintain items in place",
       );
     });
     it("should update reserved ips when reducing vsi per subnet and adding vsi with existing ips", () => {
@@ -512,7 +512,7 @@ describe("vsi", () => {
       assert.deepEqual(
         nextState.reserved_ips,
         [["1.2.3.4"], [""]],
-        "it should maintain items in place"
+        "it should maintain items in place",
       );
     });
     it("should update reserved ips when reducing subnets and adding vsi with existing ips", () => {
@@ -528,7 +528,7 @@ describe("vsi", () => {
       assert.deepEqual(
         nextState.reserved_ips,
         [["1.2.3.4", ""]],
-        "it should maintain items in place"
+        "it should maintain items in place",
       );
     });
     it("should update reserved ips when changing subnets and adding vsi with existing ips", () => {
@@ -548,7 +548,7 @@ describe("vsi", () => {
           ["", ""],
           ["", ""],
         ],
-        "it should maintain items in place"
+        "it should maintain items in place",
       );
     });
   });
@@ -562,7 +562,7 @@ describe("vsi", () => {
             name: "management-server",
           },
         }),
-        "it should disable save"
+        "it should disable save",
       );
     });
     it("should not disable save when reserved ip is valid", () => {
@@ -574,7 +574,7 @@ describe("vsi", () => {
             name: "management-server",
           },
         }),
-        "it should disable save"
+        "it should disable save",
       );
     });
   });
@@ -593,7 +593,7 @@ describe("vsi", () => {
             innerFormProps: {
               arrayParentName: "management-server",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.vsi[0].volumes,
@@ -606,7 +606,7 @@ describe("vsi", () => {
               encryption_key: "slz-vsi-volume-key",
             },
           ],
-          "it should be null"
+          "it should be null",
         );
       });
     });
@@ -628,7 +628,7 @@ describe("vsi", () => {
             innerFormProps: {
               arrayParentName: "management-server",
             },
-          }
+          },
         );
         craig.vsi.volumes.save(
           {
@@ -643,12 +643,12 @@ describe("vsi", () => {
               name: "block-storage-1",
             },
             arrayParentName: "management-server",
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.vsi[0].volumes[0].name,
           "frog",
-          "it should be null"
+          "it should be null",
         );
       });
     });
@@ -669,7 +669,7 @@ describe("vsi", () => {
             innerFormProps: {
               arrayParentName: "management-server",
             },
-          }
+          },
         );
         craig.vsi.volumes.delete(
           {},
@@ -679,12 +679,12 @@ describe("vsi", () => {
             },
             arrayParentName: "management-server",
             innerFormProps: {},
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.vsi[0].volumes,
           [],
-          "it should be null"
+          "it should be null",
         );
       });
     });
@@ -693,19 +693,19 @@ describe("vsi", () => {
         it("should be false if unfound", () => {
           assert.isFalse(
             craig.vsi.volumes.capacity.invalid({ capacity: "" }),
-            "it should be valid"
+            "it should be valid",
           );
         });
         it("should be true if decimal", () => {
           assert.isTrue(
             craig.vsi.volumes.capacity.invalid({ capacity: "1.2" }),
-            "it should be invalid"
+            "it should be invalid",
           );
         });
         it("should be true if not in range", () => {
           assert.isTrue(
             craig.vsi.volumes.capacity.invalid({ capacity: "-1" }),
-            "it should be invalid"
+            "it should be invalid",
           );
         });
       });

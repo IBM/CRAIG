@@ -79,7 +79,7 @@ function craigApi(controller, tar) {
       let craigData = configToFilesJson(
         templateNameToJson[template],
         false,
-        true
+        true,
       );
       let tarFile = `${template}.tar`;
       packTar(pack, tarFile.slice(0, tarFile.length - 4), craigData);
@@ -124,7 +124,7 @@ function craigApi(controller, tar) {
           "Error creating Terraform code for template " +
             template +
             " with additional parameters: ",
-          JSON.stringify(fieldsToUpdate, null, 2)
+          JSON.stringify(fieldsToUpdate, null, 2),
         );
         console.error(err);
         reject(err);
