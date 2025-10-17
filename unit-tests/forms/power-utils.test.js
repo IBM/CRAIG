@@ -3,7 +3,7 @@ const {
   powerImageFetch,
   powerStoragePoolFetch,
   getImagesAndStoragePools,
-} = require("../../lib//power-utils");
+} = require("../../server/lib/power-utils");
 
 const powerImageMap = require("../../client/src/lib/docs/power-image-map-legacy.json");
 const { powerStoragePoolRegionMap } = require("../../client/src/lib/constants");
