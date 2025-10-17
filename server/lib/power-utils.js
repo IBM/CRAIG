@@ -1,5 +1,5 @@
-const { powerStoragePoolRegionMap } = require("../client/src/lib/constants");
-const powerImageMap = require("../client/src/lib/docs/power-image-map-legacy.json");
+const { powerStoragePoolRegionMap } = require("../../client/src/lib/constants");
+const powerImageMap = require("../../client/src/lib/docs/power-image-map-legacy.json");
 
 /**
  * get power images

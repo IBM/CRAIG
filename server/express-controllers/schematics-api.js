@@ -2,7 +2,7 @@ const { prettyJSON, isNullOrEmptyString } = require("lazy-z");
 const tar = require("tar-stream");
 const { packTar } = require("../lib/tar-utils");
 const FormData = require("form-data");
-const { configToFilesJson } = require("../client/src/lib");
+const { configToFilesJson } = require("../../client/src/lib");
 const blobStream = require("blob-stream");
 
 function schematicsRoutes(axios, controller) {

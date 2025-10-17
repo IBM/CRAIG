@@ -1,4 +1,4 @@
-const { allDocs } = require("../client/src/lib/docs-to-md");
+const { allDocs } = require("../../client/src/lib/docs-to-md");
 const fs = require("fs");
 if (process.argv[2]) {
   fs.writeFileSync(process.argv[2], allDocs());

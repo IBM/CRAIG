@@ -9,8 +9,9 @@ const craigRoutes = new craigApi(controller, tar);
 const swaggerUi = require("swagger-ui-express");
 const yaml = require("js-yaml");
 const fs = require("fs");
+const path = require("path");
 const apiSpec = yaml.load(
-  fs.readFileSync("./client/src/lib/docs/api-spec.yaml", "utf8")
+  fs.readFileSync(path.join(__dirname, "../../client/src/lib/docs/api-spec.yaml"), "utf8")
 );
 
 // vsi

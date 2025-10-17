@@ -10,7 +10,7 @@ CRAIG configures infrastructure using JSON to create full VPC networks, manage s
 
 ## Prerequisites for Local Installations
 
-- NodeJS v18.11 or higher
+- NodeJS v24.9.0 or higher
 - NPM version v8.19.2 or higher
 - Terraform v1.3 or higher
 - [jq](https://jqlang.github.io/jq/) v1.7 or higher (for the PowerVS Workspace Deployment `terraform.sh` script)

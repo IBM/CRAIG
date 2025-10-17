@@ -1,6 +1,6 @@
 const { assert } = require("chai");
 const res = require("../mocks/response.mock");
-const { craigApi } = require("../../express-controllers/craig-api");
+const { craigApi } = require("../../server/express-controllers/craig-api.js");
 const sinon = require("sinon");
 const slz = require("../../client/src/lib/docs/templates/slz-mixed.json");
 const { getObjectFromArray, arraySplatIndex } = require("lazy-z");

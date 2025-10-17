@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { configToFilesJson } = require("../client/src/lib");
+const { configToFilesJson } = require("../../client/src/lib");
 const { eachKey, contains } = require("lazy-z");
 
 try {
