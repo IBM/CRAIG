@@ -27,6 +27,7 @@ const {
   formatSecretsManagerK8sSecret,
   formatSecretsManagerSecretGroup,
 } = require("./secrets-manager");
+const { formatSgRule } = require("./security-groups");
 
 /**
  * create tf for cluster
@@ -234,6 +235,44 @@ function clusterTf(config) {
       blockData += formatWorkerPool(pool, config);
     });
     tf += tfBlock(cluster.name + " Cluster", blockData) + "\n";
+
+    let clusterSgTf =
+      jsonToTfPrint(
+        "data",
+        "ibm_is_security_groups",
+        cluster.name + " security groups",
+        {
+          vpc_crn: `\${ibm_container_vpc_cluster.${snakeCase(`${cluster.vpc} vpc ${cluster.name}`)}.crn}`,
+          depends_on: [
+            `\${ibm_container_vpc_cluster.${snakeCase(`${cluster.vpc} vpc ${cluster.name}`)}}`,
+          ],
+        },
+      ) +
+      "\nlocals {\n" +
+      `  ${snakeCase(cluster.name + " security group id")} = [\n` +
+      `    for group in data.ibm_is_security_groups.${snakeCase(cluster.name + " security groups")}.security_groups :\n` +
+      `    group if group.name == "kube-\${ibm_container_vpc_cluster.${snakeCase(`${cluster.vpc} vpc ${cluster.name}`)}.id}"\n` +
+      `  ][0].id\n` +
+      "}\n";
+
+    let clusterSg = config.security_groups.find((sg) => {
+      return (
+        sg.cluster_security_group &&
+        sg.name == cluster.name + "-cluster-security-group"
+      );
+    });
+
+    // prevent legacy clusters without rules
+    if (clusterSg?.rules)
+      clusterSg.rules.forEach((rule) => {
+        let newRule = { ...rule };
+        newRule.cluster_security_group = true;
+        newRule.cluster_sg_id_ref = `\${local.${snakeCase(cluster.name + " security group id")}}`;
+        clusterSgTf += formatSgRule(newRule, config);
+      });
+
+    tf += tfBlock(cluster.name + " Cluster Security Group", clusterSgTf) + "\n";
+
     let clusterAddonsTf = "";
     ["logging", "monitoring"].forEach((field) => {
       if (cluster[field])

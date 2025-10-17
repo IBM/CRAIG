@@ -3002,6 +3002,32 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
 }
 
 ##############################################################################
+
+##############################################################################
+# Workload Cluster Security Group
+##############################################################################
+
+data "ibm_is_security_groups" "workload_security_groups" {
+  vpc_crn = ibm_container_vpc_cluster.workload_vpc_workload.crn
+  depends_on = [
+    ibm_container_vpc_cluster.workload_vpc_workload
+  ]
+}
+
+locals {
+  workload_security_group_id = [
+    for group in data.ibm_is_security_groups.workload_security_groups.security_groups :
+    group if group.name == "kube-\${ibm_container_vpc_cluster.workload_vpc_workload.id}"
+  ][0].id
+}
+
+resource "ibm_is_security_group_rule" "workload_vpc_workload_cluster_security_group_sg_rule_allow_ibm_inbound" {
+  group     = local.workload_security_group_id
+  remote    = "161.26.0.0/16"
+  direction = "inbound"
+}
+
+##############################################################################
 `;
       assert.deepEqual(
         actualData,
@@ -3077,6 +3103,32 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
     name      = "\${var.region}-3"
     subnet_id = module.workload_vpc.subnet_vsi_zone_3_id
   }
+}
+
+##############################################################################
+
+##############################################################################
+# Workload Cluster Security Group
+##############################################################################
+
+data "ibm_is_security_groups" "workload_security_groups" {
+  vpc_crn = ibm_container_vpc_cluster.workload_vpc_workload.crn
+  depends_on = [
+    ibm_container_vpc_cluster.workload_vpc_workload
+  ]
+}
+
+locals {
+  workload_security_group_id = [
+    for group in data.ibm_is_security_groups.workload_security_groups.security_groups :
+    group if group.name == "kube-\${ibm_container_vpc_cluster.workload_vpc_workload.id}"
+  ][0].id
+}
+
+resource "ibm_is_security_group_rule" "workload_vpc_workload_cluster_security_group_sg_rule_allow_ibm_inbound" {
+  group     = local.workload_security_group_id
+  remote    = "161.26.0.0/16"
+  direction = "inbound"
 }
 
 ##############################################################################
@@ -3213,6 +3265,32 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
     name      = "\${var.region}-3"
     subnet_id = module.workload_vpc.subnet_vsi_zone_3_id
   }
+}
+
+##############################################################################
+
+##############################################################################
+# Workload Cluster Security Group
+##############################################################################
+
+data "ibm_is_security_groups" "workload_security_groups" {
+  vpc_crn = ibm_container_vpc_cluster.workload_vpc_workload.crn
+  depends_on = [
+    ibm_container_vpc_cluster.workload_vpc_workload
+  ]
+}
+
+locals {
+  workload_security_group_id = [
+    for group in data.ibm_is_security_groups.workload_security_groups.security_groups :
+    group if group.name == "kube-\${ibm_container_vpc_cluster.workload_vpc_workload.id}"
+  ][0].id
+}
+
+resource "ibm_is_security_group_rule" "workload_vpc_workload_cluster_security_group_sg_rule_allow_ibm_inbound" {
+  group     = local.workload_security_group_id
+  remote    = "161.26.0.0/16"
+  direction = "inbound"
 }
 
 ##############################################################################
@@ -3378,6 +3456,32 @@ resource "ibm_container_vpc_worker_pool" "workload_vpc_workload_cluster_logging_
     name      = "\${var.region}-3"
     subnet_id = module.workload_vpc.subnet_vsi_zone_3_id
   }
+}
+
+##############################################################################
+
+##############################################################################
+# Workload Cluster Security Group
+##############################################################################
+
+data "ibm_is_security_groups" "workload_security_groups" {
+  vpc_crn = ibm_container_vpc_cluster.workload_vpc_workload.crn
+  depends_on = [
+    ibm_container_vpc_cluster.workload_vpc_workload
+  ]
+}
+
+locals {
+  workload_security_group_id = [
+    for group in data.ibm_is_security_groups.workload_security_groups.security_groups :
+    group if group.name == "kube-\${ibm_container_vpc_cluster.workload_vpc_workload.id}"
+  ][0].id
+}
+
+resource "ibm_is_security_group_rule" "workload_vpc_workload_cluster_security_group_sg_rule_allow_ibm_inbound" {
+  group     = local.workload_security_group_id
+  remote    = "161.26.0.0/16"
+  direction = "inbound"
 }
 
 ##############################################################################

@@ -2,7 +2,10 @@
   "_options": {
     "prefix": "slz",
     "region": "us-south",
-    "tags": ["slz", "landing-zone"],
+    "tags": [
+      "slz",
+      "landing-zone"
+    ],
     "endpoints": "private",
     "account_id": "1234"
   },
@@ -120,7 +123,10 @@
     "bucket": "atracker-bucket",
     "add_route": true,
     "cos_key": "cos-bind-key",
-    "locations": ["global", "us-south"]
+    "locations": [
+      "global",
+      "us-south"
+    ]
   },
   "vpcs": [
     {
@@ -537,16 +543,28 @@
       "vpc": "management",
       "service": "cos",
       "resource_group": "slz-management-rg",
-      "security_groups": ["management-vpe-sg"],
-      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+      "security_groups": [
+        "management-vpe-sg"
+      ],
+      "subnets": [
+        "vpe-zone-1",
+        "vpe-zone-2",
+        "vpe-zone-3"
+      ],
       "name": "cos-vpe-gw"
     },
     {
       "vpc": "workload",
       "service": "cos",
       "resource_group": "slz-workload-rg",
-      "security_groups": ["workload-vpe-sg"],
-      "subnets": ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+      "security_groups": [
+        "workload-vpe-sg"
+      ],
+      "subnets": [
+        "vpe-zone-1",
+        "vpe-zone-2",
+        "vpe-zone-3"
+      ],
       "name": "cos-vpe-gw"
     }
   ],
@@ -792,6 +810,33 @@
           }
         }
       ]
+    },
+    {
+      "cluster_security_group": true,
+      "name": "workload-cluster-security-group",
+      "resource_group": "workload-rg",
+      "rules": [
+        {
+          "vpc": "workload",
+          "sg": "workload-cluster-security-group",
+          "direction": "inbound",
+          "name": "allow-ibm-inbound",
+          "source": "161.26.0.0/16",
+          "tcp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "udp": {
+            "port_max": null,
+            "port_min": null
+          },
+          "icmp": {
+            "type": null,
+            "code": null
+          }
+        }
+      ],
+      "vpc": "workload"
     }
   ],
   "vpn_gateways": [
@@ -815,8 +860,14 @@
       "port": 255,
       "protocol": "udp",
       "resource_group": "slz-management-rg",
-      "security_groups": ["management-vpe-sg"],
-      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "security_groups": [
+        "management-vpe-sg"
+      ],
+      "subnets": [
+        "vsi-zone-1",
+        "vsi-zone-2",
+        "vsi-zone-3"
+      ],
       "vpc": "management",
       "routes": [
         {
@@ -863,7 +914,11 @@
       "name": "workload",
       "resource_group": "slz-workload-rg",
       "encryption_key": "slz-vsi-volume-key",
-      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "subnets": [
+        "vsi-zone-1",
+        "vsi-zone-2",
+        "vsi-zone-3"
+      ],
       "update_all_workers": false,
       "vpc": "workload",
       "worker_pools": [
@@ -873,7 +928,11 @@
           "flavor": "bx2.16x64",
           "name": "logging-pool",
           "resource_group": "slz-workload-rg",
-          "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+          "subnets": [
+            "vsi-zone-1",
+            "vsi-zone-2",
+            "vsi-zone-3"
+          ],
           "vpc": "workload",
           "workers_per_subnet": 2
         }
@@ -889,9 +948,17 @@
       "image": "ibm-ubuntu-22-04-1-minimal-amd64-1",
       "profile": "cx2-4x8",
       "name": "management-server",
-      "security_groups": ["management-vpe-sg"],
-      "ssh_keys": ["slz-ssh-key"],
-      "subnets": ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+      "security_groups": [
+        "management-vpe-sg"
+      ],
+      "ssh_keys": [
+        "slz-ssh-key"
+      ],
+      "subnets": [
+        "vsi-zone-1",
+        "vsi-zone-2",
+        "vsi-zone-3"
+      ],
       "vpc": "management",
       "vsi_per_subnet": 2,
       "resource_group": "slz-management-rg"

@@ -90,13 +90,16 @@ function formatSecurityGroup(sg, config) {
 function ibmIsSecurityGroupRule(rule, config) {
   let sgAddress = `${rule.vpc} vpc ${rule.sg} sg`;
   let sgRule = {
-    group: tfRef(
-      "ibm_is_security_group",
-      snakeCase(sgAddress),
-      "id",
-      config?.security_groups &&
-        getObjectFromArray(config.security_groups, "name", rule.sg).use_data,
-    ),
+    group: rule.cluster_security_group
+      ? rule.cluster_sg_id_ref
+      : tfRef(
+          "ibm_is_security_group",
+          snakeCase(sgAddress),
+          "id",
+          config?.security_groups &&
+            getObjectFromArray(config.security_groups, "name", rule.sg)
+              .use_data,
+        ),
     remote: rule.source,
     direction: rule.direction,
   };
