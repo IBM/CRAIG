@@ -658,7 +658,7 @@ function vpcModuleTf(files, config) {
     });
 
     cloneConfig.security_groups.forEach((sg) => {
-      if (sg.vpc === vpc.name) {
+      if (sg.vpc === vpc.name && !sg.cluster_security_group) {
         let sgData = formatSecurityGroup(sg, cloneConfig);
         sg.rules.forEach((rule) => (sgData += formatSgRule(rule)));
         files[vpcModule]["sg_" + snakeCase(`${sg.name}`) + ".tf"] = tfBlock(

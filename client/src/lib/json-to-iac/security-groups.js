@@ -150,9 +150,11 @@ function formatSgRule(rule, config) {
 function sgTf(config) {
   let tf = "";
   config.security_groups.forEach((group) => {
-    let blockData = formatSecurityGroup(group, config);
-    group.rules.forEach((rule) => (blockData += formatSgRule(rule)));
-    tf += tfBlock("Security Group " + group.name, blockData) + "\n";
+    if (group.cluster_security_group !== true) {
+      let blockData = formatSecurityGroup(group, config);
+      group.rules.forEach((rule) => (blockData += formatSgRule(rule)));
+      tf += tfBlock("Security Group " + group.name, blockData) + "\n";
+    }
   });
   return tfDone(tf);
 }

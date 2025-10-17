@@ -567,7 +567,7 @@
     },
     {
       "vpc": "management",
-      "name": "asdasdasdasd-vsi",
+      "name": "management-vsi",
       "resource_group": "management-rg",
       "rules": [
         {
