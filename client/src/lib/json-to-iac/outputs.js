@@ -35,8 +35,8 @@ function outputsTf(config) {
     });
 
     config.security_groups.forEach((sg) => {
-      ["name", "id"].forEach((field) => {
-        if (sg.vpc === vpc.name) {
+      if (sg.vpc === vpc.name && sg.cluster_security_group !== true) {
+        ["name", "id"].forEach((field) => {
           outputs[
             snakeCase(vpc.name + " vpc security group " + sg.name + " " + field)
           ] = {
@@ -44,8 +44,8 @@ function outputsTf(config) {
               sg.name,
             )}_${field}}`,
           };
-        }
-      });
+        });
+      }
     });
 
     tf +=

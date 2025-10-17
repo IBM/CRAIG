@@ -574,7 +574,7 @@ function vpcModuleOutputs(vpc, securityGroups) {
     };
   });
   securityGroups.forEach((sg) => {
-    if (sg.vpc === vpc.name) {
+    if (sg.vpc === vpc.name && !sg.cluster_security_group) {
       outputs[snakeCase(`${sg.name}_name`)] = {
         value: `\${${
           sg.use_data ? "data." : ""

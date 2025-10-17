@@ -814,7 +814,7 @@
     {
       "cluster_security_group": true,
       "name": "workload-cluster-security-group",
-      "resource_group": "workload-rg",
+      "resource_group": "slz-workload-rg",
       "rules": [
         {
           "vpc": "workload",
