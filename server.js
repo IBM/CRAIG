@@ -51,7 +51,7 @@ function startServer() {
 
       app.use("/api", routes);
 
-      app.get("*", (req, res) => {
+      app.get(/(.*)/, (req, res) => {
         res.sendFile(path.join(guiBuild, "index.html"));
       });
 
