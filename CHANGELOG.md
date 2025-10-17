@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 - When using dynamic subnets, CIDR blocks are now calculated to use the fewest total IPs within a VPC
 - Security and Compliance Center (SCC) has been removed as the service is no longer supported on IBM Cloud
+- Users can now add rules to the automatically created security group for any VPC cluster
 
 ## 1.16.5
 
