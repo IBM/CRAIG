@@ -37,7 +37,7 @@ const ReleaseNote = (props) => {
                           __html: item
                             .replace(
                               replaceFirstBacktickExp,
-                              '<code class="noRgService spanPadding">'
+                              '<code class="noRgService spanPadding">',
                             )
                             .replace(/`/g, "</code>"),
                         }}

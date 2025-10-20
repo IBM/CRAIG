@@ -40,7 +40,7 @@ describe("vtl", () => {
             zone: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
     });
     it("should create a new power vs instance with SAP and create volumes", () => {
@@ -64,7 +64,7 @@ describe("vtl", () => {
             zone: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         craig.store.json.power_volumes,
@@ -178,7 +178,7 @@ describe("vtl", () => {
             zone: undefined,
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
   });
@@ -200,7 +200,7 @@ describe("vtl", () => {
           data: {
             name: "toad",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.vtl,
@@ -215,7 +215,7 @@ describe("vtl", () => {
             zone: null,
           },
         ],
-        "it should save instance"
+        "it should save instance",
       );
     });
     it("should update power vs volume names when updating sap instance name", () => {
@@ -241,7 +241,7 @@ describe("vtl", () => {
             sap: true,
             sap_profile: "ush1-4x128",
           },
-        }
+        },
       );
 
       assert.deepEqual(
@@ -259,12 +259,12 @@ describe("vtl", () => {
             zone: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         distinct(flatten(splat(craig.store.json.power_volumes, "attachments"))),
         ["toad"],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
     it("should update power vs volume sizes when updating sap instance profile", () => {
@@ -291,7 +291,7 @@ describe("vtl", () => {
             name: "frog",
             sap: true,
           },
-        }
+        },
       );
 
       assert.deepEqual(
@@ -309,14 +309,14 @@ describe("vtl", () => {
             zone: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         distinct(
-          flatten(splat(craig.store.json.power_volumes, "pi_volume_size"))
+          flatten(splat(craig.store.json.power_volumes, "pi_volume_size")),
         ),
         [undefined, 3851, 512, 1024],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
     it("should create power vs volumes when converting non-sap instance to sap", () => {
@@ -341,7 +341,7 @@ describe("vtl", () => {
             name: "frog",
             zone: "dal12",
           },
-        }
+        },
       );
 
       assert.deepEqual(
@@ -359,7 +359,7 @@ describe("vtl", () => {
             zone: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         craig.store.json.power_volumes,
@@ -478,7 +478,7 @@ describe("vtl", () => {
             zone: "dal12",
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
     it("should update power vs volume workspace when changing instance workspace", () => {
@@ -523,7 +523,7 @@ describe("vtl", () => {
             sap_profile: "ush1-4x128",
             workspace: "frog",
           },
-        }
+        },
       );
 
       assert.deepEqual(
@@ -540,7 +540,7 @@ describe("vtl", () => {
             zone: "dal12",
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         craig.store.json.power_volumes,
@@ -659,7 +659,7 @@ describe("vtl", () => {
             zone: "dal12",
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
     it("should delete power vs volumes when converting sap volume to non-sap", () => {
@@ -682,7 +682,7 @@ describe("vtl", () => {
             sap: true,
             name: "frog",
           },
-        }
+        },
       );
 
       assert.deepEqual(
@@ -700,7 +700,7 @@ describe("vtl", () => {
             zone: null,
           },
         ],
-        "it should create instance"
+        "it should create instance",
       );
       assert.deepEqual(
         craig.store.json.power_volumes,
@@ -711,7 +711,7 @@ describe("vtl", () => {
             workspace: null,
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
   });
@@ -728,7 +728,7 @@ describe("vtl", () => {
           data: {
             name: "toad",
           },
-        }
+        },
       );
       assert.deepEqual(craig.store.json.vtl, [], "it should delete instance");
     });
@@ -754,7 +754,7 @@ describe("vtl", () => {
             name: "frog",
             sap: true,
           },
-        }
+        },
       );
 
       assert.deepEqual(craig.store.json.vtl, [], "it should create instance");
@@ -767,7 +767,7 @@ describe("vtl", () => {
             workspace: null,
           },
         ],
-        "it should create correct volumes"
+        "it should create correct volumes",
       );
     });
   });
@@ -805,7 +805,7 @@ describe("vtl", () => {
             zone: null,
           },
         ],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
     it("should update ssh key, network, image, and priamry subnet when workspace is unfound", () => {
@@ -841,7 +841,7 @@ describe("vtl", () => {
             zone: null,
           },
         ],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
     it("should update primary_subnet when network interface is unfound", () => {
@@ -878,7 +878,7 @@ describe("vtl", () => {
             pi_storage_type: null,
           },
         ],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
     it("should not update image when still in existing workspace", () => {
@@ -890,7 +890,7 @@ describe("vtl", () => {
       });
       craig.power.network.create(
         { name: "test-network" },
-        { innerFormProps: { arrayParentName: "toad" } }
+        { innerFormProps: { arrayParentName: "toad" } },
       );
       craig.vtl.create({
         name: "toad",
@@ -912,7 +912,7 @@ describe("vtl", () => {
       assert.deepEqual(
         craig.store.json.vtl[0].image,
         "7100-05-09",
-        "it should initialize data"
+        "it should initialize data",
       );
     });
     it("should not update ssh key when still in existing workspace", () => {
@@ -924,11 +924,11 @@ describe("vtl", () => {
       });
       craig.power.ssh_keys.create(
         { name: "test-key" },
-        { innerFormProps: { arrayParentName: "toad" } }
+        { innerFormProps: { arrayParentName: "toad" } },
       );
       craig.power.network.create(
         { name: "test-network" },
-        { innerFormProps: { arrayParentName: "toad" } }
+        { innerFormProps: { arrayParentName: "toad" } },
       );
       craig.vtl.create({
         name: "toad",
@@ -950,7 +950,7 @@ describe("vtl", () => {
       assert.deepEqual(
         craig.store.json.vtl[0].ssh_key,
         "test-key",
-        "it should initialize data"
+        "it should initialize data",
       );
     });
     it("should update image when no longer in existing workspace", () => {
@@ -961,7 +961,7 @@ describe("vtl", () => {
       });
       craig.power.network.create(
         { name: "test-network" },
-        { innerFormProps: { arrayParentName: "toad" } }
+        { innerFormProps: { arrayParentName: "toad" } },
       );
       craig.vtl.create({
         name: "toad",
@@ -983,7 +983,7 @@ describe("vtl", () => {
       assert.deepEqual(
         craig.store.json.vtl[0].image,
         null,
-        "it should initialize data"
+        "it should initialize data",
       );
     });
   });
@@ -992,48 +992,48 @@ describe("vtl", () => {
       it("should hide when no workspace is selected or no vtl images", () => {
         assert.isTrue(
           craig.vtl.pi_proc_type.hideWhen({}, {}),
-          "it should be hidden"
+          "it should be hidden",
         );
         craig.power.create({ name: "bad" });
         assert.isTrue(
           craig.vtl.pi_proc_type.hideWhen(
             { workspace: "bad" },
-            { craig: craig }
+            { craig: craig },
           ),
-          "it should be hidden"
+          "it should be hidden",
         );
         assert.isTrue(
           craig.vtl.pi_processors.hideWhen(
             { workspace: "bad" },
-            { craig: craig }
+            { craig: craig },
           ),
-          "it should be hidden"
+          "it should be hidden",
         );
         assert.isTrue(
           craig.vtl.pi_memory.hideWhen({ workspace: "bad" }, { craig: craig }),
-          "it should be hidden"
+          "it should be hidden",
         );
         assert.isTrue(
           craig.vtl.storage_option.hideWhen(
             { workspace: "bad" },
-            { craig: craig }
+            { craig: craig },
           ),
-          "it should be hidden"
+          "it should be hidden",
         );
         assert.isTrue(
           craig.vtl.storage_option.hideWhen(
             { workspace: "bad", zone: "" },
-            { craig: craig }
+            { craig: craig },
           ),
-          "it should be hidden"
+          "it should be hidden",
         );
         craig.store.json.power[0].imageNames = ["VTL"];
         assert.isFalse(
           craig.vtl.storage_option.hideWhen(
             { workspace: "bad", zone: "yes" },
-            { craig: craig }
+            { craig: craig },
           ),
-          "it should not be hidden"
+          "it should not be hidden",
         );
       });
     });
@@ -1043,7 +1043,7 @@ describe("vtl", () => {
           craig.vtl.pi_license_repository_capacity.invalid({
             pi_license_repository_capacity: "",
           }),
-          "it should be true"
+          "it should be true",
         );
       });
       it("should return true when not whole number", () => {
@@ -1051,7 +1051,7 @@ describe("vtl", () => {
           craig.vtl.pi_license_repository_capacity.invalid({
             pi_license_repository_capacity: "@@@",
           }),
-          "it should be true"
+          "it should be true",
         );
       });
       it("should return false when whole number", () => {
@@ -1059,7 +1059,7 @@ describe("vtl", () => {
           craig.vtl.pi_license_repository_capacity.invalid({
             pi_license_repository_capacity: "1",
           }),
-          "it should be true"
+          "it should be true",
         );
       });
     });
@@ -1080,7 +1080,7 @@ describe("vtl", () => {
         assert.deepEqual(
           craig.vtl.image.groups({ workspace: "toad" }, { craig: craig }),
           ["VTL"],
-          "it should return list of images"
+          "it should return list of images",
         );
       });
     });

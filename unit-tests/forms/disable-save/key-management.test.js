@@ -13,9 +13,9 @@ describe("key management", () => {
             data: {
               name: "test",
             },
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
     it("should return true if an encryption key has an invalid key ring name", () => {
@@ -28,9 +28,9 @@ describe("key management", () => {
             data: {
               name: "test",
             },
-          }
+          },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
   });
@@ -44,9 +44,9 @@ describe("key management", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be false"
+      "it should be false",
     );
   });
   it("should return true if a key management instance has an invalid resource group", () => {
@@ -59,9 +59,9 @@ describe("key management", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be false"
+      "it should be false",
     );
   });
 });

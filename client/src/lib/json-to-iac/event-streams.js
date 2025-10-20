@@ -36,7 +36,7 @@ function ibmResourceInstanceEventStreams(eventStreams, config) {
   if (contains(eventStreams.plan, "enterprise")) {
     if (eventStreams.private_ip_allowlist) {
       eventStreamsValues.parameters.private_ip_allowlist = `${JSON.stringify(
-        eventStreams.private_ip_allowlist
+        eventStreams.private_ip_allowlist,
       ).replace(/\"/g, "")}`; // remove quotes to match intended params
     }
     ["throughput", "storage_size"].forEach((field) => {
@@ -44,10 +44,10 @@ function ibmResourceInstanceEventStreams(eventStreams, config) {
         field === "throughput"
           ? (eventStreamsValues.parameters[field] = eventStreams[field].slice(
               0,
-              -4
+              -4,
             ))
           : (eventStreamsValues.parameters[field] = String(
-              Number(eventStreams[field].slice(0, -2)) * 1024
+              Number(eventStreams[field].slice(0, -2)) * 1024,
             ));
       }
     });
@@ -76,7 +76,7 @@ function formatEventStreams(eventStreams, config) {
     "resource",
     "ibm_resource_instance",
     `${eventStreams.name} es`,
-    ibmResourceInstanceEventStreams(eventStreams, config).data
+    ibmResourceInstanceEventStreams(eventStreams, config).data,
   );
 }
 /**

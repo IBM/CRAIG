@@ -52,17 +52,17 @@ function ibmCloudProvider(config) {
             })
             .digit()
             .oneOrMore()
-            .done("g")
+            .done("g"),
         )
           ? zone.replace(/\d+/g, "")
           : config._options.region !== "us-east" &&
-            contains(["us-east", "wdc06", "wdc07"], zone)
-          ? "us-east"
-          : zone.match(/dal\d+/g)
-          ? "us-south"
-          : contains(["mad02", "mad04"], zone)
-          ? "mad"
-          : "${var.region}",
+              contains(["us-east", "wdc06", "wdc07"], zone)
+            ? "us-east"
+            : zone.match(/dal\d+/g)
+              ? "us-south"
+              : contains(["mad02", "mad04"], zone)
+                ? "mad"
+                : "${var.region}",
         zone: zone,
         ibmcloud_timeout: 60,
       });
@@ -71,7 +71,7 @@ function ibmCloudProvider(config) {
 
   return tfBlock(
     "IBM Cloud Provider",
-    "\n" + jsonToTf(JSON.stringify(data)) + "\n"
+    "\n" + jsonToTf(JSON.stringify(data)) + "\n",
   );
 }
 

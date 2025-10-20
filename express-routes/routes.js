@@ -10,7 +10,7 @@ const swaggerUi = require("swagger-ui-express");
 const yaml = require("js-yaml");
 const fs = require("fs");
 const apiSpec = yaml.load(
-  fs.readFileSync("./client/src/lib/docs/api-spec.yaml", "utf8")
+  fs.readFileSync("./client/src/lib/docs/api-spec.yaml", "utf8"),
 );
 
 // vsi
@@ -26,7 +26,7 @@ router.get("/cluster/versions", controller.clusterVersions);
 router.put("/schematics/tar/:workspaceName/:region", controller.uploadTar);
 router.post(
   "/schematics/:workspaceName/:region/:resourceGroup",
-  controller.createWorkspace
+  controller.createWorkspace,
 );
 
 // power

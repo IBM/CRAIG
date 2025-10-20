@@ -111,7 +111,7 @@ function craigToVpcModuleCdktf(craig) {
         "resource",
         "ibm_is_vpc_address_prefix",
         cidr.name,
-        cidr.data
+        cidr.data,
       );
     });
     vpc.acls.forEach((nacl) => {
@@ -121,7 +121,7 @@ function craigToVpcModuleCdktf(craig) {
         "resource",
         "ibm_is_network_acl",
         acl.name,
-        acl.data
+        acl.data,
       );
       nacl.rules.forEach((aclRule) => {
         let rule = ibmIsNetworkAclRule(aclRule);
@@ -130,7 +130,7 @@ function craigToVpcModuleCdktf(craig) {
           "resource",
           "ibm_is_network_acl_rule",
           rule.name,
-          rule.data
+          rule.data,
         );
       });
       vpcRgs.push(nacl.resource_group);
@@ -142,7 +142,7 @@ function craigToVpcModuleCdktf(craig) {
         "resource",
         "ibm_is_subnet",
         subnet.name,
-        subnet.data
+        subnet.data,
       );
       vpcRgs.push(sub.resource_group);
     });
@@ -154,7 +154,7 @@ function craigToVpcModuleCdktf(craig) {
         "resource",
         "ibm_is_public_gateway",
         pgw.name,
-        pgw.data
+        pgw.data,
       );
     });
 
@@ -166,7 +166,7 @@ function craigToVpcModuleCdktf(craig) {
           "resource",
           "ibm_is_security_group",
           group.name,
-          group.data
+          group.data,
         );
         sg.rules.forEach((rule) => {
           let data = ibmIsSecurityGroupRule(rule);
@@ -175,7 +175,7 @@ function craigToVpcModuleCdktf(craig) {
             "resource",
             "ibm_is_security_group_rule",
             data.name,
-            data.data
+            data.data,
           );
         });
       }
@@ -235,7 +235,7 @@ function craigToCdktf(craig) {
       "resource",
       "ibm_atracker_target",
       target.name,
-      target.data
+      target.data,
     );
     // atracker route
     let route = ibmAtrackerRoute(craig);
@@ -244,7 +244,7 @@ function craigToCdktf(craig) {
       "resource",
       "ibm_atracker_route",
       route.name,
-      route.data
+      route.data,
     );
   }
 
@@ -257,7 +257,7 @@ function craigToCdktf(craig) {
       "resource",
       "ibm_container_vpc_cluster",
       clusterData.name,
-      clusterData.data
+      clusterData.data,
     );
 
     // add worker pool
@@ -268,7 +268,7 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_container_vpc_worker_pool",
         poolData.name,
-        poolData.data
+        poolData.data,
       );
     });
   });
@@ -281,7 +281,7 @@ function craigToCdktf(craig) {
       "resource",
       "ibm_iam_authorization_policy",
       auth.name,
-      auth.data
+      auth.data,
     );
   });
 
@@ -329,7 +329,7 @@ function craigToCdktf(craig) {
           length: 8,
           special: false,
           upper: false,
-        }
+        },
       );
     }
     cdktfValues(
@@ -337,14 +337,14 @@ function craigToCdktf(craig) {
       getResourceOrData(cos),
       "ibm_resource_instance",
       instance.name,
-      instance.data
+      instance.data,
     );
     cdktfValues(
       cdktfJson,
       "resource",
       "ibm_iam_authorization_policy",
       auth.name,
-      auth.data
+      auth.data,
     );
     cos.buckets.forEach((bucket) => {
       let data = ibmCosBucket(bucket, cos, craig, true);
@@ -353,7 +353,7 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_cos_bucket",
         data.name,
-        data.data
+        data.data,
       );
     });
     cos.keys.forEach((key) => {
@@ -363,7 +363,7 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_resource_key",
         data.name,
-        data.data
+        data.data,
       );
     });
   });
@@ -379,14 +379,14 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_iam_authorization_policy",
         is.name,
-        is.data
+        is.data,
       );
       cdktfValues(
         cdktfJson,
         "resource",
         "ibm_iam_authorization_policy",
         serverProtect.name,
-        serverProtect.data
+        serverProtect.data,
       );
     }
     let instance = ibmResourceInstanceKms(kms, craig);
@@ -395,7 +395,7 @@ function craigToCdktf(craig) {
       getResourceOrData(kms),
       "ibm_resource_instance",
       instance.name,
-      instance.data
+      instance.data,
     );
 
     // create key rings
@@ -414,7 +414,7 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_kms_key_policies",
         policy.name,
-        policy.data
+        policy.data,
       );
     });
   });
@@ -427,7 +427,7 @@ function craigToCdktf(craig) {
         default: key.public_key,
         description: `Public SSH Key Value for ${titleCase(key.name).replace(
           /Ssh/g,
-          "SSH"
+          "SSH",
         )}`,
         type: "string",
         sensitive: true,
@@ -438,7 +438,7 @@ function craigToCdktf(craig) {
       getResourceOrData(key),
       "ibm_is_ssh_key",
       sshKey.name,
-      sshKey.data
+      sshKey.data,
     );
   });
 
@@ -455,7 +455,7 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_tg_connection",
         data.name,
-        data.data
+        data.data,
       );
     });
   });
@@ -470,14 +470,14 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_is_subnet_reserved_ip",
         reservedIp.name,
-        reservedIp.data
+        reservedIp.data,
       );
       cdktfValues(
         cdktfJson,
         "resource",
         "ibm_is_virtual_endpoint_gateway_ip",
         endpoint.name,
-        endpoint.data
+        endpoint.data,
       );
     });
     let gw = ibmIsVirtualEndpointGateway(vpe, craig);
@@ -486,7 +486,7 @@ function craigToCdktf(craig) {
       "resource",
       "ibm_is_virtual_endpoint_gateway",
       gw.name,
-      gw.data
+      gw.data,
     );
   });
 
@@ -504,7 +504,7 @@ function craigToCdktf(craig) {
           "resource",
           "ibm_is_instance",
           vsi.name,
-          vsi.data
+          vsi.data,
         );
         if (!contains(instance.image, "local")) {
           cdktfValues(cdktfJson, "data", "ibm_is_image", instance.image, {
@@ -518,7 +518,7 @@ function craigToCdktf(craig) {
               "resource",
               "ibm_is_volume",
               volume.name,
-              volume.data
+              volume.data,
             );
           });
         }
@@ -535,7 +535,7 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_is_vpn_server",
         server.name,
-        server.data
+        server.data,
       );
       vpnServer.routes.forEach((vpnRoute) => {
         let route = ibmIsVpnServerRoute(vpnServer, vpnRoute, craig);
@@ -544,7 +544,7 @@ function craigToCdktf(craig) {
           "resource",
           "ibm_is_vpn_server_route",
           route.name,
-          route.data
+          route.data,
         );
       });
     });
@@ -558,7 +558,7 @@ function craigToCdktf(craig) {
       "resource",
       "ibm_is_vpn_gateway",
       vpn.name,
-      vpn.data
+      vpn.data,
     );
   });
 
@@ -580,7 +580,7 @@ function craigToCdktf(craig) {
       "data",
       "template_file",
       template.name,
-      template.data
+      template.data,
     );
   }
 
@@ -593,7 +593,7 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_resource_instance",
         es.name,
-        es.data
+        es.data,
       );
     });
 
@@ -605,7 +605,7 @@ function craigToCdktf(craig) {
       getResourceOrData(instance),
       "ibm_resource_instance",
       appid.name,
-      appid.data
+      appid.data,
     );
     instance.keys.forEach((appidKey) => {
       let key = ibmResourceKeyAppId(appidKey, craig);
@@ -614,7 +614,7 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_resource_key",
         key.name,
-        key.data
+        key.data,
       );
     });
   });
@@ -628,14 +628,14 @@ function craigToCdktf(craig) {
       "resource",
       "ibm_resource_instance",
       secrets.name,
-      secrets.data
+      secrets.data,
     );
     cdktfValues(
       cdktfJson,
       "resource",
       "ibm_iam_authorization_policy",
       auth.name,
-      auth.data
+      auth.data,
     );
   });
 
@@ -648,7 +648,7 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_is_lb_pool",
         poolData.name,
-        poolData.data
+        poolData.data,
       );
       let lbData = ibmIsLb(lb, craig);
       cdktfValues(cdktfJson, "resource", "ibm_is_lb", lbData.name, lbData.data);
@@ -659,7 +659,7 @@ function craigToCdktf(craig) {
           "resource",
           "ibm_is_lb_pool_member",
           vsi.name,
-          vsi.data
+          vsi.data,
         );
       });
       let listenerData = ibmIsLbListener(lb, poolMemberData, true);
@@ -668,7 +668,7 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_is_lb_listener",
         listenerData.name,
-        listenerData.data
+        listenerData.data,
       );
     });
 
@@ -680,7 +680,7 @@ function craigToCdktf(craig) {
       "resource",
       "ibm_iam_account_settings",
       iam.name,
-      iam.data
+      iam.data,
     );
   }
 
@@ -693,7 +693,7 @@ function craigToCdktf(craig) {
       "resource",
       "ibm_iam_access_group",
       ag.name,
-      ag.data
+      ag.data,
     );
     // access group policies
     instance.policies.forEach((policy) => {
@@ -703,7 +703,7 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_iam_access_group_policy",
         agPolicy.name,
-        agPolicy.data
+        agPolicy.data,
       );
     });
     // access group dynamic policies
@@ -714,7 +714,7 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_iam_access_group_dynamic_rule",
         agDynamicPolicy.name,
-        agDynamicPolicy.data
+        agDynamicPolicy.data,
       );
     });
     // access group invites
@@ -725,7 +725,7 @@ function craigToCdktf(craig) {
         "resource",
         "ibm_iam_access_group_members",
         agInvite.name,
-        agInvite.data
+        agInvite.data,
       );
     }
   });
@@ -738,7 +738,7 @@ function craigToCdktf(craig) {
       "resource",
       "ibm_cbr_zone",
       cbrZone.name,
-      cbrZone.data
+      cbrZone.data,
     );
   });
 
@@ -750,7 +750,7 @@ function craigToCdktf(craig) {
       "resource",
       "ibm_cbr_rule",
       cbrRule.name,
-      cbrRule.data
+      cbrRule.data,
     );
   });
   eachKey(cdktfJson.variable, (tfVar) => {

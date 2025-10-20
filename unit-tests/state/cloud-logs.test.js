@@ -33,7 +33,7 @@ describe("cloud_logs", () => {
           metrics_bucket: null,
           enabled: true,
         },
-        "it should update cloud logs"
+        "it should update cloud logs",
       );
     });
   });
@@ -44,38 +44,38 @@ describe("cloud_logs", () => {
           {},
           {
             craig: craig,
-          }
+          },
         ),
         "iac-cloud-logs",
-        "it should return correct helper text"
+        "it should return correct helper text",
       );
     });
     it("should return false when not enabled for resource group invalid", () => {
       assert.isFalse(
         craig.cloud_logs.resource_group.invalid({ enabled: false }),
-        "it should be false"
+        "it should be false",
       );
     });
     it("should return a list of cos bucksts", () => {
       assert.deepEqual(
         craig.cloud_logs.cos.groups({}, { craig: craig }),
         ["(Disabled)", "atracker-cos", "cos"],
-        "it should return list of groups"
+        "it should return list of groups",
       );
     });
     it("should have correct groups for logs bucket", () => {
       assert.deepEqual(
         craig.cloud_logs.logs_bucket.groups({ cos: "cos" }, { craig: craig }),
         ["(Disabled)", "management-bucket", "workload-bucket"],
-        "it should return list of buckets"
+        "it should return list of buckets",
       );
       assert.deepEqual(
         craig.cloud_logs.logs_bucket.groups(
           { cos: "(Disabled)" },
-          { craig: craig }
+          { craig: craig },
         ),
         ["(Disabled)"],
-        "it should return list of buckets"
+        "it should return list of buckets",
       );
     });
 
@@ -83,18 +83,18 @@ describe("cloud_logs", () => {
       assert.deepEqual(
         craig.cloud_logs.metrics_bucket.groups(
           { cos: "cos" },
-          { craig: craig }
+          { craig: craig },
         ),
         ["(Disabled)", "management-bucket", "workload-bucket"],
-        "it should return list of buckets"
+        "it should return list of buckets",
       );
       assert.deepEqual(
         craig.cloud_logs.metrics_bucket.groups(
           { cos: "(Disabled)" },
-          { craig: craig }
+          { craig: craig },
         ),
         ["(Disabled)"],
-        "it should return list of buckets"
+        "it should return list of buckets",
       );
     });
   });

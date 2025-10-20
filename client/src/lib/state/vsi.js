@@ -195,7 +195,7 @@ function updateVsi(config, key) {
         let vsiVpc = getObjectFromArray(
           config.store.json.vpcs,
           "name",
-          deployment.vpc
+          deployment.vpc,
         );
         deployment.subnets = deployment.subnets.filter((subnet) => {
           if (splatContains(vsiVpc.subnets, "name", subnet)) {
@@ -226,12 +226,12 @@ function updateVsi(config, key) {
               deployment?.reserved_ips[subnetIndex][vsi]
             ) {
               nextReservedIps[subnetIndex].push(
-                deployment.reserved_ips[subnetIndex][vsi]
+                deployment.reserved_ips[subnetIndex][vsi],
               );
             } else {
               nextReservedIps[subnetIndex].push("");
             }
-          }
+          },
         );
       });
       deployment.reserved_ips = nextReservedIps;
@@ -391,15 +391,15 @@ function reservedIpInputChange(fieldToUpdate) {
               stateData.reserved_ips[subnetIndex]
                 ? !isNullOrEmptyString(
                     stateData.reserved_ips[subnetIndex][vsi],
-                    true
+                    true,
                   )
                 : false
             ) {
               reservedIps[subnetIndex].push(
-                stateData.reserved_ips[subnetIndex][vsi]
+                stateData.reserved_ips[subnetIndex][vsi],
               );
             } else reservedIps[subnetIndex].push("");
-          }
+          },
         );
       });
     stateData.reserved_ips = reservedIps;
@@ -433,7 +433,7 @@ function initVsiStore(store) {
         "snapshot",
         "reserved_ips",
       ],
-      "vsi"
+      "vsi",
     ),
     schema: {
       name: nameField("vsi", {
@@ -527,7 +527,7 @@ function initVsiStore(store) {
         default: "",
         invalid: fieldIsNotWholeNumber("vsi_per_subnet", 1, 10),
         invalidText: unconditionalInvalidText(
-          "Enter a whole number between 1 and 10"
+          "Enter a whole number between 1 and 10",
         ),
         labelText: "VSI Per Subnet",
         onInputChange: reservedIpInputChange("vsi_per_subnet"),
@@ -600,8 +600,8 @@ function initVsiStore(store) {
             return isNullOrEmptyString(ipRef, true)
               ? false
               : !isIpv4CidrOrAddress(ipRef)
-              ? true
-              : contains(ipRef, "/");
+                ? true
+                : contains(ipRef, "/");
           } else {
             let invalidReservedIps = false;
             stateData.reserved_ips.forEach((row) => {
@@ -627,7 +627,7 @@ function initVsiStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "encryption_key", "capacity"],
           "vsi",
-          "volumes"
+          "volumes",
         ),
         schema: {
           name: nameField("volume"),
@@ -656,7 +656,7 @@ function initVsiStore(store) {
               );
             },
             invalidText: unconditionalInvalidText(
-              "Must ba whole number between 10 and 16000"
+              "Must ba whole number between 10 and 16000",
             ),
           },
         },

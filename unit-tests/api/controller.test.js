@@ -33,7 +33,7 @@ describe("controller", () => {
     it("should return a access token", () => {
       let { axios } = initMockAxios(
         { access_token: "token", expiration: 1 },
-        false
+        false,
       );
       let testController = new controller(axios);
       return testController.getBearerToken(requestConfig).then((data) => {
@@ -46,7 +46,7 @@ describe("controller", () => {
           access_token: "token",
           expiration: Math.floor(Date.now() / 1000) + 100,
         },
-        false
+        false,
       );
       let testController = new controller(axios);
       return testController.getBearerToken(requestConfig).then((data) => {
@@ -60,7 +60,7 @@ describe("controller", () => {
         assert.deepEqual(
           data,
           { stderr: "promise rejected" },
-          "it should return correct data"
+          "it should return correct data",
         );
       });
     });
@@ -82,7 +82,7 @@ describe("controller", () => {
         assert.deepEqual(
           data,
           { stderr: "No API_KEY defined" },
-          "it should return correct data"
+          "it should return correct data",
         );
 
         process.env.API_KEY = API_KEY;

@@ -15,9 +15,9 @@ describe("acls", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a acl has an invalid duplicate name", () => {
@@ -56,9 +56,9 @@ describe("acls", () => {
           data: {
             name: "hi",
           },
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
   it("should return false if network order card", () => {
@@ -75,9 +75,9 @@ describe("acls", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   describe("acl rules", () => {
@@ -127,9 +127,9 @@ describe("acls", () => {
               name: "hi",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should return true if a acl rule in a modal has an invalid duplicate name", () => {
@@ -148,9 +148,9 @@ describe("acls", () => {
               name: "hi",
             },
             parent_name: "management",
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should return true if a acl rule has an invalid source", () => {
@@ -168,9 +168,9 @@ describe("acls", () => {
             data: {
               name: "hi",
             },
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should return true if a acl rule has an invalid destination", () => {
@@ -190,9 +190,9 @@ describe("acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a acl rule has an invalid source_port_max", () => {
@@ -216,9 +216,9 @@ describe("acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a acl rule has an invalid source_port_min", () => {
@@ -243,9 +243,9 @@ describe("acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a acl rule has an invalid port_max", () => {
@@ -271,9 +271,9 @@ describe("acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a acl rule has an invalid port_min", () => {
@@ -300,9 +300,9 @@ describe("acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a icmp rule has invalid code", () => {
@@ -329,9 +329,9 @@ describe("acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return true if a icmp rule has invalid type", () => {
@@ -359,9 +359,9 @@ describe("acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return false if a acl rule with icmp protocol is valid", () => {
@@ -386,9 +386,9 @@ describe("acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return false if a acl rule with all protocol is valid", () => {
@@ -410,9 +410,9 @@ describe("acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should return false if a acl rule is valid", () => {
@@ -439,9 +439,9 @@ describe("acls", () => {
               name: "frog",
             },
             parent_name: "frog",
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
   });

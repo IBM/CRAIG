@@ -17,9 +17,9 @@ describe("vpn gateway", () => {
           data: {
             name: "@@@",
           },
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
   it("should return true if vpn gateway with no subnet", () => {
@@ -37,9 +37,9 @@ describe("vpn gateway", () => {
           data: {
             name: "hi",
           },
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
   it("should return true if vpn gateway with no vpc", () => {
@@ -57,9 +57,9 @@ describe("vpn gateway", () => {
           data: {
             name: "hi",
           },
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
   it("should return true if vpn gateway with no rg", () => {
@@ -77,9 +77,9 @@ describe("vpn gateway", () => {
           data: {
             name: "hi",
           },
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
 });

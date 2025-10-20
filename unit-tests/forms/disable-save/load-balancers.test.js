@@ -20,9 +20,9 @@ describe("load_balancers", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a load balancer with a listener port that is not a whole number", () => {
@@ -54,9 +54,9 @@ describe("load_balancers", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a load balancer with a health delay equal to health timeout", () => {
@@ -88,9 +88,9 @@ describe("load_balancers", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a load balancer with an invalid health delay", () => {
@@ -122,9 +122,9 @@ describe("load_balancers", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a load balancer has no deployment vsi", () => {
@@ -156,9 +156,9 @@ describe("load_balancers", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a load balancer has no sg", () => {
@@ -190,9 +190,9 @@ describe("load_balancers", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a load balancer with a non-whole number connection limit", () => {
@@ -224,9 +224,9 @@ describe("load_balancers", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a load balancer with a connection limit out of range", () => {
@@ -258,9 +258,9 @@ describe("load_balancers", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a load balancer with a port limit out of range", () => {
@@ -292,9 +292,9 @@ describe("load_balancers", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a load balancer with a health_timeout limit out of range", () => {
@@ -326,9 +326,9 @@ describe("load_balancers", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a load balancer with a health_delay limit out of range", () => {
@@ -360,9 +360,9 @@ describe("load_balancers", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a load balancer with a health_retries limit out of range", () => {
@@ -394,9 +394,9 @@ describe("load_balancers", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
 });

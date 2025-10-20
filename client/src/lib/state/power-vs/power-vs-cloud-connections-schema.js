@@ -44,7 +44,7 @@ function powerVsCloudConnectionsSchema() {
         );
       },
       invalidText: unconditionalInvalidText(
-        "Select at least one transit gateway"
+        "Select at least one transit gateway",
       ),
       groups: function (stateData, componentProps) {
         return splat(componentProps.craig.store.json.transit_gateways, "name");

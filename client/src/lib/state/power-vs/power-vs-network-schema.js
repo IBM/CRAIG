@@ -58,7 +58,7 @@ function powerVsNetworkSchema() {
         } else if (isIpv4CidrOrAddress(stateData[cidrField]) && cidrRange) {
           let invalidCidr = hasOverlappingCidr(componentProps.craig)(
             stateData,
-            componentProps
+            componentProps,
           );
           if (invalidCidr.invalid) {
             return `Warning: CIDR overlaps with ` + invalidCidr.cidr;
@@ -76,9 +76,9 @@ function powerVsNetworkSchema() {
         return stateData.use_data
           ? false
           : isString(stateData?.pi_dns) || !stateData.pi_dns
-          ? true
-          : contains(stateData.pi_dns[0], "/") ||
-            !isIpv4CidrOrAddress(stateData.pi_dns[0]);
+            ? true
+            : contains(stateData.pi_dns[0], "/") ||
+              !isIpv4CidrOrAddress(stateData.pi_dns[0]);
       },
       invalidText: unconditionalInvalidText("Invalid IP Address"),
       onInputChange: function (stateData, targetData) {
@@ -114,7 +114,7 @@ function powerVsNetworkSchema() {
       helperText: unconditionalInvalidText(""),
       placeholder: "9000",
       invalidText: unconditionalInvalidText(
-        "Select a whole number between 1450 and 9000"
+        "Select a whole number between 1450 and 9000",
       ),
       invalid: function (stateData) {
         return stateData.use_data

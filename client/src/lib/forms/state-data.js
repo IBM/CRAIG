@@ -25,7 +25,7 @@ function getTierSubnets(tier, vpc) {
                   .literal("-zone-")
                   .digit()
                   .stringEnd()
-                  .done("g")
+                  .done("g"),
               ) !== null
             : contains(tier.subnets, subnet.name)
         ) {
@@ -42,7 +42,7 @@ function getTierSubnets(tier, vpc) {
               .literal("-zone-")
               .digit()
               .stringEnd()
-              .done("g")
+              .done("g"),
           ) !== null &&
           subnets.length < stateData.zones
         ) {

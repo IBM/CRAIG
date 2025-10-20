@@ -16,9 +16,9 @@ describe("secrets manager", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if a secrets manager instance has an invalid resource group", () => {
@@ -31,9 +31,9 @@ describe("secrets manager", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be false"
+      "it should be false",
     );
   });
   it("should return true if a secrets manager instance has an invalid encryption key", () => {
@@ -51,9 +51,9 @@ describe("secrets manager", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be false"
+      "it should be false",
     );
   });
 });

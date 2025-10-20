@@ -33,7 +33,7 @@ describe("text input functions", () => {
       };
       assert.throws(
         task,
-        "dynamicTextInputProps expects props.field.disabled to evaluate to boolean, got string"
+        "dynamicTextInputProps expects props.field.disabled to evaluate to boolean, got string",
       );
     });
     it("should throw an error if invalid does not return a boolean", () => {
@@ -64,7 +64,7 @@ describe("text input functions", () => {
       };
       assert.throws(
         task,
-        "dynamicTextInputProps expects props.field.invalid to evaluate to boolean, got string"
+        "dynamicTextInputProps expects props.field.invalid to evaluate to boolean, got string",
       );
     });
     it("should throw an error if invalidText does not return a string", () => {
@@ -95,7 +95,7 @@ describe("text input functions", () => {
       };
       assert.throws(
         task,
-        "dynamicTextInputProps expects props.field.invalidText to evaluate to string, got boolean"
+        "dynamicTextInputProps expects props.field.invalidText to evaluate to string, got boolean",
       );
     });
     it("should throw an error if disabledText does not return a string", () => {
@@ -126,7 +126,7 @@ describe("text input functions", () => {
       };
       assert.throws(
         task,
-        "dynamicTextInputProps expects props.field.disabledText to evaluate to string, got number"
+        "dynamicTextInputProps expects props.field.disabledText to evaluate to string, got number",
       );
     });
     it("should return the correct props for text input when not disabled", () => {
@@ -177,7 +177,7 @@ describe("text input functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when not disabled and override value", () => {
@@ -229,7 +229,7 @@ describe("text input functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when disabled", () => {
@@ -281,7 +281,7 @@ describe("text input functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct placeholder prop when placeholder is a function", () => {
@@ -336,7 +336,7 @@ describe("text input functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when disabled and read only is a function", () => {
@@ -390,7 +390,7 @@ describe("text input functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when not disabled and has override label text", () => {
@@ -442,7 +442,7 @@ describe("text input functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when not disabled and has a tooltip", () => {
@@ -494,7 +494,7 @@ describe("text input functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when not disabled and has placeholder text", () => {
@@ -547,7 +547,7 @@ describe("text input functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when not disabled and is optional", () => {
@@ -599,7 +599,7 @@ describe("text input functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when not disabled and no helper text", () => {
@@ -648,7 +648,7 @@ describe("text input functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when not disabled and no helper text and is imported subnet", () => {
@@ -700,7 +700,7 @@ describe("text input functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when not disabled and no helper text and wide", () => {
@@ -750,7 +750,7 @@ describe("text input functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for text input when not disabled and field.onRender is a function", () => {
@@ -801,7 +801,7 @@ describe("text input functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
   });

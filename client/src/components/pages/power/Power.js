@@ -84,10 +84,10 @@ class PowerDiagram extends React.Component {
     return this.state.selectedItem === "power"
       ? IbmPowerVs
       : this.state.selectedItem === "vtl"
-      ? Voicemail
-      : this.state.selectedItem === "power_volumes"
-      ? FileStorage
-      : VirtualMachine;
+        ? Voicemail
+        : this.state.selectedItem === "power_volumes"
+          ? FileStorage
+          : VirtualMachine;
   }
 
   resetSelection() {
@@ -175,8 +175,8 @@ class PowerDiagram extends React.Component {
         value === "Power Volume"
           ? "power_volumes"
           : value === "FalconStor VTL"
-          ? "vtl"
-          : "power_instances",
+            ? "vtl"
+            : "power_instances",
     });
   }
 
@@ -214,7 +214,7 @@ class PowerDiagram extends React.Component {
               : (stateData, componentProps) => {
                   craig[this.state.modalService].create(
                     stateData,
-                    componentProps
+                    componentProps,
                   );
                   if (this.state.selectWhenDone) {
                     this.setState({
@@ -233,7 +233,7 @@ class PowerDiagram extends React.Component {
                       },
                       () => {
                         this.resetSelection();
-                      }
+                      },
                     );
                   }
                 }
@@ -260,10 +260,10 @@ class PowerDiagram extends React.Component {
                 return this.state.modalService === "power_volumes"
                   ? "Power Volume"
                   : this.state.modalService === "vtl"
-                  ? "FalconStor VTL"
-                  : isNullOrEmptyString(this.state.modalService, true)
-                  ? ""
-                  : "Power Instance";
+                    ? "FalconStor VTL"
+                    : isNullOrEmptyString(this.state.modalService, true)
+                      ? ""
+                      : "Power Instance";
               },
             }}
             parentProps={this.props}
@@ -280,8 +280,8 @@ class PowerDiagram extends React.Component {
                 this.state.modalService === "power_volumes"
                   ? "Power Volume"
                   : this.state.modalService === "vtl"
-                  ? "FalconStor VTL"
-                  : "Power Instance"
+                    ? "FalconStor VTL"
+                    : "Power Instance"
               }`}
               className="marginBottomSmall"
               type="subHeading"
@@ -301,8 +301,8 @@ class PowerDiagram extends React.Component {
                 this.state.modalService === "vtl"
                   ? "VTL"
                   : this.state.modalService === "power_volumes"
-                  ? undefined
-                  : "Power Instances"
+                    ? undefined
+                    : "Power Instances"
               }
               data={
                 this.state.overrideData
@@ -321,7 +321,7 @@ class PowerDiagram extends React.Component {
                   disableSave(
                     this.props.modalService,
                     this.state,
-                    this.props
+                    this.props,
                   ) === false
                 ) {
                   this.props.enableModal();
@@ -343,7 +343,7 @@ class PowerDiagram extends React.Component {
               : (stateData, componentProps) => {
                   craig[this.state.selectedItem].create(
                     stateData,
-                    componentProps
+                    componentProps,
                   );
 
                   this.resetSelection();
@@ -394,7 +394,7 @@ class PowerDiagram extends React.Component {
             formName="Manage Power VS"
             nestedDocs={docTabs(
               ["Power VS", "Power VS Instances (LPARs)", "Power Volumes"],
-              craig
+              craig,
             )}
             tfTabs={[
               {
@@ -538,10 +538,10 @@ class PowerDiagram extends React.Component {
                             this.state.selectedItem === "power"
                               ? "Workspace"
                               : this.state.selectedItem === "power_instances"
-                              ? "Instance"
-                              : this.state.selectedItem === "vtl"
-                              ? "FalconStor VTL"
-                              : "Volume"
+                                ? "Instance"
+                                : this.state.selectedItem === "vtl"
+                                  ? "FalconStor VTL"
+                                  : "Volume"
                           } ${
                             craig.store.json[this.state.selectedItem][
                               this.state.selectedIndex
@@ -551,7 +551,7 @@ class PowerDiagram extends React.Component {
                             form: forms[this.state.selectedItem],
                             formName: contains(
                               ["power_instances", "vtl"],
-                              this.state.selectedItem
+                              this.state.selectedItem,
                             )
                               ? "Power Instances"
                               : undefined,
@@ -588,7 +588,7 @@ class PowerDiagram extends React.Component {
                                       "power",
                                       craig.store.json[this.state.selectedItem][
                                         this.state.selectedIndex
-                                      ].workspace
+                                      ].workspace,
                                     ).data.zone,
                                     attachments: [
                                       craig.store.json[this.state.selectedItem][

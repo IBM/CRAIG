@@ -14,7 +14,7 @@ describe("docs functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct data when text is not _default_includes", () => {
@@ -29,7 +29,7 @@ describe("docs functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

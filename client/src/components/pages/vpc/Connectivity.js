@@ -124,7 +124,7 @@ class VpcConnectivityPage extends React.Component {
           name="Connectivity"
           nestedDocs={docTabs(
             ["Cloud Internet Services", "Transit Gateways"],
-            craig
+            craig,
           )}
           tfTabs={[
             {

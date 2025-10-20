@@ -10,7 +10,7 @@ describe("state data", () => {
     it("should return subnets from list", () => {
       let actualData = getTierSubnets(
         { name: "vsi", zones: 3 },
-        legacyDefaultVpcs()[0]
+        legacyDefaultVpcs()[0],
       )({ zones: 2 });
       let expectedData = [
         {
@@ -53,7 +53,7 @@ describe("state data", () => {
           select_zones: [1, 2, 3],
           subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
         },
-        vpc
+        vpc,
       )({
         name: "frog",
         zones: undefined,
@@ -113,7 +113,7 @@ describe("state data", () => {
           select_zones: [3],
           subnets: ["vsi-zone-3"],
         },
-        vpc
+        vpc,
       )({
         name: "frog",
         zones: undefined,
@@ -143,7 +143,7 @@ describe("state data", () => {
     it("should return subnets from list", () => {
       let actualData = getSubnetTierStateData(
         { name: "vsi", zones: 3 },
-        legacyDefaultVpcs()[0]
+        legacyDefaultVpcs()[0],
       );
       let expectedData = {
         hide: true,
@@ -182,7 +182,7 @@ describe("state data", () => {
           select_zones: [1, 2, 3],
           subnets: [],
         },
-        vpc
+        vpc,
       );
       assert.deepEqual(actualData.networkAcl, "-", "it should return vpcs");
     });

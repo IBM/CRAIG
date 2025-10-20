@@ -25,7 +25,7 @@ describe("formatJson", () => {
       assert.deepEqual(
         formatConfig(testJson, false),
         prettyJSON(testJson),
-        "it should return formatted json when isCopy is false"
+        "it should return formatted json when isCopy is false",
       );
     });
 
@@ -33,7 +33,7 @@ describe("formatJson", () => {
       assert.deepEqual(
         formatConfig(testJson, true),
         JSON.stringify(testJson),
-        "it should return stringified json when isCopy is true"
+        "it should return stringified json when isCopy is true",
       );
     });
   });
@@ -50,7 +50,7 @@ describe("formatJson", () => {
             name: "management",
           },
           craig: newState(),
-        }
+        },
       );
       let expectedData = `{
   "action": "allow",
@@ -85,7 +85,7 @@ describe("formatJson", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct security group rule data", () => {
@@ -97,7 +97,7 @@ describe("formatJson", () => {
         {
           isAclForm: false,
           craig: newState(),
-        }
+        },
       );
       let expectedData = `{
   "direction": "inbound",
@@ -124,7 +124,7 @@ describe("formatJson", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -269,7 +269,7 @@ describe("formatJson", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -422,7 +422,7 @@ describe("formatJson", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

@@ -117,7 +117,7 @@ class Projects extends React.Component {
             uploadedJsonData: undefined,
           });
         }
-      }
+      },
     );
   }
 
@@ -161,7 +161,7 @@ class Projects extends React.Component {
             this.props.onProjectSelect(
               this.props.projects[keyName].project_name,
               "",
-              this.afterValidation
+              this.afterValidation,
             );
           });
         }
@@ -200,7 +200,7 @@ class Projects extends React.Component {
             splatContains(
               this.state.invalidItems.power_images,
               "workspace",
-              workspace.name
+              workspace.name,
             )
           ) {
             // get a list of image objects for this workspace
@@ -209,7 +209,7 @@ class Projects extends React.Component {
                 if (image.workspace === workspace.name) {
                   return image;
                 }
-              }
+              },
             );
 
             // set image names to filter out images
@@ -240,7 +240,7 @@ class Projects extends React.Component {
               ? splatContains(
                   this.state.invalidItems[item],
                   "vsi",
-                  resource.name
+                  resource.name,
                 )
               : contains(this.state.invalidItems[item], resource.name)
           ) {
@@ -379,7 +379,7 @@ class Projects extends React.Component {
                       method: "PUT",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify(this.props.projects[keyName].json),
-                    }
+                    },
                   )
                     .then((res) => res.json())
                     .then((data) => {
@@ -414,10 +414,10 @@ class Projects extends React.Component {
                       });
                       this.props.notify(notification);
                     });
-                }
+                },
               );
             }
-          }
+          },
         );
       });
     };
@@ -550,10 +550,10 @@ class Projects extends React.Component {
                     onViewClick={this.onViewClick(keyName)}
                     onDeleteClick={this.onDeleteClick(keyName)}
                     onSchematicsUploadClick={this.onSchematicsUploadClick(
-                      keyName
+                      keyName,
                     )}
                     onCreateWorkspaceClick={this.onCreateWorkspaceClick(
-                      keyName
+                      keyName,
                     )}
                   />
                 ))}
@@ -583,7 +583,7 @@ class Projects extends React.Component {
                   true,
                   () => {
                     this.setState({ showValidationModal: false });
-                  }
+                  },
                 );
               });
             }}
@@ -632,7 +632,7 @@ class Projects extends React.Component {
             // props for retry
             projects={this.props.projects}
             retryCallback={this.onSchematicsUploadClick(
-              this.state.clickedProject
+              this.state.clickedProject,
             )}
             lastWorkspaceName={this.state.clickedWorkspace}
           />
@@ -660,9 +660,9 @@ class Projects extends React.Component {
                     stateData,
                     componentProps,
                     setCurrentProject,
-                    this.afterValidation
+                    this.afterValidation,
                   );
-                }
+                },
               );
             }}
           />

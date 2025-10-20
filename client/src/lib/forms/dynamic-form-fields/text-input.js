@@ -54,33 +54,33 @@ function dynamicTextInputProps(props) {
     props.handleInputChange,
     "props.field.disabledText",
     "Function",
-    props.field.disabledText
+    props.field.disabledText,
   );
 
   let isDisabled = disabledReturnsBooleanCheck(props, "dynamicTextInputProps");
   let disabledText = fieldFunctionReturnsStringCheck(
     props,
     "dynamicTextInputProps",
-    "disabledText"
+    "disabledText",
   );
   let invalid = invalidReturnsBooleanCheck(props, "dynamicTextInputProps");
   let invalidText = fieldFunctionReturnsStringCheck(
     props,
     "dynamicTextInputProps",
-    "invalidText"
+    "invalidText",
   );
 
   let placeholder = props.field.placeholder
     ? props.field.placeholder
     : (props.field.optional ? "(Optional) " : "") +
       `my-${kebabCase(props.parentProps.formName)}-${kebabCase(
-        props.name
+        props.name,
       )}`.replace(/--/g, "-");
   let labelText = props.field.tooltip
     ? ""
     : props.field.labelText
-    ? props.field.labelText
-    : titleCase(props.name);
+      ? props.field.labelText
+      : titleCase(props.name);
   return {
     name: props.name,
     id: dynamicFieldId(props),
@@ -88,7 +88,7 @@ function dynamicTextInputProps(props) {
       "leftTextAlign",
       props.field,
       props.parentState.use_data === true &&
-        props.parentProps.formName === "subnet"
+        props.parentProps.formName === "subnet",
     ),
     labelText: labelText,
     placeholder: isFunction(placeholder)
@@ -98,8 +98,8 @@ function dynamicTextInputProps(props) {
     value: props.value
       ? props.value
       : props.field.onRender
-      ? props.field.onRender(props.parentState, props.parentProps)
-      : props.parentState[props.name] || "",
+        ? props.field.onRender(props.parentState, props.parentProps)
+        : props.parentState[props.name] || "",
     onChange: props.handleInputChange,
     maxLength: props.field.maxLength,
     invalid: invalid,
@@ -108,15 +108,19 @@ function dynamicTextInputProps(props) {
     helperText: isDisabled
       ? disabledText
       : isFunction(props.field.helperText)
-      ? props.field.helperText(props.parentState, props.parentProps)
-      : props.field.onRender
-      ? props.field.onRender(props.parentState, props.parentProps, props.index)
-      : null,
+        ? props.field.helperText(props.parentState, props.parentProps)
+        : props.field.onRender
+          ? props.field.onRender(
+              props.parentState,
+              props.parentProps,
+              props.index,
+            )
+          : null,
     readOnly: !props.field.readOnly
       ? false
       : isFunction(props.field.readOnly)
-      ? props.field.readOnly(props.parentState, props.parentProps)
-      : props.field.readOnly,
+        ? props.field.readOnly(props.parentState, props.parentProps)
+        : props.field.readOnly,
   };
 }
 

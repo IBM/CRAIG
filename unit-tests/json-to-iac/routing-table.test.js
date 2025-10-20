@@ -20,7 +20,7 @@ describe("routing table", () => {
           _options: {
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
@@ -35,7 +35,7 @@ resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should format a routing table with vpc from data", () => {
@@ -60,7 +60,7 @@ resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
               use_data: true,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
@@ -75,7 +75,7 @@ resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should format a routing table with advertised routes", () => {
@@ -92,7 +92,7 @@ resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
           _options: {
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
@@ -110,7 +110,7 @@ resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
   });
@@ -130,7 +130,7 @@ resource "ibm_is_vpc_routing_table" "management_vpc_routing_table_table" {
             region: "us-south",
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_test_route_route" {
@@ -146,7 +146,7 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should format routing table route with advertise and priority", () => {
@@ -166,7 +166,7 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
             region: "us-south",
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_test_route_route" {
@@ -184,7 +184,7 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should format routing table route with deliver and next hop", () => {
@@ -203,7 +203,7 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
             region: "us-south",
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_test_route_route" {
@@ -219,7 +219,7 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
   });
@@ -322,7 +322,7 @@ resource "ibm_is_vpc_routing_table_route" "management_vpc_routing_table_table_te
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
   });

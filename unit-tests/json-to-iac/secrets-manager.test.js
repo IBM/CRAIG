@@ -60,7 +60,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return auth policy tf"
+        "it should return auth policy tf",
       );
     });
     it("should return correct data for secrets manager with kms from data", () => {
@@ -112,7 +112,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return auth policy tf"
+        "it should return auth policy tf",
       );
     });
   });
@@ -159,7 +159,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_to_kms_kms_policy" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 data "ibm_resource_instance" "secrets_manager_secrets_manager" {
@@ -169,7 +169,7 @@ data "ibm_resource_instance" "secrets_manager_secrets_manager" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return auth policy tf"
+        "it should return auth policy tf",
       );
     });
     it("should return correct data for secrets manager", () => {
@@ -213,7 +213,7 @@ data "ibm_resource_instance" "secrets_manager_secrets_manager" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
@@ -241,7 +241,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return auth policy tf"
+        "it should return auth policy tf",
       );
     });
     it("should return correct data for secrets manager with trial plan", () => {
@@ -286,7 +286,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
@@ -314,7 +314,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return auth policy tf"
+        "it should return auth policy tf",
       );
     });
     it("should return correct data for secrets manager with invalid encryption key", () => {
@@ -358,7 +358,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
@@ -383,7 +383,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return auth policy tf"
+        "it should return auth policy tf",
       );
     });
   });
@@ -404,7 +404,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
             region: "us-south",
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_sm_kv_secret" "secrets_manager_cos_secret" {
@@ -435,7 +435,7 @@ resource "ibm_sm_kv_secret" "secrets_manager_cos_secret" {
             region: "us-south",
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_sm_kv_secret" "secrets_manager_imported_cert" {
@@ -461,7 +461,7 @@ resource "ibm_sm_kv_secret" "secrets_manager_imported_cert" {
             region: "us-south",
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_sm_kv_secret" "secrets_manager_cos_bind_key" {
@@ -489,7 +489,7 @@ resource "ibm_sm_kv_secret" "secrets_manager_cos_bind_key" {
             region: "us-south",
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_sm_kv_secret" "secrets_manager_appid_default_key_test" {
@@ -515,7 +515,7 @@ resource "ibm_sm_kv_secret" "secrets_manager_appid_default_key_test" {
             region: "us-south",
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_sm_kv_secret" "secrets_manager_logdna_key" {
@@ -541,7 +541,7 @@ resource "ibm_sm_kv_secret" "secrets_manager_logdna_key" {
             region: "us-south",
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_sm_kv_secret" "secrets_manager_sysdig_key" {
@@ -762,7 +762,7 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should have the correct terraform code"
+        "it should have the correct terraform code",
       );
     });
     it("should create the correct terraform code with data source", () => {
@@ -861,7 +861,7 @@ data "ibm_resource_instance" "secrets_manager_secrets_manager" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should have the correct terraform code"
+        "it should have the correct terraform code",
       );
     });
     it("should create the correct terraform code when invalid kms ref", () => {
@@ -974,7 +974,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should have the correct terraform code"
+        "it should have the correct terraform code",
       );
     });
     it("should create the correct terraform code with no secrets manager instances", () => {
@@ -1056,7 +1056,7 @@ resource "ibm_resource_instance" "secrets_manager_secrets_manager" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should have the correct terraform code"
+        "it should have the correct terraform code",
       );
     });
     it("should create the correct terraform code when all kms have secrets auth", () => {
@@ -1233,7 +1233,7 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should have the correct terraform code"
+        "it should have the correct terraform code",
       );
     });
     it("should create the correct terraform code with a secret", () => {
@@ -1460,7 +1460,7 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should have the correct terraform code"
+        "it should have the correct terraform code",
       );
     });
     it("should create the correct terraform code with a secret", () => {
@@ -1723,7 +1723,7 @@ resource "ibm_resource_instance" "secrets_manager3_secrets_manager" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should have the correct terraform code"
+        "it should have the correct terraform code",
       );
     });
     it("should create the correct terraform code with ssl certificates", () => {
@@ -2047,7 +2047,7 @@ resource "ibm_sm_private_certificate" "secrets_manager_secrets_manager_private_c
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should have the correct terraform code"
+        "it should have the correct terraform code",
       );
     });
     it("should create the correct terraform code with ssl certificates from state", () => {
@@ -2399,7 +2399,7 @@ resource "ibm_sm_private_certificate" "secrets_manager_secrets_manager_private_c
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should have the correct terraform code"
+        "it should have the correct terraform code",
       );
     });
   });
@@ -2416,7 +2416,7 @@ resource "ibm_sm_private_certificate" "secrets_manager_secrets_manager_private_c
             region: "us-south",
             prefix: "iac",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_sm_secret_group" "secrets_manager_group_cos_secret" {
@@ -2429,7 +2429,7 @@ resource "ibm_sm_secret_group" "secrets_manager_group_cos_secret" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return group terraform"
+        "it should return group terraform",
       );
     });
   });
@@ -2476,7 +2476,7 @@ resource "ibm_iam_authorization_policy" "secrets_manager_dev_to_containers_polic
           _options: {
             endpoints: "private",
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_sm_arbitrary_secret" "secrets_manager_arbitrary_secret_secret" {

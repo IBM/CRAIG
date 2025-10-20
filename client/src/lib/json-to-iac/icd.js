@@ -52,7 +52,7 @@ function formatIcdToKmsAuth(kmsName, service, config) {
     "resource",
     "ibm_iam_authorization_policy",
     auth.name,
-    auth.data
+    auth.data,
   );
 }
 
@@ -86,7 +86,7 @@ function ibmResourceInstanceIcd(instance, config) {
       values.key_protect_key = encryptionKeyRef(
         instance.kms,
         instance.encryption_key,
-        "crn"
+        "crn",
       );
     }
     values.version = instance.version;
@@ -132,7 +132,7 @@ function formatIcd(instance, config) {
     getResourceOrData(instance),
     "ibm_resource_instance",
     icd.name,
-    icd.data
+    icd.data,
   );
 }
 

@@ -81,7 +81,7 @@ function slzToCraig(slz, prefix) {
       use_data: slz.key_management.use_data === true,
       use_hs_crypto: slz.key_management.use_hs_crypto,
     },
-    craig.key_management[0]
+    craig.key_management[0],
   );
 
   // handle object storage
@@ -145,7 +145,7 @@ function slzToCraig(slz, prefix) {
       splatContains(
         instance.buckets,
         "name",
-        slz.atracker.collector_bucket_name
+        slz.atracker.collector_bucket_name,
       )
     ) {
       craig.atracker.target_name = instance.name;
@@ -183,8 +183,8 @@ function slzToCraig(slz, prefix) {
       craigVpc[field] = vpc[field]
         ? vpc[field]
         : field === "classic_access"
-        ? false
-        : null;
+          ? false
+          : null;
     });
     // for each zone
     eachZone(3, (zone) => {
@@ -203,7 +203,7 @@ function slzToCraig(slz, prefix) {
         let isF5 = splatContains(
           craigVpc.address_prefixes,
           "name",
-          "f5-zone-1"
+          "f5-zone-1",
         );
         craigVpc.subnets.push({
           name: subnet.name,
@@ -317,7 +317,7 @@ function slzToCraig(slz, prefix) {
               craigVsi.security_groups.push(group.replace(/-sg$/g, ""));
             });
           instance.ssh_keys.forEach((key) =>
-            craigVsi.ssh_keys.push(noPrefix(key))
+            craigVsi.ssh_keys.push(noPrefix(key)),
           );
           craig.vsi.push(craigVsi);
         } else {
@@ -354,7 +354,7 @@ function slzToCraig(slz, prefix) {
             craigTeleportVsi.security_groups.push(group.replace(/-sg$/g, ""));
           });
           instance.ssh_keys.forEach((key) =>
-            craigTeleportVsi.ssh_keys.push(noPrefix(key))
+            craigTeleportVsi.ssh_keys.push(noPrefix(key)),
           );
           craig.teleport_vsi.push(craigTeleportVsi);
         }
@@ -480,7 +480,7 @@ function slzToCraig(slz, prefix) {
         craigF5.network_interfaces.push({
           security_groups: [inf.group_name.replace(/-sg/g, "")],
           subnet: noPrefix(
-            inf.interface_name.replace(instance.vpc_name + "-", "")
+            inf.interface_name.replace(instance.vpc_name + "-", ""),
           ),
         });
       });

@@ -3,11 +3,13 @@
     "version": "1.17.0",
     "features": [
       "When using dynamic subnets, CIDR blocks are now calculated to use the fewest total IPs within a VPC",
-      "Security and Compliance Center (SCC) has been removed as the service is no longer supported on IBM Cloud"
+      "Security and Compliance Center (SCC) has been removed as the service is no longer supported on IBM Cloud",
+      "Users can now add rules to the automatically created security group for any VPC cluster"
     ],
     "fixes": [],
     "upgrade_notes": [
-      "CRAIG no longer depends on react-scripts and uses Next JS to build"
+      "CRAIG no longer depends on react-scripts and uses Next JS to build",
+      "Updated VPC Cluster and Worker Pool resource addressess to be more intuitive"
     ]
   },
   {

@@ -22,7 +22,7 @@ describe("doc helper functions", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

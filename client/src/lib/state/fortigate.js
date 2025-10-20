@@ -35,7 +35,7 @@ function vnfSubnetGroups(fieldToCheck) {
                 return subnet;
               }
             }),
-          "name"
+          "name",
         )
       : [];
   };
@@ -94,7 +94,7 @@ function initFortigateStore(store) {
       config.updateChild(
         ["json", "fortigate_vnf"],
         componentProps.data.name,
-        stateData
+        stateData,
       );
     },
     delete: function (config, stateData, componentProps) {
@@ -111,7 +111,7 @@ function initFortigateStore(store) {
         "ssh_keys",
         "security_groups",
       ],
-      "fortigate_vnf"
+      "fortigate_vnf",
     ),
     schema: {
       name: nameField("fortigate_vnf", { size: "small" }),

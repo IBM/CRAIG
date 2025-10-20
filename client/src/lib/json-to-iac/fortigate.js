@@ -17,7 +17,7 @@ const {
  */
 function formatFortigate(gw, config) {
   let randomSuffix = `-\${random_string.${snakeCase(
-    gw.name
+    gw.name,
   )}_random_suffix.result}`;
   let securityGroups = gw.security_groups.map((sg) => {
     return `\${module.${snakeCase(gw.vpc)}_vpc.${snakeCase(sg)}_id}`;
@@ -99,11 +99,11 @@ end
             "ibm_is_ssh_key",
             key,
             "id",
-            getObjectFromArray(config.ssh_keys, "name", key)?.use_data
+            getObjectFromArray(config.ssh_keys, "name", key)?.use_data,
           );
         }),
         volumes: [`\${ibm_is_volume.${snakeCase(gw.name)}_vnf_log_volume.id}`],
-      }
+      },
     )
   );
 }
@@ -118,7 +118,7 @@ function fortigateTf(config) {
   (config.fortigate_vnf || []).forEach((gw) => {
     gwTf += tfBlock(
       gw.name + " Fortigate Gateway",
-      formatFortigate(gw, config)
+      formatFortigate(gw, config),
     );
   });
   return gwTf === "" ? null : gwTf;

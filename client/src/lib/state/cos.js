@@ -46,11 +46,11 @@ function cosSetStoreBucketsAndKeys(config, instanceCallback) {
     });
     // add all bucket names from instance to buckets
     config.store.cosBuckets = config.store.cosBuckets.concat(
-      splat(instance.buckets, "name")
+      splat(instance.buckets, "name"),
     );
     // add all key names to keys
     config.store.cosKeys = config.store.cosKeys.concat(
-      splat(instance.keys, "name")
+      splat(instance.keys, "name"),
     );
     // if callback run callback against instance
     if (instanceCallback) {
@@ -143,7 +143,7 @@ function cosSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "object_storage"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -161,7 +161,7 @@ function cosBucketCreate(config, stateData, componentProps) {
     "object_storage",
     "buckets",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -196,7 +196,7 @@ function cosBucketSave(config, stateData, componentProps) {
         if (vpc.bucket === componentProps.data.name)
           vpc.bucket = stateData.name;
       });
-    }
+    },
   );
 }
 
@@ -222,7 +222,7 @@ function cosKeyCreate(config, stateData, componentProps) {
     "object_storage",
     "keys",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -246,7 +246,7 @@ function cosKeySave(config, stateData, componentProps) {
       if (config.store.json.atracker.cos_key === componentProps.data.name) {
         config.store.json.atracker.cos_key = stateData.name;
       }
-    }
+    },
   );
 }
 
@@ -291,7 +291,7 @@ function initObjectStorageStore(store) {
     onStoreUpdate: cosOnStoreUpdate,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "resource_group", "plan"],
-      "object_storage"
+      "object_storage",
     ),
     create: cosCreate,
     save: cosSave,
@@ -326,7 +326,7 @@ function initObjectStorageStore(store) {
          */
         helperText: function cosResourceHelperTextCallback(
           stateData,
-          componentProps
+          componentProps,
         ) {
           return stateData.use_data
             ? stateData.name
@@ -351,7 +351,7 @@ function initObjectStorageStore(store) {
         groups: function (stateData, componentProps) {
           return splat(
             componentProps.craig.store.json.key_management,
-            "name"
+            "name",
           ).concat("NONE (Insecure)");
         },
         onInputChange: function (stateData) {
@@ -391,7 +391,7 @@ function initObjectStorageStore(store) {
             "metrics_monitoring_crn",
           ],
           "object_storage",
-          "buckets"
+          "buckets",
         ),
         schema: {
           name: nameField("buckets", {
@@ -415,21 +415,21 @@ function initObjectStorageStore(store) {
             default: null,
             invalid: fieldIsNullOrEmptyString("kms_key"),
             invalidText: unconditionalInvalidText(
-              "Warning: Unencrypted storage bucket"
+              "Warning: Unencrypted storage bucket",
             ),
             groups: function (stateData, componentProps) {
               let cosName = componentProps.arrayParentName;
               let { kms } = getObjectFromArray(
                 componentProps.craig.store.json.object_storage,
                 "name",
-                cosName
+                cosName,
               );
               let validKeys = [];
               if (kms) {
                 getObjectFromArray(
                   componentProps.craig.store.json.key_management,
                   "name",
-                  kms
+                  kms,
                 ).keys.forEach((key) => {
                   if (key.root_key) {
                     validKeys.push(key.name);
@@ -547,7 +547,7 @@ function initObjectStorageStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "role"],
           "object_storage",
-          "keys"
+          "keys",
         ),
         schema: {
           name: nameField("cos_keys", {

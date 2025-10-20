@@ -13,8 +13,8 @@ export const PowerInterfaces = (props) => {
       isEmpty(
         props.componentProps.craig.vtl.image.groups(
           props.stateData,
-          props.componentProps
-        )
+          props.componentProps,
+        ),
       )) ? (
     <CraigEmptyResourceTile
       noClick

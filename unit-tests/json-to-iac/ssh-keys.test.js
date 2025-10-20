@@ -15,7 +15,7 @@ describe("ssh keys", () => {
           public_key: "public-key",
           resource_group: "slz-management-rg",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_ssh_key" "slz_ssh_key" {
@@ -31,7 +31,7 @@ resource "ibm_is_ssh_key" "slz_ssh_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create correct ssh key from data", () => {
@@ -42,7 +42,7 @@ resource "ibm_is_ssh_key" "slz_ssh_key" {
           resource_group: "slz-management-rg",
           use_data: true,
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 data "ibm_is_ssh_key" "slz_ssh_key" {
@@ -52,7 +52,7 @@ data "ibm_is_ssh_key" "slz_ssh_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -78,7 +78,7 @@ resource "ibm_is_ssh_key" "slz_ssh_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

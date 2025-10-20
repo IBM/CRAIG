@@ -17,7 +17,7 @@ describe("dynamic form field utils", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return the correct data"
+        "it should return the correct data",
       );
     });
   });
@@ -28,7 +28,7 @@ describe("dynamic form field utils", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct className"
+        "it should return correct className",
       );
     });
     it("should return the correct additional classname with field className", () => {
@@ -37,7 +37,7 @@ describe("dynamic form field utils", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct className"
+        "it should return correct className",
       );
     });
     it("should return the correct additional classname with field className and size small", () => {
@@ -46,7 +46,7 @@ describe("dynamic form field utils", () => {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct className"
+        "it should return correct className",
       );
     });
   });
@@ -58,7 +58,7 @@ describe("dynamic form field utils", () => {
       assert.throws(
         task,
         "test expects props.field.placeholder to evaluate to string, got undefined",
-        "it should return error text"
+        "it should return error text",
       );
     });
   });

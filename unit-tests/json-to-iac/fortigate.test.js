@@ -20,7 +20,7 @@ describe("fortigate", () => {
           ssh_keys: ["slz-ssh-key"],
           zone: "1",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 data "template_file" "fortigate_vnf_userdata" {
@@ -97,7 +97,7 @@ resource "ibm_is_instance" "fortigate_fortigate_vnf_vsi" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -197,7 +197,7 @@ resource "ibm_is_instance" "fortigate_fortigate_vnf_vsi" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct terraform with imported subnets", () => {
@@ -299,7 +299,7 @@ resource "ibm_is_instance" "fortigate_fortigate_vnf_vsi" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

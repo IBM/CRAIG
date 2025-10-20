@@ -12,7 +12,7 @@ describe("vpn gateways", () => {
           subnet: "vpn-zone-1",
           vpc: "management",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
@@ -32,7 +32,7 @@ resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create tf code for vpn gateway with imported subnet", () => {
@@ -44,7 +44,7 @@ resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
           subnet: "vpn-zone-1",
           vpc: "management",
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
@@ -64,7 +64,7 @@ resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create tf code for vpn gateway with policy", () => {
@@ -76,7 +76,7 @@ resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
           vpc: "management",
           policy_mode: true,
         },
-        slzNetwork
+        slzNetwork,
       );
       let expectedData = `
 resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
@@ -97,7 +97,7 @@ resource "ibm_is_vpn_gateway" "management_management_vpn_gw" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -137,7 +137,7 @@ resource "ibm_is_vpc_address_prefix" "management_management_gateway_on_prem_127_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create tf code for vpn gateway with connections", () => {
@@ -196,7 +196,7 @@ resource "ibm_is_vpc_address_prefix" "management_management_gateway_on_prem_127_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create tf code for vpn gateway with no subnet", () => {
@@ -247,7 +247,7 @@ resource "ibm_is_vpc_address_prefix" "management_management_gateway_on_prem_1_2_
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

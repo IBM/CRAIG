@@ -27,8 +27,8 @@ function filterDocs(template, field, docs) {
       tableHeader = section.table[0];
       section.table = section.table.filter(
         (
-          defaultResource // Removes all defaults in table not in that template
-        ) => contains(defaultsForTemplate, defaultResource[0])
+          defaultResource, // Removes all defaults in table not in that template
+        ) => contains(defaultsForTemplate, defaultResource[0]),
       );
       section.table = [tableHeader, ...section.table]; // Insert headers back into table
     }

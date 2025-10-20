@@ -19,7 +19,7 @@ describe("dynamicIcseHeadingProps", () => {
         tooltip: {},
         key: "heading-heading",
       },
-      "it should return props"
+      "it should return props",
     );
   });
 });

@@ -35,7 +35,7 @@ describe("power vs ansible for SAP", () => {
         },
         {
           bastion_host: "REF-TO-BASTION-IP",
-        }
+        },
       );
       let expectedData = `
 resource "null_resource" "configure_nfs_workspace_frog" {
@@ -96,7 +96,7 @@ EOF
       assert.deepEqual(
         actalData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

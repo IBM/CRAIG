@@ -463,7 +463,7 @@ describe("utils", () => {
     it("should return correct titleCase formatting for ip address", () => {
       assert.deepEqual(
         cbrTitleCase("type")({ type: "Ipaddress" }),
-        "IP Address"
+        "IP Address",
       );
     });
     it("should return correct titleCase formatting for ip range", () => {
@@ -472,7 +472,7 @@ describe("utils", () => {
     it("should return correct titleCase formatting for service ref", () => {
       assert.deepEqual(
         cbrTitleCase("type")({ type: "Serviceref" }),
-        "Service Ref"
+        "Service Ref",
       );
     });
     it("should return correct titleCase for empty string", () => {
@@ -486,7 +486,7 @@ describe("utils", () => {
     it("should return correctly formatted cbr type to store in JSON", () => {
       assert.deepEqual(
         cbrSaveType("type")({ type: "IP Address" }),
-        "ipAddress"
+        "ipAddress",
       );
     });
     it("should return correctly formatted cbr type to store in JSON", () => {
@@ -501,7 +501,7 @@ describe("utils", () => {
     it("should return correctly formatted cbr type to store in JSON", () => {
       assert.deepEqual(
         cbrSaveType("type")({ type: "Service Ref" }),
-        "serviceRef"
+        "serviceRef",
       );
     });
   });
@@ -509,7 +509,7 @@ describe("utils", () => {
     it("should be true if state data option is option and no affinity type", () => {
       assert.isTrue(
         powerAffinityInvalid({ storage_option: "good" }, "good"),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should be false if everything matches and field is not null", () => {
@@ -518,9 +518,9 @@ describe("utils", () => {
           { storage_option: "good", affinity_type: "good" },
           "good",
           "good",
-          "good"
+          "good",
         ),
-        "it should be false"
+        "it should be false",
       );
     });
   });
@@ -550,7 +550,7 @@ describe("utils", () => {
     it("should be invalid when storage option is storage pool and field is invalid", () => {
       assert.isTrue(
         powerStoragePoolSelect().invalid({ storage_option: "Storage Pool" }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
   });
@@ -561,7 +561,7 @@ describe("utils", () => {
           pi_anti_affinity_instance: "",
           storage_option: "Anti-Affinity",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
   });
@@ -572,7 +572,7 @@ describe("utils", () => {
           pi_anti_affinity_volume: "",
           storage_option: "Anti-Affinity",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
   });
@@ -583,7 +583,7 @@ describe("utils", () => {
           pi_affinity_instance: "",
           storage_option: "Affinity",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
   });
@@ -594,7 +594,7 @@ describe("utils", () => {
           pi_affinity_volume: "",
           storage_option: "Affinity",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
   });
@@ -602,7 +602,7 @@ describe("utils", () => {
     it("should handle invalid cases", () => {
       assert.isTrue(
         powerVsStorageOptions().invalid({ storage_option: "Storage Pool" }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
   });

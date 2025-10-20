@@ -48,8 +48,8 @@ function docsToMd(docsJson) {
           doc += isNotLast // if not last match length with spaces add pipe
             ? matchLength(item.table[row][col], allLongest[col]) + " | "
             : allLongest.length === 1 && row !== 0 // if is just a list and not first row
-            ? `- \`${item.table[row][col]}\`` // add list item
-            : item.table[row][col]; // otherwise add text directly when last to prevent extra whitespace
+              ? `- \`${item.table[row][col]}\`` // add list item
+              : item.table[row][col]; // otherwise add text directly when last to prevent extra whitespace
         }
         doc += "\n"; // add newline
         // add row to divide headers from content when not a list
@@ -62,9 +62,11 @@ function docsToMd(docsJson) {
               matchLength(
                 "",
                 allLongest[tableHeadDivider.length] +
-                  (tableHeadDivider.length === 0 ? 1 : 2) // space correctly with pipe
+                  (tableHeadDivider.length === 0 ? 1 : 2), // space correctly with pipe
               ).replace(/\s/g, "-") + // add pipe if not last, otherwise add newline
-                (tableHeadDivider.length + 1 !== allLongest.length ? "|" : "\n")
+                (tableHeadDivider.length + 1 !== allLongest.length
+                  ? "|"
+                  : "\n"),
             );
           }
           // join and add to doc
@@ -93,23 +95,23 @@ function allDocs() {
         heading === "object_storage"
           ? "Cloud Object Storage"
           : heading === "vpcs"
-          ? "VPCs"
-          : heading === "acls"
-          ? "Network Access Control Lists"
-          : heading === "vsi"
-          ? "Virtual Server Instance Deployments"
-          : heading === "appid"
-          ? "App ID"
-          : heading === "f5"
-          ? "F5 Big IP"
-          : heading === "atracker"
-          ? "Activity Tracker"
-          : heading === "cbr"
-          ? "Context Based Restrictions"
-          : titleCase(heading)
-              .replace(/Ssh/g, "SSH") // capitalize these
-              .replace("Vpn", "VPN")
-              .replace("Iam", "IAM");
+            ? "VPCs"
+            : heading === "acls"
+              ? "Network Access Control Lists"
+              : heading === "vsi"
+                ? "Virtual Server Instance Deployments"
+                : heading === "appid"
+                  ? "App ID"
+                  : heading === "f5"
+                    ? "F5 Big IP"
+                    : heading === "atracker"
+                      ? "Activity Tracker"
+                      : heading === "cbr"
+                        ? "Context Based Restrictions"
+                        : titleCase(heading)
+                            .replace(/Ssh/g, "SSH") // capitalize these
+                            .replace("Vpn", "VPN")
+                            .replace("Iam", "IAM");
       doc += `\n## ${header}\n`;
       doc += docsToMd(docs[heading]);
       doc += "\n-----\n"; // add divider

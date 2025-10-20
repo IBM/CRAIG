@@ -37,7 +37,7 @@ describe("virtual_private_endpoints", () => {
       assert.deepEqual(
         state.store.json.virtual_private_endpoints,
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
   });
@@ -56,7 +56,7 @@ describe("virtual_private_endpoints", () => {
       assert.deepEqual(
         state.store.json.virtual_private_endpoints[0],
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
     it("should remove subnets from a vpc after deletion", () => {
@@ -76,7 +76,7 @@ describe("virtual_private_endpoints", () => {
           data: {
             name: "vpe-zone-1",
           },
-        }
+        },
       );
       state.vpcs.subnets.delete(
         {},
@@ -85,7 +85,7 @@ describe("virtual_private_endpoints", () => {
           data: {
             name: "vpe-zone-2",
           },
-        }
+        },
       );
       state.vpcs.subnets.delete(
         {},
@@ -94,12 +94,12 @@ describe("virtual_private_endpoints", () => {
           data: {
             name: "vpe-zone-3",
           },
-        }
+        },
       );
       assert.deepEqual(
         state.store.json.virtual_private_endpoints[0],
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
     it("should remove unfound resource groups", () => {
@@ -126,7 +126,7 @@ describe("virtual_private_endpoints", () => {
       assert.deepEqual(
         state.store.json.virtual_private_endpoints,
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
     it("should remove unfound security groups", () => {
@@ -153,7 +153,7 @@ describe("virtual_private_endpoints", () => {
       assert.deepEqual(
         state.store.json.virtual_private_endpoints,
         expectedData,
-        "it should have empty list for security groups"
+        "it should have empty list for security groups",
       );
     });
   });
@@ -162,7 +162,7 @@ describe("virtual_private_endpoints", () => {
       let state = newState();
       state.virtual_private_endpoints.delete(
         {},
-        { data: { name: "management-cos" } }
+        { data: { name: "management-cos" } },
       );
       assert.deepEqual(
         state.store.json.virtual_private_endpoints,
@@ -176,7 +176,7 @@ describe("virtual_private_endpoints", () => {
             subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
           },
         ],
-        "it should delete"
+        "it should delete",
       );
     });
   });
@@ -214,12 +214,12 @@ describe("virtual_private_endpoints", () => {
           data: {
             name: "management-cos",
           },
-        }
+        },
       );
       assert.deepEqual(
         state.store.json.virtual_private_endpoints,
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
   });
@@ -245,7 +245,7 @@ describe("virtual_private_endpoints", () => {
       assert.deepEqual(
         state.store.json.virtual_private_endpoints[2],
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
   });
@@ -259,14 +259,14 @@ describe("virtual_private_endpoints", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.service.onRender({}),
           "",
-          "it should be empty string"
+          "it should be empty string",
         );
       });
       it("should return string onRender when service", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.service.onRender({ service: "icr" }),
           "Container Registry",
-          "it should be empty string"
+          "it should be empty string",
         );
       });
       it("should return string on input change", () => {
@@ -275,7 +275,7 @@ describe("virtual_private_endpoints", () => {
             service: "Container Registry",
           }),
           "icr",
-          "it should be empty string"
+          "it should be empty string",
         );
       });
     });
@@ -284,7 +284,7 @@ describe("virtual_private_endpoints", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.vpc.groups({}, { craig: craig }),
           ["management", "workload"],
-          "it should return vpc names"
+          "it should return vpc names",
         );
       });
       it("should reset security groups and subnets on state change", () => {
@@ -297,7 +297,7 @@ describe("virtual_private_endpoints", () => {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return the correct data"
+          "it should return the correct data",
         );
       });
     });
@@ -306,20 +306,20 @@ describe("virtual_private_endpoints", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.security_groups.groups(
             {},
-            { craig: craig }
+            { craig: craig },
           ),
           [],
-          "it should return empty array"
+          "it should return empty array",
         );
       });
       it("should return correct security groups when vpc", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.security_groups.groups(
             { vpc: "management" },
-            { craig: craig }
+            { craig: craig },
           ),
           ["management-vpe", "management-vsi"],
-          "it should return empty string"
+          "it should return empty string",
         );
       });
       it("should return the correct forceUpdateKey", () => {
@@ -328,7 +328,7 @@ describe("virtual_private_endpoints", () => {
             vpc: "management",
           }),
           "management",
-          "it should return correct key"
+          "it should return correct key",
         );
       });
     });
@@ -337,14 +337,14 @@ describe("virtual_private_endpoints", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.subnets.groups({}),
           [],
-          "it should return empty array"
+          "it should return empty array",
         );
       });
       it("should return correct groups when vpc", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.subnets.groups(
             { vpc: "management" },
-            { craig: craig }
+            { craig: craig },
           ),
           [
             "vsi-zone-1",
@@ -355,7 +355,7 @@ describe("virtual_private_endpoints", () => {
             "vpe-zone-2",
             "vpe-zone-3",
           ],
-          "it should return empty array"
+          "it should return empty array",
         );
       });
     });
@@ -363,7 +363,7 @@ describe("virtual_private_endpoints", () => {
       it("should be hidden when service is not secrets manager", () => {
         assert.isTrue(
           craig.virtual_private_endpoints.instance.hideWhen({ service: "icr" }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should be invalid if service is secrets manager and no instance", () => {
@@ -371,14 +371,14 @@ describe("virtual_private_endpoints", () => {
           craig.virtual_private_endpoints.instance.invalid({
             service: "secrets-manager",
           }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should return groups", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.instance.groups({}, { craig: craig }),
           [],
-          "it should return groups"
+          "it should return groups",
         );
       });
     });

@@ -23,7 +23,7 @@ describe("appid", () => {
       assert.deepEqual(
         craig.store.json.appid,
         expectedData,
-        "it should have appid initialized"
+        "it should have appid initialized",
       );
     });
   });
@@ -48,7 +48,7 @@ describe("appid", () => {
               resource_group: null,
             },
           ],
-          "it should set keys"
+          "it should set keys",
         );
       });
       it("should set encryption key to null when deleted", () => {
@@ -58,12 +58,12 @@ describe("appid", () => {
             arrayParentName: "kms",
             data: { name: "key" },
             isTeleport: false,
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.appid[0].encryption_key,
           null,
-          "it should be null"
+          "it should be null",
         );
       });
       it("should set encryption key and kms to null when kms deleted", () => {
@@ -72,17 +72,17 @@ describe("appid", () => {
           {
             data: { name: "kms" },
             isTeleport: false,
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.appid[0].kms,
           null,
-          "it should be null"
+          "it should be null",
         );
         assert.deepEqual(
           craig.store.json.appid[0].encryption_key,
           null,
-          "it should be null"
+          "it should be null",
         );
       });
     });
@@ -98,18 +98,18 @@ describe("appid", () => {
             resource_group: null,
           },
         ],
-        "it should create appid"
+        "it should create appid",
       );
     });
     it("should save an appid instance", () => {
       craig.appid.save(
         { resource_group: "service-rg" },
-        { data: { name: "default" } }
+        { data: { name: "default" } },
       );
       assert.deepEqual(
         craig.store.json.appid[0].resource_group,
         "service-rg",
-        "it should create appid"
+        "it should create appid",
       );
     });
     it("should delete an appid instance", () => {
@@ -128,7 +128,7 @@ describe("appid", () => {
           innerFormProps: {
             arrayParentName: "default",
           },
-        }
+        },
       );
     });
     it("should add an appid instance", () => {
@@ -146,7 +146,7 @@ describe("appid", () => {
             ],
           },
         ],
-        "it should create appid key"
+        "it should create appid key",
       );
     });
     it("should save an appid instance", () => {
@@ -155,7 +155,7 @@ describe("appid", () => {
         {
           data: { name: "test" },
           arrayParentName: "default",
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.appid,
@@ -168,7 +168,7 @@ describe("appid", () => {
             resource_group: null,
           },
         ],
-        "it should save key"
+        "it should save key",
       );
     });
     it("should delete an appid key", () => {
@@ -177,12 +177,12 @@ describe("appid", () => {
         {
           data: { name: "test" },
           arrayParentName: "default",
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.appid.keys.length,
         0,
-        "it should delete appid key"
+        "it should delete appid key",
       );
     });
   });
@@ -201,7 +201,7 @@ describe("appid", () => {
               data: {
                 name: "",
               },
-            }
+            },
           );
           assert.isTrue(actualData, "it should be disabled");
         });
@@ -212,7 +212,7 @@ describe("appid", () => {
               resource_group: "",
               use_data: true,
             }),
-            "it should be enabled"
+            "it should be enabled",
           );
         });
         it("should return true if name is valid and resource group is invalid", () => {
@@ -227,7 +227,7 @@ describe("appid", () => {
               data: {
                 name: "",
               },
-            }
+            },
           );
           assert.isTrue(actualData, "it should be disabled");
         });
@@ -241,7 +241,7 @@ describe("appid", () => {
               data: {
                 name: "",
               },
-            }
+            },
           );
           assert.isTrue(actualData, "it should return true if name is invalid");
         });
@@ -253,12 +253,12 @@ describe("appid", () => {
               data: {
                 name: "",
               },
-            }
+            },
           );
           assert.deepEqual(
             actualData,
             "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
-            "it should return correct text"
+            "it should return correct text",
           );
         });
         it("should return true if appid has invalid duplicate name", () => {
@@ -270,7 +270,7 @@ describe("appid", () => {
               data: {
                 name: "",
               },
-            }
+            },
           );
           assert.isTrue(actualData, "it should return true if name is invalid");
         });
@@ -283,12 +283,12 @@ describe("appid", () => {
               data: {
                 name: "",
               },
-            }
+            },
           );
           assert.deepEqual(
             actualData,
             'Name "egg" already in use',
-            "it should return correct text"
+            "it should return correct text",
           );
         });
       });
@@ -297,7 +297,7 @@ describe("appid", () => {
           assert.deepEqual(
             craig.appid.encryption_key.groups({}, { craig: craig }),
             ["key", "atracker-key", "vsi-volume-key", "roks-key"],
-            "it should return groups"
+            "it should return groups",
           );
         });
       });
@@ -312,9 +312,9 @@ describe("appid", () => {
                   data: {
                     name: "",
                   },
-                }
+                },
               ),
-              "it should return true if name is invalid"
+              "it should return true if name is invalid",
             );
           });
           it("should return correct text if appid key has invalid name", () => {
@@ -326,10 +326,10 @@ describe("appid", () => {
                   data: {
                     name: "",
                   },
-                }
+                },
               ),
               "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
-              "it should return correct text"
+              "it should return correct text",
             );
           });
           it("should return true if appid key has invalid duplicate name", () => {
@@ -340,7 +340,7 @@ describe("appid", () => {
                 innerFormProps: {
                   arrayParentName: "egg",
                 },
-              }
+              },
             );
             assert.isTrue(
               craig.appid.keys.name.invalid(
@@ -350,9 +350,9 @@ describe("appid", () => {
                   data: {
                     name: "",
                   },
-                }
+                },
               ),
-              "it should return true if name is invalid"
+              "it should return true if name is invalid",
             );
           });
           it("should return correct text if appid key has invalid duplicate name", () => {
@@ -363,7 +363,7 @@ describe("appid", () => {
                 innerFormProps: {
                   arrayParentName: "egg",
                 },
-              }
+              },
             );
             assert.deepEqual(
               craig.appid.keys.name.invalidText(
@@ -373,10 +373,10 @@ describe("appid", () => {
                   data: {
                     name: "aa",
                   },
-                }
+                },
               ),
               'Name "egg" already in use',
-              "it should return correct text"
+              "it should return correct text",
             );
           });
         });
@@ -387,7 +387,7 @@ describe("appid", () => {
     it("should disable save when invalid name", () => {
       assert.isTrue(
         disableSave("keys", { name: "@@@" }, { craig: craig }),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
   });

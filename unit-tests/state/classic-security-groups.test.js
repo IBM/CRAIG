@@ -24,7 +24,7 @@ describe("classic security groups state", () => {
       assert.deepEqual(
         craig.store.json.classic_security_groups,
         [],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
   });
@@ -39,7 +39,7 @@ describe("classic security groups state", () => {
             classic_sg_rules: [],
           },
         ],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -52,7 +52,7 @@ describe("classic security groups state", () => {
           data: {
             name: "test",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.classic_security_groups,
@@ -63,7 +63,7 @@ describe("classic security groups state", () => {
             classic_sg_rules: [],
           },
         ],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should update a security group and rules", () => {
@@ -82,7 +82,7 @@ describe("classic security groups state", () => {
           data: {
             name: "test",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.classic_security_groups,
@@ -97,7 +97,7 @@ describe("classic security groups state", () => {
             ],
           },
         ],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -105,12 +105,12 @@ describe("classic security groups state", () => {
     it("should delete a security group", () => {
       craig.classic_security_groups.delete(
         {},
-        { data: { name: "test", description: "" } }
+        { data: { name: "test", description: "" } },
       );
       assert.deepEqual(
         craig.store.json.classic_security_groups,
         [],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -120,7 +120,7 @@ describe("classic security groups state", () => {
         craig.classic_security_groups.description.invalid({
           description: "toad",
         }),
-        "it should return false"
+        "it should return false",
       );
     });
   });
@@ -134,7 +134,7 @@ describe("classic security groups state", () => {
             innerFormProps: {
               arrayParentName: "test",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.classic_security_groups[0].classic_sg_rules,
@@ -144,7 +144,7 @@ describe("classic security groups state", () => {
               direction: "inbound",
               classic_sg: "test",
             },
-          ]
+          ],
         );
       });
     });
@@ -157,7 +157,7 @@ describe("classic security groups state", () => {
             innerFormProps: {
               arrayParentName: "test",
             },
-          }
+          },
         );
         craig.classic_security_groups.classic_sg_rules.save(
           { name: "example2", direction: "inbound" },
@@ -165,7 +165,7 @@ describe("classic security groups state", () => {
             craig: craig,
             arrayParentName: "test",
             data: { name: "example", direction: "inbound" },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.classic_security_groups[0].classic_sg_rules,
@@ -175,7 +175,7 @@ describe("classic security groups state", () => {
               direction: "inbound",
               classic_sg: "test",
             },
-          ]
+          ],
         );
       });
     });
@@ -188,7 +188,7 @@ describe("classic security groups state", () => {
             innerFormProps: {
               arrayParentName: "test",
             },
-          }
+          },
         );
         craig.classic_security_groups.classic_sg_rules.delete(
           { name: "example2", direction: "inbound" },
@@ -196,18 +196,18 @@ describe("classic security groups state", () => {
             craig: craig,
             arrayParentName: "test",
             data: { name: "example", direction: "inbound" },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.classic_security_groups[0].classic_sg_rules,
-          []
+          [],
         );
       });
     });
     it("should disable save for rule", () => {
       assert.isTrue(
         disableSave("classic_sg_rules", {}, { craig: craig }),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     describe("schema", () => {
@@ -219,155 +219,155 @@ describe("classic security groups state", () => {
             innerFormProps: {
               arrayParentName: "test",
             },
-          }
+          },
         );
         assert.isTrue(
           craig.classic_security_groups.classic_sg_rules.name.invalid(
             {
               name: "example",
             },
-            { craig: craig, arrayParentName: "test" }
-          )
+            { craig: craig, arrayParentName: "test" },
+          ),
         );
       });
       it("should return correct protocol on input change", () => {
         assert.deepEqual(
           craig.classic_security_groups.classic_sg_rules.ruleProtocol.onInputChange(
-            {}
+            {},
           ),
           "",
-          "it should return correct data"
+          "it should return correct data",
         );
         assert.deepEqual(
           craig.classic_security_groups.classic_sg_rules.ruleProtocol.onInputChange(
             {
               ruleProtocol: "All",
-            }
+            },
           ),
           "all",
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       it("should return correct provol on render", () => {
         assert.deepEqual(
           craig.classic_security_groups.classic_sg_rules.ruleProtocol.onRender(
-            {}
+            {},
           ),
           "",
-          "it should return correct data"
+          "it should return correct data",
         );
         assert.deepEqual(
           craig.classic_security_groups.classic_sg_rules.ruleProtocol.onRender({
             ruleProtocol: "all",
           }),
           "All",
-          "it should return correct data"
+          "it should return correct data",
         );
         assert.deepEqual(
           craig.classic_security_groups.classic_sg_rules.ruleProtocol.onRender({
             ruleProtocol: "icmp",
           }),
           "ICMP",
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       describe("port_range_min", () => {
         it("should hide when rule protcol is not icmp, tcp, or udp", () => {
           assert.isTrue(
             craig.classic_security_groups.classic_sg_rules.port_range_min.hideWhen(
-              {}
+              {},
             ),
-            "it should be hidden"
+            "it should be hidden",
           );
         });
         it("should return correct invalid value", () => {
           assert.isFalse(
             craig.classic_security_groups.classic_sg_rules.port_range_min.invalid(
-              {}
+              {},
             ),
-            "it should be false"
+            "it should be false",
           );
           assert.isFalse(
             craig.classic_security_groups.classic_sg_rules.port_range_min.invalid(
               {
                 ruleProtocol: "all",
-              }
+              },
             ),
-            "it should be false"
+            "it should be false",
           );
           assert.isTrue(
             craig.classic_security_groups.classic_sg_rules.port_range_min.invalid(
               {
                 ruleProtocol: "icmp",
                 port_range_min: "9999999",
-              }
+              },
             ),
-            "it should be true"
+            "it should be true",
           );
           assert.isFalse(
             craig.classic_security_groups.classic_sg_rules.port_range_min.invalid(
               {
                 ruleProtocol: "icmp",
                 port_range_min: "1",
-              }
+              },
             ),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             craig.classic_security_groups.classic_sg_rules.port_range_min.invalid(
               {
                 ruleProtocol: "udp",
                 port_range_min: "aaaa",
-              }
+              },
             ),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             craig.classic_security_groups.classic_sg_rules.port_range_min.invalid(
               {
                 ruleProtocol: "udp",
                 port_range_min: "9999999999",
-              }
+              },
             ),
-            "it should be true"
+            "it should be true",
           );
         });
         it("should return correct invalid text value", () => {
           assert.deepEqual(
             craig.classic_security_groups.classic_sg_rules.port_range_min.invalidText(
-              {}
+              {},
             ),
             "",
-            "it should return correct value"
+            "it should return correct value",
           );
           assert.deepEqual(
             craig.classic_security_groups.classic_sg_rules.port_range_min.invalidText(
               {
                 ruleProtocol: "all",
-              }
+              },
             ),
             "",
-            "it should return correct value"
+            "it should return correct value",
           );
           assert.deepEqual(
             craig.classic_security_groups.classic_sg_rules.port_range_min.invalidText(
               {
                 ruleProtocol: "icmp",
                 port_range_min: "aaaa",
-              }
+              },
             ),
             "Enter a whole number between 0 and 254",
-            "it should be true"
+            "it should be true",
           );
           assert.deepEqual(
             craig.classic_security_groups.classic_sg_rules.port_range_min.invalidText(
               {
                 ruleProtocol: "udp",
                 port_range_min: "aaaa",
-              }
+              },
             ),
             "Enter a whole number between 1 and 65535",
-            "it should be true"
+            "it should be true",
           );
         });
       });
@@ -378,46 +378,46 @@ describe("classic security groups state", () => {
               {
                 ruleProtocol: "icmp",
                 port_range_min: "aaaa",
-              }
+              },
             ),
-            "it should be true"
+            "it should be true",
           );
           assert.isFalse(
             craig.classic_security_groups.classic_sg_rules.port_range_max.invalid(
               {
                 ruleProtocol: "icmp",
                 port_range_max: "1",
-              }
+              },
             ),
-            "it should be true"
+            "it should be true",
           );
           assert.isFalse(
             craig.classic_security_groups.classic_sg_rules.port_range_max.invalid(
               {
                 ruleProtocol: "icmp",
                 port_range_max: "0",
-              }
+              },
             ),
-            "it should be true"
+            "it should be true",
           );
           assert.isTrue(
             craig.classic_security_groups.classic_sg_rules.port_range_max.invalid(
               {
                 ruleProtocol: "tcp",
                 port_range_max: "0",
-              }
+              },
             ),
-            "it should be true"
+            "it should be true",
           );
           assert.deepEqual(
             craig.classic_security_groups.classic_sg_rules.port_range_max.invalidText(
               {
                 ruleProtocol: "icmp",
                 port_range_min: "aaaa",
-              }
+              },
             ),
             "Enter a whole number between 0 and 255",
-            "it should be true"
+            "it should be true",
           );
         });
       });

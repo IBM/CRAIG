@@ -38,7 +38,7 @@ function resourceGroupInit(config) {
 function resourceGroupOnStoreUpdate(config) {
   config.store.resourceGroups = splat(
     config.store.json.resource_groups,
-    "name"
+    "name",
   );
 }
 
@@ -105,7 +105,7 @@ function resourceGroupSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "resource_groups"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 

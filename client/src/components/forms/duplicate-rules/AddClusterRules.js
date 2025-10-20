@@ -27,7 +27,7 @@ const AddClusterRules = (props) => {
             labelText: "Target ACL",
             className: "fieldWidthSmaller",
             groups: (props.addClusterRuleAcl ? [""] : []).concat(
-              splat(props.data.acls, "name")
+              splat(props.data.acls, "name"),
             ),
             disabled: (stateData) => {
               return stateData.v2;

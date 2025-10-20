@@ -67,7 +67,7 @@ class PopoverWrapper extends React.Component {
 
   render() {
     let { noPopover, autoAlign, contentClassName } = popoverWrapperParams(
-      this.props
+      this.props,
     );
     return noPopover ? (
       this.props.children

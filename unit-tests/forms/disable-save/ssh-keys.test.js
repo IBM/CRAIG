@@ -29,9 +29,9 @@ describe("ssh keys", () => {
             data: "test",
           },
           craig: craig,
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
   it("should return true when the ssh key has no rg", () => {
@@ -49,9 +49,9 @@ describe("ssh keys", () => {
             data: "test",
           },
           craig: state(),
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
   it("should return true when the public key value already exists", () => {
@@ -82,9 +82,9 @@ describe("ssh keys", () => {
             data: "test",
           },
           craig: craig,
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
   it("should not check invalidSshKey when using data", () => {
@@ -102,9 +102,9 @@ describe("ssh keys", () => {
             data: "test",
           },
           craig: state(),
-        }
+        },
       ),
-      "it should be enabled"
+      "it should be enabled",
     );
   });
 });

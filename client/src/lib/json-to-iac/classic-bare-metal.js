@@ -24,7 +24,7 @@ function formatClassicBareMetal(server, config) {
     hourly_billing: false,
     private_network_only: server.private_network_only,
     private_vlan_id: `\${ibm_network_vlan.classic_vlan_${snakeCase(
-      server.private_vlan
+      server.private_vlan,
     )}.id}`,
     public_vlan_id: server.private_network_only
       ? undefined
@@ -35,7 +35,7 @@ function formatClassicBareMetal(server, config) {
     "resource",
     "ibm_compute_bare_metal",
     server.name,
-    bareMetalData
+    bareMetalData,
   );
 }
 
