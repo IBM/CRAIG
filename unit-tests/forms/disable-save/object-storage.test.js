@@ -16,9 +16,9 @@ describe("object storage", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be false"
+      "it should be false",
     );
   });
   it("should return true if a object storage instance has an invalid resource group", () => {
@@ -31,9 +31,9 @@ describe("object storage", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be false"
+      "it should be false",
     );
   });
   // commented out for power poc
@@ -67,9 +67,9 @@ describe("object storage", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be false"
+      "it should be false",
     );
   });
   // commented out to allow for unencrypted cos buckets
@@ -99,9 +99,9 @@ describe("object storage", () => {
             name: "test",
           },
           formName: "Service Credentials",
-        }
+        },
       ),
-      "it should be false"
+      "it should be false",
     );
   });
 });

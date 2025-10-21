@@ -30,7 +30,7 @@ const ResetState = (props) => {
               window.localStorage.removeItem(
                 process.env.NODE_ENV === "development"
                   ? "craigDevStore"
-                  : "craigStore"
+                  : "craigStore",
               );
               window.location.href = "/";
             }}
@@ -43,7 +43,7 @@ const ResetState = (props) => {
               window.localStorage.removeItem(
                 process.env.NODE_ENV === "development"
                   ? "craigDevStore"
-                  : "craigStore"
+                  : "craigStore",
               );
               window.localStorage.removeItem("craigProjects");
               window.localStorage.removeItem("craigVisited");

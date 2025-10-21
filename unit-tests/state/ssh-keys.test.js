@@ -34,7 +34,7 @@ describe("ssh_keys", () => {
       assert.deepEqual(
         craig.store.json.ssh_keys,
         [],
-        "there should be no keys"
+        "there should be no keys",
       );
       assert.deepEqual(craig.store.sshKeys, [], "it should remove the ssh key");
     });
@@ -43,13 +43,13 @@ describe("ssh_keys", () => {
     it("should update an ssh key in place", () => {
       craig.ssh_keys.save(
         { name: "todd", show: false },
-        { data: { name: "ssh-key" } }
+        { data: { name: "ssh-key" } },
       );
       assert.deepEqual(craig.store.sshKeys, ["todd"], "it should be todd");
       assert.deepEqual(
         craig.store.json.ssh_keys[0].name,
         "todd",
-        "it should have a new name"
+        "it should have a new name",
       );
     });
     it("should update an ssh key in place with same name", () => {
@@ -57,12 +57,12 @@ describe("ssh_keys", () => {
       craig.store.json.vsi = [{ ssh_keys: ["ssh-key"] }];
       craig.ssh_keys.save(
         { name: "ssh-key", public_key: "todd" },
-        { data: { name: "ssh-key" } }
+        { data: { name: "ssh-key" } },
       );
       assert.deepEqual(
         craig.store.json.ssh_keys[0].public_key,
         "todd",
-        "it should have a new public key"
+        "it should have a new public key",
       );
     });
     it("should update an ssh key in place with same name not used by vsi", () => {
@@ -71,7 +71,7 @@ describe("ssh_keys", () => {
       assert.deepEqual(
         craig.store.sshKeys,
         ["ssh-key", "todd"],
-        "it should have a new name"
+        "it should have a new name",
       );
     });
     it("should update vsi ssh key name", () => {
@@ -81,19 +81,19 @@ describe("ssh_keys", () => {
       assert.deepEqual(
         craig.store.json.vsi[0].ssh_keys,
         ["frog"],
-        "it should have a new ssh key"
+        "it should have a new ssh key",
       );
     });
   });
   it("should set public key to null when using data", () => {
     craig.ssh_keys.save(
       { name: "todd", use_data: true, public_key: "honk" },
-      { data: { name: "ssh-key" } }
+      { data: { name: "ssh-key" } },
     );
     assert.deepEqual(
       craig.store.json.ssh_keys[0].public_key,
       null,
-      "it should have a new name and public key null"
+      "it should have a new name and public key null",
     );
   });
   describe("ssh_keys.create", () => {
@@ -102,7 +102,7 @@ describe("ssh_keys", () => {
       assert.deepEqual(
         craig.store.sshKeys,
         ["ssh-key", "frog"],
-        "it should have a new name"
+        "it should have a new name",
       );
     });
   });
@@ -112,9 +112,9 @@ describe("ssh_keys", () => {
         assert.isFalse(
           craig.ssh_keys.resource_group.invalid(
             { use_data: true },
-            { craig: craig }
+            { craig: craig },
           ),
-          "it should be false"
+          "it should be false",
         );
       });
     });
@@ -123,9 +123,9 @@ describe("ssh_keys", () => {
         assert.isFalse(
           craig.ssh_keys.public_key.invalid(
             { use_data: true },
-            { craig: craig }
+            { craig: craig },
           ),
-          "it should be false"
+          "it should be false",
         );
       });
       it("should not be invalid if the key is NONE and another NONE key exists", () => {
@@ -137,16 +137,16 @@ describe("ssh_keys", () => {
               data: {},
               isModal: true,
               craig: craig,
-            }
+            },
           ),
-          "it should be valid"
+          "it should be valid",
         );
       });
       describe("hideWhen", () => {
         it("should return true when use data is true", () => {
           assert.isTrue(
             craig.ssh_keys.public_key.hideWhen({ use_data: true }),
-            "it should be true"
+            "it should be true",
           );
         });
       });

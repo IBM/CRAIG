@@ -38,7 +38,7 @@ describe("edge network", () => {
       assert.deepEqual(
         craig.store.json.vpcs[0],
         defaultEdgeVpnAndWaf,
-        "it should return correct vpc"
+        "it should return correct vpc",
       );
       assert.deepEqual(
         craig.store.json.security_groups,
@@ -49,7 +49,7 @@ describe("edge network", () => {
           newF5BastionSg(),
           newF5VpeSg(),
         ].concat(defaultSecurityGroups()),
-        "it should have the correct security groups"
+        "it should have the correct security groups",
       );
     });
     it("should create the default vpn and waf edge vpc and security groups with one zone", () => {
@@ -58,7 +58,7 @@ describe("edge network", () => {
       assert.deepEqual(
         craig.store.json.vpcs[0],
         oneZoneEdgeVpnAndWaf,
-        "it should return correct vpc"
+        "it should return correct vpc",
       );
       assert.deepEqual(
         craig.store.json.security_groups,
@@ -69,7 +69,7 @@ describe("edge network", () => {
           newF5BastionSg(),
           newF5VpeSg(),
         ].concat(defaultSecurityGroups()),
-        "it should have the correct security groups"
+        "it should have the correct security groups",
       );
     });
     it("should increase from one zone to three zones", () => {
@@ -79,7 +79,7 @@ describe("edge network", () => {
       assert.deepEqual(
         craig.store.json.vpcs[0],
         threeZoneEdgeVpnAndWaf,
-        "it should return correct vpc"
+        "it should return correct vpc",
       );
       assert.deepEqual(
         craig.store.json.security_groups,
@@ -90,7 +90,7 @@ describe("edge network", () => {
           newF5BastionSg(),
           newF5VpeSg(),
         ].concat(defaultSecurityGroups()),
-        "it should have the correct security groups"
+        "it should have the correct security groups",
       );
     });
     it("should decrease from three zones to one zone", () => {
@@ -100,7 +100,7 @@ describe("edge network", () => {
       assert.deepEqual(
         craig.store.json.vpcs[0],
         oneZoneEdgeVpnAndWaf,
-        "it should return correct vpc"
+        "it should return correct vpc",
       );
       assert.deepEqual(
         craig.store.json.security_groups,
@@ -111,7 +111,7 @@ describe("edge network", () => {
           newF5BastionSg(),
           newF5VpeSg(),
         ].concat(defaultSecurityGroups()),
-        "it should have the correct security groups"
+        "it should have the correct security groups",
       );
     });
     it("should not create any new resource when create edge network is run when an edge network exists", () => {
@@ -121,7 +121,7 @@ describe("edge network", () => {
       assert.deepEqual(
         craig.store.json.vpcs[0],
         defaultEdgeVpnAndWaf,
-        "it should return correct vpc"
+        "it should return correct vpc",
       );
       assert.deepEqual(
         craig.store.json.security_groups,
@@ -132,7 +132,7 @@ describe("edge network", () => {
           newF5BastionSg(),
           newF5VpeSg(),
         ].concat(defaultSecurityGroups()),
-        "it should have the correct security groups"
+        "it should have the correct security groups",
       );
     });
     it("should create the default full-tunnel edge vpc and security groups", () => {
@@ -141,7 +141,7 @@ describe("edge network", () => {
       assert.deepEqual(
         craig.store.json.vpcs[0],
         defaultEdgeFullTunnel,
-        "it should return correct vpc"
+        "it should return correct vpc",
       );
       assert.deepEqual(
         craig.store.json.security_groups,
@@ -151,7 +151,7 @@ describe("edge network", () => {
           newF5BastionSg(),
           newF5VpeSg(),
         ].concat(defaultSecurityGroups()),
-        "it should have the correct security groups"
+        "it should have the correct security groups",
       );
     });
     it("should create the default waf edge vpc and security groups", () => {
@@ -161,7 +161,7 @@ describe("edge network", () => {
       assert.deepEqual(
         craig.store.json.vpcs[0],
         defaultEdgeWaf,
-        "it should return correct vpc"
+        "it should return correct vpc",
       );
       assert.deepEqual(
         craig.store.json.security_groups,
@@ -171,7 +171,7 @@ describe("edge network", () => {
           newF5WorkloadSg(),
           newF5VpeSg(),
         ].concat(defaultSecurityGroups()),
-        "it should have the correct security groups"
+        "it should have the correct security groups",
       );
     });
     it("should create the default vpn and waf edge vpc on management", () => {
@@ -180,7 +180,7 @@ describe("edge network", () => {
       assert.deepEqual(
         craig.store.json.vpcs[0],
         managementEdgeVpnAndWaf,
-        "it should return correct vpc"
+        "it should return correct vpc",
       );
     });
   });

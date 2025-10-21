@@ -59,7 +59,7 @@ function formatTgw(tgw, config) {
     tgw.use_data ? "data" : "resource",
     "ibm_tg_gateway",
     tf.name,
-    tf.data
+    tf.data,
   );
 }
 
@@ -74,24 +74,24 @@ function ibmTgConnection(connection, tgw) {
   let connectionName = connection.power
     ? connection.power
     : connection.gateway || connection.local_tunnel_ip
-    ? (connection.gateway || connection.name) + " unbound gre"
-    : connection.crn
-    ? connection.crn.replace(/.+vpc:/g, "")
-    : connection.classic
-    ? "classic"
-    : connection.vpc;
+      ? (connection.gateway || connection.name) + " unbound gre"
+      : connection.crn
+        ? connection.crn.replace(/.+vpc:/g, "")
+        : connection.classic
+          ? "classic"
+          : connection.vpc;
   let connectionResourceName = kebabName(
     [connection.tgw]
       .concat(connection.power ? "power" : [])
-      .concat(connectionName)
+      .concat(connectionName),
   );
   let networkId = connection.power
     ? `\${ibm_resource_instance.power_vs_workspace_${snakeCase(
-        connection.power
+        connection.power,
       )}.resource_crn}`
     : connection.vpc
-    ? vpcRef(connection.vpc, "crn", true)
-    : connection.crn;
+      ? vpcRef(connection.vpc, "crn", true)
+      : connection.crn;
   let connectionData = {
     name: `${connection.tgw} to ${
       (connection.power ? "power_workspace_" : "") + connectionName
@@ -101,16 +101,16 @@ function ibmTgConnection(connection, tgw) {
         "ibm_tg_gateway",
         snakeCase((tgw.use_data ? "data_" : "") + connection.tgw),
         "id",
-        tgw.use_data
+        tgw.use_data,
       ),
       network_type:
         connection.gateway || connection.local_tunnel_ip
           ? "unbound_gre_tunnel"
           : connection.power
-          ? "power_virtual_server"
-          : connection.classic
-          ? "classic"
-          : "vpc",
+            ? "power_virtual_server"
+            : connection.classic
+              ? "classic"
+              : "vpc",
       name: connectionResourceName,
       network_id: networkId,
       timeouts: timeouts("30m", "", "30m"),
@@ -120,7 +120,7 @@ function ibmTgConnection(connection, tgw) {
     connectionData.data.base_network_type = "classic";
     connectionData.data.remote_bgp_asn = isNullOrEmptyString(
       connection.remote_bgp_asn,
-      true
+      true,
     )
       ? undefined
       : connection.remote_bgp_asn;
@@ -164,7 +164,7 @@ function formatTgwPrefixFilter(filter, tgw) {
         "ibm_tg_gateway",
         snakeCase((tgw.use_data ? "data_" : "") + filter.tgw),
         "id",
-        tgw.use_data
+        tgw.use_data,
       ),
       connection_id: tfRef(
         "ibm_tg_connection",
@@ -173,13 +173,13 @@ function formatTgwPrefixFilter(filter, tgw) {
         }${filter.target} ${
           filter.connection_type === "gre" ? "unbound gre " : ""
         }connection`,
-        "connection_id"
+        "connection_id",
       ),
       action: filter.action,
       prefix: filter.prefix,
       le: filter.le,
       ge: filter.ge,
-    }
+    },
   );
 }
 
@@ -194,11 +194,11 @@ function tgwTf(config) {
   config.transit_gateways.forEach((gw, index) => {
     let blockData = formatTgw(gw, config);
     gw.connections.forEach(
-      (connection) => (blockData += formatTgwConnection(connection, gw))
+      (connection) => (blockData += formatTgwConnection(connection, gw)),
     );
     if (gw.gre_tunnels) {
       gw.gre_tunnels.forEach(
-        (tunnel) => (blockData += formatTgwConnection(tunnel, gw))
+        (tunnel) => (blockData += formatTgwConnection(tunnel, gw)),
       );
     }
     if (gw.prefix_filters) {

@@ -17,9 +17,9 @@ describe("access groups", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if an access group policy has an invalid name", () => {
@@ -45,9 +45,9 @@ describe("access groups", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if an access group policy has an invalid name", () => {
@@ -64,9 +64,9 @@ describe("access groups", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if an access group dynamic policy has an invalid name", () => {
@@ -94,9 +94,9 @@ describe("access groups", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if an access group dynamic policy has an invalid identity provider URI", () => {
@@ -124,9 +124,9 @@ describe("access groups", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if an access group dynamic policy has no identity provider URI", () => {
@@ -154,9 +154,9 @@ describe("access groups", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
   it("should return true if an access group dynamic policy has no identity provider URI", () => {
@@ -184,9 +184,9 @@ describe("access groups", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   });
 });

@@ -29,7 +29,7 @@ function formatCisOriginPool(pool) {
     "resource",
     "ibm_cis_origin_pool",
     pool.cis + "_cis_origin_pool_" + pool.name,
-    originPoolData
+    originPoolData,
   );
 }
 
@@ -43,12 +43,12 @@ function formatCisGlb(glb) {
     cis_id: tfRef("ibm_cis", glb.cis + " cis"),
     domain_id: tfRef(
       "ibm_cis_domain",
-      glb.cis + " cis domain " + glb.domain.replace(/\./g, " ")
+      glb.cis + " cis domain " + glb.domain.replace(/\./g, " "),
     ),
     name: glb.name,
     fallback_pool_id: tfRef(
       "ibm_cis_origin_pool",
-      glb.cis + " cis origin pool " + glb.fallback_pool
+      glb.cis + " cis origin pool " + glb.fallback_pool,
     ),
     enabled: glb.enabled,
     proxied: glb.proxied,
@@ -56,14 +56,14 @@ function formatCisGlb(glb) {
   };
   glb.default_pools.forEach((pool) => {
     glbData.default_pools.push(
-      tfRef("ibm_cis_origin_pool", glb.cis + " cis origin pool " + pool)
+      tfRef("ibm_cis_origin_pool", glb.cis + " cis origin pool " + pool),
     );
   });
   return jsonToTfPrint(
     "resource",
     "ibm_cis_global_load_balancer",
     glb.cis + "_cis_glb_" + glb.name.replace(/\./g, " "),
-    glbData
+    glbData,
   );
 }
 
@@ -89,7 +89,7 @@ function formatCisHealthCheck(check) {
       port: check.port,
       retries: check.retries,
       type: check.type,
-    }
+    },
   );
 }
 

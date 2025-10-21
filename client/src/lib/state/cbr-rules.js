@@ -31,7 +31,7 @@ function cbrRuleSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "cbr_rules"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -69,7 +69,7 @@ function cbrRuleContextCreate(config, stateData, componentProps) {
     "cbr_rules",
     "contexts",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -117,7 +117,7 @@ function cbrRuleAttributeCreate(config, stateData, componentProps) {
     "cbr_rules",
     "resource_attributes",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -137,7 +137,7 @@ function cbrRuleAttributeSave(config, stateData, componentProps) {
     "cbr_rules",
     "resource_attributes",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -243,7 +243,7 @@ function initCbrRules(store) {
     delete: cbrRuleDelete,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "description", "api_type_id"],
-      "cbr_rules"
+      "cbr_rules",
     ),
     schema: {
       name: nameField("cbr_rules"),
@@ -293,7 +293,7 @@ function initCbrRules(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "value"],
           "cbr_rules",
-          "contexts"
+          "contexts",
         ),
         schema: {
           name: nameField("contexts"),
@@ -313,7 +313,7 @@ function initCbrRules(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "value"],
           "cbr_rules",
-          "resource_attributes"
+          "resource_attributes",
         ),
         schema: {
           name: nameField("resource_attributes"),
@@ -333,7 +333,7 @@ function initCbrRules(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "value", "operator"],
           "cbr_rules",
-          "tags"
+          "tags",
         ),
         schema: {
           name: nameField("tags"),

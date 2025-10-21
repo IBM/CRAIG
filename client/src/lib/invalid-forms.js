@@ -63,8 +63,8 @@ function invalidForms(craig) {
                   subComponent === "acls"
                     ? "/form/nacls"
                     : subComponent === "subnets"
-                    ? "/form/subnets"
-                    : formKeyName;
+                      ? "/form/subnets"
+                      : formKeyName;
                 if (
                   disableSave(
                     subComponent === "subnets" ? "subnet" : subComponent,
@@ -75,7 +75,7 @@ function invalidForms(craig) {
                       // pass array parent name to prevent disable save from checking
                       // other ssh keys lists
                       arrayParentName: key === "power" ? item.name : undefined,
-                    }
+                    },
                   )
                 ) {
                   forms = distinct(forms.concat(subComponentFormName));
@@ -96,8 +96,8 @@ function invalidForms(craig) {
       ) {
         forms = distinct(
           forms.concat(
-            contains(["logdna", "sysdig"], key) ? "/form/observability" : key
-          )
+            contains(["logdna", "sysdig"], key) ? "/form/observability" : key,
+          ),
         );
       }
     }

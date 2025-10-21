@@ -40,7 +40,7 @@ function logdnaOnStoreUpdate(config) {
     !splatContains(
       config.store.json.object_storage,
       "name",
-      config.store.json.logdna.cos
+      config.store.json.logdna.cos,
     )
   ) {
     config.store.json.logdna.cos = null;
@@ -55,7 +55,7 @@ function logdnaOnStoreUpdate(config) {
       !splatContains(
         config.store.json.secrets_manager,
         "name",
-        config.store.json[resource].secrets_manager
+        config.store.json[resource].secrets_manager,
       )
     ) {
       config.store.json[resource].secrets_manager = null;
@@ -90,7 +90,7 @@ function logdnaSave(config, stateData) {
   }
   stateData.cos = getCosFromBucket(
     stateData.bucket,
-    config.store.json.object_storage
+    config.store.json.object_storage,
   );
   transpose(stateData, config.store.json.logdna);
 }
@@ -175,7 +175,7 @@ function initLogDna(store) {
     save: logdnaSave,
     shouldDisableSave: shouldDisableComponentSave(
       ["plan", "resource_group", "bucket", "secrets_manager"],
-      "logdna"
+      "logdna",
     ),
     schema: {
       name: {
@@ -261,7 +261,7 @@ function initSysDig(store) {
     save: sysdigSave,
     shouldDisableSave: shouldDisableComponentSave(
       ["resource_group", "plan", "secrets_manager"],
-      "sysdig"
+      "sysdig",
     ),
     schema: {
       enabled: {

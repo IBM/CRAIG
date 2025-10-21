@@ -21,7 +21,7 @@ function getDisplaySubnetTiers(props) {
           emptySubnetResources = true;
         }
       });
-    }
+    },
   );
 
   ["vpn_gateways"].forEach((field) => {

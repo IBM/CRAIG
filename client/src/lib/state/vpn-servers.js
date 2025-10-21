@@ -67,7 +67,7 @@ function vpnServerOnStoreUpdate(config) {
       let vpcSgs = config.store.securityGroups[server.vpc];
       server.security_groups = deleteUnfoundArrayItems(
         vpcSgs,
-        server.security_groups
+        server.security_groups,
       );
     }
     if (isString(server.protocol)) {
@@ -91,7 +91,7 @@ function vpnServerSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "vpn_servers"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -130,7 +130,7 @@ function vpnServerRouteCreate(config, stateData, componentProps) {
     "vpn_servers",
     "routes",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -198,7 +198,7 @@ function initVpnState(store) {
         "zone",
         "secrets_manager",
       ],
-      "vpn_servers"
+      "vpn_servers",
     ),
     schema: {
       name: nameField("vpn_servers", {
@@ -237,7 +237,7 @@ function initVpnState(store) {
         labelText: "Authentication Method",
         invalid: fieldIsNullOrEmptyString("method"),
         invalidText: unconditionalInvalidText(
-          "Select an authentication method"
+          "Select an authentication method",
         ),
         groups: [
           "Username and Certificate",
@@ -250,19 +250,19 @@ function initVpnState(store) {
           return stateData.method === "both"
             ? "Username and Certificate"
             : stateData.method === "INSECURE"
-            ? "INSECURE - Developer Certificate"
-            : stateData.method === "byo"
-            ? "Bring Your Own Certificate"
-            : titleCase(stateData.method);
+              ? "INSECURE - Developer Certificate"
+              : stateData.method === "byo"
+                ? "Bring Your Own Certificate"
+                : titleCase(stateData.method);
         },
         onInputChange(stateData) {
           return stateData.method === "Username and Certificate"
             ? "both"
             : stateData.method === "INSECURE - Developer Certificate"
-            ? "INSECURE"
-            : stateData.method === "Bring Your Own Certificate"
-            ? "byo"
-            : snakeCase(stateData.method);
+              ? "INSECURE"
+              : stateData.method === "Bring Your Own Certificate"
+                ? "byo"
+                : snakeCase(stateData.method);
         },
       },
       secrets_manager: {
@@ -301,7 +301,7 @@ function initVpnState(store) {
           return (
             fieldIsNullOrEmptyString("client_ip_pool")(
               stateData,
-              componentProps
+              componentProps,
             ) || invalidCidrBlock(stateData.client_ip_pool)
           );
         },
@@ -312,7 +312,7 @@ function initVpnState(store) {
         default: "",
         invalid: fieldIsNotWholeNumber("port", 1, 65535),
         invalidText: unconditionalInvalidText(
-          "Must be a whole number between 1 and 65535"
+          "Must be a whole number between 1 and 65535",
         ),
       },
       protocol: {
@@ -345,7 +345,7 @@ function initVpnState(store) {
             : false;
         },
         invalidText: unconditionalInvalidText(
-          "Must be a whole number between 0 and 28800"
+          "Must be a whole number between 0 and 28800",
         ),
       },
       client_dns_server_ips: {
@@ -356,15 +356,15 @@ function initVpnState(store) {
           return (
             !isNullOrEmptyString(stateData.client_dns_server_ips) &&
             (stateData.client_dns_server_ips || "").match(
-              commaSeparatedIpListExp
+              commaSeparatedIpListExp,
             ) === null
           );
         },
         invalidText: unconditionalInvalidText(
-          "Please enter a comma separated list of IP addresses."
+          "Please enter a comma separated list of IP addresses.",
         ),
         helperText: unconditionalInvalidText(
-          "Enter a comma separated list of IP addresses."
+          "Enter a comma separated list of IP addresses.",
         ),
         placeholder: "X.X.X.X, X.X.X.X, ...",
       },
@@ -383,7 +383,7 @@ function initVpnState(store) {
         },
         placeholder: "X.X.X.X/X, X.X.X.X/X, ...",
         invalidText: unconditionalInvalidText(
-          "Enter a list of comma separated CIDR blocks"
+          "Enter a list of comma separated CIDR blocks",
         ),
         onRender: function (stateData) {
           return stateData.additional_prefixes.join(",");
@@ -392,10 +392,10 @@ function initVpnState(store) {
           return stateData.additional_prefixes.split(",");
         },
         invalidText: unconditionalInvalidText(
-          "Please enter a comma separated list of IPV4 CIDR blocks."
+          "Please enter a comma separated list of IPV4 CIDR blocks.",
         ),
         helperText: unconditionalInvalidText(
-          "Enter a comma separated list of IPV4 CIDR blocks."
+          "Enter a comma separated list of IPV4 CIDR blocks.",
         ),
       },
       zone: {
@@ -420,7 +420,7 @@ function initVpnState(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "destination", "action"],
           "vpn_servers",
-          "routes"
+          "routes",
         ),
         schema: {
           name: nameField("vpn_server_routes", {
@@ -433,7 +433,7 @@ function initVpnState(store) {
               return invalidCidrBlock(stateData.destination);
             },
             invalidText: unconditionalInvalidText(
-              "Destination must be a valid IPV4 CIDR Block"
+              "Destination must be a valid IPV4 CIDR Block",
             ),
           },
           action: {

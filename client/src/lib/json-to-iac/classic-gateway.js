@@ -16,7 +16,7 @@ function formatNetworkGateway(gateway) {
     let newGatewayMember = {
       hostname: kebabName([gateway.domain.replace(/\./g, "-"), member]).replace(
         /\$\{var.prefix\}-/g,
-        ""
+        "",
       ),
       domain: gateway.domain,
       datacenter: gateway.datacenter,
@@ -29,19 +29,19 @@ function formatNetworkGateway(gateway) {
       notes: gateway.notes,
       ipv6_enabled: gateway.ipv6_enabled,
       private_vlan_id: `\${ibm_network_vlan.classic_vlan_${snakeCase(
-        gateway.private_vlan
+        gateway.private_vlan,
       )}.id}`,
       public_vlan_id: gateway.private_network_only
         ? undefined
         : `\${ibm_network_vlan.classic_vlan_${snakeCase(
-            gateway.public_vlan
+            gateway.public_vlan,
           )}.id}`,
       package_key_name: gateway.package_key_name,
       os_key_name: gateway.os_key_name,
       process_key_name: gateway.process_key_name,
       ssh_key_ids: [
         `\${ibm_compute_ssh_key.classic_ssh_key_${snakeCase(
-          gateway.ssh_key
+          gateway.ssh_key,
         )}.id}`,
       ],
       disk_key_names: gateway.disk_key_names,
@@ -53,7 +53,7 @@ function formatNetworkGateway(gateway) {
     "resource",
     "ibm_network_gateway",
     "classic_gateway_" + snakeCase(gateway.name),
-    gatewayData
+    gatewayData,
   );
 }
 
@@ -67,7 +67,7 @@ function classicGatewayTf(config) {
   (config.classic_gateways || []).forEach((gateway) => {
     gwTf += tfBlock(
       gateway.name + " Classic Gateway",
-      formatNetworkGateway(gateway)
+      formatNetworkGateway(gateway),
     );
   });
   return gwTf === "" ? null : gwTf;

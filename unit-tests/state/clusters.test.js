@@ -55,10 +55,25 @@ describe("clusters", () => {
     it("should add a new cluster", () => {
       craig.store.json.clusters = [];
       craig.clusters.create(newDefaultWorkloadCluster());
+
+      let clusterSecurityGroup = {
+        cluster_security_group: true,
+        name: "workload-cluster-security-group",
+        vpc: "workload",
+        resource_group: "workload-rg",
+        rules: [],
+      };
       assert.deepEqual(
         craig.store.json.clusters,
         [newDefaultWorkloadCluster()],
-        "it should create cluster"
+        "it should create cluster",
+      );
+      assert.deepEqual(
+        craig.store.json.security_groups[
+          craig.store.json.security_groups.length - 1
+        ],
+        clusterSecurityGroup,
+        "it should create a new security group",
       );
     });
   });
@@ -70,7 +85,7 @@ describe("clusters", () => {
       assert.deepEqual(
         craig.store.json.clusters,
         [defaultManagementCluster],
-        "it should save cluster"
+        "it should save cluster",
       );
     });
     it("should update cluster worker pools when changing vpc", () => {
@@ -121,7 +136,7 @@ describe("clusters", () => {
             name: "frog",
             vpc: "workload",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.clusters[1],
@@ -156,7 +171,7 @@ describe("clusters", () => {
           ],
           workers_per_subnet: 2,
         },
-        "it should save cluster"
+        "it should save cluster",
       );
     });
     it("should not update cluster worker pools when not changing vpc", () => {
@@ -206,7 +221,7 @@ describe("clusters", () => {
             name: "frog",
             vpc: "workload",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.clusters[1],
@@ -241,7 +256,7 @@ describe("clusters", () => {
           ],
           workers_per_subnet: 2,
         },
-        "it should save cluster"
+        "it should save cluster",
       );
     });
     it("should update opaque_secret.cluster when cluster.name is changed", () => {
@@ -253,12 +268,90 @@ describe("clusters", () => {
       };
       craig.clusters.save(
         { name: "new-name" },
-        { data: { name: "workload-cluster" } }
+        { data: { name: "workload-cluster" } },
       );
       assert.deepEqual(
         craig.store.json.clusters[0].opaque_secrets[0].cluster,
         "new-name",
-        "it should update opaque secrets cluster name"
+        "it should update opaque secrets cluster name",
+      );
+    });
+    it("should update cluster security group name when cluster.name is changed", () => {
+      craig.clusters.create(newDefaultWorkloadCluster());
+      craig.clusters.save(
+        { name: "new-name" },
+        { data: { name: "workload-cluster" } },
+      );
+      assert.deepEqual(
+        craig.store.json.security_groups[
+          craig.store.json.security_groups.length - 3
+        ].name,
+        "new-name-security-group",
+        "it should update opaque secrets cluster name",
+      );
+    });
+    it("should update cluster security group when changing vpc", () => {
+      craig.clusters.create({
+        cos: "cos",
+        entitlement: "cloud_pak",
+        kube_type: "openshift",
+        kube_version: "default (Default)",
+        flavor: "bx2.16x64",
+        name: "frog",
+        resource_group: "workload-rg",
+        encryption_key: "roks-key",
+        subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+        update_all_workers: false,
+        vpc: "workload",
+        worker_pools: [
+          {
+            entitlement: "cloud_pak",
+            resource_group: "workload-rg",
+            flavor: "bx2.16x64",
+            name: "logging-worker-pool",
+            subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+            vpc: "workload",
+            workers_per_subnet: 2,
+          },
+        ],
+        workers_per_subnet: 2,
+        private_endpoint: true,
+      });
+      craig.clusters.save(
+        {
+          vpc: "management",
+          kube_version: "default (Default)",
+          worker_pools: [
+            {
+              entitlement: "cloud_pak",
+              flavor: "bx2.16x64",
+              name: "logging-worker-pool",
+              resource_group: "workload-rg",
+              subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+              vpc: "workload",
+              workers_per_subnet: 2,
+            },
+          ],
+        },
+        {
+          data: {
+            name: "frog",
+            vpc: "workload",
+          },
+        },
+      );
+      assert.deepEqual(
+        craig.store.json.security_groups[
+          craig.store.json.security_groups.length - 1
+        ],
+        {
+          cluster_security_group: true,
+          name: "frog-security-group",
+          vpc: "management",
+          resource_group: "workload-rg",
+          rules: [],
+        },
+        "it should update security group",
       );
     });
   });
@@ -269,7 +362,7 @@ describe("clusters", () => {
       assert.deepEqual(
         craig.store.json.clusters,
         [],
-        "it should delete clusters"
+        "it should delete clusters",
       );
     });
   });
@@ -282,12 +375,12 @@ describe("clusters", () => {
       assert.deepEqual(
         craig.store.json.clusters[0].resource_group,
         null,
-        "it should be null"
+        "it should be null",
       );
       assert.deepEqual(
         craig.store.json.clusters[0].worker_pools[0].resource_group,
         null,
-        "it should be null"
+        "it should be null",
       );
     });
     it("should set cos to null if deleted", () => {
@@ -295,7 +388,7 @@ describe("clusters", () => {
       assert.deepEqual(
         craig.store.json.clusters[0].cos,
         null,
-        "it should be null"
+        "it should be null",
       );
     });
     it("should set worker pools if not found", () => {
@@ -306,7 +399,7 @@ describe("clusters", () => {
       assert.deepEqual(
         craig.store.json.clusters[2].worker_pools,
         [],
-        "it should be null"
+        "it should be null",
       );
     });
     it("should delete subnet names on tier deletion", () => {
@@ -317,7 +410,7 @@ describe("clusters", () => {
           data: {
             name: "vsi-zone-1",
           },
-        }
+        },
       );
       craig.vpcs.subnets.delete(
         {},
@@ -326,7 +419,7 @@ describe("clusters", () => {
           data: {
             name: "vsi-zone-2",
           },
-        }
+        },
       );
       craig.vpcs.subnets.delete(
         {},
@@ -335,12 +428,12 @@ describe("clusters", () => {
           data: {
             name: "vsi-zone-3",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.clusters[0].subnets,
         [],
-        "it should be empty"
+        "it should be empty",
       );
     });
     it("should set vpc name to null if deleted", () => {
@@ -348,33 +441,33 @@ describe("clusters", () => {
       assert.deepEqual(
         craig.store.json.clusters[0].vpc,
         null,
-        "it should be null"
+        "it should be null",
       );
       assert.deepEqual(
         craig.store.json.clusters[0].subnets,
         [],
-        "it should be empty"
+        "it should be empty",
       );
       assert.deepEqual(
         craig.store.json.clusters[0].worker_pools[0].vpc,
         null,
-        "it should be null"
+        "it should be null",
       );
       assert.deepEqual(
         craig.store.json.clusters[0].worker_pools[0].subnets,
         [],
-        "it should be null"
+        "it should be null",
       );
     });
     it("should set encryption key name to null if key deleted", () => {
       craig.key_management.keys.delete(
         {},
-        { arrayParentName: "kms", data: { name: "roks-key" } }
+        { arrayParentName: "kms", data: { name: "roks-key" } },
       );
       assert.deepEqual(
         craig.store.json.clusters[0].encryption_key,
         null,
-        "it should return null"
+        "it should return null",
       );
     });
   });
@@ -396,9 +489,9 @@ describe("clusters", () => {
                   },
                 },
               },
-            }
+            },
           ),
-          "should be invalid"
+          "should be invalid",
         );
       });
     });
@@ -419,9 +512,9 @@ describe("clusters", () => {
                   },
                 },
               },
-            }
+            },
           ),
-          "Cluster names must be 32 or fewer characters including the environment prefix and suffix"
+          "Cluster names must be 32 or fewer characters including the environment prefix and suffix",
         );
       });
     });
@@ -441,10 +534,10 @@ describe("clusters", () => {
                   },
                 },
               },
-            }
+            },
           ),
           "iac-test-cluster",
-          "it should return correct text"
+          "it should return correct text",
         );
       });
     });
@@ -452,28 +545,28 @@ describe("clusters", () => {
       assert.deepEqual(
         craig.clusters.kube_type.onRender({}),
         "",
-        "it should return empty string"
+        "it should return empty string",
       );
     });
     it("should return correct data on kube type render when openshift", () => {
       assert.deepEqual(
         craig.clusters.kube_type.onRender({ kube_type: "openshift" }),
         "OpenShift",
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct data on kube type render when iks", () => {
       assert.deepEqual(
         craig.clusters.kube_type.onRender({ kube_type: "iks" }),
         "IBM Kubernetes Service",
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct data on kube type render when openshift", () => {
       assert.deepEqual(
         craig.clusters.kube_type.onInputChange({ kube_type: "OpenShift" }),
         "openshift",
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct data on kube type input change when iks", () => {
@@ -482,13 +575,13 @@ describe("clusters", () => {
           kube_type: "IBM Kubernetes Service",
         }),
         "iks",
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should be not have invalid cos when openshift", () => {
       assert.isFalse(
         craig.clusters.cos.invalid({}),
-        "it should not be invalid"
+        "it should not be invalid",
       );
     });
     it("should be have invalid cos when openshift and not selected", () => {
@@ -496,26 +589,26 @@ describe("clusters", () => {
         craig.clusters.cos.invalid({
           kube_type: "openshift",
         }),
-        "it should not be invalid"
+        "it should not be invalid",
       );
     });
     it("should return correct groups for cos", () => {
       assert.deepEqual(
         craig.clusters.cos.groups({}, { craig: craig }),
         ["atracker-cos", "cos"],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should hide cos when type not openshift", () => {
       assert.isTrue(
         craig.clusters.cos.hideWhen({ kube_type: "" }),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
     it("should hide entitlement when type not openshift", () => {
       assert.isTrue(
         craig.clusters.entitlement.hideWhen({ kube_type: "" }),
-        "it should be hidden"
+        "it should be hidden",
       );
     });
     it("should have invalid subnets when openshift and invalid workers per subnet", () => {
@@ -525,7 +618,7 @@ describe("clusters", () => {
           subnets: [],
           workers_per_subnet: "1",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should have invalid workers per subnet when openshift and invalid workers per subnet", () => {
@@ -535,7 +628,7 @@ describe("clusters", () => {
           subnets: [],
           workers_per_subnet: "1",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should not be invalid subnets when openshift and workers per subnet", () => {
@@ -545,7 +638,7 @@ describe("clusters", () => {
           subnets: ["subnet"],
           workers_per_subnet: "2",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should not be invalid when not openshift and 1 workers per subnet", () => {
@@ -555,7 +648,7 @@ describe("clusters", () => {
           subnets: ["subnet"],
           workers_per_subnet: "1",
         }),
-        "it should be invalid"
+        "it should be invalid",
       );
     });
     it("should return correct api endpoint for flavors", () => {
@@ -572,10 +665,10 @@ describe("clusters", () => {
                 },
               },
             },
-          }
+          },
         ),
         `/api/cluster/us-south/flavors`,
-        "it should return api endpoint"
+        "it should return api endpoint",
       );
     });
     it("should disable logging integration when logdna is not enabled", () => {
@@ -590,9 +683,9 @@ describe("clusters", () => {
                 },
               },
             },
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should disable monitoring integration when sysdig is not enabled", () => {
@@ -607,9 +700,9 @@ describe("clusters", () => {
                 },
               },
             },
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
   });
@@ -624,12 +717,12 @@ describe("clusters", () => {
           {
             data: { name: "logging-worker-pool" },
             arrayParentName: "workload-cluster",
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.clusters[0].worker_pools,
           [],
-          "it should be empty"
+          "it should be empty",
         );
       });
     });
@@ -642,12 +735,12 @@ describe("clusters", () => {
           {
             arrayParentName: "workload-cluster",
             data: { name: "logging-worker-pool" },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.clusters[0].worker_pools[0].cloud_pak,
           "no",
-          "it should be no"
+          "it should be no",
         );
       });
     });
@@ -659,7 +752,7 @@ describe("clusters", () => {
           },
           {
             innerFormProps: { arrayParentName: "workload-cluster" },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.clusters[0].worker_pools[1],
@@ -671,7 +764,7 @@ describe("clusters", () => {
             subnets: [],
             flavor: "bx2.16x64",
           },
-          "it should be empty"
+          "it should be empty",
         );
       });
     });
@@ -684,9 +777,9 @@ describe("clusters", () => {
               parent: {
                 kube_type: "iks",
               },
-            }
+            },
           ),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
     });
@@ -706,7 +799,7 @@ describe("clusters", () => {
           },
           {
             innerFormProps: { arrayParentName: "workload-cluster" },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.clusters[0].opaque_secrets[1],
@@ -714,7 +807,7 @@ describe("clusters", () => {
             cluster: "workload-cluster",
             name: "super_secret_password",
           },
-          "it should create opaque secret"
+          "it should create opaque secret",
         );
       });
     });
@@ -732,12 +825,12 @@ describe("clusters", () => {
           {
             arrayParentName: "workload-cluster",
             data: { name: "secret" },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.clusters[0].opaque_secrets[0].name,
           "password",
-          "it should update secret name to password"
+          "it should update secret name to password",
         );
       });
     });
@@ -755,12 +848,12 @@ describe("clusters", () => {
           {
             data: { name: "secret" },
             arrayParentName: "workload-cluster",
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.clusters[0].opaque_secrets,
           [],
-          "it should be empty"
+          "it should be empty",
         );
       });
     });
@@ -768,7 +861,7 @@ describe("clusters", () => {
       it("should have invalid expiration date", () => {
         assert.isTrue(
           craig.clusters.opaque_secrets.expiration_date.invalid({}),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should have invalid username_password_secret_description", () => {
@@ -776,9 +869,9 @@ describe("clusters", () => {
           craig.clusters.opaque_secrets.username_password_secret_description.invalid(
             {
               username_password_secret_description: "@@@",
-            }
+            },
           ),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should have invalid arbitrary_secret_description", () => {
@@ -786,19 +879,19 @@ describe("clusters", () => {
           craig.clusters.opaque_secrets.arbitrary_secret_description.invalid({
             arbitrary_secret_description: "@@@",
           }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should have correct invalid values", () => {
         assert.isTrue(
           craig.clusters.opaque_secrets.labels.invalid({}),
-          "it should be invalid"
+          "it should be invalid",
         );
         assert.isTrue(
           craig.clusters.opaque_secrets.labels.invalid({
             labels: ["@!@@"],
           }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should return true if arbitrary_secret_name has empty string as name", () => {
@@ -823,7 +916,7 @@ describe("clusters", () => {
               data: {
                 arbitrary_secret_name: "egg",
               },
-            }
+            },
           );
         assert.isTrue(actualData, "it should be true");
       });
@@ -847,7 +940,7 @@ describe("clusters", () => {
             data: {
               name: "egg",
             },
-          }
+          },
         );
         assert.isTrue(actualData, "it should be true");
       });
@@ -871,7 +964,7 @@ describe("clusters", () => {
             data: {
               name: "egg",
             },
-          }
+          },
         );
         assert.isTrue(actualData, "it should be true");
       });
@@ -895,7 +988,7 @@ describe("clusters", () => {
             data: {
               secerts_group: "egg",
             },
-          }
+          },
         );
         assert.isTrue(actualData, "it should be true");
       });
@@ -923,7 +1016,7 @@ describe("clusters", () => {
               data: {
                 username_password_secret_name: "egg",
               },
-            }
+            },
           );
         assert.isTrue(actualData, "it should be true");
       });
@@ -949,12 +1042,12 @@ describe("clusters", () => {
               data: {
                 arbitrary_secret_name: "egg",
               },
-            }
+            },
           );
         assert.deepEqual(
           actualData,
           "Name must follow the regex pattern: /^[A-z]([a-z0-9-]*[a-z0-9])*$/s",
-          "it should return the correct text"
+          "it should return the correct text",
         );
       });
       it("should return correct text if arbitrary_secret_name is a duplicate", () => {
@@ -981,22 +1074,22 @@ describe("clusters", () => {
               data: {
                 arbitrary_secret_name: "egg",
               },
-            }
+            },
           );
         assert.deepEqual(
           actualData,
           `Name "frog" already in use`,
-          "it should return the correct text"
+          "it should return the correct text",
         );
       });
       it("should return groups for secrets manager", () => {
         assert.deepEqual(
           craig.clusters.opaque_secrets.secrets_manager.groups(
             {},
-            { craig: craig }
+            { craig: craig },
           ),
           [],
-          "it should return secrets manager instances"
+          "it should return secrets manager instances",
         );
       });
       it("should hide interval when auto rotate is false", () => {
@@ -1004,7 +1097,7 @@ describe("clusters", () => {
           craig.clusters.opaque_secrets.interval.hideWhen({
             auto_rotate: false,
           }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should not have invalid interval when auto rotate is false", () => {
@@ -1012,7 +1105,7 @@ describe("clusters", () => {
           craig.clusters.opaque_secrets.interval.invalid({
             auto_rotate: false,
           }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should return true when auto rotate and no interval", () => {
@@ -1021,13 +1114,13 @@ describe("clusters", () => {
             auto_rotate: true,
             interval: "",
           }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should hide unit when auto rotate is false", () => {
         assert.isTrue(
           craig.clusters.opaque_secrets.unit.hideWhen({ auto_rotate: false }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
     });

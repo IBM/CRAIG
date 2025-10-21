@@ -21,7 +21,7 @@ function dynamicCraigFormGroupsProps(componentProps, index, stateData) {
         allNextGroupsHidden = allGroupItemsHidden(
           componentProps.form.groups[i],
           stateData,
-          componentProps
+          componentProps,
         );
     }
   }
@@ -35,7 +35,7 @@ function dynamicCraigFormGroupsProps(componentProps, index, stateData) {
       allGroupItemsHidden(
         componentProps.form.groups[index],
         stateData,
-        componentProps
+        componentProps,
       ),
   };
 
@@ -44,7 +44,7 @@ function dynamicCraigFormGroupsProps(componentProps, index, stateData) {
     !allGroupItemsHidden(
       componentProps.form.groups[index],
       stateData,
-      componentProps
+      componentProps,
     )
   ) {
     formGroupData.className =

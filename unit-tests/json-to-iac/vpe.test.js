@@ -19,7 +19,7 @@ describe("virtual private endpoints", () => {
           subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
           name: "cos-vpe-gw",
         },
-        "test"
+        "test",
       );
       let expectedData = `
 resource "ibm_is_subnet_reserved_ip" "management_vpc_test_subnet_vpe_ip_cos_vpe_gw" {
@@ -63,7 +63,7 @@ resource "ibm_is_subnet_reserved_ip" "management_vpc_test_subnet_vpe_ip_cos_vpe_
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
@@ -120,7 +120,7 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_virtual_endpoint_gateway" "management_vpc_secrets_manager_vpe_gateway" {
@@ -175,7 +175,7 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_secrets_manager_vpe_g
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
@@ -208,7 +208,7 @@ resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
           subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
           name: "cos-vpe-gw",
         },
-        "vpe-zone-1"
+        "vpe-zone-1",
       );
       let expectedData = `
 resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_cos_gw_vpe_zone_1_gateway_ip" {

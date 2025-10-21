@@ -32,7 +32,7 @@ describe("classic gateways", () => {
       assert.deepEqual(
         craig.store.json.classic_gateways,
         [],
-        "it should initialize value"
+        "it should initialize value",
       );
     });
   });
@@ -67,7 +67,7 @@ describe("classic gateways", () => {
           data: {
             name: "vsrx-private",
           },
-        }
+        },
       );
       assert.deepEqual(craig.store.json.classic_gateways, [
         {
@@ -100,12 +100,12 @@ describe("classic gateways", () => {
           data: {
             name: "vsrx-public",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.classic_gateways[0].public_vlan,
         null,
-        "it should reset vlan"
+        "it should reset vlan",
       );
     });
     it("should update classic gateway ssh key when deleted", () => {
@@ -115,12 +115,12 @@ describe("classic gateways", () => {
           data: {
             name: "example-classic",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.classic_gateways[0].ssh_key,
         null,
-        "it should reset ssh key"
+        "it should reset ssh key",
       );
     });
   });
@@ -174,7 +174,7 @@ describe("classic gateways", () => {
             hadr: false,
           },
         ],
-        "it should create gateway"
+        "it should create gateway",
       );
     });
   });
@@ -216,7 +216,7 @@ describe("classic gateways", () => {
           innerFormProps: {
             arrayParentName: "transit-gateway",
           },
-        }
+        },
       );
       craig.classic_gateways.save(
         {
@@ -244,7 +244,7 @@ describe("classic gateways", () => {
           data: {
             name: "gw",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.classic_gateways,
@@ -271,7 +271,7 @@ describe("classic gateways", () => {
             hadr: false,
           },
         ],
-        "it should save gateway"
+        "it should save gateway",
       );
     });
     it("should save a classic gateway and update gre tunnels with new updated name", () => {
@@ -288,7 +288,7 @@ describe("classic gateways", () => {
           innerFormProps: {
             arrayParentName: "transit-gateway",
           },
-        }
+        },
       );
       craig.classic_gateways.save(
         {
@@ -316,12 +316,12 @@ describe("classic gateways", () => {
           data: {
             name: "gw",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.transit_gateways[0].gre_tunnels[0].gateway,
         "aaa",
-        "it should update gateway name"
+        "it should update gateway name",
       );
       assert.deepEqual(
         craig.store.json.classic_gateways,
@@ -348,7 +348,7 @@ describe("classic gateways", () => {
             hadr: false,
           },
         ],
-        "it should save gateway"
+        "it should save gateway",
       );
     });
   });
@@ -379,7 +379,7 @@ describe("classic gateways", () => {
       assert.deepEqual(
         craig.store.json.classic_gateways,
         [],
-        "it should delete gateway"
+        "it should delete gateway",
       );
     });
   });
@@ -412,9 +412,9 @@ describe("classic gateways", () => {
               data: {
                 name: "frog",
               },
-            }
+            },
           ),
-          "it should be true"
+          "it should be true",
         );
       });
       it("should return true if a gw has memory that is whole number not in range", () => {
@@ -440,9 +440,9 @@ describe("classic gateways", () => {
               data: {
                 name: "frog",
               },
-            }
+            },
           ),
-          "it should be true"
+          "it should be true",
         );
       });
     });
@@ -453,10 +453,10 @@ describe("classic gateways", () => {
             { name: "frog" },
             {
               craig: craig,
-            }
+            },
           ),
           "iac-gateway-frog",
-          "it should return correct helper text"
+          "it should return correct helper text",
         );
       });
     });
@@ -464,7 +464,7 @@ describe("classic gateways", () => {
       it("should return false when domain is undefined", () => {
         assert.isTrue(
           craig.classic_gateways.domain.invalid({}),
-          "it should be true"
+          "it should be true",
         );
       });
     });
@@ -491,9 +491,9 @@ describe("classic gateways", () => {
               data: {
                 name: "frog",
               },
-            }
+            },
           ),
-          "it should be true"
+          "it should be true",
         );
       });
     });
@@ -504,7 +504,7 @@ describe("classic gateways", () => {
         assert.deepEqual(
           data,
           { private_vlan: "", public_vlan: "" },
-          "it should set to empty string"
+          "it should set to empty string",
         );
       });
     });
@@ -513,7 +513,7 @@ describe("classic gateways", () => {
         assert.deepEqual(
           craig.classic_gateways.ssh_key.groups({}, { craig: craig }),
           ["example-classic"],
-          "it should return list of keys"
+          "it should return list of keys",
         );
       });
     });
@@ -522,10 +522,10 @@ describe("classic gateways", () => {
         assert.deepEqual(
           craig.classic_gateways.public_vlan.groups(
             { datacenter: "dal10" },
-            { craig: craig }
+            { craig: craig },
           ),
           ["vsrx-public"],
-          "it should return vlans"
+          "it should return vlans",
         );
       });
       it("should hide when private_network_only", () => {
@@ -533,7 +533,7 @@ describe("classic gateways", () => {
           craig.classic_gateways.public_vlan.hideWhen({
             private_network_only: true,
           }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
     });
@@ -562,9 +562,9 @@ describe("classic gateways", () => {
               data: {
                 name: "frog",
               },
-            }
+            },
           ),
-          "it should be true"
+          "it should be true",
         );
       });
       it("should return true if a gw has no public_vlan and private_network_only is false", () => {
@@ -591,9 +591,9 @@ describe("classic gateways", () => {
               data: {
                 name: "frog",
               },
-            }
+            },
           ),
-          "it should be true"
+          "it should be true",
         );
       });
       it("should change state data when changing from false to true", () => {
@@ -607,7 +607,7 @@ describe("classic gateways", () => {
             private_network_only: true,
             public_vlan: "",
           },
-          "it should set data"
+          "it should set data",
         );
       });
       it("should change state data when changing from true to false", () => {
@@ -620,7 +620,7 @@ describe("classic gateways", () => {
           {
             private_network_only: false,
           },
-          "it should set data"
+          "it should set data",
         );
       });
     });

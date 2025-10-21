@@ -28,7 +28,7 @@ describe("classic vsi", () => {
           _options: {
             tags: ["hello", "world"],
           },
-        }
+        },
       );
       let expectedData = `
 resource "ibm_compute_vm_instance" "classic_vsi_name" {
@@ -61,7 +61,7 @@ resource "ibm_compute_vm_instance" "classic_vsi_name" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct vsi"
+        "it should return correct vsi",
       );
     });
   });
@@ -165,7 +165,7 @@ resource "ibm_compute_vm_instance" "classic_vsi_name2" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct vsi"
+        "it should return correct vsi",
       );
     });
   });

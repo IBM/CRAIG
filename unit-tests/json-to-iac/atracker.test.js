@@ -39,7 +39,7 @@ resource "ibm_atracker_target" "atracker_cos_target" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -79,7 +79,7 @@ resource "ibm_atracker_route" "atracker_cos_route" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format a route", () => {
@@ -115,7 +115,7 @@ resource "ibm_atracker_route" "atracker_cos_route" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -172,7 +172,7 @@ resource "ibm_atracker_route" "atracker_cos_route" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should create the correct terraform for  with no route", () => {
@@ -214,7 +214,7 @@ resource "ibm_atracker_target" "atracker_cos_target" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return empty string when not enabled", () => {
@@ -234,7 +234,7 @@ resource "ibm_atracker_target" "atracker_cos_target" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should create correct terraform"
+        "it should create correct terraform",
       );
     });
     it("should return empty string when cloud logs enabled", () => {
@@ -257,7 +257,7 @@ resource "ibm_atracker_target" "atracker_cos_target" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should create correct terraform"
+        "it should create correct terraform",
       );
     });
   });

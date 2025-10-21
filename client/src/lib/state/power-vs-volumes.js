@@ -56,12 +56,12 @@ function powerVsVolumesOnStoreUpdate(config) {
           splatContains(
             config.store.json.power_instances,
             "name",
-            attachment
+            attachment,
           ) ||
           splatContains(
             config.store.json.vtl,
             "name",
-            attachment.replace(/\s\(VTL\)/g, "")
+            attachment.replace(/\s\(VTL\)/g, ""),
           )
         ) {
           newAttachments.push(attachment);
@@ -77,7 +77,7 @@ function powerVsVolumesOnStoreUpdate(config) {
       let workspace = getObjectFromArray(
         config.store.json.power,
         "name",
-        volume.workspace
+        volume.workspace,
       );
       if (volume.zone !== workspace.zone) {
         volume.pi_volume_type = null;
@@ -90,7 +90,7 @@ function powerVsVolumesOnStoreUpdate(config) {
       !splatContains(
         config.store.json.power_instances,
         "name",
-        volume.pi_affinity_instance
+        volume.pi_affinity_instance,
       )
     ) {
       volume.pi_affinity_instance = null;
@@ -100,7 +100,7 @@ function powerVsVolumesOnStoreUpdate(config) {
       !splatContains(
         config.store.json.power_instances,
         "name",
-        volume.pi_anti_affinity_instance
+        volume.pi_anti_affinity_instance,
       )
     ) {
       volume.pi_anti_affinity_instance = null;
@@ -110,7 +110,7 @@ function powerVsVolumesOnStoreUpdate(config) {
       !splatContains(
         config.store.json.power_volumes,
         "name",
-        volume.pi_anti_affinity_volume
+        volume.pi_anti_affinity_volume,
       )
     ) {
       volume.pi_anti_affinity_volume = null;
@@ -120,7 +120,7 @@ function powerVsVolumesOnStoreUpdate(config) {
       !splatContains(
         config.store.json.power_volumes,
         "name",
-        volume.pi_affinity_volume
+        volume.pi_affinity_volume,
       )
     ) {
       volume.pi_affinity_volume = null;
@@ -148,7 +148,7 @@ function powerVsVolumeSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "power_volumes"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -196,7 +196,7 @@ function initPowerVsVolumeStore(store) {
         "storage_option",
         "pi_volume_type",
       ],
-      "power_volumes"
+      "power_volumes",
     ),
     schema: {
       name: nameField("power_volumes", { size: "small" }),
@@ -216,7 +216,7 @@ function initPowerVsVolumeStore(store) {
           stateData.pi_anti_affinity_instance = null;
           stateData.zone = new revision(componentProps.craig.store.json).child(
             "power",
-            stateData.workspace
+            stateData.workspace,
           ).data.zone;
           stateData.workspace = targetValue;
         },
@@ -228,7 +228,7 @@ function initPowerVsVolumeStore(store) {
           return !isInRange(parseInt(stateData.pi_volume_size), 1, 2000);
         },
         invalidText: unconditionalInvalidText(
-          "Must be a whole number between 1 and 2000"
+          "Must be a whole number between 1 and 2000",
         ),
         size: "small",
         disabled: function (stateData, componentProps) {
@@ -267,7 +267,7 @@ function initPowerVsVolumeStore(store) {
             replicationEnabledStoragePoolMap[stateData.zone] || [];
           return !contains(
             replicationEnabledPools,
-            (pool || "").replace(/\s\(Replication.+/g, "")
+            (pool || "").replace(/\s\(Replication.+/g, ""),
           );
         },
       },
@@ -313,10 +313,10 @@ function initPowerVsVolumeStore(store) {
                   if (instance.workspace === stateData.workspace) {
                     return instance;
                   }
-                }
+                },
               ),
-              "name"
-            )
+              "name",
+            ),
           );
           let vtlNames = splat(
             componentProps.craig.store.json.vtl.filter((instance) => {
@@ -324,7 +324,7 @@ function initPowerVsVolumeStore(store) {
                 return instance;
               }
             }),
-            "name"
+            "name",
           );
 
           vtlNames.forEach((name, index) => {
@@ -350,7 +350,7 @@ function initPowerVsVolumeStore(store) {
           }
         },
         invalidText: unconditionalInvalidText(
-          "Enter a whole number between 1 and 127"
+          "Enter a whole number between 1 and 127",
         ),
         tooltip: {
           content: "Create multiple volumes with this configuration",

@@ -57,7 +57,7 @@ function formatKmsInstance(kms, config) {
     getResourceOrData(kms),
     "ibm_resource_instance",
     instance.name,
-    instance.data
+    instance.data,
   );
 }
 
@@ -99,7 +99,7 @@ function formatKmsAuthPolicy(kms, isBlockStorage) {
     "resource",
     "ibm_iam_authorization_policy",
     auth.name,
-    auth.data
+    auth.data,
   );
 }
 
@@ -164,7 +164,7 @@ function ibmKmsKey(key, kms, config) {
       ? tfRef(
           "ibm_kms_key_rings",
           `${kms.name} ${key.key_ring} ring`,
-          "key_ring_id"
+          "key_ring_id",
         )
       : undefined,
     force_delete: key.force_delete,
@@ -175,10 +175,10 @@ function ibmKmsKey(key, kms, config) {
     keyValues.depends_on = [];
     [
       `ibm_iam_authorization_policy.${snakeCase(
-        kms.name
+        kms.name,
       )}_server_protect_policy`,
       `ibm_iam_authorization_policy.${snakeCase(
-        kms.name
+        kms.name,
       )}_block_storage_policy`,
     ].forEach((ref) => {
       keyValues.depends_on.push(cdktfRef(ref));
@@ -259,7 +259,7 @@ function formatKmsKeyPolicy(key, kms, config) {
     "resource",
     "ibm_kms_key_policies",
     policy.name,
-    policy.data
+    policy.data,
   );
 }
 

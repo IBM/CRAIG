@@ -17,19 +17,19 @@ const {
 function fieldFunctionReturnsBooleanCheck(
   props,
   functionName,
-  fieldFunctionName
+  fieldFunctionName,
 ) {
   let result = props.field[fieldFunctionName](
     props.parentState,
     props.parentProps,
-    props.index
+    props.index,
   );
   // prevent crashing for vpc subnet page public gateway toggle
   // it inexplicably is returning `undefined` even though the evaluation
   // is true
   if (!isBoolean(result || false)) {
     throw new Error(
-      `${functionName} expects props.field.${fieldFunctionName} to evaluate to boolean, got ${typeof result}`
+      `${functionName} expects props.field.${fieldFunctionName} to evaluate to boolean, got ${typeof result}`,
     );
   }
   return result;
@@ -67,14 +67,14 @@ function invalidReturnsBooleanCheck(props, functionName) {
 function fieldFunctionReturnsStringCheck(
   props,
   functionName,
-  fieldFunctionName
+  fieldFunctionName,
 ) {
   let result = isFunction(props.field[fieldFunctionName])
     ? props.field[fieldFunctionName](props.parentState, props.parentProps)
     : props.field[fieldFunctionName];
   if (!isString(result)) {
     throw new Error(
-      `${functionName} expects props.field.${fieldFunctionName} to evaluate to string, got ${typeof result}`
+      `${functionName} expects props.field.${fieldFunctionName} to evaluate to string, got ${typeof result}`,
     );
   }
   return result;
@@ -96,10 +96,10 @@ function groupsEvaluatesToArrayCheck(props, functionName, stateValue) {
   ) {
     throw new Error(
       `${functionName} expects props.field.groups to be an array of string or to be a function that evaluates to be an array of string. Got value ${typeof (isFunction(
-        props.field.groups
+        props.field.groups,
       )
         ? props.field.groups(props.parentState, props.parentProps)
-        : props.field.groups)}`
+        : props.field.groups)}`,
     );
   }
   // prevent multiselect from adding invalid param ""
@@ -111,7 +111,7 @@ function groupsEvaluatesToArrayCheck(props, functionName, stateValue) {
   ).concat(
     isArray(props.field.groups)
       ? props.field.groups
-      : props.field.groups(props.parentState, props.parentProps)
+      : props.field.groups(props.parentState, props.parentProps),
   );
   return groups;
 }
@@ -142,8 +142,8 @@ function addClassName(className, field, isImportedSubnetName) {
     field?.size === "small" && !isImportedSubnetName
       ? " fieldWidthSmaller"
       : field?.size === "wide"
-      ? " textInputWide"
-      : " fieldWidth";
+        ? " textInputWide"
+        : " fieldWidth";
 
   return composedClassName;
 }

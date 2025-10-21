@@ -169,7 +169,7 @@ let pageOrder = [
           icon: Settings,
         },
       ]
-    : []
+    : [],
 );
 
 // for each nav category
@@ -209,22 +209,22 @@ const PageTemplate = (props) => {
           title: "Reset State",
         }
       : nextPathIndex === pageOrder.length || nextPathIndex === -1
-      ? {
-          // if next index is out of bounds of array, send empty string
-          // and no onclick function
-          title: "",
-        }
-      : getObjectFromArray(pageOrder, "path", `/form/${props.form}`)?.isLast
-      ? {
-          title: "Summary",
-          onClick: () => {
-            props.nav("/summary");
-          },
-        }
-      : {
-          title: pageOrder[nextPathIndex].title,
-          onClick: onClick,
-        };
+        ? {
+            // if next index is out of bounds of array, send empty string
+            // and no onclick function
+            title: "",
+          }
+        : getObjectFromArray(pageOrder, "path", `/form/${props.form}`)?.isLast
+          ? {
+              title: "Summary",
+              onClick: () => {
+                props.nav("/summary");
+              },
+            }
+          : {
+              title: pageOrder[nextPathIndex].title,
+              onClick: onClick,
+            };
   }
 
   /**
@@ -244,8 +244,8 @@ const PageTemplate = (props) => {
   let formPathNotPresent = props.beta
     ? false
     : pageObj.path === undefined
-    ? true
-    : !contains(pageObj.path, "form");
+      ? true
+      : !contains(pageObj.path, "form");
 
   return (
     <>
@@ -327,7 +327,7 @@ const PageTemplate = (props) => {
             props.jsonInCodeMirror,
             props.beta ? "/v2/services" : pageObj.path,
             pageObj.toTf,
-            pageObj.jsonField
+            pageObj.jsonField,
           )}
           onTabClick={props.onTabClick}
           jsonInCodeMirror={props.jsonInCodeMirror}

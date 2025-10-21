@@ -85,7 +85,7 @@ function readOnlyWhenEdgeTier(stateData, componentProps) {
         "f5-bastion",
         "f5-external",
       ],
-      stateData.name
+      stateData.name,
     ) && stateData.vpc === componentProps.craig.store.edge_vpc_name
   );
 }
@@ -276,7 +276,7 @@ function vpcOnStoreUpdate(config) {
         !splatContains(
           config.store.json.resource_groups,
           "name",
-          acl.resource_group
+          acl.resource_group,
         )
       ) {
         acl.resource_group = null;
@@ -442,7 +442,7 @@ function subnetSave(config, stateData, componentProps) {
         let prefix = getObjectFromArray(
           data.address_prefixes,
           "name",
-          subnetName
+          subnetName,
         );
         if (prefix) {
           prefix.name = stateData.name;
@@ -462,14 +462,14 @@ function subnetSave(config, stateData, componentProps) {
     .then(() => {
       let tier = new revision(config.store.json).child(
         "vpcs",
-        componentProps.vpc_name
+        componentProps.vpc_name,
       ).data.subnetTiers
         ? new revision(config.store.json)
             .child("vpcs", componentProps.vpc_name)
             .child("subnetTiers", stateData.tier).data
         : new revision(config.store.subnetTiers).child(
             componentProps.vpc_name,
-            stateData.tier
+            stateData.tier,
           ).data;
       if (tier.advanced) {
         let newSubnets = [];
@@ -491,7 +491,7 @@ function subnetSave(config, stateData, componentProps) {
               }
             }
           });
-        }
+        },
       );
       config.store.json.clusters.forEach((cluster) => {
         for (let i = 0; i < cluster.subnets.length; i++) {
@@ -630,8 +630,8 @@ function subnetTierCreate(config, stateData, componentProps) {
             config.store.json.vpcs[vpcIndex].resource_group,
             i + 1,
             stateData.addPublicGateway,
-            stateData.use_prefix // prefix
-          )
+            stateData.use_prefix, // prefix
+          ),
         );
         let lastSubnet = config.store.json.vpcs[vpcIndex].subnets.length - 1;
         config.store.json.vpcs[vpcIndex].address_prefixes.push({
@@ -687,8 +687,8 @@ function subnetTierCreate(config, stateData, componentProps) {
           config.store.json.vpcs[vpcIndex].resource_group,
           i + 1,
           stateData.addPublicGateway,
-          stateData.use_prefix // prefix
-        )
+          stateData.use_prefix, // prefix
+        ),
       );
       let lastSubnet = config.store.json.vpcs[vpcIndex].subnets.length - 1;
       config.store.json.vpcs[vpcIndex].address_prefixes.push({
@@ -742,7 +742,7 @@ function subnetTierSave(config, stateData, componentProps) {
           tier,
           oldTierName,
           newTierName,
-          zones
+          zones,
         );
         if (config.store.json._options.dynamic_subnets) {
           newTiers.push(tierData);
@@ -760,8 +760,8 @@ function subnetTierSave(config, stateData, componentProps) {
               oldTierName,
               vpcName,
               newTierName,
-              vpcIndex
-            )
+              vpcIndex,
+            ),
           );
         } else if (tier.advanced) {
           config.store.json._options.advanced_subnets = true;
@@ -778,7 +778,7 @@ function subnetTierSave(config, stateData, componentProps) {
           vpc,
           newTierName,
           vpcName,
-          config
+          config,
         );
         if (componentProps.data.advanced && stateData.zones === 0) {
           deleteAdvancedTier(oldTiers, componentProps.data.name, vpc);
@@ -795,7 +795,7 @@ function subnetTierSave(config, stateData, componentProps) {
             oldTierName,
             config,
             stateData,
-            componentProps
+            componentProps,
           );
         }
         // if deleting a tier
@@ -805,7 +805,7 @@ function subnetTierSave(config, stateData, componentProps) {
             config,
             oldTierName,
             componentProps.vpc_name,
-            vpcIndex
+            vpcIndex,
           );
         }
       });
@@ -1197,7 +1197,7 @@ function createEdgeVpc(config, pattern, useManagementVpc, zones, noUpdate) {
   // set security groups to new list and then add existing to end
   if (!edgeTiersExist)
     config.store.json.security_groups = newSecurityGroups.concat(
-      config.store.json.security_groups
+      config.store.json.security_groups,
     );
 
   if (!noUpdate) config.update();
@@ -1229,7 +1229,7 @@ function naclRuleSubComponents() {
           if (!shouldBeDisabled) {
             shouldBeDisabled = config.vpcs.acls.rules[field].invalid(
               stateData,
-              componentProps
+              componentProps,
             );
           }
         });
@@ -1243,7 +1243,7 @@ function naclRuleSubComponents() {
             return !isIpv4CidrOrAddress(stateData.source || "");
           },
           invalidText: unconditionalInvalidText(
-            "Please provide a valid IPV4 IP address or CIDR notation."
+            "Please provide a valid IPV4 IP address or CIDR notation.",
           ),
           size: "small",
           placeholder: "x.x.x.x",
@@ -1275,7 +1275,7 @@ function naclRuleSubComponents() {
             return !isIpv4CidrOrAddress(stateData.destination || "");
           },
           invalidText: unconditionalInvalidText(
-            "Please provide a valid IPV4 IP address or CIDR notation."
+            "Please provide a valid IPV4 IP address or CIDR notation.",
           ),
           size: "small",
           placeholder: "x.x.x.x",
@@ -1301,9 +1301,9 @@ function vpcAclGroups(stateData, componentProps) {
   return splat(
     new revision(componentProps.craig.store.json).child(
       "vpcs",
-      componentProps.vpc_name
+      componentProps.vpc_name,
     ).data.acls,
-    "name"
+    "name",
   );
 }
 
@@ -1336,7 +1336,7 @@ function initVpcStore(store) {
         "default_security_group_name",
         "default_routing_table_name",
       ],
-      "vpcs"
+      "vpcs",
     ),
     schema: vpcSchema(),
     subComponents: {
@@ -1348,7 +1348,7 @@ function initVpcStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "resource_group"],
           "vpcs",
-          "acls"
+          "acls",
         ),
         schema: {
           use_data: {
@@ -1360,7 +1360,7 @@ function initVpcStore(store) {
                 getObjectFromArray(
                   componentProps.craig.store.json.vpcs,
                   "name",
-                  componentProps.vpc_name
+                  componentProps.vpc_name,
                 ).use_data !== true
               );
             },
@@ -1374,7 +1374,7 @@ function initVpcStore(store) {
              */
             helperText: function aclHelperTextCallback(
               stateData,
-              componentProps
+              componentProps,
             ) {
               return stateData.use_data
                 ? stateData.name
@@ -1396,7 +1396,7 @@ function initVpcStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["network_acl", "cidr", "name"],
           "vpcs",
-          "subnets"
+          "subnets",
         ),
         schema: {
           name: nameField("subnet", {
@@ -1408,17 +1408,17 @@ function initVpcStore(store) {
                   new RegexButWithWords()
                     .stringBegin()
                     .literal(
-                      componentProps.craig.store.json._options.prefix + "-"
+                      componentProps.craig.store.json._options.prefix + "-",
                     )
                     .done("s"),
-                  `${componentProps.craig.store.json._options.prefix}-${componentProps.vpc_name}-`
+                  `${componentProps.craig.store.json._options.prefix}-${componentProps.vpc_name}-`,
                 );
             },
             size: "small",
             invalid: function (stateData, componentProps) {
               return invalidName("subnet", componentProps.craig)(
                 stateData,
-                componentProps
+                componentProps,
               );
             },
             disabledText: unconditionalInvalidText(""),
@@ -1450,7 +1450,7 @@ function initVpcStore(store) {
                 ? false
                 : fieldIsNullOrEmptyString("network_acl")(
                     stateData,
-                    componentProps
+                    componentProps,
                   );
             },
             groups: vpcAclGroups,
@@ -1472,9 +1472,9 @@ function initVpcStore(store) {
                 contains(
                   new revision(componentProps.craig.store.json).child(
                     "vpcs",
-                    componentProps.vpc_name
+                    componentProps.vpc_name,
                   ).data.publicGateways,
-                  parseInt(stateData.name.replace(/\D/g, ""))
+                  parseInt(stateData.name.replace(/\D/g, "")),
                 ) === false
               );
             },
@@ -1488,7 +1488,7 @@ function initVpcStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "networkAcl", "advanced"],
           "vpcs",
-          "subnetTiers"
+          "subnetTiers",
         ),
         schema: {
           name: {
@@ -1504,7 +1504,7 @@ function initVpcStore(store) {
              */
             invalidText: function invalidSubnetTierText(
               stateData,
-              componentProps
+              componentProps,
             ) {
               if (
                 splatContains(
@@ -1512,7 +1512,7 @@ function initVpcStore(store) {
                     componentProps.vpc_name
                   ],
                   "name",
-                  stateData.name
+                  stateData.name,
                 )
               )
                 return duplicateNameCallback(stateData.name);
@@ -1622,8 +1622,8 @@ function initVpcStore(store) {
                 isEmpty(
                   new revision(componentProps.craig.store.json).child(
                     "vpcs",
-                    componentProps.vpc
-                  ).data.public_gateways
+                    componentProps.vpc,
+                  ).data.public_gateways,
                 )
               );
             },

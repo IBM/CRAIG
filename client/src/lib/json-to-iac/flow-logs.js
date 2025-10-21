@@ -25,7 +25,7 @@ const {
  */
 function ibmIsFlowLog(vpc, config) {
   let depends = `ibm_iam_authorization_policy.flow_logs_to_${snakeCase(
-    vpc.cos
+    vpc.cos,
   )}_object_storage_policy`;
   let flowLogsData = {
     name: kebabName([vpc.name, "vpc-logs"]),
@@ -63,7 +63,7 @@ function formatFlowLogs(vpc, config) {
     "resource",
     "ibm_is_flow_log",
     `${vpc.name}-flow-log-collector`,
-    ibmIsFlowLog(vpc, config).data
+    ibmIsFlowLog(vpc, config).data,
   );
 }
 
@@ -89,7 +89,7 @@ function ibmIamAuthorizationPolicyFlowLogs(cosName, config) {
       target_service_name: "cloud-object-storage",
       target_resource_instance_id: getCosId(
         getObjectFromArray(config.object_storage, "name", cosName),
-        true
+        true,
       ),
     },
   };
@@ -111,7 +111,7 @@ function formatFlowLogsPolicy(cosName, config) {
     "resource",
     "ibm_iam_authorization_policy",
     `flow_logs_to_${snakeCase(cosName)}_object_storage_policy`,
-    ibmIamAuthorizationPolicyFlowLogs(cosName, config).data
+    ibmIamAuthorizationPolicyFlowLogs(cosName, config).data,
   );
 }
 
@@ -129,10 +129,10 @@ function flowLogsTf(config) {
   });
   let blockData = "";
   allFlowLogsCos.forEach(
-    (cos) => (blockData += formatFlowLogsPolicy(cos, config))
+    (cos) => (blockData += formatFlowLogsPolicy(cos, config)),
   );
   config.vpcs.forEach(
-    (instance) => (blockData += formatFlowLogs(instance, config))
+    (instance) => (blockData += formatFlowLogs(instance, config)),
   );
   return tfBlock("Flow Logs Resources", blockData);
 }

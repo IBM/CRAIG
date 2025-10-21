@@ -110,14 +110,14 @@ function powerRoutes(axios, controller) {
       if (guid === undefined) {
         return reject(
           `Error: environment variable POWER_WORKSPACE_${snakeCase(
-            zone
-          ).toUpperCase()} has no value.`
+            zone,
+          ).toUpperCase()} has no value.`,
         );
       }
       console.log(
         `\n${titleCase(componentType)} request for workspace ${
           guid ? guid : req.query.name
-        }...`
+        }...`,
       );
       return controller.getBearerToken().then(() => {
         // when getting one by name, use get power details and guid otherwise
@@ -125,13 +125,13 @@ function powerRoutes(axios, controller) {
         // an additional issue will be needed to add this option to the CRAIG api
         // swagger
         return controller[guid ? "getPowerDetails" : "getResourceInstance"](
-          guid || req.query.name
+          guid || req.query.name,
         )
           .then((powerWorkspaceData) => {
             workspaceData = powerWorkspaceData;
             if (powerWorkspaceData === undefined) {
               return reject(
-                `Error: powerWorkspaceData is undefined. Make sure the guid for your power workspace environment variables exist and are correct.`
+                `Error: powerWorkspaceData is undefined. Make sure the guid for your power workspace environment variables exist and are correct.`,
               );
             }
 
@@ -188,7 +188,7 @@ function powerRoutes(axios, controller) {
                 return image;
               });
               console.log(
-                `Success! Found ${imageResponse.data.images.length} custom images.`
+                `Success! Found ${imageResponse.data.images.length} custom images.`,
               );
               console.log("Sending images...");
 
@@ -200,7 +200,7 @@ function powerRoutes(axios, controller) {
                       return image;
                     }
                   })
-                  .concat(existingImages)
+                  .concat(existingImages),
               );
             });
           }

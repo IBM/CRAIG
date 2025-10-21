@@ -112,8 +112,8 @@ class DynamicForm extends React.Component {
           this.state[field] = isBoolean(group[field].default)
             ? group[field].default
             : group[field].default === null && field !== "router_hostname"
-            ? null
-            : group[field].default || "";
+              ? null
+              : group[field].default || "";
         }
       });
     });
@@ -170,7 +170,7 @@ class DynamicForm extends React.Component {
           nextState[field] = group[field].onInputChange(
             nextState,
             targetData,
-            this.props
+            this.props,
           );
           madeChanges = true;
         } else if (group[field].onStateChange && targetName === field) {
@@ -269,7 +269,7 @@ class DynamicForm extends React.Component {
       let vsi = getObjectFromArray(
         this.props.craig.store.json.vsi,
         "name",
-        deployment
+        deployment,
       );
       let nextRow = [];
       // for each subnet vsi
@@ -352,7 +352,7 @@ class DynamicForm extends React.Component {
                             parentProps: propsCopy,
                             handleInputChange: this.handleReservedIpInputChange(
                               vsi.subnetIndex,
-                              vsi.vsiIndex
+                              vsi.vsiIndex,
                             ),
                           })}
                         </div>
@@ -360,7 +360,7 @@ class DynamicForm extends React.Component {
                     })}
                   </CraigFormGroup>
                 );
-              }
+              },
             )
           ) : (
             <CraigFormGroup
@@ -383,27 +383,27 @@ class DynamicForm extends React.Component {
                       this.props,
                       key,
                       keyIndex,
-                      field
+                      field,
                     )}
                   >
                     {RenderForm(
                       fieldType === "select"
                         ? DynamicFormSelect
                         : fieldType === "toggle"
-                        ? DynamicFormToggle
-                        : fieldType === "textArea"
-                        ? DynamicTextArea
-                        : fieldType === "multiselect"
-                        ? DynamicMultiSelect
-                        : fieldType === "public-key"
-                        ? DynamicPublicKey
-                        : fieldType === "fetchSelect"
-                        ? DynamicFetchSelect
-                        : fieldType === "fetchMultiSelect"
-                        ? DynamicFetchMultiSelect
-                        : fieldType === "date"
-                        ? DynamicDatePicker
-                        : DynamicFormTextInput,
+                          ? DynamicFormToggle
+                          : fieldType === "textArea"
+                            ? DynamicTextArea
+                            : fieldType === "multiselect"
+                              ? DynamicMultiSelect
+                              : fieldType === "public-key"
+                                ? DynamicPublicKey
+                                : fieldType === "fetchSelect"
+                                  ? DynamicFetchSelect
+                                  : fieldType === "fetchMultiSelect"
+                                    ? DynamicFetchMultiSelect
+                                    : fieldType === "date"
+                                      ? DynamicDatePicker
+                                      : DynamicFormTextInput,
                       {
                         name: key,
                         labelText: field.labelText,
@@ -417,13 +417,13 @@ class DynamicForm extends React.Component {
                           field.type === "toggle"
                             ? this.handleToggle
                             : this.handleInputChange,
-                      }
+                      },
                     )}
                   </DynamicToolTipWrapper>
                 );
               })}
             </CraigFormGroup>
-          )
+          ),
         )}
         <PowerInterfaces
           stateData={this.state}

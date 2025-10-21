@@ -32,7 +32,7 @@ resource "ibm_cis_origin_pool" "cis_cis_origin_pool_pool" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should format an origin pool with no origins and check regions", () => {
@@ -62,7 +62,7 @@ resource "ibm_cis_origin_pool" "cis_cis_origin_pool_pool" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
     it("should format an origin pool with origins and check regions", () => {
@@ -116,7 +116,7 @@ resource "ibm_cis_origin_pool" "cis_cis_origin_pool_pool" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
   });
@@ -182,7 +182,7 @@ resource "ibm_cis_healthcheck" "cis_cis_healthcheck_check" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return health check data"
+        "it should return health check data",
       );
     });
   });
@@ -303,7 +303,7 @@ resource "ibm_cis_healthcheck" "cis_cis_healthcheck_check" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
   });

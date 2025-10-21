@@ -20,7 +20,7 @@ describe("getStats", () => {
           },
         ],
       },
-      false
+      false,
     );
     axios.get = () => {
       return {
@@ -55,7 +55,7 @@ describe("getStats", () => {
           },
         ],
       },
-      false
+      false,
     );
     axios.get = () => {
       return {
@@ -94,7 +94,7 @@ describe("getStats", () => {
           },
         ],
       },
-      false
+      false,
     );
     axios.get = () => {
       return {
@@ -133,7 +133,7 @@ describe("getStats", () => {
           },
         ],
       },
-      false
+      false,
     );
     let testController = new controller(axios);
     return testController.getStats({}, res).then(() => {

@@ -83,7 +83,7 @@ class FormTemplate extends React.Component {
     return this.props.parentToggle
       ? contains(
           this.props.parentToggle.shownChildren[this.props.parentToggle.index],
-          index
+          index,
         ) // show children
       : contains(this.state.shownArrayForms, index);
   }
@@ -113,7 +113,7 @@ class FormTemplate extends React.Component {
           disableSave(
             this.props.submissionFieldName,
             this.state,
-            this.props
+            this.props,
           ) === false
         ) {
           this.props.enableModal();

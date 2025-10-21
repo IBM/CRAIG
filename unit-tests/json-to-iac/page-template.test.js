@@ -104,7 +104,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
         assert.deepEqual(
           codeMirrorVpcTf(testData),
           expectedData,
-          "it should return correct terraform"
+          "it should return correct terraform",
         );
       });
       it("should create vpc code mirror terraform with disabled flow logs", () => {
@@ -176,7 +176,7 @@ resource "ibm_is_public_gateway" "management_gateway_zone_1" {
         assert.deepEqual(
           codeMirrorVpcTf(testData),
           expectedData,
-          "it should return correct terraform"
+          "it should return correct terraform",
         );
       });
       it("should create vpc code mirror terraform without public gateway", () => {
@@ -251,7 +251,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
         assert.deepEqual(
           codeMirrorVpcTf(testData),
           expectedData,
-          "it should return correct terraform"
+          "it should return correct terraform",
         );
       });
     });
@@ -409,7 +409,7 @@ resource "ibm_is_network_acl" "management_management_acl" {
         assert.deepEqual(
           codeMirrorAclTf(testData),
           expectedData,
-          "it should return correct terraform"
+          "it should return correct terraform",
         );
       });
     });
@@ -619,7 +619,7 @@ resource "ibm_is_subnet" "management_vpe_zone_3" {
         assert.deepEqual(
           codeMirrorSubnetsTf(testData),
           expectedData,
-          "it should return correct terraform"
+          "it should return correct terraform",
         );
       });
     });
@@ -631,7 +631,7 @@ resource "ibm_is_subnet" "management_vpe_zone_3" {
       assert.deepEqual(
         codeMirrorEventStreamsTf(testData),
         expectedData,
-        "it should return an empty string"
+        "it should return an empty string",
       );
     });
     it("should return event streams tf", () => {
@@ -698,7 +698,7 @@ resource "ibm_resource_instance" "event_streams_es" {
       assert.deepEqual(
         codeMirrorEventStreamsTf(testData),
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -734,7 +734,7 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
       assert.deepEqual(
         codeMirrorFormatIamAccountSettingsTf(testData),
         expectedData,
-        "should return iam account settings terraform"
+        "should return iam account settings terraform",
       );
     });
   });
@@ -745,7 +745,7 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
       assert.deepEqual(
         codeMirrorGetDisplay(testData, false, undefined, undefined, undefined),
         expectedData,
-        "should return code mirror display"
+        "should return code mirror display",
       );
     });
     it("should return correct terraform for nacl when jsonInCodeMirror is true", () => {
@@ -940,10 +940,10 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
           true,
           "/form/nacls",
           codeMirrorAclTf,
-          undefined
+          undefined,
         ),
         expectedData,
-        "should return code mirror display"
+        "should return code mirror display",
       );
     });
     it("should return correct terraform for subnets when jsonInCodeMirror is true", () => {
@@ -1083,10 +1083,10 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
           true,
           "/form/subnets",
           codeMirrorSubnetsTf,
-          undefined
+          undefined,
         ),
         expectedData,
-        "should return code mirror display"
+        "should return code mirror display",
       );
     });
     it("should return correct terraform for resource_groups when jsonInCodeMirror is true", () => {
@@ -1139,10 +1139,10 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
           true,
           "/form/resourceGroups",
           resourceGroupTf,
-          "resource_groups"
+          "resource_groups",
         ),
         expectedData,
-        "should return code mirror display"
+        "should return code mirror display",
       );
     });
     it("should return correct terraform for fortigate page when none fortigate", () => {
@@ -1178,10 +1178,10 @@ resource "ibm_iam_account_settings" "iam_account_settings" {
           false,
           "/form/fortigate_vnf",
           fortigateTf,
-          "fortigate_vnf"
+          "fortigate_vnf",
         ),
         expectedData,
-        "should return code mirror display"
+        "should return code mirror display",
       );
     });
     it("should return correct terraform for resource_groups page", () => {
@@ -1246,10 +1246,10 @@ resource "ibm_resource_group" "workload_rg" {
           false,
           "/form/resourceGroups",
           resourceGroupTf,
-          "resource_groups"
+          "resource_groups",
         ),
         expectedData,
-        "should return code mirror display"
+        "should return code mirror display",
       );
     });
     it("should return correct terraform for f5 when jsonInCodeMirror is true and tmos_admin_password is not undefined", () => {
@@ -1270,7 +1270,7 @@ resource "ibm_resource_group" "workload_rg" {
       assert.deepEqual(
         codeMirrorGetDisplay(testData, true, "/form/f5", f5Tf, "f5_vsi"),
         expectedData,
-        "should return code mirror display"
+        "should return code mirror display",
       );
     });
     it("should return correct terraform for f5 when pageObj.jsonField is undefined", () => {
@@ -1293,7 +1293,7 @@ resource "ibm_resource_group" "workload_rg" {
       assert.deepEqual(
         codeMirrorGetDisplay(testData, true, "/form/f5", f5Tf, undefined),
         expectedData,
-        "should return code mirror display"
+        "should return code mirror display",
       );
     });
   });
@@ -1329,7 +1329,7 @@ resource "ibm_resource_group" "workload_rg" {
     assert.deepEqual(
       codeMirrorGetDisplay(testData, true, "/form/cbr", cbrTf, undefined),
       expectedData,
-      "should return code mirror display"
+      "should return code mirror display",
     );
   });
   it("should return correct observability json", () => {
@@ -1371,10 +1371,10 @@ resource "ibm_resource_group" "workload_rg" {
         true,
         "/form/observability",
         loggingMonitoringTf,
-        undefined
+        undefined,
       ),
       expectedData,
-      "should return code mirror display"
+      "should return code mirror display",
     );
   });
 });

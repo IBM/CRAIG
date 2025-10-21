@@ -32,7 +32,7 @@ resource "ibm_pi_volume" "example_volume_test_volume" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct volume terraform with existing workspace", () => {
@@ -110,7 +110,7 @@ resource "ibm_pi_volume" "example_volume_test_volume" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_volume" "example_volume_test_volume" {
@@ -126,7 +126,7 @@ resource "ibm_pi_volume" "example_volume_test_volume" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct volume terraform with unfound workspace", () => {
@@ -151,7 +151,7 @@ resource "ibm_pi_volume" "example_volume_test_volume" {
             },
           ],
           power: [],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_volume" "example_volume_test_volume" {
@@ -167,7 +167,7 @@ resource "ibm_pi_volume" "example_volume_test_volume" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct volume terraform when count is empty string", () => {
@@ -195,7 +195,7 @@ resource "ibm_pi_volume" "example_volume_test_volume" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct volume and remove index", () => {
@@ -233,7 +233,7 @@ resource "ibm_pi_volume" "workspace_volume_aixtgtvols1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct volume terraform with multiples", () => {
@@ -291,7 +291,7 @@ resource "ibm_pi_volume" "example_volume_test_volume_4" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format volume terraform with affinity policy for instance", () => {
@@ -330,7 +330,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format volume terraform with anti-affinity policy for volume", () => {
@@ -369,7 +369,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should format volume terraform with storage pool passed in as pi_volume_pool", () => {
@@ -406,7 +406,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -418,7 +418,7 @@ resource "ibm_pi_volume" "oracle_template_volume_oracle_1_db_1" {
           name: "test-volume",
           zone: "dal12",
         },
-        "test"
+        "test",
       );
       let expectedData = `
 resource "ibm_pi_volume_attach" "example_attach_test_volume_to_test_instance" {
@@ -437,7 +437,7 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume_to_test_instance" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correctly formatted data when using data", () => {
@@ -513,7 +513,7 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume_to_test_instance" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_pi_volume_attach" "example_attach_test_volume_to_test_instance" {
@@ -532,7 +532,7 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume_to_test_instance" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -601,7 +601,7 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume_to_instance_2_instan
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return power volume terraform file with count", () => {
@@ -710,7 +710,7 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume_2_to_instance_2_inst
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return power volume terraform file", () => {
@@ -1123,7 +1123,7 @@ resource "ibm_pi_volume_attach" "smatzek_storage_test_attach_tier0vol_to_tier0vm
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return power volume terraform file", () => {
@@ -1247,7 +1247,7 @@ resource "ibm_pi_volume_attach" "example_attach_test_volume2_to_instance_2_insta
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

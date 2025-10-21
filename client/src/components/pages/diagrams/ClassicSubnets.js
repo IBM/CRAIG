@@ -14,7 +14,7 @@ export const ClassicSubnets = (props) => {
     let vlanIndex = arraySplatIndex(
       props.craig.store.json.classic_vlans,
       "name",
-      vlan.name
+      vlan.name,
     );
     let isPrivate = vlan.type === "PRIVATE";
     let hoverClassName =
@@ -66,7 +66,7 @@ export const ClassicSubnets = (props) => {
           React.cloneElement(child, {
             datacenter: props.datacenter,
             vlan: vlan.name,
-          })
+          }),
         )}
       </HoverClassNameWrapper>
     );

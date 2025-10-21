@@ -1111,7 +1111,7 @@ const ibmContainerVpcClusterWorkloadVpcWorkloadCluster =
   );
 new ibm.containerVpcWorkerPool.ContainerVpcWorkerPool(
   this,
-  "workload_vpc_workload_cluster_logging_pool_pool",
+  "workload_vpc_workload_logging_pool",
   {
     cluster: ibmContainerVpcClusterWorkloadVpcWorkloadCluster.id,
     entitlement: "cloud_pak",

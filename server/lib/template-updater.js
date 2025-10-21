@@ -90,9 +90,9 @@ function dynamicFormSetup(originalItem, jsonField, craigRef, parentName) {
       item[field] = isBoolean(craig[jsonField][field].default)
         ? craig[jsonField][field].default
         : craig[jsonField][field].default === null &&
-          field !== "router_hostname"
-        ? null
-        : craig[jsonField][field].default || "";
+            field !== "router_hostname"
+          ? null
+          : craig[jsonField][field].default || "";
     }
   });
 
@@ -150,7 +150,7 @@ fs.readdirSync("./client/src/lib/docs/templates").forEach((template) => {
         parsedData[jsonField][itemIndex] = dynamicFormSetup(
           item,
           jsonField,
-          craigState
+          craigState,
         );
         // if there are subcomponents
         if (subComponents.length > 0) {
@@ -163,7 +163,7 @@ fs.readdirSync("./client/src/lib/docs/templates").forEach((template) => {
                 subItem,
                 subComponent,
                 craigState[jsonField],
-                item.name
+                item.name,
               );
             });
           });
@@ -174,7 +174,7 @@ fs.readdirSync("./client/src/lib/docs/templates").forEach((template) => {
       parsedData[jsonField] = dynamicFormSetup(
         parsedData[jsonField],
         jsonField === "_options" ? "options" : jsonField,
-        craigState
+        craigState,
       );
     }
   });

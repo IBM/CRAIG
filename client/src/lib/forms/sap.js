@@ -16,8 +16,8 @@ function calculateSapHanaMemory(profile) {
         .anyNumber()
         .literal("x")
         .done("g"),
-      ""
-    )
+      "",
+    ),
   );
   if (memory < 256) {
     // all volume sizes must be at least 256 regardless of memory
@@ -75,8 +75,8 @@ function getSapVolumeList(profile, workspace, instanceName, zone) {
       type === "data"
         ? calculateSapDataVolumeSize(profile)
         : type === "log"
-        ? calculateSapLogVolumeSize(profile)
-        : calculateSapSharedVolumeSize(profile);
+          ? calculateSapLogVolumeSize(profile)
+          : calculateSapSharedVolumeSize(profile);
     let isShared = type === "shared";
     for (let i = 0; i < (isShared ? 1 : 4); i++) {
       volumes.push({

@@ -30,7 +30,7 @@ describe("object storage", () => {
               name: "slz-service-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_instance" "cos_object_storage" {
@@ -48,7 +48,7 @@ resource "ibm_resource_instance" "cos_object_storage" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data for cos"
+        "it should return correct data for cos",
       );
     });
     it("should create an object storage resource instance with the correct plan when not `standard`", () => {
@@ -71,7 +71,7 @@ resource "ibm_resource_instance" "cos_object_storage" {
               name: "slz-service-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_instance" "cos_object_storage" {
@@ -89,7 +89,7 @@ resource "ibm_resource_instance" "cos_object_storage" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data for cos"
+        "it should return correct data for cos",
       );
     });
     it("should create an object storage resource instance with random suffix", () => {
@@ -112,7 +112,7 @@ resource "ibm_resource_instance" "cos_object_storage" {
               name: "slz-service-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "random_string" "cos_random_suffix" {
@@ -136,7 +136,7 @@ resource "ibm_resource_instance" "cos_object_storage" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data for cos"
+        "it should return correct data for cos",
       );
     });
     it("should create an object storage data instance", () => {
@@ -160,7 +160,7 @@ resource "ibm_resource_instance" "cos_object_storage" {
               name: "slz-service-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 data "ibm_resource_instance" "cos_object_storage" {
@@ -173,7 +173,7 @@ data "ibm_resource_instance" "cos_object_storage" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data for cos"
+        "it should return correct data for cos",
       );
     });
     it("should create an object storage data instance with random suffix", () => {
@@ -197,7 +197,7 @@ data "ibm_resource_instance" "cos_object_storage" {
               name: "slz-service-rg",
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "random_string" "cos_random_suffix" {
@@ -216,7 +216,7 @@ data "ibm_resource_instance" "cos_object_storage" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data for cos"
+        "it should return correct data for cos",
       );
     });
   });
@@ -263,7 +263,7 @@ data "ibm_resource_instance" "cos_object_storage" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_iam_authorization_policy" "cos_cos_to_unfound_kms_policy" {
@@ -321,7 +321,7 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_unfound_kms_policy" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
@@ -380,7 +380,7 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
@@ -447,7 +447,7 @@ resource "ibm_iam_authorization_policy" "cos_cos_to_kms_kms_policy" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -466,7 +466,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code with no kms", () => {
@@ -518,7 +518,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -533,7 +533,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code from data source", () => {
@@ -585,7 +585,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -604,7 +604,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code from data source with random suffix", () => {
@@ -657,7 +657,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -676,7 +676,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code from data source with random suffix and object versioning", () => {
@@ -729,7 +729,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -751,7 +751,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code from data source with random suffix and archive rule", () => {
@@ -811,7 +811,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -836,7 +836,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code from data source with random suffix and expire rule", () => {
@@ -896,7 +896,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -923,7 +923,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code from data source with random suffix and retention rule", () => {
@@ -981,7 +981,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -1006,7 +1006,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code from data source with random suffix and allowed ip", () => {
@@ -1059,7 +1059,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -1079,7 +1079,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code from data source with random suffix and metrics monitoring", () => {
@@ -1135,7 +1135,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -1159,7 +1159,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code from data source with random suffix and metrics monitoring from crn", () => {
@@ -1216,7 +1216,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -1240,7 +1240,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code from data source with random suffix and activity tracking", () => {
@@ -1296,7 +1296,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -1320,7 +1320,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code from data source with random suffix and activity tracking from crn", () => {
@@ -1375,7 +1375,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
@@ -1399,7 +1399,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
   });
@@ -1452,7 +1452,7 @@ resource "ibm_cos_bucket" "cos_object_storage_bucket_bucket" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
@@ -1468,7 +1468,7 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code with hmac and random suffix", () => {
@@ -1519,7 +1519,7 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
@@ -1538,7 +1538,7 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
     it("should create cos bucket terraform code with hmac and random suffix and reader role", () => {
@@ -1589,7 +1589,7 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
@@ -1608,7 +1608,7 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return cos bucket tf"
+        "it should return cos bucket tf",
       );
     });
   });
@@ -1670,7 +1670,7 @@ resource "ibm_resource_key" "cos_object_storage_key_cos_key" {
               ],
             },
           ],
-        }
+        },
       );
       let expectedData = `##############################################################################
 # Object Storage Instance Cos

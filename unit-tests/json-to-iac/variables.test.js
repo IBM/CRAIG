@@ -67,7 +67,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct variables"
+      "it should return correct variables",
     );
   });
   it("should return correct variable values for vpn server with danger developer certificate", () => {
@@ -128,7 +128,7 @@ variable "management_vpn_server_vpn_server_certificate_crn" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct variables"
+      "it should return correct variables",
     );
   });
   it("should return correct variable values for cluster ingress secrets manager secrets", () => {
@@ -224,7 +224,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct variables"
+      "it should return correct variables",
     );
   });
   it("should return correct variable when classic resources are enabled", () => {
@@ -323,7 +323,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct variables"
+      "it should return correct variables",
     );
   });
   it("should return correct variable when classic resources are enabled for template tar mode", () => {
@@ -420,7 +420,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct variables"
+      "it should return correct variables",
     );
   });
   it("should return correct variable when power vs is enabled", () => {
@@ -495,7 +495,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct variables"
+      "it should return correct variables",
     );
   });
   it("should return correct variable when power vs is enabled with ssh keys", () => {
@@ -652,7 +652,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct variables"
+      "it should return correct variables",
     );
   });
   it("should return correct variable when power vs is enabled with ssh keys in template tar mode", () => {
@@ -807,7 +807,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct variables"
+      "it should return correct variables",
     );
   });
   it("should return correct variable when power vs is enabled with ssh keys", () => {
@@ -919,7 +919,7 @@ variable "management_vpn_server_abc_client_ca_private_key_pem" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct variables"
+      "it should return correct variables",
     );
   });
   it("should return correct variable when power vs is enabled with ssh keys from data", () => {
@@ -1070,7 +1070,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct variables"
+      "it should return correct variables",
     );
   });
   it("should return correct variables for byo cert in vpn server", () => {
@@ -1756,7 +1756,7 @@ variable "transit_vpn_server_test_c2s_client_ca_private_key_pem" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct variables"
+      "it should return correct variables",
     );
   });
   it("should return correct variable values for vsi using variable names", () => {
@@ -1846,7 +1846,7 @@ variable "management_vpn_server_vpn_server_client_ca_crn" {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct variables"
+      "it should return correct variables",
     );
   });
   it("should return correct variable values for vsi using variable names with no cbr, power, or vpn server", () => {
@@ -1927,7 +1927,7 @@ variable "management_vpc_vsi_deployment_management_server_vsi_zone_3_subnet_serv
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should return correct variables"
+      "it should return correct variables",
     );
   });
 });

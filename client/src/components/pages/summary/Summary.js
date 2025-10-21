@@ -35,7 +35,7 @@ class Summary extends React.Component {
   render() {
     let json = formatConfig(
       this.props.craig.store.json,
-      !this.state.usePrettyJson
+      !this.state.usePrettyJson,
     );
     return (
       <>

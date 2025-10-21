@@ -58,7 +58,7 @@ function routingTableSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "routing_tables"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -95,7 +95,7 @@ function routingTableRouteCreate(config, stateData, componentProps) {
     "routing_tables",
     "routes",
     stateData,
-    componentProps
+    componentProps,
   );
 }
 
@@ -128,7 +128,7 @@ function initRoutingTable(store) {
     delete: routingTableDelete,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "vpc"],
-      "routing_tables"
+      "routing_tables",
     ),
     schema: {
       name: nameField("routing_tables", {
@@ -202,7 +202,7 @@ function initRoutingTable(store) {
           return []
             .concat(stateData.route_direct_link_ingress ? ["Direct Link"] : [])
             .concat(
-              stateData.transit_gateway_ingress ? ["Transit Gateway"] : []
+              stateData.transit_gateway_ingress ? ["Transit Gateway"] : [],
             );
         },
         onRender: function (stateData) {
@@ -241,7 +241,7 @@ function initRoutingTable(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "zone", "action", "next_hop", "destination"],
           "routing_tables",
-          "routes"
+          "routes",
         ),
         schema: {
           name: nameField("routes", {
@@ -297,7 +297,7 @@ function initRoutingTable(store) {
               );
             },
             invalidText: unconditionalInvalidText(
-              "Enter a valid IPV4 address or CIDR block"
+              "Enter a valid IPV4 address or CIDR block",
             ),
             placeholder: "X.X.X.X/X",
             size: "small",

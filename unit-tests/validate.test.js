@@ -979,7 +979,7 @@ describe("validate", () => {
       };
       assert.throws(
         task,
-        "Activity Tracker must have a valid bucket name. Got `null`"
+        "Activity Tracker must have a valid bucket name. Got `null`",
       );
     });
     it("should throw an error if the cos instance where the activity tracker bucket is provisioned has no keys", () => {
@@ -1008,7 +1008,7 @@ describe("validate", () => {
       };
       assert.throws(
         task,
-        "The COS instance where the Activity Tracker bucket is created must have at least one key. Got 0"
+        "The COS instance where the Activity Tracker bucket is created must have at least one key. Got 0",
       );
     });
     it("should not throw when cos has valid key", () => {
@@ -1070,7 +1070,7 @@ describe("validate", () => {
       };
       assert.throws(
         task,
-        `atracker-bucket must reference a key in the kms service slz-kms used by atracker-cos. fake-key is invalid.`
+        `atracker-bucket must reference a key in the kms service slz-kms used by atracker-cos. fake-key is invalid.`,
       );
     });
   });
@@ -1082,7 +1082,7 @@ describe("validate", () => {
       };
       assert.throws(
         task,
-        "Options requires a Prefix, prefix missing from JSON."
+        "Options requires a Prefix, prefix missing from JSON.",
       );
     });
     it("should throw an error if options does not have a region", () => {
@@ -1092,7 +1092,7 @@ describe("validate", () => {
       };
       assert.throws(
         task,
-        "Options requires a Region, region missing from JSON."
+        "Options requires a Region, region missing from JSON.",
       );
     });
   });
@@ -1114,7 +1114,7 @@ describe("validate", () => {
       };
       assert.throws(
         task,
-        "Secrets Manager requires a resource group, Secrets Manager Resource Group is null."
+        "Secrets Manager requires a resource group, Secrets Manager Resource Group is null.",
       );
     });
     it("should accept valid secrets manager", () => {
@@ -1150,7 +1150,7 @@ describe("validate", () => {
       };
       assert.throws(
         task,
-        "Event Streams require a resource group, `event-stream` resource_group is null."
+        "Event Streams require a resource group, `event-stream` resource_group is null.",
       );
     });
   });
@@ -1162,7 +1162,7 @@ describe("validate", () => {
       let task = () => validate(testData);
       assert.throws(
         task,
-        "OpenShift clusters require a cos instance. Cluster `workload-cluster` cos is null."
+        "OpenShift clusters require a cos instance. Cluster `workload-cluster` cos is null.",
       );
     });
     it("should throw an error if a cluster has a null vpc name", () => {
@@ -1172,7 +1172,7 @@ describe("validate", () => {
       let task = () => validate(testData);
       assert.throws(
         task,
-        "Clusters require a VPC Name, `workload-cluster` vpc is null."
+        "Clusters require a VPC Name, `workload-cluster` vpc is null.",
       );
     });
     it("should throw an error if a cluster has no subnet names", () => {
@@ -1182,7 +1182,7 @@ describe("validate", () => {
       let task = () => validate(testData);
       assert.throws(
         task,
-        "Clusters require at least one subnet to provision, `workload-cluster` subnets is []."
+        "Clusters require at least one subnet to provision, `workload-cluster` subnets is [].",
       );
     });
     it("should throw an error if a cluster has an invalid encryption key (not in kms)", () => {
@@ -1192,7 +1192,7 @@ describe("validate", () => {
       let task = () => validate(testData);
       assert.throws(
         task,
-        "workload-cluster must reference a key in the kms service slz-kms. fake-key is invalid."
+        "workload-cluster must reference a key in the kms service slz-kms. fake-key is invalid.",
       );
     });
     describe("worker_pools", () => {
@@ -1203,7 +1203,7 @@ describe("validate", () => {
         let task = () => validate(testData);
         assert.throws(
           task,
-          "Worker Pools require at least one subnet to provision, `workload-cluster` worker_pool `logging-worker-pool` subnets is []."
+          "Worker Pools require at least one subnet to provision, `workload-cluster` worker_pool `logging-worker-pool` subnets is [].",
         );
       });
     });
@@ -1297,7 +1297,7 @@ describe("validate", () => {
       assert.deepEqual(
         testData.security_groups,
         expectedData,
-        "should convert port to numbers"
+        "should convert port to numbers",
       );
     });
   });
@@ -1308,7 +1308,7 @@ describe("validate", () => {
       let task = () => validate(testData);
       assert.throws(
         task,
-        "virtual_private_endpoints require a VPC Name, `management-cos` vpc is null."
+        "virtual_private_endpoints require a VPC Name, `management-cos` vpc is null.",
       );
     });
     it("should throw an error if a vpe vpc has no subnets", () => {
@@ -1317,7 +1317,7 @@ describe("validate", () => {
       let task = () => validate(testData);
       assert.throws(
         task,
-        "Virtual Private Endpoints must have at least one VPC subnet. Service name `management-cos` VPC Name `management` has 0."
+        "Virtual Private Endpoints must have at least one VPC subnet. Service name `management-cos` VPC Name `management` has 0.",
       );
     });
     it("should throw an error if a vpe vpc has no security groups", () => {
@@ -1326,7 +1326,7 @@ describe("validate", () => {
       let task = () => validate(testData);
       assert.throws(
         task,
-        "Virtual Private Endpoints must have at least one Security Group. Service name `management-cos` has 0."
+        "Virtual Private Endpoints must have at least one Security Group. Service name `management-cos` has 0.",
       );
     });
   });
@@ -1337,7 +1337,7 @@ describe("validate", () => {
       let task = () => validate(testData);
       assert.throws(
         task,
-        "VPN Gateways require a subnet name, `management-gateway` subnet is null."
+        "VPN Gateways require a subnet name, `management-gateway` subnet is null.",
       );
     });
     it("should throw an error if vpn gateway rg is null", () => {
@@ -1346,7 +1346,7 @@ describe("validate", () => {
       let task = () => validate(testData);
       assert.throws(
         task,
-        "VPN Gateways require a resource group, `management-gateway` resource_group is null."
+        "VPN Gateways require a resource group, `management-gateway` resource_group is null.",
       );
     });
     it("should throw an error if vpn gateway subnet is null", () => {
@@ -1355,7 +1355,7 @@ describe("validate", () => {
       let task = () => validate(testData);
       assert.throws(
         task,
-        "VPN Gateways require a VPC Name, `management-gateway` vpc is null."
+        "VPN Gateways require a VPC Name, `management-gateway` vpc is null.",
       );
     });
   });
@@ -1454,7 +1454,7 @@ describe("validate", () => {
       };
       assert.throws(
         task,
-        "App ID requires a resource group, App ID resource_group is null."
+        "App ID requires a resource group, App ID resource_group is null.",
       );
     });
     it("should not throw an error if valid appid", () => {
@@ -1487,7 +1487,7 @@ describe("validate", () => {
       let task = () => validate(testData);
       assert.throws(
         task,
-        "VSIs require at least one subnet to provision, `management-server` subnets is []."
+        "VSIs require at least one subnet to provision, `management-server` subnets is [].",
       );
     });
     it("should throw an error when sg is not in the same vpc as deployment", () => {
@@ -1496,7 +1496,7 @@ describe("validate", () => {
       let task = () => validate(testData);
       assert.throws(
         task,
-        "Security Group workload-vpe-sg not in the same vpc as management-server's VPC, management"
+        "Security Group workload-vpe-sg not in the same vpc as management-server's VPC, management",
       );
     });
   });
@@ -1751,7 +1751,7 @@ describe("validate", () => {
       assert.deepEqual(
         splat(testData.resource_groups, "use_prefix"),
         [false, false, false],
-        "it should set value"
+        "it should set value",
       );
       assert.deepEqual(
         testData.clusters,
@@ -1815,7 +1815,7 @@ describe("validate", () => {
             opaque_secrets: [],
           },
         ],
-        "it should set kms config"
+        "it should set kms config",
       );
     });
   });
@@ -1841,7 +1841,7 @@ describe("validate", () => {
       };
       assert.throws(
         task,
-        "Cannot read properties of undefined (reading 'forEach')"
+        "Cannot read properties of undefined (reading 'forEach')",
       );
     });
   });
@@ -1861,7 +1861,7 @@ describe("validate", () => {
       validate(overrideJson);
       assert.isTrue(
         overrideJson.key_management[0].use_data,
-        "use data should be true"
+        "use data should be true",
       );
     });
     it("should throw an error if no resource group", () => {
@@ -1878,7 +1878,7 @@ describe("validate", () => {
       };
       assert.throws(
         task,
-        "Key Management require a resource group, `asdf` resource_group is null."
+        "Key Management require a resource group, `asdf` resource_group is null.",
       );
     });
   });
@@ -1889,7 +1889,7 @@ describe("validate", () => {
       validate(overrideJson);
       assert.isFalse(
         overrideJson.resource_groups[0].use_prefix,
-        "use data should be false"
+        "use data should be false",
       );
     });
   });
@@ -1909,7 +1909,7 @@ describe("validate", () => {
       assert.deepEqual(
         actualData.secrets_manager,
         expectedData,
-        "it should set secrets manager"
+        "it should set secrets manager",
       );
     });
     it("should set iam_account_settings if not found", () => {
@@ -1931,7 +1931,7 @@ describe("validate", () => {
       assert.deepEqual(
         actualData.iam_account_settings,
         expectedData,
-        "it should set appid"
+        "it should set appid",
       );
     });
     it("should not touch iam_account_settings if found", () => {
@@ -1946,7 +1946,7 @@ describe("validate", () => {
       assert.deepEqual(
         actualData.access_groups,
         [],
-        "it should set access_groups"
+        "it should set access_groups",
       );
     });
     it("should not update access_groups if found", () => {
@@ -1961,7 +1961,7 @@ describe("validate", () => {
       assert.deepEqual(
         actualData.event_streams,
         [],
-        "it should set event_streams"
+        "it should set event_streams",
       );
     });
     it("should set icd if null", () => {

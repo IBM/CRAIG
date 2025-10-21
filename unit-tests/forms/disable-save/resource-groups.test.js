@@ -12,9 +12,9 @@ describe("resource groups", () => {
           data: {
             name: "test",
           },
-        }
+        },
       ),
-      "it should be false"
+      "it should be false",
     );
   });
 });

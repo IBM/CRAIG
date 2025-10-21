@@ -36,7 +36,7 @@ function formatIamAccountSettings(iamSettings) {
       "resource",
       "ibm_iam_account_settings",
       "iam_account_settings",
-      ibmIamAccountSettings(iamSettings).data
+      ibmIamAccountSettings(iamSettings).data,
     );
   } else return "";
 }
@@ -72,7 +72,7 @@ function formatAccessGroup(group, config) {
     "resource",
     "ibm_iam_access_group",
     `${group.name}_access_group`,
-    ibmIamAccessGroup(group, config).data
+    ibmIamAccessGroup(group, config).data,
   );
 }
 
@@ -92,7 +92,7 @@ function ibmIamAccessGroupPolicy(policy) {
   let policyValues = {
     access_group_id: tfRef(
       "ibm_iam_access_group",
-      policy.group + " access group"
+      policy.group + " access group",
     ),
     roles: policy.roles,
   };
@@ -131,7 +131,7 @@ function formatAccessGroupPolicy(policy) {
     "resource",
     "ibm_iam_access_group_policy",
     `${policy.group} ${policy.name} policy`,
-    ibmIamAccessGroupPolicy(policy).data
+    ibmIamAccessGroupPolicy(policy).data,
   );
 }
 
@@ -153,7 +153,7 @@ function ibmIamAccessGroupDynamicRule(policy) {
       name: kebabCase(`${policy.group} ${policy.name} dynamic rule`),
       access_group_id: tfRef(
         "ibm_iam_access_group",
-        policy.group + " access group"
+        policy.group + " access group",
       ),
       expiration: policy.expiration,
       identity_provider: policy.identity_provider,
@@ -177,7 +177,7 @@ function formatAccessGroupDynamicRule(policy) {
     "resource",
     "ibm_iam_access_group_dynamic_rule",
     `${policy.group} ${policy.name} dynamic rule`,
-    ibmIamAccessGroupDynamicRule(policy).data
+    ibmIamAccessGroupDynamicRule(policy).data,
   );
 }
 
@@ -194,7 +194,7 @@ function ibmIamAccessGroupMembers(invite) {
     data: {
       access_group_id: tfRef(
         "ibm_iam_access_group",
-        invite.group + " access group"
+        invite.group + " access group",
       ),
       ibm_ids: invite.ibm_ids,
     },
@@ -213,7 +213,7 @@ function formatGroupMembers(invite) {
     "resource",
     "ibm_iam_access_group_members",
     `${invite.group} invites`,
-    ibmIamAccessGroupMembers(invite).data
+    ibmIamAccessGroupMembers(invite).data,
   );
 }
 
@@ -223,17 +223,17 @@ function iamTf(config) {
     tf +=
       tfBlock(
         "IAM Account Settings",
-        formatIamAccountSettings(config.iam_account_settings)
+        formatIamAccountSettings(config.iam_account_settings),
       ) + "\n";
   }
   if (config.access_groups)
     config.access_groups.forEach((group) => {
       let blockData = formatAccessGroup(group, config);
       group.policies.forEach(
-        (policy) => (blockData += formatAccessGroupPolicy(policy))
+        (policy) => (blockData += formatAccessGroupPolicy(policy)),
       );
       group.dynamic_policies.forEach(
-        (policy) => (blockData += formatAccessGroupDynamicRule(policy))
+        (policy) => (blockData += formatAccessGroupDynamicRule(policy)),
       );
       if (group.has_invites) blockData += formatGroupMembers(group.invites);
       tf += tfBlock(`${group.name} access group`, blockData) + "\n";

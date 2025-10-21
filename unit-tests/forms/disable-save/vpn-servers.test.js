@@ -12,7 +12,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -25,7 +25,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -48,7 +48,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -71,7 +71,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -95,7 +95,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -119,7 +119,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -143,7 +143,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -167,7 +167,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -191,7 +191,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -215,7 +215,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -240,7 +240,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -265,7 +265,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -291,7 +291,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -318,7 +318,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -346,7 +346,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isFalse(actualData, "it should not be disabled");
   });
@@ -375,7 +375,7 @@ describe("vpn_servers", () => {
           name: "",
         },
         craig: craig,
-      }
+      },
     );
     assert.isFalse(actualData, "it should not be disabled");
   });
@@ -389,7 +389,7 @@ describe("vpn_servers", () => {
             name: "",
           },
           craig: craig,
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -402,7 +402,7 @@ describe("vpn_servers", () => {
             name: "",
           },
           craig: craig,
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });

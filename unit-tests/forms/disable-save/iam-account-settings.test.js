@@ -5,7 +5,7 @@ const craig = state();
 describe("iam account settings", () => {
   it("should return true if iam_account_settings mfa invalid", () => {
     assert.isTrue(
-      disableSave("iam_account_settings", { mfa: null }, { craig: craig })
+      disableSave("iam_account_settings", { mfa: null }, { craig: craig }),
     );
   });
   it("should return true if iam_account_settings restrict_create_platform_apikey invalid", () => {
@@ -13,8 +13,8 @@ describe("iam account settings", () => {
       disableSave(
         "iam_account_settings",
         { mfa: "1", restrict_create_platform_apikey: null },
-        { craig: craig }
-      )
+        { craig: craig },
+      ),
     );
   });
   it("should return true if iam_account_settings restrict_create_service_id invalid", () => {
@@ -26,8 +26,8 @@ describe("iam account settings", () => {
           restrict_create_platform_apikey: "null",
           restrict_create_service_id: null,
         },
-        { craig: craig }
-      )
+        { craig: craig },
+      ),
     );
   });
   it("should return true if iam_account_settings max_sessions_per_identity invalid", () => {
@@ -40,8 +40,8 @@ describe("iam account settings", () => {
           restrict_create_service_id: "null",
           max_sessions_per_identity: null,
         },
-        { craig: craig }
-      )
+        { craig: craig },
+      ),
     );
   });
   it("should return true if iam account settings page has bad mfa field", () => {
@@ -57,8 +57,8 @@ describe("iam account settings", () => {
         },
         {
           craig: craig,
-        }
-      )
+        },
+      ),
     );
   });
   it("should return true if iam account settings page has bad allowed_ip_addresses field", () => {
@@ -74,8 +74,8 @@ describe("iam account settings", () => {
         },
         {
           craig: craig,
-        }
-      )
+        },
+      ),
     );
   });
   it("should return true if iam account settings page has bad max_sessions_per_identity field", () => {
@@ -91,8 +91,8 @@ describe("iam account settings", () => {
         },
         {
           craig: craig,
-        }
-      )
+        },
+      ),
     );
   });
 
@@ -109,8 +109,8 @@ describe("iam account settings", () => {
         },
         {
           craig: craig,
-        }
-      )
+        },
+      ),
     );
   });
   it("should return true if iam account settings form has bad restrict_create_platform_apikey field", () => {
@@ -126,8 +126,8 @@ describe("iam account settings", () => {
         },
         {
           craig: craig,
-        }
-      )
+        },
+      ),
     );
   });
   it("should return true if iam account settings page has bad session_expiration_in_seconds field", () => {
@@ -144,8 +144,8 @@ describe("iam account settings", () => {
         },
         {
           craig: craig,
-        }
-      )
+        },
+      ),
     );
   });
   it("should return true if iam account settings page has bad session_invalidation_in_seconds field", () => {
@@ -163,8 +163,8 @@ describe("iam account settings", () => {
         },
         {
           craig: craig,
-        }
-      )
+        },
+      ),
     );
   });
   describe("invalidText", () => {
@@ -172,42 +172,42 @@ describe("iam account settings", () => {
       assert.deepEqual(
         craig.iam_account_settings.allowed_ip_addresses.invalidText(),
         "Enter a comma separated list of IP addresses or CIDR blocks",
-        "it should return text"
+        "it should return text",
       );
     });
     it("should return invalid text for max_sessions_per_identity", () => {
       assert.deepEqual(
         craig.iam_account_settings.max_sessions_per_identity.invalidText(),
         "Value must be in range [1-10]",
-        "it should return text"
+        "it should return text",
       );
     });
     it("should return invalid text for restrict_create_service_id", () => {
       assert.deepEqual(
         craig.iam_account_settings.restrict_create_service_id.invalidText(),
         "Invalid",
-        "it should return text"
+        "it should return text",
       );
     });
     it("should return invalid text for restrict_create_platform_apikey", () => {
       assert.deepEqual(
         craig.iam_account_settings.restrict_create_platform_apikey.invalidText(),
         "Invalid",
-        "it should return text"
+        "it should return text",
       );
     });
     it("should return invalid text for session_expiration_in_seconds", () => {
       assert.deepEqual(
         craig.iam_account_settings.session_expiration_in_seconds.invalidText(),
         "Must be a whole number between 900 and 86400",
-        "it should return text"
+        "it should return text",
       );
     });
     it("should return invalid text for session_invalidation_in_seconds", () => {
       assert.deepEqual(
         craig.iam_account_settings.session_invalidation_in_seconds.invalidText(),
         "Must be a whole number between 900 and 86400",
-        "it should return text"
+        "it should return text",
       );
     });
   });

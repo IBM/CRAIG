@@ -115,7 +115,7 @@ function initAppIdStore(store) {
     onStoreUpdate: appidOnStoreUpdate,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "resource_group"],
-      "appid"
+      "appid",
     ),
     create: appidCreate,
     save: appidSave,
@@ -164,7 +164,7 @@ function initAppIdStore(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name"],
           "appid",
-          "keys"
+          "keys",
         ),
         schema: {
           name: nameField("appid_key"),

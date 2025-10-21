@@ -18,7 +18,7 @@ function onProjectDeselect(component, craig) {
   craig.store.json = new state().store.json;
   component.saveAndSendNotification(
     `Successfully cleared project selection`,
-    true
+    true,
   );
 }
 
@@ -38,7 +38,7 @@ function onProjectSelectCallback(
   craig,
   name,
   message,
-  callback
+  callback,
 ) {
   let projectKeyName = kebabCase(name);
   craig.store.project_name = projectKeyName;
@@ -51,7 +51,7 @@ function onProjectSelectCallback(
   return function () {
     component.saveAndSendNotification(
       message || `Project ${name} successfully imported`,
-      true
+      true,
     );
     if (callback) callback();
   };
@@ -113,7 +113,7 @@ function saveAndSendNotificationCallback(
   projectData,
   notification,
   noProjectSave,
-  footerToggle
+  footerToggle,
 ) {
   return function () {
     if (noProjectSave !== true && !isEmpty(keys(projectData))) {
@@ -142,14 +142,14 @@ function saveProjectCallback(
   stateData,
   componentProps,
   setCurrentProject,
-  afterValidation
+  afterValidation,
 ) {
   return function () {
     if (setCurrentProject) {
       component.onProjectSelect(
         stateData.project_name,
         `Successfully saved project ${stateData.name}`,
-        afterValidation
+        afterValidation,
       );
     } else {
       if (
@@ -162,7 +162,7 @@ function saveProjectCallback(
       // send notification
       component.saveAndSendNotification(
         `Successfully saved project ${stateData.name}`,
-        true
+        true,
       );
     }
   };
@@ -183,7 +183,7 @@ function projectShouldCreateWorkspace(projects, stateData) {
         projects[projectKeyName][field] = stateData[field];
         shouldCreateWorkspace = true;
       }
-    }
+    },
   );
   return shouldCreateWorkspace;
 }
@@ -247,7 +247,7 @@ function projectFetch(
   workspace,
   reject,
   resolveCallback,
-  rejectCallback
+  rejectCallback,
 ) {
   let { workspace_name, workspace_region, workspace_resource_group } =
     workspace;
@@ -255,7 +255,7 @@ function projectFetch(
     `/api/schematics/${workspace_name}` +
       (workspace_region ? "/" + workspace_region : "/us-south") +
       (workspace_resource_group ? "/" + workspace_resource_group : "/Default"),
-    { method: "POST" }
+    { method: "POST" },
   )
     .then((res) => res.json())
     .then((data) => {
@@ -265,7 +265,7 @@ function projectFetch(
         reject("Workspace did not create. Missing ID.");
       } else {
         resolveCallback(
-          `https://cloud.ibm.com/schematics/workspaces/${data.id}`
+          `https://cloud.ibm.com/schematics/workspaces/${data.id}`,
         );
       }
     })
@@ -287,7 +287,7 @@ function onRequestSubmitJSONModal(
   event,
   stateData,
   componentProps,
-  resolveCallback
+  resolveCallback,
 ) {
   // if edit mode, ignore enter key to allow for new lines in text area
   if (!stateData.readOnlyJSON && event.code === "Enter") {
@@ -308,11 +308,11 @@ function onRequestSubmitJSONModal(
           componentProps.onProjectSave(
             project,
             componentProps,
-            componentProps.current_project === stateData.name // update if current project
+            componentProps.current_project === stateData.name, // update if current project
           );
         }
         resolveCallback(true);
-      }
+      },
     );
   }
 }
@@ -349,7 +349,7 @@ function onRequestProjectImport(stateData, resolveCallback) {
 function onRequestOverrideProjectJSON(
   stateData,
   componentProps,
-  resolveCallback
+  resolveCallback,
 ) {
   let invalidTextData = stateData.json === undefined;
   let textAreaDidChange =

@@ -18,7 +18,7 @@ describe("classic", () => {
         assert.deepEqual(
           craig.store.json.classic_ssh_keys,
           [],
-          "it should initialize value"
+          "it should initialize value",
         );
       });
     });
@@ -41,11 +41,11 @@ describe("classic", () => {
                 datacenter: "dal10",
               },
             ],
-            "it should create key"
+            "it should create key",
           );
           assert.isTrue(
             craig.store.json._options.enable_classic,
-            "it should enable classic"
+            "it should enable classic",
           );
         });
       });
@@ -61,7 +61,7 @@ describe("classic", () => {
               data: {
                 name: "example-classic",
               },
-            }
+            },
           );
           assert.deepEqual(
             craig.store.json.classic_ssh_keys,
@@ -72,7 +72,7 @@ describe("classic", () => {
                 datacenter: "dal10",
               },
             ],
-            "it should create key"
+            "it should create key",
           );
         });
       });
@@ -88,16 +88,16 @@ describe("classic", () => {
               data: {
                 name: "example-classic",
               },
-            }
+            },
           );
           assert.deepEqual(
             craig.store.json.classic_ssh_keys,
             [],
-            "it should create key"
+            "it should create key",
           );
           assert.isFalse(
             craig.store.json._options.enable_classic,
-            "it should disable classic"
+            "it should disable classic",
           );
         });
       });
@@ -118,10 +118,10 @@ describe("classic", () => {
                   data: {
                     name: "hi",
                   },
-                }
+                },
               ),
               "Provide a unique SSH public key that does not exist in the IBM Cloud account in your region",
-              "it should return correct invalid text"
+              "it should return correct invalid text",
             );
           });
         });
@@ -134,7 +134,7 @@ describe("classic", () => {
         assert.deepEqual(
           craig.store.json.classic_vlans,
           [],
-          "it should initialize value"
+          "it should initialize value",
         );
       });
     });
@@ -155,11 +155,11 @@ describe("classic", () => {
               router_hostname: "",
             },
           ],
-          "it should create key"
+          "it should create key",
         );
         assert.isTrue(
           craig.store.json._options.enable_classic,
-          "it should enable classic"
+          "it should enable classic",
         );
       });
     });
@@ -181,7 +181,7 @@ describe("classic", () => {
               router_hostname: "",
             },
           ],
-          "it should create vlan"
+          "it should create vlan",
         );
       });
       it("should not remove found classic vlans from router hostname", () => {
@@ -212,7 +212,7 @@ describe("classic", () => {
               type: "PUBLIC",
             },
           ],
-          "it should create vlan"
+          "it should create vlan",
         );
       });
     });
@@ -233,7 +233,7 @@ describe("classic", () => {
             data: {
               name: "vsrx-public",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.classic_vlans,
@@ -246,7 +246,7 @@ describe("classic", () => {
             },
           ],
 
-          "it should create key"
+          "it should create key",
         );
       });
     });
@@ -267,12 +267,12 @@ describe("classic", () => {
             data: {
               name: "vsrx-public",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.classic_vlans,
           [],
-          "it should create key"
+          "it should create key",
         );
       });
     });
@@ -289,9 +289,9 @@ describe("classic", () => {
                   name: "test",
                 },
                 craig: craig,
-              }
+              },
             ),
-            "it should be disabled"
+            "it should be disabled",
           );
         });
         it("should return the correct text when a classic vlan that has a name greater than 20 characters is passed", () => {
@@ -313,12 +313,12 @@ describe("classic", () => {
               data: {
                 name: "frog",
               },
-            }
+            },
           );
           assert.deepEqual(
             actualData,
             "Classic VLAN names must be 20 or fewer characters including the environment prefix",
-            "it should return correct message"
+            "it should return correct message",
           );
         });
         describe("classic_vlans.name.helperText", () => {
@@ -336,10 +336,10 @@ describe("classic", () => {
                       },
                     },
                   },
-                }
+                },
               ),
               "frog-frog",
-              "it should return correct helper text"
+              "it should return correct helper text",
             );
           });
           it("should return helper text", () => {
@@ -356,10 +356,10 @@ describe("classic", () => {
                       },
                     },
                   },
-                }
+                },
               ),
               "frog-",
-              "it should return correct helper text"
+              "it should return correct helper text",
             );
           });
           it("should return helper text", () => {
@@ -376,10 +376,10 @@ describe("classic", () => {
                       },
                     },
                   },
-                }
+                },
               ),
               "",
-              "it should return correct helper text"
+              "it should return correct helper text",
             );
           });
         });
@@ -390,14 +390,14 @@ describe("classic", () => {
             assert.deepEqual(
               craig.classic_vlans.type.onRender({ type: "PUBLIC" }),
               "Public",
-              "it should set to titlecase"
+              "it should set to titlecase",
             );
           });
           it("should return correct name on render when no type", () => {
             assert.deepEqual(
               craig.classic_vlans.type.onRender({ type: undefined }),
               "",
-              "it should set to titlecase"
+              "it should set to titlecase",
             );
           });
         });
@@ -406,7 +406,7 @@ describe("classic", () => {
             assert.deepEqual(
               craig.classic_vlans.type.invalidText(),
               "Select a type",
-              "it should return correct text"
+              "it should return correct text",
             );
           });
         });
@@ -415,7 +415,7 @@ describe("classic", () => {
             assert.deepEqual(
               craig.classic_vlans.type.onInputChange({ type: "Public" }),
               "PUBLIC",
-              "it should set to ALLCAPS"
+              "it should set to ALLCAPS",
             );
           });
         });
@@ -426,7 +426,7 @@ describe("classic", () => {
             assert.deepEqual(
               craig.classic_vlans.datacenter.invalidText(),
               "Select a datacenter",
-              "It should return correct invalid text"
+              "It should return correct invalid text",
             );
           });
         });
@@ -436,7 +436,7 @@ describe("classic", () => {
           it("should return false", () => {
             assert.isFalse(
               craig.classic_vlans.router_hostname.invalid(),
-              "It should return correct invalid text"
+              "It should return correct invalid text",
             );
           });
         });
@@ -465,10 +465,10 @@ describe("classic", () => {
                       },
                     },
                   },
-                }
+                },
               ),
               ["mom"],
-              "It should return correct groups"
+              "It should return correct groups",
             );
           });
           it("should return groups when not modal", () => {
@@ -498,10 +498,10 @@ describe("classic", () => {
                       },
                     },
                   },
-                }
+                },
               ),
               ["mom"],
-              "It should return correct groups"
+              "It should return correct groups",
             );
           });
         });

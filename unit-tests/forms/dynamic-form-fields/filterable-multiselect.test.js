@@ -61,26 +61,26 @@ describe("filterable multiselect", () => {
             value: ["items"],
           },
         },
-        "it should return correct value"
+        "it should return correct value",
       );
       delete actualData.onChange;
       assert.isFunction(actualData.itemToString, "it should be a function");
       assert.deepEqual(
         actualData.itemToString(),
         "",
-        "it should return empty string"
+        "it should return empty string",
       );
       assert.deepEqual(
         actualData.itemToString("hi"),
         "hi",
-        "it should return string"
+        "it should return string",
       );
       delete actualData.itemToString;
 
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for multiselect when not disabled", () => {
@@ -141,26 +141,26 @@ describe("filterable multiselect", () => {
             value: ["items"],
           },
         },
-        "it should return correct value"
+        "it should return correct value",
       );
       delete actualData.onChange;
       assert.isFunction(actualData.itemToString, "it should be a function");
       assert.deepEqual(
         actualData.itemToString(),
         "",
-        "it should return empty string"
+        "it should return empty string",
       );
       assert.deepEqual(
         actualData.itemToString("hi"),
         "hi",
-        "it should return string"
+        "it should return string",
       );
       delete actualData.itemToString;
 
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for multiselect when not disabled and force update using key prop", () => {
@@ -224,26 +224,26 @@ describe("filterable multiselect", () => {
             value: ["items"],
           },
         },
-        "it should return correct value"
+        "it should return correct value",
       );
       delete actualData.onChange;
       assert.isFunction(actualData.itemToString, "it should be a function");
       assert.deepEqual(
         actualData.itemToString(),
         "",
-        "it should return empty string"
+        "it should return empty string",
       );
       assert.deepEqual(
         actualData.itemToString("hi"),
         "hi",
-        "it should return string"
+        "it should return string",
       );
       delete actualData.itemToString;
 
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for multiselect when not disabled and has tooltip", () => {
@@ -305,26 +305,26 @@ describe("filterable multiselect", () => {
             value: ["items"],
           },
         },
-        "it should return correct value"
+        "it should return correct value",
       );
       delete actualData.onChange;
       assert.isFunction(actualData.itemToString, "it should be a function");
       assert.deepEqual(
         actualData.itemToString(),
         "",
-        "it should return empty string"
+        "it should return empty string",
       );
       assert.deepEqual(
         actualData.itemToString("hi"),
         "hi",
-        "it should return string"
+        "it should return string",
       );
       delete actualData.itemToString;
 
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for multiselect when not disabled and onrender is used", () => {
@@ -388,26 +388,26 @@ describe("filterable multiselect", () => {
             value: ["items"],
           },
         },
-        "it should return correct value"
+        "it should return correct value",
       );
       delete actualData.onChange;
       assert.isFunction(actualData.itemToString, "it should be a function");
       assert.deepEqual(
         actualData.itemToString(),
         "",
-        "it should return empty string"
+        "it should return empty string",
       );
       assert.deepEqual(
         actualData.itemToString("hi"),
         "hi",
-        "it should return string"
+        "it should return string",
       );
       delete actualData.itemToString;
 
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for multiselect when not disabled, items are none, and is optional", () => {
@@ -469,26 +469,26 @@ describe("filterable multiselect", () => {
             value: ["items"],
           },
         },
-        "it should return correct value"
+        "it should return correct value",
       );
       delete actualData.onChange;
       assert.isFunction(actualData.itemToString, "it should be a function");
       assert.deepEqual(
         actualData.itemToString(),
         "",
-        "it should return empty string"
+        "it should return empty string",
       );
       assert.deepEqual(
         actualData.itemToString("hi"),
         "hi",
-        "it should return string"
+        "it should return string",
       );
       delete actualData.itemToString;
 
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for multiselect when not disabled, items are not none, and is network", () => {
@@ -549,26 +549,26 @@ describe("filterable multiselect", () => {
             value: ["items"],
           },
         },
-        "it should return correct value"
+        "it should return correct value",
       );
       delete actualData.onChange;
       assert.isFunction(actualData.itemToString, "it should be a function");
       assert.deepEqual(
         actualData.itemToString(),
         "",
-        "it should return empty string"
+        "it should return empty string",
       );
       assert.deepEqual(
         actualData.itemToString("hi"),
         "hi",
-        "it should return string"
+        "it should return string",
       );
       delete actualData.itemToString;
 
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
     it("should return the correct props for multiselect when not disabled, items are none, and is optional and is invalid", () => {
@@ -630,26 +630,26 @@ describe("filterable multiselect", () => {
             value: ["items"],
           },
         },
-        "it should return correct value"
+        "it should return correct value",
       );
       delete actualData.onChange;
       assert.isFunction(actualData.itemToString, "it should be a function");
       assert.deepEqual(
         actualData.itemToString(),
         "",
-        "it should return empty string"
+        "it should return empty string",
       );
       assert.deepEqual(
         actualData.itemToString("hi"),
         "hi",
-        "it should return string"
+        "it should return string",
       );
       delete actualData.itemToString;
 
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correctly formatted data"
+        "it should return correctly formatted data",
       );
     });
   });
@@ -691,7 +691,7 @@ describe("filterable multiselect", () => {
     assert.deepEqual(
       actualData.itemToString({ name: "frog" }),
       "frog",
-      "it should return string"
+      "it should return string",
     );
   });
   it("should append Loading... to labelText if data is being fetched", () => {
@@ -732,7 +732,7 @@ describe("filterable multiselect", () => {
         name: "name",
         propsName: "frog",
       },
-      ["Loading..."]
+      ["Loading..."],
     );
     let expectedData = {
       className: "leftTextAlign fieldWidth",
@@ -752,7 +752,7 @@ describe("filterable multiselect", () => {
     assert.deepEqual(
       actualData,
       expectedData,
-      "it should add Loading... to name"
+      "it should add Loading... to name",
     );
   });
 });

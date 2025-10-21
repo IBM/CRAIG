@@ -3,7 +3,7 @@ const { disableSave, state } = require("../../../client/src/lib");
 const craig = state();
 
 describe("options", () => {
-  it("should return true for invalid prefix", () => {
+  (it("should return true for invalid prefix", () => {
     assert.isTrue(
       disableSave(
         "options",
@@ -26,9 +26,9 @@ describe("options", () => {
           data: {
             name: "frog",
           },
-        }
+        },
       ),
-      "it should be true"
+      "it should be true",
     );
   }),
     it("should return true if power vs enabled and no zones", () => {
@@ -54,9 +54,9 @@ describe("options", () => {
             data: {
               name: "frog",
             },
-          }
+          },
         ),
-        "it should be true"
+        "it should be true",
       );
-    });
+    }));
 });

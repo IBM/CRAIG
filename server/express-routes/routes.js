@@ -27,7 +27,7 @@ router.get("/cluster/versions", controller.clusterVersions);
 router.put("/schematics/tar/:workspaceName/:region", controller.uploadTar);
 router.post(
   "/schematics/:workspaceName/:region/:resourceGroup",
-  controller.createWorkspace
+  controller.createWorkspace,
 );
 
 // power
