@@ -31,6 +31,7 @@ tfxjs.tfvars
 
 #production
 /build
+/server/build
 .icse/
 tf-test/
 dev/

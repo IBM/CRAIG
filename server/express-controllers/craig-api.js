@@ -1,17 +1,18 @@
-const { configToFilesJson } = require("../client/src/lib");
+const { configToFilesJson } = require("../../client/src/lib");
 const { packTar } = require("../lib/tar-utils");
-const fromScratch = require("../client/src/lib/docs/templates/from-scratch.json");
-const oracleRac = require("../client/src/lib/docs/templates/oracle-rac.json");
-const oracleSi = require("../client/src/lib/docs/templates/oracle-si.json");
-const powerVsPoc = require("../client/src/lib/docs/templates/power-poc-quick-start.json");
-const powerVsPocClassic = require("../client/src/lib/docs/templates/power-poc-classic-quick-start.json");
-const powerVsSapHana = require("../client/src/lib/docs/templates/power-sap-hana.json");
-const quickStartPower = require("../client/src/lib/docs/templates/quick-start-power.json");
-const slzMixed = require("../client/src/lib/docs/templates/slz-mixed.json");
-const slzVsiEdge = require("../client/src/lib/docs/templates/slz-vsi-edge.json");
-const slzVsi = require("../client/src/lib/docs/templates/slz-vsi.json");
-const vpnaas = require("../client/src/lib/docs/templates/vpn-as-a-service.json");
+const fromScratch = require("../../client/src/lib/docs/templates/from-scratch.json");
+const oracleRac = require("../../client/src/lib/docs/templates/oracle-rac.json");
+const oracleSi = require("../../client/src/lib/docs/templates/oracle-si.json");
+const powerVsPoc = require("../../client/src/lib/docs/templates/power-poc-quick-start.json");
+const powerVsPocClassic = require("../../client/src/lib/docs/templates/power-poc-classic-quick-start.json");
+const powerVsSapHana = require("../../client/src/lib/docs/templates/power-sap-hana.json");
+const quickStartPower = require("../../client/src/lib/docs/templates/quick-start-power.json");
+const slzMixed = require("../../client/src/lib/docs/templates/slz-mixed.json");
+const slzVsiEdge = require("../../client/src/lib/docs/templates/slz-vsi-edge.json");
+const slzVsi = require("../../client/src/lib/docs/templates/slz-vsi.json");
+const vpnaas = require("../../client/src/lib/docs/templates/vpn-as-a-service.json");
 const { recursiveTranspose } = require("lazy-z");
+
 const templateNameToJson = {
   "from-scratch": fromScratch,
   "oracle-rac": oracleRac,
