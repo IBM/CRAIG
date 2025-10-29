@@ -136,11 +136,11 @@ function fortmatVpeGateway(vpe, config) {
 
 function ibmIsVirtualEndpointGatewayIp(vpe, subnetName) {
   return {
-    name: `${vpe.vpc} vpc ${vpe.service} gw ${subnetName} gateway ip`,
+    name: `${vpe.vpc} vpc ${vpe.service === "cluster" ? `${vpe.cluster_vpc} cluster` : vpe.service} gw ${subnetName} gateway ip`,
     data: {
       gateway: tfRef(
         "ibm_is_virtual_endpoint_gateway",
-        `${vpe.vpc} vpc ${vpe.service} vpe gateway`,
+        `${vpe.vpc} vpc ${vpe.service === "cluster" ? `${vpe.cluster_vpc} cluster` : vpe.service} vpe gateway`,
       ),
       reserved_ip: tfRef(
         "ibm_is_subnet_reserved_ip",

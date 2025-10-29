@@ -489,5 +489,171 @@ resource "ibm_is_virtual_endpoint_gateway_ip" "workload_vpc_cos_gw_vpe_zone_3_ga
       delete slzNetwork.vpcs[0].subnets[0].use_data;
       assert.deepEqual(actualData, expectedData, "it should create correct tf");
     });
+    it("should create vpe terraform", () => {
+      slzNetwork.virtual_private_endpoints.push({
+        vpc: "management",
+        name: "workload-cluster",
+        service: "cluster",
+        cluster_vpc: "workload",
+        resource_group: "slz-management-rg",
+        security_groups: ["management-vpe-sg"],
+        subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
+        account_id: "1234",
+        instance: "workload",
+      });
+      let actualData = vpeTf(slzNetwork);
+
+      let expectedData = `##############################################################################
+# Management VPE Resources
+##############################################################################
+
+resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_1_subnet_vpe_ip_cos_vpe_gw" {
+  subnet = module.management_vpc.import_vpe_zone_1_id
+}
+
+resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_2_subnet_vpe_ip_cos_vpe_gw" {
+  subnet = module.management_vpc.subnet_vpe_zone_2_id
+}
+
+resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_3_subnet_vpe_ip_cos_vpe_gw" {
+  subnet = module.management_vpc.subnet_vpe_zone_3_id
+}
+
+resource "ibm_is_virtual_endpoint_gateway" "management_vpc_cos_vpe_gateway" {
+  name           = "\${var.prefix}-management-cos-vpe-gw"
+  vpc            = module.management_vpc.id
+  resource_group = ibm_resource_group.slz_management_rg.id
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  security_groups = [
+    module.management_vpc.management_vpe_sg_id
+  ]
+  target {
+    crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.\${var.region}.cloud-object-storage.appdomain.cloud"
+    resource_type = "provider_cloud_service"
+  }
+}
+
+resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_cos_gw_vpe_zone_1_gateway_ip" {
+  gateway     = ibm_is_virtual_endpoint_gateway.management_vpc_cos_vpe_gateway.id
+  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_1_subnet_vpe_ip_cos_vpe_gw.reserved_ip
+}
+
+resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_cos_gw_vpe_zone_2_gateway_ip" {
+  gateway     = ibm_is_virtual_endpoint_gateway.management_vpc_cos_vpe_gateway.id
+  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_2_subnet_vpe_ip_cos_vpe_gw.reserved_ip
+}
+
+resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_cos_gw_vpe_zone_3_gateway_ip" {
+  gateway     = ibm_is_virtual_endpoint_gateway.management_vpc_cos_vpe_gateway.id
+  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_3_subnet_vpe_ip_cos_vpe_gw.reserved_ip
+}
+
+##############################################################################
+
+##############################################################################
+# Workload VPE Resources
+##############################################################################
+
+resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_1_subnet_vpe_ip_cos_vpe_gw" {
+  subnet = module.workload_vpc.subnet_vpe_zone_1_id
+}
+
+resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_2_subnet_vpe_ip_cos_vpe_gw" {
+  subnet = module.workload_vpc.subnet_vpe_zone_2_id
+}
+
+resource "ibm_is_subnet_reserved_ip" "workload_vpc_vpe_zone_3_subnet_vpe_ip_cos_vpe_gw" {
+  subnet = module.workload_vpc.subnet_vpe_zone_3_id
+}
+
+resource "ibm_is_virtual_endpoint_gateway" "workload_vpc_cos_vpe_gateway" {
+  name           = "\${var.prefix}-workload-cos-vpe-gw"
+  vpc            = module.workload_vpc.id
+  resource_group = ibm_resource_group.slz_workload_rg.id
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  security_groups = [
+    module.workload_vpc.workload_vpe_sg_id
+  ]
+  target {
+    crn           = "crn:v1:bluemix:public:cloud-object-storage:global:::endpoint:s3.direct.\${var.region}.cloud-object-storage.appdomain.cloud"
+    resource_type = "provider_cloud_service"
+  }
+}
+
+resource "ibm_is_virtual_endpoint_gateway_ip" "workload_vpc_cos_gw_vpe_zone_1_gateway_ip" {
+  gateway     = ibm_is_virtual_endpoint_gateway.workload_vpc_cos_vpe_gateway.id
+  reserved_ip = ibm_is_subnet_reserved_ip.workload_vpc_vpe_zone_1_subnet_vpe_ip_cos_vpe_gw.reserved_ip
+}
+
+resource "ibm_is_virtual_endpoint_gateway_ip" "workload_vpc_cos_gw_vpe_zone_2_gateway_ip" {
+  gateway     = ibm_is_virtual_endpoint_gateway.workload_vpc_cos_vpe_gateway.id
+  reserved_ip = ibm_is_subnet_reserved_ip.workload_vpc_vpe_zone_2_subnet_vpe_ip_cos_vpe_gw.reserved_ip
+}
+
+resource "ibm_is_virtual_endpoint_gateway_ip" "workload_vpc_cos_gw_vpe_zone_3_gateway_ip" {
+  gateway     = ibm_is_virtual_endpoint_gateway.workload_vpc_cos_vpe_gateway.id
+  reserved_ip = ibm_is_subnet_reserved_ip.workload_vpc_vpe_zone_3_subnet_vpe_ip_cos_vpe_gw.reserved_ip
+}
+
+##############################################################################
+
+##############################################################################
+# Management VPE Resources
+##############################################################################
+
+resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_1_subnet_vpe_ip_workload_cluster" {
+  subnet = module.management_vpc.import_vpe_zone_1_id
+}
+
+resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_2_subnet_vpe_ip_workload_cluster" {
+  subnet = module.management_vpc.subnet_vpe_zone_2_id
+}
+
+resource "ibm_is_subnet_reserved_ip" "management_vpc_vpe_zone_3_subnet_vpe_ip_workload_cluster" {
+  subnet = module.management_vpc.subnet_vpe_zone_3_id
+}
+
+resource "ibm_is_virtual_endpoint_gateway" "management_vpc_workload_cluster_vpe_gateway" {
+  name           = "\${var.prefix}-management-workload-cluster-vpe-gw"
+  vpc            = module.management_vpc.id
+  resource_group = ibm_resource_group.slz_management_rg.id
+  tags = [
+    "slz",
+    "landing-zone"
+  ]
+  security_groups = [
+    module.management_vpc.management_vpe_sg_id
+  ]
+  target {
+    crn           = ibm_container_vpc_cluster.workload_vpc_workload.crn
+    resource_type = "provider_cloud_service"
+  }
+}
+
+resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_workload_cluster_gw_vpe_zone_1_gateway_ip" {
+  gateway     = ibm_is_virtual_endpoint_gateway.management_vpc_workload_cluster_vpe_gateway.id
+  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_1_subnet_vpe_ip_workload_cluster.reserved_ip
+}
+
+resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_workload_cluster_gw_vpe_zone_2_gateway_ip" {
+  gateway     = ibm_is_virtual_endpoint_gateway.management_vpc_workload_cluster_vpe_gateway.id
+  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_2_subnet_vpe_ip_workload_cluster.reserved_ip
+}
+
+resource "ibm_is_virtual_endpoint_gateway_ip" "management_vpc_workload_cluster_gw_vpe_zone_3_gateway_ip" {
+  gateway     = ibm_is_virtual_endpoint_gateway.management_vpc_workload_cluster_vpe_gateway.id
+  reserved_ip = ibm_is_subnet_reserved_ip.management_vpc_vpe_zone_3_subnet_vpe_ip_workload_cluster.reserved_ip
+}
+
+##############################################################################
+`;
+      assert.deepEqual(actualData, expectedData, "it should create correct tf");
+    });
   });
 });
