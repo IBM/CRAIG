@@ -710,7 +710,7 @@ class Craig extends React.Component {
   }
 
   render() {
-    console.log("window.location.pathname", window.location.pathname)
+    console.log("window.location.pathname", window.location.pathname);
     window.localStorage.setItem("craigVisited", true);
     return !this.state.visited ? (
       <Tutorial />
