@@ -46,6 +46,7 @@
     "json-to-tf": "^0.3.0",
     "lazy-z": "1.12.1",
     "next": "^16.0.0",
+    "node": "^25.1.0",
     "regex-but-with-words": "^1.5.1",
     "swagger-ui-express": "^5.0.0",
     "tar-stream": "^3.1.6"
