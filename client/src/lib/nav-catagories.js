@@ -191,6 +191,27 @@ const navCatagories = [
     ],
   },
   {
+    name: "Platform Automation",
+    links: [
+      {
+        title: "Inventories",
+        path: "/form/cis",
+        react_icon: "IbmCloudInternetServices",
+        toTf: (config) => {
+          return cisTf(config) || "";
+        },
+        jsonField: "cis",
+      },
+      {
+        title: "Agents",
+        path: "/form/agent",
+        react_icon: "",
+        toTf: agentTf,
+        jsonField: "agents"
+      }
+    ],
+  },
+  {
     name: "Clusters",
     links: [
       {
