@@ -73,12 +73,12 @@ function formatReservedIp(vpe, subnetName, useData) {
 
 function ibmIsVirtualEndpointGateway(vpe, config) {
   let data = {
-    name: `${vpe.vpc} vpc ${vpe.service} vpe gateway`,
+    name: `${vpe.vpc} vpc ${vpe.service === "cluster" ? `${vpe.cluster_vpc} cluster` : vpe.service} vpe gateway`,
     data: {
       name: kebabName([
         vpe.vpc,
         vpe.instance ? vpe.instance : vpe.service,
-        "vpe-gw",
+        `${vpe.service === "cluster" ? "cluster-" : ""}vpe-gw`,
       ]),
       vpc: vpcRef(vpe.vpc, "id", true),
       resource_group: rgIdRef(vpe.resource_group, config),
@@ -88,7 +88,10 @@ function ibmIsVirtualEndpointGateway(vpe, config) {
     },
   };
   let target = {
-    crn: serviceToEndpointMap[vpe.service].replace(/\$REGION/g, varDotRegion),
+    crn:
+      vpe.service === "cluster"
+        ? `\${ibm_container_vpc_cluster.${snakeCase(vpe.cluster_vpc)}_vpc_${snakeCase(vpe.instance)}.crn}`
+        : serviceToEndpointMap[vpe.service].replace(/\$REGION/g, varDotRegion),
     resource_type: "provider_cloud_service",
   };
   if (vpe.service === "secrets-manager") {
@@ -133,11 +136,11 @@ function fortmatVpeGateway(vpe, config) {
 
 function ibmIsVirtualEndpointGatewayIp(vpe, subnetName) {
   return {
-    name: `${vpe.vpc} vpc ${vpe.service} gw ${subnetName} gateway ip`,
+    name: `${vpe.vpc} vpc ${vpe.service === "cluster" ? `${vpe.cluster_vpc} cluster` : vpe.service} gw ${subnetName} gateway ip`,
     data: {
       gateway: tfRef(
         "ibm_is_virtual_endpoint_gateway",
-        `${vpe.vpc} vpc ${vpe.service} vpe gateway`,
+        `${vpe.vpc} vpc ${vpe.service === "cluster" ? `${vpe.cluster_vpc} cluster` : vpe.service} vpe gateway`,
       ),
       reserved_ip: tfRef(
         "ibm_is_subnet_reserved_ip",
