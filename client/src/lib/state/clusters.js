@@ -166,6 +166,7 @@ function clusterSave(config, stateData, componentProps) {
   // remove pool subnet names
   if (stateData.kube_version)
     stateData.kube_version = stateData.kube_version.replace(/\s.+$/, "");
+
   if (stateData.vpc !== componentProps.data.vpc) {
     stateData.worker_pools.forEach((pool) => {
       pool.vpc = stateData.vpc;
@@ -176,15 +177,33 @@ function clusterSave(config, stateData, componentProps) {
       .then((sg) => {
         sg.vpc = stateData.vpc;
       });
+
+    config.store.json.virtual_private_endpoints.forEach((vpe) => {
+      if (vpe.service === "cluster") {
+        vpe.subnets = [];
+        vpe.security_groups = [];
+        vpe.instance = undefined;
+      }
+    });
   }
-  console.log(stateData.name, componentProps.data.name);
+
   if (stateData.name && stateData.name !== componentProps.data.name) {
     new revision(config.store.json)
       .child("security_groups", componentProps.data.name + "-security-group")
       .then((sg) => {
         sg.name = stateData.name + "-security-group";
       });
+
+    config.store.json.virtual_private_endpoints.forEach((vpe) => {
+      if (
+        vpe.service === "cluster" &&
+        vpe.instance === componentProps.data.name
+      ) {
+        vpe.instance = stateData.name;
+      }
+    });
   }
+
   config.updateChild(["json", "clusters"], componentProps.data.name, stateData);
 }
 

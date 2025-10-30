@@ -290,6 +290,27 @@ describe("clusters", () => {
         "it should update opaque secrets cluster name",
       );
     });
+    it("should update cluster vpe instance when cluster.name is changed", () => {
+      craig.clusters.create(newDefaultWorkloadCluster());
+      craig.virtual_private_endpoints.create({
+        name: "cluster",
+        service: "cluster",
+        instance: "workload-cluster",
+        subnets: [],
+        security_groups: [],
+      });
+      craig.clusters.save(
+        { name: "new-name" },
+        { data: { name: "workload-cluster" } },
+      );
+      assert.deepEqual(
+        craig.store.json.virtual_private_endpoints[
+          craig.store.json.virtual_private_endpoints.length - 1
+        ].instance,
+        "new-name",
+        "it should update vpe cluster name",
+      );
+    });
     it("should update cluster security group when changing vpc", () => {
       craig.clusters.create({
         cos: "cos",
@@ -352,6 +373,27 @@ describe("clusters", () => {
           rules: [],
         },
         "it should update security group",
+      );
+    });
+    it("should update cluster vpe instance when cluster.vpc is changed", () => {
+      craig.clusters.create(newDefaultWorkloadCluster());
+      craig.virtual_private_endpoints.create({
+        name: "cluster",
+        service: "cluster",
+        instance: "workload-cluster",
+        subnets: [],
+        security_groups: [],
+      });
+      craig.clusters.save(
+        { vpc: "oops", name: "workload-cluster", worker_pools: [] },
+        { data: { name: "workload-cluster" } },
+      );
+      assert.deepEqual(
+        craig.store.json.virtual_private_endpoints[
+          craig.store.json.virtual_private_endpoints.length - 1
+        ].instance,
+        undefined,
+        "it should update vpe cluster name",
       );
     });
   });
