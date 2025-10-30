@@ -710,6 +710,7 @@ class Craig extends React.Component {
   }
 
   render() {
+    console.log("window.location.pathname", window.location.pathname)
     window.localStorage.setItem("craigVisited", true);
     return !this.state.visited ? (
       <Tutorial />
@@ -752,8 +753,8 @@ class Craig extends React.Component {
         <PageTemplate
           hideCodeMirror={
             this.props.params.doc ||
-            window.location.pathname === "/summary" ||
-            window.location.pathname === "/projects"
+            window.location.pathname === "/summary/" ||
+            window.location.pathname === "/projects/"
               ? true
               : this.state.hideCodeMirror
           } // always hide if about
@@ -813,7 +814,9 @@ class Craig extends React.Component {
             )
           ) : window.location.pathname === "/projects" ||
             window.location.pathname === "/v2/projects" ||
-            window.location.pathname === "/v2" ? (
+            window.location.pathname === "/v2" ||
+            window.location.pathname === "/projects/" ||
+            window.location.pathname === "/v2/projects/" ? (
             <Projects
               craig={craig}
               current_project={craig.store.project_name}
@@ -828,34 +831,34 @@ class Craig extends React.Component {
               }}
             />
           ) : window.location.pathname === "/" ||
-            window.location.pathname === "/v2/settings" ? (
+            window.location.pathname === "/v2/settings/" ? (
             <Home craig={craig} />
-          ) : window.location.pathname === "/summary" ? (
+          ) : window.location.pathname === "/summary/" ? (
             <Summary
               craig={craig}
               onProjectSave={this.onProjectSave}
               projects={this.state.projects}
               nav={this.props.craigRouter.nav}
             />
-          ) : window.location.pathname === "/v2/services" ? (
+          ) : window.location.pathname === "/v2/services/" ? (
             <CloudServicesPage craig={craig} />
-          ) : window.location.pathname === "/v2/vpc" ? (
+          ) : window.location.pathname === "/v2/vpc/" ? (
             <VpcDiagramPage craig={craig} />
-          ) : window.location.pathname === "/v2/vpcDeployments" ? (
+          ) : window.location.pathname === "/v2/vpcDeployments/" ? (
             <VpcDeploymentsDiagramPage craig={craig} />
-          ) : window.location.pathname === "/v2/connectivity" ? (
+          ) : window.location.pathname === "/v2/connectivity/" ? (
             <VpcConnectivityPage craig={craig} />
-          ) : window.location.pathname === "/v2/power" ? (
+          ) : window.location.pathname === "/v2/power/" ? (
             <PowerDiagram craig={craig} />
-          ) : window.location.pathname === "/v2/classic" ? (
+          ) : window.location.pathname === "/v2/classic/" ? (
             <ClassicDiagram craig={craig} />
-          ) : window.location.pathname === "/v2/overview" ? (
+          ) : window.location.pathname === "/v2/overview/" ? (
             <Overview craig={craig} />
-          ) : window.location.pathname === "/form/observability" ? (
+          ) : window.location.pathname === "/form/observability/" ? (
             <ObservabilityForm craig={craig} />
-          ) : window.location.pathname === "/stats" ? (
+          ) : window.location.pathname === "/stats/" ? (
             <Stats craig={craig} />
-          ) : window.location.pathname === "/v2/stats" ? (
+          ) : window.location.pathname === "/v2/stats/" ? (
             <Stats craig={craig} />
           ) : this.props.params.form ? (
             <NewFormPage form={this.props.params.form} craig={craig} />

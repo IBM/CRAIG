@@ -28,6 +28,7 @@ const vpeServiceMap = {
   "Container Registry": "icr",
   "Secrets Manager": "secrets-manager",
   cluster: "Cluster",
+  Cluster: "cluster"
 };
 
 /**
