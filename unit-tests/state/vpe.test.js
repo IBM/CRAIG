@@ -300,6 +300,24 @@ describe("virtual_private_endpoints", () => {
           "it should return the correct data",
         );
       });
+      it("should reset security groups and subnets on state change", () => {
+        let expectedData = {
+          security_groups: [],
+          subnets: [],
+          service: "cluster",
+          instance: undefined,
+        };
+        let actualData = {
+          security_groups: [],
+          subnets: [],
+        };
+        craig.virtual_private_endpoints.vpc.onStateChange(actualData);
+        assert.deepEqual(
+          actualData,
+          expectedData,
+          "it should return the correct data",
+        );
+      });
     });
     describe("security_groups", () => {
       it("should return correct security groups when none vpc", () => {

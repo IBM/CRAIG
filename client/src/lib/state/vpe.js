@@ -182,6 +182,7 @@ function initVpe(store) {
         onStateChange: function (stateData) {
           stateData.security_groups = [];
           stateData.subnets = [];
+          if (stateData.service === "cluster") stateData.instance = undefined;
         },
       },
       security_groups: securityGroupsMultiselect(),
@@ -196,7 +197,7 @@ function initVpe(store) {
             ? isNullOrEmptyString(stateData.instance, true)
             : false;
         },
-        invalidText: selectInvalidText("secrets manager instance"),
+        invalidText: selectInvalidText("resource instance"),
         hideWhen: function (stateData) {
           return (
             stateData.service !== "secrets-manager" &&
