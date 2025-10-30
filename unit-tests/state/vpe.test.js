@@ -366,19 +366,191 @@ describe("virtual_private_endpoints", () => {
           "it should be hidden",
         );
       });
+      it("should not be hidden when service is cluster", () => {
+        assert.isFalse(
+          craig.virtual_private_endpoints.instance.hideWhen({
+            service: "cluster",
+          }),
+          "it should be hidden",
+        );
+      });
       it("should be invalid if service is secrets manager and no instance", () => {
         assert.isTrue(
           craig.virtual_private_endpoints.instance.invalid({
             service: "secrets-manager",
           }),
-          "it should be hidden",
+          "it should not be valid",
+        );
+      });
+      it("should be invalid if service is cluster and no instance", () => {
+        assert.isTrue(
+          craig.virtual_private_endpoints.instance.invalid({
+            service: "cluster",
+          }),
+          "it should not be valid",
         );
       });
       it("should return groups", () => {
         assert.deepEqual(
-          craig.virtual_private_endpoints.instance.groups({}, { craig: craig }),
+          craig.virtual_private_endpoints.instance.groups(
+            { vpc: "workload" },
+            { craig: craig },
+          ),
           [],
           "it should return groups",
+        );
+      });
+      it("should return an empty list when no vpc is selected and service is cluster", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.instance.groups(
+            { service: "cluster" },
+            { craig: craig },
+          ),
+          [],
+          "it should return groups",
+        );
+      });
+      it("should return an empty list when service is secrets-manager", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.instance.groups(
+            { service: "secrets-manager" },
+            { craig: craig },
+          ),
+          [],
+          "it should return groups",
+        );
+      });
+      it("should return a list of clusters not in the same vpc when a vpc is selected", () => {
+        craig.clusters.create({
+          logging: false,
+          monitoring: false,
+          cos: "cos",
+          entitlement: "cloud_pak",
+          kube_type: "openshift",
+          kube_version: "default",
+          flavor: "bx2.16x64",
+          name: "frog",
+          opaque_secrets: [],
+          kms: "kms",
+          resource_group: "workload-rg",
+          encryption_key: "roks-key",
+          private_endpoint: true,
+          subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+          update_all_workers: false,
+          vpc: "management",
+          worker_pools: [
+            {
+              cluster: "frog",
+              entitlement: "cloud_pak",
+              flavor: "bx2.16x64",
+              name: "logging-worker-pool",
+              subnets: [],
+              vpc: "management",
+              workers_per_subnet: 2,
+              resource_group: "workload-rg",
+            },
+          ],
+          workers_per_subnet: 2,
+        });
+        assert.deepEqual(
+          craig.virtual_private_endpoints.instance.groups(
+            { service: "cluster", vpc: "workload" },
+            { craig: craig },
+          ),
+          ["frog"],
+          "it should return groups",
+        );
+      });
+      it("should add cluster vpc to the vpe object when changing state", () => {
+        craig.clusters.create({
+          logging: false,
+          monitoring: false,
+          cos: "cos",
+          entitlement: "cloud_pak",
+          kube_type: "openshift",
+          kube_version: "default",
+          flavor: "bx2.16x64",
+          name: "frog",
+          opaque_secrets: [],
+          kms: "kms",
+          resource_group: "workload-rg",
+          encryption_key: "roks-key",
+          private_endpoint: true,
+          subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+          update_all_workers: false,
+          vpc: "management",
+          worker_pools: [
+            {
+              cluster: "frog",
+              entitlement: "cloud_pak",
+              flavor: "bx2.16x64",
+              name: "logging-worker-pool",
+              subnets: [],
+              vpc: "management",
+              workers_per_subnet: 2,
+              resource_group: "workload-rg",
+            },
+          ],
+          workers_per_subnet: 2,
+        });
+        let newVpe = { service: "cluster", vpc: "workload", instance: "frog" };
+
+        craig.virtual_private_endpoints.instance.onStateChange(newVpe, {
+          craig: craig,
+        });
+
+        assert.deepEqual(
+          newVpe.cluster_vpc,
+          "management",
+          "it should return groups",
+        );
+      });
+      it("should not update when not cluster update", () => {
+        craig.clusters.create({
+          logging: false,
+          monitoring: false,
+          cos: "cos",
+          entitlement: "cloud_pak",
+          kube_type: "openshift",
+          kube_version: "default",
+          flavor: "bx2.16x64",
+          name: "frog",
+          opaque_secrets: [],
+          kms: "kms",
+          resource_group: "workload-rg",
+          encryption_key: "roks-key",
+          private_endpoint: true,
+          subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+          update_all_workers: false,
+          vpc: "management",
+          worker_pools: [
+            {
+              cluster: "frog",
+              entitlement: "cloud_pak",
+              flavor: "bx2.16x64",
+              name: "logging-worker-pool",
+              subnets: [],
+              vpc: "management",
+              workers_per_subnet: 2,
+              resource_group: "workload-rg",
+            },
+          ],
+          workers_per_subnet: 2,
+        });
+        let newVpe = {
+          service: "secrets-manager",
+          vpc: "workload",
+          instance: "frog",
+        };
+
+        craig.virtual_private_endpoints.instance.onStateChange(newVpe, {
+          craig: craig,
+        });
+
+        assert.deepEqual(
+          newVpe.cluster_vpc,
+          undefined,
+          "it should be undefine",
         );
       });
     });
