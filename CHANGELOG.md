@@ -16,6 +16,10 @@ All notable changes to this project will be documented in this file.
 - Users can now add rules to the automatically created security group for any VPC cluster
 - Users can now create VPEs for VPC Clusters from the VPE page. A cluster VPE can be created only in VPCs where the cluster is not provisioned
 
+### Fixes
+
+- Fixed an issue causing the Projects page to be inaccessible when no projects are present
+
 ## 1.16.5
 
 ### Features
