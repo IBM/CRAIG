@@ -305,6 +305,7 @@ const PageTemplate = (props) => {
             <>
               {window.location.pathname !== "/projects/" &&
                 !contains(window.location.pathname, "/docs/") &&
+                !contains(window.location.pathname, "/projects") &&
                 !contains(window.location.pathname, "/v2/projects/") &&
                 !props.craig.store.project_name && (
                   <NoProjectModal
