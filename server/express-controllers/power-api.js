@@ -6,8 +6,8 @@ const {
   splat,
   splatContains,
 } = require("lazy-z");
-const powerImageMap = require("../client/src/lib/docs/power-image-map.json");
-const { powerStoragePoolRegionMap } = require("../client/src/lib/constants");
+const powerImageMap = require("../../client/src/lib/docs/power-image-map.json");
+const { powerStoragePoolRegionMap } = require("../../client/src/lib/constants");
 
 /**
  *

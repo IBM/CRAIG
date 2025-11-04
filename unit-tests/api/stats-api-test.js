@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const controller = require("../../express-controllers/controller");
+const controller = require("../../server/express-controllers/controller");
 const res = require("../mocks/response.mock");
 const { initMockAxios } = require("lazy-z");
 
