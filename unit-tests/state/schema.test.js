@@ -1888,7 +1888,14 @@ describe("automate schema generation", () => {
             service: {
               type: "string",
               default: null,
-              groups: ["hpcs", "kms", "cos", "icr", "secrets-manager"],
+              groups: [
+                "hpcs",
+                "kms",
+                "cos",
+                "icr",
+                "secrets-manager",
+                "cluster",
+              ],
             },
             vpc: { type: "string", default: null, groups: "<calculated>" },
             security_groups: { type: "Array", default: [] },

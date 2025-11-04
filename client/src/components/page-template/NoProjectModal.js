@@ -64,8 +64,8 @@ class NoProjectModal extends React.Component {
                 <a
                   href={
                     contains(window.location.pathname, "/v2")
-                      ? "/v2/projects"
-                      : "/projects"
+                      ? "/v2/projects/"
+                      : "/projects/"
                   }
                 >
                   Projects Page
