@@ -37,7 +37,7 @@ describe("transit_gateways", () => {
             ],
           },
         ],
-        "it should be equal"
+        "it should be equal",
       );
     });
   });
@@ -47,7 +47,7 @@ describe("transit_gateways", () => {
       assert.deepEqual(
         craig.store.json.transit_gateways[0].connections,
         [{ tgw: "transit-gateway", vpc: "workload" }],
-        "it should only have one connection"
+        "it should only have one connection",
       );
     });
     it("should remove a connection when a power vs workspace is deleted", () => {
@@ -69,7 +69,7 @@ describe("transit_gateways", () => {
           data: {
             name: "transit-gateway",
           },
-        }
+        },
       );
       craig.power.delete(
         {},
@@ -77,7 +77,7 @@ describe("transit_gateways", () => {
           data: {
             name: "toad",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.transit_gateways[0].connections,
@@ -85,7 +85,7 @@ describe("transit_gateways", () => {
           { tgw: "transit-gateway", vpc: "management" },
           { tgw: "transit-gateway", vpc: "workload" },
         ],
-        "it should only have correct connections"
+        "it should only have correct connections",
       );
     });
     it("should not remove tgw connections to power workspaces in non-PER enabled zones", () => {
@@ -107,7 +107,7 @@ describe("transit_gateways", () => {
           data: {
             name: "transit-gateway",
           },
-        }
+        },
       );
       craig.power.save(
         {
@@ -119,7 +119,7 @@ describe("transit_gateways", () => {
           data: {
             name: "toad",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.transit_gateways[0].connections,
@@ -128,13 +128,13 @@ describe("transit_gateways", () => {
           { tgw: "transit-gateway", vpc: "workload" },
           { tgw: "transit-gateway", power: "toad" },
         ],
-        "it should only have correct connections"
+        "it should only have correct connections",
       );
     });
     it("should add a connection when crns is provided", () => {
       craig.transit_gateways.save(
         { name: "todd", resource_group: "management-rg", crns: ["crn"] },
-        { data: { name: "transit-gateway" } }
+        { data: { name: "transit-gateway" } },
       );
 
       assert.deepEqual(
@@ -144,13 +144,13 @@ describe("transit_gateways", () => {
           { tgw: "todd", vpc: "workload" },
           { tgw: "todd", crn: "crn" },
         ],
-        "it should have a crn connection"
+        "it should have a crn connection",
       );
     });
     it("should add a connection when crns is provided and adding a second one", () => {
       craig.transit_gateways.save(
         { name: "todd", resource_group: "management-rg", crns: ["crn"] },
-        { data: { name: "transit-gateway" } }
+        { data: { name: "transit-gateway" } },
       );
       craig.transit_gateways.save(
         {
@@ -158,7 +158,7 @@ describe("transit_gateways", () => {
           resource_group: "management-rg",
           crns: ["crn", "crn2"],
         },
-        { data: { name: "todd" } }
+        { data: { name: "todd" } },
       );
 
       assert.deepEqual(
@@ -169,13 +169,13 @@ describe("transit_gateways", () => {
           { tgw: "todd", crn: "crn" },
           { tgw: "todd", crn: "crn2" },
         ],
-        "it should have a crn connection"
+        "it should have a crn connection",
       );
     });
     it("should remove a crn connection when a crn is removed", () => {
       craig.transit_gateways.save(
         { name: "todd", resource_group: "management-rg", crns: ["crn"] },
-        { data: { name: "transit-gateway" } }
+        { data: { name: "transit-gateway" } },
       );
       craig.transit_gateways.save(
         {
@@ -183,7 +183,7 @@ describe("transit_gateways", () => {
           resource_group: "management-rg",
           crns: ["crn", "crn2"],
         },
-        { data: { name: "todd" } }
+        { data: { name: "todd" } },
       );
 
       craig.transit_gateways.save(
@@ -192,7 +192,7 @@ describe("transit_gateways", () => {
           resource_group: "management-rg",
           crns: ["crn"],
         },
-        { data: { name: "todd" } }
+        { data: { name: "todd" } },
       );
 
       assert.deepEqual(
@@ -202,7 +202,7 @@ describe("transit_gateways", () => {
           { tgw: "todd", vpc: "workload" },
           { tgw: "todd", crn: "crn" },
         ],
-        "it should have a crn connection"
+        "it should have a crn connection",
       );
     });
     it("should not remove crn connections", () => {
@@ -215,7 +215,7 @@ describe("transit_gateways", () => {
           { tgw: "transit-gateway", crn: "crn" },
           { tgw: "transit-gateway", vpc: "workload" },
         ],
-        "it should only have one connection"
+        "it should only have one connection",
       );
     });
     it("should set resource group to null if deleted", () => {
@@ -223,7 +223,7 @@ describe("transit_gateways", () => {
       assert.deepEqual(
         craig.store.json.transit_gateways[0].resource_group,
         null,
-        "it should be null"
+        "it should be null",
       );
     });
   });
@@ -248,7 +248,7 @@ describe("transit_gateways", () => {
       assert.deepEqual(
         craig.store.json.transit_gateways[1],
         expectedData,
-        "it should be second tg"
+        "it should be second tg",
       );
     });
   });
@@ -256,12 +256,12 @@ describe("transit_gateways", () => {
     it("should update transit gateway", () => {
       craig.transit_gateways.save(
         { name: "todd", resource_group: "management-rg" },
-        { data: { name: "transit-gateway" } }
+        { data: { name: "transit-gateway" } },
       );
       assert.deepEqual(
         craig.store.json.transit_gateways[0].name,
         "todd",
-        "it should change name and rg"
+        "it should change name and rg",
       );
     });
   });
@@ -271,7 +271,7 @@ describe("transit_gateways", () => {
       assert.deepEqual(
         craig.store.json.transit_gateways,
         [],
-        "it should be empty"
+        "it should be empty",
       );
     });
   });
@@ -282,13 +282,13 @@ describe("transit_gateways", () => {
           assert.deepEqual(
             craig.transit_gateways.resource_group.groups({}, { craig: craig }),
             ["service-rg", "management-rg", "workload-rg"],
-            "it should return correct data"
+            "it should return correct data",
           );
         });
         it("should not have invalid resource group when use data", () => {
           assert.isFalse(
             craig.transit_gateways.resource_group.invalid({ use_data: true }),
-            "it should be invalid"
+            "it should be invalid",
           );
         });
       });
@@ -297,9 +297,9 @@ describe("transit_gateways", () => {
           assert.isTrue(
             craig.transit_gateways.resource_group.hideWhen(
               { use_data: true },
-              { craig: craig }
+              { craig: craig },
             ),
-            "it should return correct data"
+            "it should return correct data",
           );
         });
       });
@@ -310,7 +310,7 @@ describe("transit_gateways", () => {
           assert.deepEqual(
             craig.transit_gateways.vpc_connections.groups({}, { craig: craig }),
             ["management", "workload"],
-            "it should return correct groups"
+            "it should return correct groups",
           );
         });
         it("should return groups when tgw is global and management is already attached to a different global transit gateway", () => {
@@ -336,10 +336,10 @@ describe("transit_gateways", () => {
                 data: {
                   name: "transit-gateway",
                 },
-              }
+              },
             ),
             ["workload"],
-            "it should return correct groups"
+            "it should return correct groups",
           );
         });
         it("should return groups when tgw is local and management is already attached to a different local transit gateway", () => {
@@ -365,10 +365,10 @@ describe("transit_gateways", () => {
                 data: {
                   name: "transit-gateway",
                 },
-              }
+              },
             ),
             ["management", "workload"],
-            "it should return correct groups"
+            "it should return correct groups",
           );
         });
         it("should return groups when tgw is local and management is already attached to a different local transit gateway in modal", () => {
@@ -381,7 +381,7 @@ describe("transit_gateways", () => {
                 },
               ],
             },
-            { data: { name: "transit-gateway" } }
+            { data: { name: "transit-gateway" } },
           );
           assert.deepEqual(
             craig.transit_gateways.vpc_connections.groups(
@@ -392,10 +392,10 @@ describe("transit_gateways", () => {
               {
                 craig: craig,
                 isModal: true,
-              }
+              },
             ),
             ["management", "workload"],
-            "it should return correct groups"
+            "it should return correct groups",
           );
         });
         it("should set connections on input change for global", () => {
@@ -409,7 +409,7 @@ describe("transit_gateways", () => {
               connections: [],
               global: false,
             },
-            "it should set data"
+            "it should set data",
           );
         });
         it("should set connections when enabling classic connections", () => {
@@ -429,7 +429,7 @@ describe("transit_gateways", () => {
               ],
               name: "transit-gateway",
             },
-            "it should add a classic connection"
+            "it should add a classic connection",
           );
         });
         it("should set connections when disabling classic connections", () => {
@@ -449,7 +449,7 @@ describe("transit_gateways", () => {
               connections: [{ tgw: "transit-gateway", vpc: "vpc" }],
               name: "transit-gateway",
             },
-            "it should remove a classic connection"
+            "it should remove a classic connection",
           );
         });
         it("should have force update key for connections", () => {
@@ -458,14 +458,14 @@ describe("transit_gateways", () => {
               global: true,
             }),
             "true",
-            "it should have correct force update key"
+            "it should have correct force update key",
           );
           assert.deepEqual(
             craig.transit_gateways.power_connections.forceUpdateKey({
               global: true,
             }),
             "true",
-            "it should have correct force update key"
+            "it should have correct force update key",
           );
         });
       });
@@ -487,10 +487,10 @@ describe("transit_gateways", () => {
               },
               {
                 craig: craig,
-              }
+              },
             ),
             ["toad"],
-            "it should return correct list"
+            "it should return correct list",
           );
         });
       });
@@ -519,7 +519,7 @@ describe("transit_gateways", () => {
               ],
               name: "tgw",
             },
-            "it should return correct data"
+            "it should return correct data",
           );
         });
       });
@@ -543,10 +543,10 @@ describe("transit_gateways", () => {
           assert.deepEqual(
             craig.transit_gateways.power_connections.groups(
               {},
-              { craig: craig }
+              { craig: craig },
             ),
             ["power"],
-            "it should return correct groups"
+            "it should return correct groups",
           );
         });
         it("should return groups when one power workspace is attached to a different transit gateway with the same global setting in modal", () => {
@@ -577,10 +577,10 @@ describe("transit_gateways", () => {
           assert.deepEqual(
             craig.transit_gateways.power_connections.groups(
               { global: false },
-              { craig: craig, isModal: true }
+              { craig: craig, isModal: true },
             ),
             ["power", "power-also"],
-            "it should return correct groups"
+            "it should return correct groups",
           );
         });
         it("should return groups when one power workspace is attached to a different transit gateway with the same global setting as form", () => {
@@ -616,10 +616,10 @@ describe("transit_gateways", () => {
                 data: {
                   name: "transit-gateway",
                 },
-              }
+              },
             ),
             ["power"],
-            "it should return correct groups"
+            "it should return correct groups",
           );
         });
       });
@@ -639,7 +639,7 @@ describe("transit_gateways", () => {
               ],
             }),
             ["toad"],
-            "it should return correct list"
+            "it should return correct list",
           );
         });
       });
@@ -676,7 +676,7 @@ describe("transit_gateways", () => {
               name: "tgw",
             },
             stateData,
-            "it should return correct data"
+            "it should return correct data",
           );
         });
       });
@@ -687,12 +687,12 @@ describe("transit_gateways", () => {
           assert.isTrue(
             craig.transit_gateways.crns.invalidText({
               crns: ["crn:v1:bluemix:public:abcdf", "mooseeeeeeeeeeeeeeeeee"],
-            })
+            }),
           );
           assert.isFalse(
             craig.transit_gateways.crns.invalidText({
               crns: undefined,
-            })
+            }),
           );
         });
       });
@@ -714,7 +714,7 @@ describe("transit_gateways", () => {
             innerFormProps: {
               arrayParentName: "transit-gateway",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.transit_gateways[0].gre_tunnels[0],
@@ -726,7 +726,7 @@ describe("transit_gateways", () => {
             local_tunnel_ip: "1.2.3.4",
             remote_tunnel_ip: "1.2.3.4",
           },
-          "it should remove unfound gateway and create tunnel"
+          "it should remove unfound gateway and create tunnel",
         );
       });
       it("should create a gre tunnel with gateway", () => {
@@ -764,7 +764,7 @@ describe("transit_gateways", () => {
             innerFormProps: {
               arrayParentName: "transit-gateway",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.transit_gateways[0].gre_tunnels[0],
@@ -776,7 +776,7 @@ describe("transit_gateways", () => {
             local_tunnel_ip: "1.2.3.4",
             remote_tunnel_ip: "1.2.3.4",
           },
-          "it should create tunnel"
+          "it should create tunnel",
         );
       });
     });
@@ -816,7 +816,7 @@ describe("transit_gateways", () => {
             innerFormProps: {
               arrayParentName: "transit-gateway",
             },
-          }
+          },
         );
         craig.transit_gateways.gre_tunnels.save(
           {
@@ -833,7 +833,7 @@ describe("transit_gateways", () => {
             data: {
               gateway: "gw",
             },
-          }
+          },
         );
         craig.transit_gateways.gre_tunnels.save(
           {
@@ -851,7 +851,7 @@ describe("transit_gateways", () => {
               gateway: "gw",
               name: "frog",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.transit_gateways[0].gre_tunnels[0],
@@ -864,7 +864,7 @@ describe("transit_gateways", () => {
             remote_tunnel_ip: "1.2.3.4",
             name: "frog",
           },
-          "it should create tunnel"
+          "it should create tunnel",
         );
       });
     });
@@ -904,7 +904,7 @@ describe("transit_gateways", () => {
             innerFormProps: {
               arrayParentName: "transit-gateway",
             },
-          }
+          },
         );
         craig.transit_gateways.gre_tunnels.delete(
           {},
@@ -913,12 +913,12 @@ describe("transit_gateways", () => {
             data: {
               gateway: "gw",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.transit_gateways[0].gre_tunnels,
           [],
-          "it should create tunnel"
+          "it should create tunnel",
         );
       });
       it("should delete a gre tunnel with name", () => {
@@ -956,7 +956,7 @@ describe("transit_gateways", () => {
             innerFormProps: {
               arrayParentName: "transit-gateway",
             },
-          }
+          },
         );
         craig.transit_gateways.gre_tunnels.delete(
           {},
@@ -965,12 +965,12 @@ describe("transit_gateways", () => {
             data: {
               name: "gw",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.transit_gateways[0].gre_tunnels,
           [],
-          "it should create tunnel"
+          "it should create tunnel",
         );
       });
       it("should delete a gre tunnel with null gateway", () => {
@@ -1029,7 +1029,7 @@ describe("transit_gateways", () => {
             innerFormProps: {
               arrayParentName: "transit-gateway",
             },
-          }
+          },
         );
         craig.transit_gateways.gre_tunnels.create(
           {
@@ -1044,7 +1044,7 @@ describe("transit_gateways", () => {
             innerFormProps: {
               arrayParentName: "transit-gateway",
             },
-          }
+          },
         );
         craig.classic_gateways.delete({}, { data: { name: "gw" } });
         craig.transit_gateways.gre_tunnels.delete(
@@ -1054,7 +1054,7 @@ describe("transit_gateways", () => {
             data: {
               gateway: null,
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.transit_gateways[0].gre_tunnels,
@@ -1068,7 +1068,7 @@ describe("transit_gateways", () => {
               zone: 1,
             },
           ],
-          "it should create tunnel"
+          "it should create tunnel",
         );
       });
     });
@@ -1080,7 +1080,7 @@ describe("transit_gateways", () => {
               craig.transit_gateways.gre_tunnels.local_tunnel_ip.invalid({
                 local_tunnel_ip: "aa",
               }),
-              "it should be invalid"
+              "it should be invalid",
             );
           });
           it("should return true if an ipv4 cidr address", () => {
@@ -1088,7 +1088,7 @@ describe("transit_gateways", () => {
               craig.transit_gateways.gre_tunnels.local_tunnel_ip.invalid({
                 local_tunnel_ip: "10.10.10.10/10",
               }),
-              "it should be invalid"
+              "it should be invalid",
             );
           });
         });
@@ -1097,7 +1097,7 @@ describe("transit_gateways", () => {
             assert.deepEqual(
               craig.transit_gateways.gre_tunnels.local_tunnel_ip.invalidText(),
               "Enter a valid IP address",
-              "it should be invalid"
+              "it should be invalid",
             );
           });
         });
@@ -1122,7 +1122,7 @@ describe("transit_gateways", () => {
           innerFormProps: {
             arrayParentName: "transit-gateway",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.transit_gateways[0].prefix_filters,
@@ -1138,7 +1138,7 @@ describe("transit_gateways", () => {
             ge: 32,
           },
         ],
-        "it should create a gatway"
+        "it should create a gatway",
       );
     });
   });
@@ -1160,7 +1160,7 @@ describe("transit_gateways", () => {
           innerFormProps: {
             arrayParentName: "transit-gateway",
           },
-        }
+        },
       );
       craig.transit_gateways.prefix_filters.save(
         {
@@ -1179,12 +1179,12 @@ describe("transit_gateways", () => {
           data: {
             name: "my-cool-filter",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.transit_gateways[0].prefix_filters[0].name,
         "oops",
-        "it should create a gatway"
+        "it should create a gatway",
       );
     });
   });
@@ -1206,7 +1206,7 @@ describe("transit_gateways", () => {
           innerFormProps: {
             arrayParentName: "transit-gateway",
           },
-        }
+        },
       );
       craig.transit_gateways.prefix_filters.delete(
         {
@@ -1223,12 +1223,12 @@ describe("transit_gateways", () => {
           data: {
             name: "my-cool-filter",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.transit_gateways[0].prefix_filters,
         [],
-        "it should create a gatway"
+        "it should create a gatway",
       );
     });
   });
@@ -1250,14 +1250,14 @@ describe("transit_gateways", () => {
           innerFormProps: {
             arrayParentName: "transit-gateway",
           },
-        }
+        },
       );
       assert.isTrue(
         craig.transit_gateways.prefix_filters.name.invalid(
           { name: "my-cool-filter" },
-          { arrayParentName: "transit-gateway", craig: craig }
+          { arrayParentName: "transit-gateway", craig: craig },
         ),
-        "it should return true"
+        "it should return true",
       );
     });
   });
@@ -1269,7 +1269,7 @@ describe("transit_gateways", () => {
             craig.transit_gateways.prefix_filters.connection_type.invalid({
               connection_type: "",
             }),
-            "it should be invalid"
+            "it should be invalid",
           );
         });
       });
@@ -1278,8 +1278,8 @@ describe("transit_gateways", () => {
           let data = {
             connection_type: "",
           };
-          craig.transit_gateways.prefix_filters.connection_type.onStateChange(
-            data
+          (craig.transit_gateways.prefix_filters.connection_type.onStateChange(
+            data,
           ),
             assert.deepEqual(
               data,
@@ -1287,8 +1287,8 @@ describe("transit_gateways", () => {
                 connection_type: "",
                 target: "",
               },
-              "it should be invalid"
-            );
+              "it should be invalid",
+            ));
         });
       });
     });
@@ -1298,7 +1298,7 @@ describe("transit_gateways", () => {
           assert.deepEqual(
             craig.transit_gateways.prefix_filters.le.invalidText(),
             "Enter a whole number",
-            "it should return correct text"
+            "it should return correct text",
           );
         });
       });
@@ -1306,13 +1306,13 @@ describe("transit_gateways", () => {
         it("should return true when not a whole number", () => {
           assert.isTrue(
             craig.transit_gateways.prefix_filters.le.invalid({ le: "a" }),
-            "it should return correct text"
+            "it should return correct text",
           );
         });
         it("should return true when not a whole number", () => {
           assert.isTrue(
             craig.transit_gateways.prefix_filters.le.invalid({ le: "1a" }),
-            "it should return correct text"
+            "it should return correct text",
           );
         });
       });
@@ -1323,7 +1323,7 @@ describe("transit_gateways", () => {
           assert.deepEqual(
             craig.transit_gateways.prefix_filters.action.invalidText(),
             "Select an action",
-            "it should return correct text"
+            "it should return correct text",
           );
         });
       });
@@ -1335,13 +1335,13 @@ describe("transit_gateways", () => {
             craig.transit_gateways.prefix_filters.prefix.invalid({
               prefix: "aaaa",
             }),
-            "it should return correct text"
+            "it should return correct text",
           );
         });
         it("should return true when not a cidr block", () => {
           assert.isTrue(
             craig.transit_gateways.prefix_filters.prefix.invalid({}),
-            "it should return correct text"
+            "it should return correct text",
           );
         });
         it("should return true when an ipv4 address but not a cidr block", () => {
@@ -1349,7 +1349,7 @@ describe("transit_gateways", () => {
             craig.transit_gateways.prefix_filters.prefix.invalid({
               prefix: "1.2.3.4",
             }),
-            "it should return correct text"
+            "it should return correct text",
           );
         });
       });
@@ -1358,7 +1358,7 @@ describe("transit_gateways", () => {
           assert.deepEqual(
             craig.transit_gateways.prefix_filters.prefix.invalidText(),
             "Enter a valid IPV4 CIDR Block",
-            "it should return correct text"
+            "it should return correct text",
           );
         });
       });
@@ -1369,10 +1369,10 @@ describe("transit_gateways", () => {
           assert.deepEqual(
             craig.transit_gateways.prefix_filters.target.groups(
               { connection_type: "" },
-              { craig: craig, arrayParentName: "transit-gateway" }
+              { craig: craig, arrayParentName: "transit-gateway" },
             ),
             [],
-            "it should return valid connections"
+            "it should return valid connections",
           );
         });
         it("should return correct connection types for vpc", () => {
@@ -1383,10 +1383,10 @@ describe("transit_gateways", () => {
           assert.deepEqual(
             craig.transit_gateways.prefix_filters.target.groups(
               { connection_type: "VPC" },
-              { craig: craig, arrayParentName: "transit-gateway" }
+              { craig: craig, arrayParentName: "transit-gateway" },
             ),
             ["management", "workload"],
-            "it should return valid connections"
+            "it should return valid connections",
           );
         });
         it("should return correct connection types for gre", () => {
@@ -1394,10 +1394,10 @@ describe("transit_gateways", () => {
           assert.deepEqual(
             craig.transit_gateways.prefix_filters.target.groups(
               { connection_type: "GRE Tunnel" },
-              { craig: craig, arrayParentName: "transit-gateway" }
+              { craig: craig, arrayParentName: "transit-gateway" },
             ),
             [],
-            "it should return valid connections"
+            "it should return valid connections",
           );
         });
         it("should return correct connection types for power", () => {
@@ -1414,10 +1414,10 @@ describe("transit_gateways", () => {
           assert.deepEqual(
             craig.transit_gateways.prefix_filters.target.groups(
               { connection_type: "Power VS" },
-              { craig: craig, arrayParentName: "transit-gateway" }
+              { craig: craig, arrayParentName: "transit-gateway" },
             ),
             ["toad"],
-            "it should return valid connections"
+            "it should return valid connections",
           );
         });
       });

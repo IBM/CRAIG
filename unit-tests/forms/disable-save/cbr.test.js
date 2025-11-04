@@ -72,7 +72,7 @@ describe("cbr", () => {
       disableSave("cbr_rules", cbr_rule, {
         craig: setTempCraig({ json: { cbr_rules: [{ name: "hi" }] } }),
         data: { name: "hi" },
-      })
+      }),
     );
   });
   it("should be enabled if valid", () => {
@@ -81,7 +81,7 @@ describe("cbr", () => {
       disableSave("cbr_rules", cbr_rule, {
         craig: setTempCraig({ json: { cbr_rules: [{ name: "hi" }] } }),
         data: { name: "hi" },
-      })
+      }),
     );
   });
   it("should be disabled if invalid cbr context name or value", () => {
@@ -94,7 +94,7 @@ describe("cbr", () => {
           json: { cbr_rules: [{ name: "hi", contexts: [{ name: "hi" }] }] },
         }),
         data: { name: "hi" },
-      })
+      }),
     );
   });
   it("should be enabled if valid cbr context", () => {
@@ -105,13 +105,13 @@ describe("cbr", () => {
           json: { cbr_rules: [{ name: "hi", contexts: [{ name: "hi" }] }] },
         }),
         data: { name: "hi" },
-      })
+      }),
     );
   });
   it("should be disabled if invalid cbr resource attribute name or value", () => {
     let cbr_attribute = Object.assign(
       {},
-      example_cbr_rule.resource_attributes[0]
+      example_cbr_rule.resource_attributes[0],
     );
     cbr_attribute.name = "";
     cbr_attribute.value = "";
@@ -123,13 +123,13 @@ describe("cbr", () => {
           },
         }),
         data: { name: "hey" },
-      })
+      }),
     );
   });
   it("should be enabled if valid cbr resource attribute", () => {
     let cbr_attribute = Object.assign(
       {},
-      example_cbr_rule.resource_attributes[0]
+      example_cbr_rule.resource_attributes[0],
     );
     assert.isFalse(
       disableSave("resource_attributes", cbr_attribute, {
@@ -139,7 +139,7 @@ describe("cbr", () => {
           },
         }),
         data: { name: "hey" },
-      })
+      }),
     );
   });
   it("should be disabled if invalid cbr tag name, operator, or value", () => {
@@ -153,7 +153,7 @@ describe("cbr", () => {
           json: { cbr_rules: [{ name: "hi", tags: [{ name: "hello" }] }] },
         }),
         data: { name: "hello" },
-      })
+      }),
     );
   });
   it("should be enabled if valid cbr tag", () => {
@@ -164,7 +164,7 @@ describe("cbr", () => {
           json: { cbr_rules: [{ name: "hi", tags: [{ name: "hello" }] }] },
         }),
         data: { name: "hello" },
-      })
+      }),
     );
   });
   it("should be disabled if invalid cbr zone name, description, or account id", () => {
@@ -176,7 +176,7 @@ describe("cbr", () => {
       disableSave("cbr_zones", cbr_zone, {
         craig: setTempCraig({ json: { cbr_zones: [{ name: "hi" }] } }),
         data: { name: "hi" },
-      })
+      }),
     );
   });
   it("should be enabled if valid cbr zone", () => {
@@ -185,7 +185,7 @@ describe("cbr", () => {
       disableSave("cbr_zones", cbr_zone, {
         craig: setTempCraig({ json: { cbr_zones: [{ name: "hi" }] } }),
         data: { name: "hi" },
-      })
+      }),
     );
   });
   it("should be disabled if invalid cbr address", () => {
@@ -202,7 +202,7 @@ describe("cbr", () => {
           json: { cbr_zones: [{ name: "hi", addresses: [{ name: "hi" }] }] },
         }),
         data: { name: "hi" },
-      })
+      }),
     );
   });
   it("should be enabled if valid cbr address", () => {
@@ -213,7 +213,7 @@ describe("cbr", () => {
           json: { cbr_zones: [{ name: "hi", addresses: [{ name: "hi" }] }] },
         }),
         data: { name: "hi" },
-      })
+      }),
     );
   });
   it("should be disabled if invalid cbr exclusion", () => {
@@ -231,7 +231,7 @@ describe("cbr", () => {
           json: { cbr_zones: [{ name: "hi", exclusions: [{ name: "hi" }] }] },
         }),
         data: { name: "hi" },
-      })
+      }),
     );
   });
   it("should be enabled if valid cbr exclusion", () => {
@@ -242,7 +242,7 @@ describe("cbr", () => {
           json: { cbr_zones: [{ name: "hi", exclusions: [{ name: "hi" }] }] },
         }),
         data: { name: "hi" },
-      })
+      }),
     );
   });
 });

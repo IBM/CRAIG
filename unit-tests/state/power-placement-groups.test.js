@@ -26,7 +26,7 @@ describe("power_instances", () => {
       assert.deepEqual(
         craig.store.json.power_placement_groups,
         [],
-        "it should initialize data"
+        "it should initialize data",
       );
     });
   });
@@ -48,7 +48,7 @@ describe("power_instances", () => {
             pi_placement_group_policy: "affinity",
           },
         ],
-        "it should create pool"
+        "it should create pool",
       );
     });
   });
@@ -74,7 +74,7 @@ describe("power_instances", () => {
             name: "test",
             pi_placement_group_policy: "affinity",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power_placement_groups,
@@ -86,7 +86,7 @@ describe("power_instances", () => {
             pi_placement_group_policy: "affinity",
           },
         ],
-        "it should create pool"
+        "it should create pool",
       );
     });
   });
@@ -107,12 +107,12 @@ describe("power_instances", () => {
             name: "test",
             pi_placement_group_policy: "affinity",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power_placement_groups,
         [],
-        "it should be empty"
+        "it should be empty",
       );
     });
   });
@@ -130,7 +130,7 @@ describe("power_instances", () => {
           data: {
             name: "example",
           },
-        }
+        },
       );
       assert.deepEqual(
         craig.store.json.power_placement_groups,
@@ -142,7 +142,7 @@ describe("power_instances", () => {
             pi_placement_group_policy: "affinity",
           },
         ],
-        "it should update"
+        "it should update",
       );
     });
   });
@@ -153,14 +153,14 @@ describe("power_instances", () => {
           pi_placement_group_policy: null,
         }),
         "",
-        "it should return correct policy"
+        "it should return correct policy",
       );
       assert.deepEqual(
         craig.power_placement_groups.pi_placement_group_policy.onRender({
           pi_placement_group_policy: "anti-affinity",
         }),
         "Anti-Affinity",
-        "it should return correct policy"
+        "it should return correct policy",
       );
     });
     it("should update workspace and zone on change", () => {
@@ -184,7 +184,7 @@ describe("power_instances", () => {
           workspace: "toad",
           zone: "dal12",
         },
-        "it should return list of workspaces"
+        "it should return list of workspaces",
       );
     });
   });

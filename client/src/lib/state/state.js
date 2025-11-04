@@ -121,7 +121,7 @@ const state = function (legacy) {
     typeCheck(
       `store.toggleStoreValue - store.${value}`,
       "boolean",
-      store.store[value]
+      store.store[value],
     );
     store.store[value] = !store.store[value];
   };
@@ -397,8 +397,8 @@ const state = function (legacy) {
     return ref.type === "toggle" || isBoolean(ref.default)
       ? "boolean"
       : isArray(ref.default)
-      ? "Array"
-      : "string";
+        ? "Array"
+        : "string";
   }
 
   /**
@@ -488,7 +488,7 @@ const state = function (legacy) {
           if (store[field][subField][key]?.type === "select") {
             subComponentRef[key].groups = getSchemaGroups(
               store[field][subField][key],
-              key
+              key,
             );
           }
         }
@@ -509,7 +509,7 @@ const state = function (legacy) {
           if (store.vpcs.acls.rules[key]?.type === "select") {
             innerFieldRef.acls.Array.rules.Array[key].groups = getSchemaGroups(
               store.vpcs.acls.rules[key],
-              key
+              key,
             );
           }
         }

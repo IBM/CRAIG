@@ -27,6 +27,8 @@ const vpeServiceMap = {
   "Object Storage": "cos",
   "Container Registry": "icr",
   "Secrets Manager": "secrets-manager",
+  cluster: "Cluster",
+  Cluster: "cluster",
 };
 
 /**
@@ -53,7 +55,7 @@ function vpeOnStoreUpdate(config) {
       // delete unfound subnets and add to list
       vpe.subnets = deleteUnfoundArrayItems(
         config.store.subnets[vpe.vpc],
-        vpe.subnets
+        vpe.subnets,
       );
     } else {
       // set to null if does not exist
@@ -65,7 +67,7 @@ function vpeOnStoreUpdate(config) {
       config.store.securityGroups[vpe.vpc] === undefined // if there are no security groups for this vpc, looking up will result in undefined
         ? []
         : config.store.securityGroups[vpe.vpc],
-      vpe.security_groups
+      vpe.security_groups,
     );
     config.updateUnfoundResourceGroup(vpe);
   });
@@ -102,7 +104,7 @@ function vpeSave(config, stateData, componentProps) {
   config.updateChild(
     ["json", "virtual_private_endpoints"],
     componentProps.data.name,
-    stateData
+    stateData,
   );
 }
 
@@ -139,7 +141,7 @@ function initVpe(store) {
         "vpc",
         "instance",
       ],
-      "virtual_private_endpoints"
+      "virtual_private_endpoints",
     ),
     schema: {
       name: nameField("virtual_private_endpoints", {
@@ -158,6 +160,7 @@ function initVpe(store) {
           "Object Storage",
           "Container Registry",
           "Secrets Manager",
+          "Cluster",
         ],
         onRender: function (stateData) {
           return isNullOrEmptyString(stateData.service, true)
@@ -179,6 +182,7 @@ function initVpe(store) {
         onStateChange: function (stateData) {
           stateData.security_groups = [];
           stateData.subnets = [];
+          if (stateData.service === "cluster") stateData.instance = undefined;
         },
       },
       security_groups: securityGroupsMultiselect(),
@@ -188,16 +192,42 @@ function initVpe(store) {
         size: "small",
         default: null,
         invalid: function (stateData) {
-          return stateData.service === "secrets-manager"
+          return stateData.service === "secrets-manager" ||
+            stateData.service === "cluster"
             ? isNullOrEmptyString(stateData.instance, true)
             : false;
         },
-        invalidText: selectInvalidText("secrets manager instance"),
+        invalidText: selectInvalidText("resource instance"),
         hideWhen: function (stateData) {
-          return stateData.service !== "secrets-manager";
+          return (
+            stateData.service !== "secrets-manager" &&
+            stateData.service !== "cluster"
+          );
+        },
+        onStateChange(stateData, componentProps) {
+          if (stateData.service === "cluster") {
+            stateData.cluster_vpc =
+              componentProps.craig.store.json.clusters.find((cluster) => {
+                return cluster.name === stateData.instance;
+              }).vpc;
+          }
         },
         groups: function (stateData, componentProps) {
-          return splat(componentProps.craig.store.json.secrets_manager, "name");
+          return stateData.service !== "secrets-manager" &&
+            stateData.service !== "cluster"
+            ? []
+            : stateData.service === "secrets-manager"
+              ? splat(componentProps.craig.store.json.secrets_manager, "name")
+              : stateData.service === "cluster" && !stateData.vpc
+                ? []
+                : splat(
+                    componentProps.craig.store.json.clusters.filter(
+                      (cluster) => {
+                        return cluster.vpc !== stateData.vpc;
+                      },
+                    ),
+                    "name",
+                  );
         },
       },
     },

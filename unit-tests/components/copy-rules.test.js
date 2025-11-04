@@ -11,7 +11,7 @@ describe("copy rule functions", () => {
           },
         })("test"),
         "copy-rule-acl-test-test",
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct name when sg", () => {
@@ -23,7 +23,7 @@ describe("copy rule functions", () => {
           isSecurityGroup: true,
         })("test"),
         "copy-rule-sg-test",
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

@@ -18,7 +18,7 @@ describe("power", () => {
           ssh_keys: [],
           imageNames: [],
         },
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -37,7 +37,7 @@ describe("power", () => {
           ssh_keys: [],
           imageNames: [],
         },
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -69,7 +69,7 @@ describe("power", () => {
           imageNames: [],
         },
         craig: tempCraig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -87,7 +87,7 @@ describe("power", () => {
         data: {
           name: "test",
         },
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -119,7 +119,7 @@ describe("power", () => {
           ssh_keys: [],
           images: [],
         },
-      }
+      },
     );
     assert.isFalse(actualData, "it should be disabled");
   });
@@ -154,7 +154,7 @@ describe("power", () => {
             name: "toad",
           },
           craig: tempCraig,
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -171,7 +171,7 @@ describe("power", () => {
             name: "toad",
           },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -189,7 +189,7 @@ describe("power", () => {
             name: "toad",
           },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -208,7 +208,7 @@ describe("power", () => {
             name: "toad",
           },
           craig: state(),
-        }
+        },
       );
       assert.isFalse(actualData, "it should be disabled");
     });
@@ -244,7 +244,7 @@ describe("power", () => {
             name: "toad",
           },
           craig: tempCraig,
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -262,7 +262,7 @@ describe("power", () => {
             name: "toad",
           },
           craig: state(),
-        }
+        },
       );
       assert.isTrue(actualData, "it should be disabled");
     });
@@ -278,7 +278,7 @@ describe("power", () => {
               name: "egg",
             },
             craig: state(),
-          }
+          },
         );
         assert.isTrue(actualData, "it should be disabled");
       });
@@ -294,7 +294,7 @@ describe("power", () => {
               name: "egg",
             },
             craig: state(),
-          }
+          },
         );
         assert.isTrue(actualData, "it should be disabled");
       });
@@ -317,7 +317,7 @@ describe("power", () => {
               name: "egg",
             },
             craig: state(),
-          }
+          },
         );
         assert.isTrue(actualData, "it should be disabled");
       });
@@ -339,7 +339,7 @@ describe("power", () => {
               name: "egg",
             },
             craig: state(),
-          }
+          },
         );
         assert.isTrue(actualData, "it should be disabled");
       });
@@ -366,7 +366,7 @@ describe("power", () => {
               name: "egg",
             },
             craig: state(),
-          }
+          },
         );
         assert.isTrue(actualData, "it should be disabled");
       });
@@ -393,7 +393,7 @@ describe("power", () => {
               name: "egg",
             },
             craig: state(),
-          }
+          },
         );
         assert.isTrue(actualData, "it should be disabled");
       });
@@ -424,7 +424,7 @@ describe("power", () => {
               name: "egg",
             },
             craig: state(),
-          }
+          },
         );
         assert.isTrue(actualData, "it should be disabled");
       });
@@ -459,7 +459,7 @@ describe("power", () => {
               name: "egg",
             },
             craig: state(),
-          }
+          },
         );
         assert.isTrue(actualData, "it should not be disabled");
       });
@@ -494,7 +494,7 @@ describe("power", () => {
               name: "egg",
             },
             craig: state(),
-          }
+          },
         );
         assert.isFalse(actualData, "it should not be disabled");
       });
@@ -522,7 +522,7 @@ describe("power", () => {
               name: "egg",
             },
             craig: state(),
-          }
+          },
         );
         assert.isTrue(actualData, "it should be disabled");
       });
@@ -551,7 +551,7 @@ describe("power", () => {
               name: "egg",
             },
             craig: state(),
-          }
+          },
         );
         assert.isTrue(actualData, "it should be disabled");
       });
@@ -591,9 +591,9 @@ describe("power", () => {
             },
             arrayParentName: "workspace",
             craig: tempCraig,
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
     it("should return true when the public key value already exists", () => {
@@ -638,9 +638,9 @@ describe("power", () => {
             arrayParentName: "workspace",
             craig: tempCraig,
             isModal: true,
-          }
+          },
         ),
-        "it should be disabled"
+        "it should be disabled",
       );
     });
   });

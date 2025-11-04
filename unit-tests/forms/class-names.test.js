@@ -17,7 +17,7 @@ describe("class names", () => {
       assert.deepEqual(
         actualData,
         "blueTileRail whiteFill rail ",
-        "it should return classname"
+        "it should return classname",
       );
     });
     it("should return correct classname for path when expanded and not current path", () => {
@@ -29,7 +29,7 @@ describe("class names", () => {
       assert.deepEqual(
         actualData,
         "blueTileExpanded whiteFill expanded ",
-        "it should return classname"
+        "it should return classname",
       );
     });
     it("should return correct classname for path when expanded and not current path and invalid and not hovering", () => {
@@ -37,7 +37,7 @@ describe("class names", () => {
       assert.deepEqual(
         actualData,
         "invalid-form-left-nav whiteFill expanded ",
-        "it should return classname"
+        "it should return classname",
       );
     });
     it("should return correct classname for path when expanded and current path and invalid", () => {
@@ -45,7 +45,7 @@ describe("class names", () => {
       assert.deepEqual(
         actualData,
         "invalid-form-left-nav whiteFill expanded ",
-        "it should return classname"
+        "it should return classname",
       );
     });
     it("should return correct classname for path when not expanded and not current path and invalid", () => {
@@ -53,7 +53,7 @@ describe("class names", () => {
       assert.deepEqual(
         actualData,
         "invalid-form-left-nav whiteFill rail ",
-        "it should return classname"
+        "it should return classname",
       );
     });
     it("should return correct classname for path when not expanded and not current path and invalid and is hovering", () => {
@@ -61,7 +61,7 @@ describe("class names", () => {
       assert.deepEqual(
         actualData,
         "invalid-form-left-nav rail ",
-        "it should return classname"
+        "it should return classname",
       );
     });
     it("should return correct classname for path when not expanded and current path and invalid", () => {
@@ -69,7 +69,7 @@ describe("class names", () => {
       assert.deepEqual(
         actualData,
         "invalid-form-left-nav whiteFill rail ",
-        "it should return classname"
+        "it should return classname",
       );
     });
   });

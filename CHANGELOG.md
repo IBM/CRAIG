@@ -4,9 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## 1.17.0
 
+### Upgrade Notes
+
+- CRAIG no longer depends on react-scripts and uses Next JS to build
+- Updated VPC Cluster and Worker Pool resource addressess to be more intuitive
+
 ### Features
 
 - When using dynamic subnets, CIDR blocks are now calculated to use the fewest total IPs within a VPC
+- Security and Compliance Center (SCC) has been removed as the service is no longer supported on IBM Cloud
+- Users can now add rules to the automatically created security group for any VPC cluster
+- Users can now create VPEs for VPC Clusters from the VPE page. A cluster VPE can be created only in VPCs where the cluster is not provisioned
+
+### Fixes
+
+- Fixed an issue causing the Projects page to be inaccessible when no projects are present
 
 ## 1.16.5
 

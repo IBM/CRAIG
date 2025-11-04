@@ -37,7 +37,7 @@ describe("options", () => {
       assert.deepEqual(
         craig.store.json._options,
         expectedData,
-        "it should have options initialized"
+        "it should have options initialized",
       );
     });
   });
@@ -45,14 +45,14 @@ describe("options", () => {
     it("should change the prefix when saved", () => {
       craig.options.save(
         { prefix: "test", showModal: false },
-        { data: { prefix: "iac" } }
+        { data: { prefix: "iac" } },
       );
       assert.deepEqual(craig.store.json._options.prefix, "test");
     });
     it("should update tags when saved", () => {
       craig.options.save(
         { tags: ["new", "tags", "here"] },
-        { data: { tags: ["hello", "world"] } }
+        { data: { tags: ["hello", "world"] } },
       );
       assert.deepEqual(craig.store.json._options.tags, ["new", "tags", "here"]);
     });
@@ -87,7 +87,7 @@ describe("options", () => {
       assert.deepEqual(
         expectedData,
         craig.store.subnetTiers,
-        "all zones should be 2"
+        "all zones should be 2",
       );
     });
     it("should update subnets when saved", () => {
@@ -130,7 +130,7 @@ describe("options", () => {
     it("should update craig version when saved", () => {
       craig.options.save(
         { craig_version: "1.3.0" },
-        { data: craig.store.json._options.craig_version }
+        { data: craig.store.json._options.craig_version },
       );
       let expectedData = {
         prefix: "iac",
@@ -150,7 +150,7 @@ describe("options", () => {
       assert.deepEqual(
         craig.store.json._options,
         expectedData,
-        "it should have correct craig version"
+        "it should have correct craig version",
       );
     });
     it("should update atracker location when changing region", () => {
@@ -158,7 +158,7 @@ describe("options", () => {
       assert.deepEqual(
         craig.store.json.atracker.locations,
         ["global", "eu-de"],
-        "it should update region"
+        "it should update region",
       );
     });
     describe("options.schema", () => {
@@ -167,14 +167,14 @@ describe("options", () => {
           craig.options.tags.invalid({
             tags: ["___@@@J,,,,,", "@@@d,,,,!!!@@@", "222---2-"],
           }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should return region groups when fs cloud", () => {
         assert.deepEqual(
           craig.options.region.groups({ fs_cloud: true }),
           ["eu-de", "eu-es", "eu-gb", "us-east", "us-south"],
-          "it should return correct groups"
+          "it should return correct groups",
         );
       });
       it("should return region groups when not fs cloud", () => {
@@ -192,7 +192,7 @@ describe("options", () => {
             "us-east",
             "us-south",
           ],
-          "it should return correct groups"
+          "it should return correct groups",
         );
       });
       it("should have invalid prefix when none prefix", () => {
@@ -201,13 +201,13 @@ describe("options", () => {
       it("should have invalid prefix when longer than 16 characters", () => {
         assert.isTrue(
           craig.options.prefix.invalid({ prefix: "looooooooooooooooooong" }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should have invalid prefix when bad value", () => {
         assert.isTrue(
           craig.options.prefix.invalid({ prefix: "@@@" }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should set power vs regions to [] and return region on input change", () => {
@@ -217,7 +217,7 @@ describe("options", () => {
         assert.deepEqual(
           craig.options.region.onInputChange(data),
           "us-south",
-          "it should return correct region"
+          "it should return correct region",
         );
         assert.deepEqual(
           data,
@@ -225,14 +225,14 @@ describe("options", () => {
             region: "us-south",
             power_vs_zones: [],
           },
-          "it should set power vs zones"
+          "it should set power vs zones",
         );
       });
       it("should render public and private endpoints in title case", () => {
         assert.deepEqual(
           craig.options.endpoints.onRender({ endpoints: "public-and-private" }),
           "Public and Private",
-          "it should return endpoints"
+          "it should return endpoints",
         );
       });
       it("should disable dynamic subnets toggle when advanced subnets is true", () => {
@@ -243,9 +243,9 @@ describe("options", () => {
               craig: {
                 store: { json: { _options: { advanced_subnets: true } } },
               },
-            }
+            },
           ),
-          "it should be disabled"
+          "it should be disabled",
         );
       });
       it("should disable dynamic subnets toggle when advanced subnets not found", () => {
@@ -256,9 +256,9 @@ describe("options", () => {
               craig: {
                 store: { json: { _options: {} } },
               },
-            }
+            },
           ),
-          "it should be disabled"
+          "it should be disabled",
         );
       });
       it("should change enable_power_vs from false to true", () => {
@@ -270,7 +270,7 @@ describe("options", () => {
             enable_power_vs: true,
             power_vs_zones: [],
           },
-          "it should change value"
+          "it should change value",
         );
       });
       it("should change enable_power_vs from true to false and reset zones", () => {
@@ -282,7 +282,7 @@ describe("options", () => {
             enable_power_vs: false,
             power_vs_zones: [],
           },
-          "it should change value"
+          "it should change value",
         );
       });
       it("should change power_vs_high_availability from false to true", () => {
@@ -294,7 +294,7 @@ describe("options", () => {
             power_vs_high_availability: true,
             power_vs_zones: [],
           },
-          "it should change value"
+          "it should change value",
         );
       });
       it("should change power_vs_high_availability from true to false and reset zones", () => {
@@ -306,7 +306,7 @@ describe("options", () => {
             power_vs_high_availability: false,
             power_vs_zones: [],
           },
-          "it should change value"
+          "it should change value",
         );
       });
       it("should hide power_vs_high_availability when not using power vs", () => {
@@ -314,14 +314,14 @@ describe("options", () => {
           craig.options.power_vs_high_availability.hideWhen({
             enable_power_vs: false,
           }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should return correct invalid text when region does not have power vs zones", () => {
         assert.deepEqual(
           craig.options.power_vs_zones.invalidText({ region: "invalid" }),
           "The region invalid does not have any available Power VS zones",
-          "it should return correct invalid text"
+          "it should return correct invalid text",
         );
       });
       it("should be invalid when region does not have power vs zones", () => {
@@ -331,7 +331,7 @@ describe("options", () => {
             enable_power_vs: true,
             power_vs_zones: [],
           }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should be invalid when region does not have power vs zones", () => {
@@ -341,7 +341,7 @@ describe("options", () => {
             enable_power_vs: true,
             power_vs_zones: ["dal12", "wdc06"],
           }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should be valid when region does not have power vs zones and power vs not enabled", () => {
@@ -351,14 +351,14 @@ describe("options", () => {
             enable_power_vs: false,
             power_vs_zones: [],
           }),
-          "it should be invalid"
+          "it should be invalid",
         );
       });
       it("should return correct invalid text when does have power vs zones", () => {
         assert.deepEqual(
           craig.options.power_vs_zones.invalidText({ region: "us-south" }),
           "Select at least one Availability Zone",
-          "it should return correct invalid text"
+          "it should return correct invalid text",
         );
       });
       it("should force update zones on power vs high availability toggle", () => {
@@ -367,20 +367,20 @@ describe("options", () => {
             power_vs_high_availability: true,
           }),
           "trueundefined",
-          "it should return value"
+          "it should return value",
         );
       });
       it("should hide power vs zones", () => {
         assert.isTrue(
           craig.options.power_vs_zones.hideWhen({}),
-          "it should be hidden"
+          "it should be hidden",
         );
         assert.isTrue(
           craig.options.power_vs_zones.hideWhen({
             enable_power_vs: true,
             power_vs_high_availability: true,
           }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should return correct power_vs_zones groups when power_vs_high_availability true", () => {
@@ -389,7 +389,7 @@ describe("options", () => {
             power_vs_high_availability: true,
           }),
           ["dal12", "wdc06"],
-          "it should return correct groups"
+          "it should return correct groups",
         );
       });
       it("should return correct power_vs_zones groups when power_vs_high_availability false", () => {
@@ -399,14 +399,14 @@ describe("options", () => {
             region: "ca-tor",
           }),
           ["tor01"],
-          "it should return correct groups"
+          "it should return correct groups",
         );
       });
       it("should return tags when no value", () => {
         assert.deepEqual(
           craig.options.tags.onInputChange({}),
           [],
-          "it should return empty array"
+          "it should return empty array",
         );
       });
       it("should return tags when value", () => {
@@ -415,7 +415,7 @@ describe("options", () => {
             tags: "hello,world",
           }),
           ["hello", "world"],
-          "it should return empty array"
+          "it should return empty array",
         );
       });
       it("should hide power_vs_ha_zone_1 when not ha", () => {
@@ -424,33 +424,33 @@ describe("options", () => {
             enable_power_vs: true,
             power_vs_high_availability: false,
           }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       it("should return correct value for power_vs_ha_zone_1 on render", () => {
         assert.deepEqual(
           craig.options.power_vs_ha_zone_1.onRender({ power_vs_zones: [] }),
           "",
-          "it should return correct data"
+          "it should return correct data",
         );
         assert.deepEqual(
           craig.options.power_vs_ha_zone_2.onRender({ power_vs_zones: [] }),
           "",
-          "it should return correct data"
+          "it should return correct data",
         );
         assert.deepEqual(
           craig.options.power_vs_ha_zone_1.onRender({
             power_vs_zones: ["mad02", "eu-de-1"],
           }),
           "mad02",
-          "it should return correct data"
+          "it should return correct data",
         );
         assert.deepEqual(
           craig.options.power_vs_ha_zone_2.onRender({
             power_vs_zones: ["mad02", "eu-de-1"],
           }),
           "eu-de-1",
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       it("should change power vs zones when changing power_vs_ha_zone_1", () => {
@@ -462,17 +462,17 @@ describe("options", () => {
         assert.deepEqual(
           data.power_vs_zones,
           ["mad02", "eu-de-1"],
-          "it should set zones"
+          "it should set zones",
         );
       });
       it("should have correct invalid for ha zone 1", () => {
         assert.isFalse(
           craig.options.power_vs_ha_zone_1.invalid({}),
-          "it should be false when no power vs"
+          "it should be false when no power vs",
         );
         assert.isFalse(
           craig.options.power_vs_ha_zone_1.invalid({ enable_power_vs: true }),
-          "it should be false when no power vs ha"
+          "it should be false when no power vs ha",
         );
         assert.isTrue(
           craig.options.power_vs_ha_zone_1.invalid({
@@ -480,14 +480,14 @@ describe("options", () => {
             power_vs_high_availability: true,
             power_vs_zones: [],
           }),
-          "it should be true when no power vs zones"
+          "it should be true when no power vs zones",
         );
       });
       it("should return correct invalid text for ha zone 1", () => {
         assert.deepEqual(
           craig.options.power_vs_ha_zone_1.invalidText({ region: "us-south" }),
           "Select an Availability Zone",
-          "it should return correct invalid text"
+          "it should return correct invalid text",
         );
       });
     });

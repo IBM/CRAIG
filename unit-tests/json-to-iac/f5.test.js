@@ -888,12 +888,12 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
               public_gateways: [],
             },
           ],
-        }
+        },
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct template data with all values", () => {
@@ -1381,12 +1381,12 @@ data "template_file" "user_data_f5_ve_01_zone_1" {
               public_gateways: [],
             },
           ],
-        }
+        },
       );
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -1591,7 +1591,7 @@ resource "ibm_is_instance" "f5_ve_01_zone_1" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return correct f5 vsi terraform", () => {
@@ -4382,7 +4382,7 @@ resource "ibm_is_instance" "f5_zone_3" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return empty string when no f5 vsi", () => {
@@ -4391,7 +4391,7 @@ resource "ibm_is_instance" "f5_zone_3" {
           f5_vsi: [],
         }),
         "",
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });

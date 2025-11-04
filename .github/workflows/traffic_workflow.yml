@@ -16,12 +16,12 @@ jobs:
       steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: checkout repo content
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
         with:
           ref: "traffic"
 
       - name: setup python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
             python-version: '3.14' # install the python version needed
     

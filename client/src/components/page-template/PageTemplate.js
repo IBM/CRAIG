@@ -125,16 +125,16 @@ const navIcons = {
 };
 
 let pageOrder = [
-  { title: "About", path: "/docs/about", icon: Help },
-  { title: "Release Notes", path: "/docs/releaseNotes", icon: Bullhorn },
+  { title: "About", path: "/docs/about/", icon: Help },
+  { title: "Release Notes", path: "/docs/releaseNotes/", icon: Bullhorn },
   {
     title: "JSON Documentation",
-    path: "/docs/json",
+    path: "/docs/json/",
     icon: JsonReference,
   },
   {
     title: "Projects",
-    path: "/projects",
+    path: "/projects/",
     icon: Folders,
   },
   {
@@ -144,7 +144,7 @@ let pageOrder = [
   },
   {
     title: "Stats",
-    path: "/stats",
+    path: "/stats/",
     icon: ChartLine,
   },
 ].concat(
@@ -153,23 +153,23 @@ let pageOrder = [
         {
           // temporary to get page to render
           title: "Cloud Services",
-          path: "/v2/services",
+          path: "/v2/services/",
           icon: Settings,
         },
         {
           // temporary to get page to render
           title: "VPC Network",
-          path: "/v2/vpc",
+          path: "/v2/vpc/",
           icon: Settings,
         },
         {
           // temporary to get page to render
           title: "VPC Deployments",
-          path: "/v2/vpcDeployments",
+          path: "/v2/vpcDeployments/",
           icon: Settings,
         },
       ]
-    : []
+    : [],
 );
 
 // for each nav category
@@ -209,22 +209,22 @@ const PageTemplate = (props) => {
           title: "Reset State",
         }
       : nextPathIndex === pageOrder.length || nextPathIndex === -1
-      ? {
-          // if next index is out of bounds of array, send empty string
-          // and no onclick function
-          title: "",
-        }
-      : getObjectFromArray(pageOrder, "path", `/form/${props.form}`)?.isLast
-      ? {
-          title: "Summary",
-          onClick: () => {
-            props.nav("/summary");
-          },
-        }
-      : {
-          title: pageOrder[nextPathIndex].title,
-          onClick: onClick,
-        };
+        ? {
+            // if next index is out of bounds of array, send empty string
+            // and no onclick function
+            title: "",
+          }
+        : getObjectFromArray(pageOrder, "path", `/form/${props.form}`)?.isLast
+          ? {
+              title: "Summary",
+              onClick: () => {
+                props.nav("/summary");
+              },
+            }
+          : {
+              title: pageOrder[nextPathIndex].title,
+              onClick: onClick,
+            };
   }
 
   /**
@@ -244,8 +244,8 @@ const PageTemplate = (props) => {
   let formPathNotPresent = props.beta
     ? false
     : pageObj.path === undefined
-    ? true
-    : !contains(pageObj.path, "form");
+      ? true
+      : !contains(pageObj.path, "form");
 
   return (
     <>
@@ -303,9 +303,10 @@ const PageTemplate = (props) => {
           </ul>
           {!isResetState && (
             <>
-              {window.location.pathname !== "/projects" &&
+              {window.location.pathname !== "/projects/" &&
                 !contains(window.location.pathname, "/docs/") &&
-                !contains(window.location.pathname, "/v2/projects") &&
+                !contains(window.location.pathname, "/projects") &&
+                !contains(window.location.pathname, "/v2/projects/") &&
                 !props.craig.store.project_name && (
                   <NoProjectModal
                     craig={props.craig}
@@ -327,14 +328,14 @@ const PageTemplate = (props) => {
             props.jsonInCodeMirror,
             props.beta ? "/v2/services" : pageObj.path,
             pageObj.toTf,
-            pageObj.jsonField
+            pageObj.jsonField,
           )}
           onTabClick={props.onTabClick}
           jsonInCodeMirror={props.jsonInCodeMirror}
         />
       </div>
       <BottomAbout />
-      {isResetState !== true && !contains(window.location.pathname, "/v2") && (
+      {/* {isResetState !== true && !contains(window.location.pathname, "/v2") && (
         <Footer
           toggleFooter={() => {
             props.craig.store.json._options.hideFooter =
@@ -348,7 +349,7 @@ const PageTemplate = (props) => {
           }
           navigate={navigate}
         />
-      )}
+      )} */}
     </>
   );
 };

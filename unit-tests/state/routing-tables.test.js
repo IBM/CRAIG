@@ -21,7 +21,7 @@ describe("routing_tables", () => {
       assert.deepEqual(
         craig.store.json.routing_tables,
         [],
-        "it should have routing_tables initialized as a list"
+        "it should have routing_tables initialized as a list",
       );
     });
   });
@@ -41,12 +41,12 @@ describe("routing_tables", () => {
       assert.deepEqual(
         craig.store.json.routing_tables[0].vpc,
         null,
-        "it should return correct data"
+        "it should return correct data",
       );
       assert.deepEqual(
         craig.store.json.routing_tables[0].routes[0].vpc,
         null,
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -61,12 +61,12 @@ describe("routing_tables", () => {
           name: "todd",
           vpc: "management",
         },
-        { data: { name: "kms" } }
+        { data: { name: "kms" } },
       );
       assert.deepEqual(
         craig.store.json.routing_tables[0].name,
         "todd",
-        "it should update everything"
+        "it should update everything",
       );
     });
   });
@@ -85,7 +85,7 @@ describe("routing_tables", () => {
             routes: [],
           },
         ],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -99,7 +99,7 @@ describe("routing_tables", () => {
       assert.deepEqual(
         craig.store.json.routing_tables,
         [],
-        "it should return correct data"
+        "it should return correct data",
       );
     });
   });
@@ -110,7 +110,7 @@ describe("routing_tables", () => {
           accept_routes_from_resource_type: ["vpn_server", "vpn_gateway"],
         }),
         ["VPN Server", "VPN Gateway"],
-        "it should return groups"
+        "it should return groups",
       );
     });
     it("should return list of routes on input change", () => {
@@ -119,40 +119,40 @@ describe("routing_tables", () => {
           accept_routes_from_resource_type: ["VPN Server", "VPN Gateway"],
         }),
         ["vpn_server", "vpn_gateway"],
-        "it should return groups"
+        "it should return groups",
       );
     });
     it("should return correct advertise groups", () => {
       assert.deepEqual(
         craig.routing_tables.advertise_routes_to.groups({}),
         [],
-        "it should return groups"
+        "it should return groups",
       );
       assert.deepEqual(
         craig.routing_tables.advertise_routes_to.groups({
           route_direct_link_ingress: true,
         }),
         ["Direct Link"],
-        "it should return groups"
+        "it should return groups",
       );
       assert.isTrue(
         craig.routing_tables.route_direct_link_ingress.disabled({
           advertise_routes_to: ["direct_link"],
         }),
-        "it should be disabled"
+        "it should be disabled",
       );
       assert.isTrue(
         craig.routing_tables.transit_gateway_ingress.disabled({
           advertise_routes_to: ["transit_gateway"],
         }),
-        "it should be disabled"
+        "it should be disabled",
       );
       assert.deepEqual(
         craig.routing_tables.advertise_routes_to.groups({
           transit_gateway_ingress: true,
         }),
         ["Transit Gateway"],
-        "it should return groups"
+        "it should return groups",
       );
     });
     it("should return list of routes on render", () => {
@@ -161,7 +161,7 @@ describe("routing_tables", () => {
           advertise_routes_to: ["vpn_server", "vpn_gateway"],
         }),
         ["VPN Server", "VPN Gateway"],
-        "it should return groups"
+        "it should return groups",
       );
     });
     it("should return list of routes on input change", () => {
@@ -170,7 +170,7 @@ describe("routing_tables", () => {
           advertise_routes_to: ["VPN Server", "VPN Gateway"],
         }),
         ["vpn_server", "vpn_gateway"],
-        "it should return groups"
+        "it should return groups",
       );
     });
     it("should have the correct name helper text", () => {
@@ -187,10 +187,10 @@ describe("routing_tables", () => {
                 },
               },
             },
-          }
+          },
         ),
         "hi-undefined-vpc-undefined-table",
-        "it should have correct helper text"
+        "it should have correct helper text",
       );
     });
   });
@@ -213,7 +213,7 @@ describe("routing_tables", () => {
           {
             innerFormProps: { arrayParentName: "frog" },
             arrayData: craig.store.json.routing_tables[0].routes,
-          }
+          },
         );
         let expectedData = {
           vpc: "management",
@@ -226,7 +226,7 @@ describe("routing_tables", () => {
         assert.deepEqual(
           craig.store.json.routing_tables[0].routes[0],
           expectedData,
-          "it should add route"
+          "it should add route",
         );
       });
     });
@@ -243,13 +243,13 @@ describe("routing_tables", () => {
           {
             innerFormProps: { arrayParentName: "frog" },
             arrayData: craig.store.json.routing_tables[0].routes,
-          }
+          },
         );
         craig.routing_tables.routes.save(
           {
             name: "aaaaa",
           },
-          { arrayParentName: "frog", data: { name: "test-route" } }
+          { arrayParentName: "frog", data: { name: "test-route" } },
         );
         let expectedData = {
           routing_table: "frog",
@@ -262,7 +262,7 @@ describe("routing_tables", () => {
         assert.deepEqual(
           craig.store.json.routing_tables[0].routes[0],
           expectedData,
-          "it should update key"
+          "it should update key",
         );
       });
     });
@@ -278,16 +278,16 @@ describe("routing_tables", () => {
           {
             innerFormProps: { arrayParentName: "frog" },
             arrayData: craig.store.json.routing_tables[0].routes,
-          }
+          },
         );
         craig.routing_tables.routes.delete(
           {},
-          { arrayParentName: "frog", data: { name: "test-route" } }
+          { arrayParentName: "frog", data: { name: "test-route" } },
         );
         assert.deepEqual(
           craig.store.json.routing_tables[0].routes,
           [],
-          "it should update data"
+          "it should update data",
         );
       });
     });
@@ -296,7 +296,7 @@ describe("routing_tables", () => {
         assert.deepEqual(
           craig.routing_tables.routes.action.onRender({}),
           "",
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       it("should return correct action on render", () => {
@@ -305,7 +305,7 @@ describe("routing_tables", () => {
             action: "delegate_vpc",
           }),
           "Delegate VPC",
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       it("should return correct action on input change", () => {
@@ -314,7 +314,7 @@ describe("routing_tables", () => {
             action: "Delegate VPC",
           }),
           "delegate_vpc",
-          "it should return correct data"
+          "it should return correct data",
         );
       });
       it("should disable next hop when ", () => {
@@ -322,7 +322,7 @@ describe("routing_tables", () => {
           craig.routing_tables.routes.next_hop.hideWhen({
             action: "delegate_vpc",
           }),
-          "it should be disabled"
+          "it should be disabled",
         );
       });
       it("should return true if a routing table route has an invalid destination", () => {
@@ -332,7 +332,7 @@ describe("routing_tables", () => {
             destination: "",
             action: "deliver",
           }),
-          "it should be true"
+          "it should be true",
         );
         assert.isTrue(
           craig.routing_tables.routes.destination.invalid({
@@ -340,7 +340,7 @@ describe("routing_tables", () => {
             destination: "aaaa",
             action: "deliver",
           }),
-          "it should be true"
+          "it should be true",
         );
       });
       it("should return true if a routing table route has an invalid next hop", () => {
@@ -350,7 +350,7 @@ describe("routing_tables", () => {
             next_hop: "aaa",
             action: "deliver",
           }),
-          "it should be true"
+          "it should be true",
         );
       });
       it("should return true if a routing table route has an invalid next hop as cidr block", () => {
@@ -360,7 +360,7 @@ describe("routing_tables", () => {
             next_hop: "1.2.3.4/5",
             action: "deliver",
           }),
-          "it should be true"
+          "it should be true",
         );
       });
     });

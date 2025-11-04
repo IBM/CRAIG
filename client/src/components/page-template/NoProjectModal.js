@@ -24,7 +24,7 @@ class NoProjectModal extends React.Component {
   render() {
     let existingData = deepEqual(
       this.props.craig.store.json._options,
-      template_dropdown_map["Mixed"].template._options
+      template_dropdown_map["Mixed"].template._options,
     );
     return (
       <>
@@ -64,8 +64,8 @@ class NoProjectModal extends React.Component {
                 <a
                   href={
                     contains(window.location.pathname, "/v2")
-                      ? "/v2/projects"
-                      : "/projects"
+                      ? "/v2/projects/"
+                      : "/projects/"
                   }
                 >
                   Projects Page

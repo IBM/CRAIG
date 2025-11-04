@@ -83,13 +83,13 @@ function keyManagementSave(config, stateData, componentProps) {
         if (resource.kms === componentProps.data.name)
           resource.kms = stateData.name;
       });
-    }
+    },
   );
 
   config.updateChild(
     ["json", "key_management"],
     componentProps.data.name,
-    keyManagementData
+    keyManagementData,
   );
 }
 
@@ -130,7 +130,7 @@ function setEncryptionKeys(config) {
         }
       }),
       "keys",
-      "name"
+      "name",
     );
   } else {
     config.store.encryptionKeys = [];
@@ -163,7 +163,7 @@ function kmsKeyCreate(config, stateData, componentProps) {
     "key_management",
     "keys",
     newKey,
-    componentProps
+    componentProps,
   );
 }
 
@@ -223,7 +223,7 @@ function initKeyManagement(store) {
     delete: keyManagementDelete,
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "resource_group"],
-      "key_management"
+      "key_management",
     ),
     schema: {
       use_hs_crypto: {
@@ -274,7 +274,7 @@ function initKeyManagement(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "key_ring", "endpoint"],
           "key_management",
-          "keys"
+          "keys",
         ),
         schema: {
           name: nameField("encryption_keys"),
@@ -288,7 +288,7 @@ function initKeyManagement(store) {
               );
             },
             invalidText: unconditionalInvalidText(
-              "Enter a valid key ring name"
+              "Enter a valid key ring name",
             ),
           },
           endpoint: {

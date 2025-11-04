@@ -151,10 +151,10 @@ class CloudServicesPage extends React.Component {
         value === "Cloud Databases"
           ? "icd"
           : value === "App ID"
-          ? "appid"
-          : value === "Activity Tracker"
-          ? "atracker"
-          : snakeCase(value),
+            ? "appid"
+            : value === "Activity Tracker"
+              ? "atracker"
+              : snakeCase(value),
     });
   }
 
@@ -196,7 +196,7 @@ class CloudServicesPage extends React.Component {
       : arraySplatIndex(
           this.props.craig.store.json[this.state.service],
           "name",
-          this.state.serviceName
+          this.state.serviceName,
         );
   }
 
@@ -216,7 +216,7 @@ class CloudServicesPage extends React.Component {
     else
       this.props.craig[this.state.modalService].create(
         stateData,
-        componentProps
+        componentProps,
       );
 
     // close modal
@@ -379,14 +379,14 @@ class CloudServicesPage extends React.Component {
                 return stateData.modalService === "appid"
                   ? "AppID"
                   : stateData.modalService === "icd"
-                  ? "Cloud Databases"
-                  : stateData.modalService === "dns"
-                  ? "DNS"
-                  : stateData.modalService === "logdna"
-                  ? "LogDNA"
-                  : stateData.modalService === "atracker"
-                  ? "Activity Tracker"
-                  : titleCase(stateData.modalService);
+                    ? "Cloud Databases"
+                    : stateData.modalService === "dns"
+                      ? "DNS"
+                      : stateData.modalService === "logdna"
+                        ? "LogDNA"
+                        : stateData.modalService === "atracker"
+                          ? "Activity Tracker"
+                          : titleCase(stateData.modalService);
               },
             }}
             parentProps={this.props}
@@ -403,18 +403,18 @@ class CloudServicesPage extends React.Component {
                 this.state.modalService === "icd"
                   ? "Cloud Databases"
                   : this.state.modalService === "appid"
-                  ? "AppID"
-                  : this.state.modalService === "logdna"
-                  ? "LogDNA"
-                  : this.state.modalService === "atracker"
-                  ? "Activity Tracker"
-                  : this.state.modalService === "dns"
-                  ? "DNS"
-                  : titleCase(this.state.modalService)
+                    ? "AppID"
+                    : this.state.modalService === "logdna"
+                      ? "LogDNA"
+                      : this.state.modalService === "atracker"
+                        ? "Activity Tracker"
+                        : this.state.modalService === "dns"
+                          ? "DNS"
+                          : titleCase(this.state.modalService),
               )
                 .replace(
                   contains(["DNS", "event_streams"]) ? "" : /s(?=$)/g,
-                  ""
+                  "",
                 )
                 .replace("Dns", "DNS")}${
                 this.state.modalService === "resource_groups" ? "" : " Service"
@@ -446,7 +446,7 @@ class CloudServicesPage extends React.Component {
                   disableSave(
                     this.props.modalService,
                     this.state,
-                    this.props
+                    this.props,
                   ) === false
                 ) {
                   this.props.enableModal();
@@ -522,7 +522,7 @@ class CloudServicesPage extends React.Component {
               "Key Management",
               "Object Storage",
             ],
-            craig
+            craig,
           )}
           form={
             <div className="displayFlex" style={{ minWidth: "100%" }}>
@@ -694,13 +694,13 @@ class CloudServicesPage extends React.Component {
                       craig: craig,
                       data: contains(
                         ["logdna", "sysdig", "atracker"],
-                        this.state.service
+                        this.state.service,
                       )
                         ? craig.store.json[this.state.service]
                         : getObjectFromArray(
                             craig.store.json[this.state.service],
                             "name",
-                            this.state.serviceName
+                            this.state.serviceName,
                           ),
                       form: forms[this.state.service],
                     }}

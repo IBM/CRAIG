@@ -105,7 +105,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
           ssh_keys: craig.store.json.f5_vsi[0].ssh_keys,
           image:
             /f5-bigip-(15-1-5-1-0-0-14|16-1-2-2-0-0-28)-(ltm|all)-1slot/.exec(
-              craig.store.json.f5_vsi[0].image
+              craig.store.json.f5_vsi[0].image,
             )[0], // keep only image name in props
           profile: craig.store.json.f5_vsi[0].profile,
           zones: craig.store.json.f5_vsi.length,
@@ -139,22 +139,22 @@ class VpcDeploymentsDiagramPage extends React.Component {
     return field === "routing_tables"
       ? Router
       : field === "fortigate_vnf"
-      ? AppConnectivity
-      : field === "load_balancers"
-      ? LoadBalancerVpc
-      : field === "vpn_servers"
-      ? ServerProxy
-      : field === "security_groups"
-      ? Security
-      : field === "ssh_keys"
-      ? Password
-      : field === "vpn_gateways"
-      ? GatewayVpn
-      : field === "vsi"
-      ? BareMetalServer_02
-      : field === "clusters"
-      ? IbmCloudKubernetesService
-      : IbmCloudVpcEndpoints;
+        ? AppConnectivity
+        : field === "load_balancers"
+          ? LoadBalancerVpc
+          : field === "vpn_servers"
+            ? ServerProxy
+            : field === "security_groups"
+              ? Security
+              : field === "ssh_keys"
+                ? Password
+                : field === "vpn_gateways"
+                  ? GatewayVpn
+                  : field === "vsi"
+                    ? BareMetalServer_02
+                    : field === "clusters"
+                      ? IbmCloudKubernetesService
+                      : IbmCloudVpcEndpoints;
   }
 
   vpcName() {
@@ -175,7 +175,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
       arraySplatIndex(
         this.props.craig.store.json.security_groups,
         "name",
-        sgName
+        sgName,
       ) === this.state.selectedIndex &&
       this.state.selectedItem === "security_groups"
     );
@@ -194,8 +194,8 @@ class VpcDeploymentsDiagramPage extends React.Component {
         arraySplatIndex(
           this.props.craig.store.json.security_groups,
           "name",
-          sgName
-        )
+          sgName,
+        ),
       );
     };
   }
@@ -217,8 +217,8 @@ class VpcDeploymentsDiagramPage extends React.Component {
         value === "VSI"
           ? "vsi"
           : value === "Fortigate VNF"
-          ? "fortigate_vnf"
-          : snakeCase(value) + "s",
+            ? "fortigate_vnf"
+            : snakeCase(value) + "s",
     });
   }
 
@@ -260,14 +260,14 @@ class VpcDeploymentsDiagramPage extends React.Component {
     return this.state.selectedItem === "fortigate_vnf"
       ? "Fortigate VNF"
       : this.state.selectedItem === "vsi"
-      ? "VSI"
-      : this.state.selectedItem === "vpn_servers"
-      ? "VPN Server"
-      : this.state.selectedItem === "vpn_gateways"
-      ? "VPN Gateway"
-      : this.state.selectedItem === "ssh_keys"
-      ? "SSH Key"
-      : titleCase(this.state.selectedItem).replace(/s$/g, "");
+        ? "VSI"
+        : this.state.selectedItem === "vpn_servers"
+          ? "VPN Server"
+          : this.state.selectedItem === "vpn_gateways"
+            ? "VPN Gateway"
+            : this.state.selectedItem === "ssh_keys"
+              ? "SSH Key"
+              : titleCase(this.state.selectedItem).replace(/s$/g, "");
   }
 
   render() {
@@ -291,7 +291,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
               : (stateData, componentProps) => {
                   craig[this.state.selectedItem].create(
                     stateData,
-                    componentProps
+                    componentProps,
                   );
                   this.resetSelection();
                 }
@@ -375,7 +375,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
                 subnets: [],
                 security_groups: contains(
                   ["vsi", "virtual_private_endpoints"],
-                  this.state.selectedItem
+                  this.state.selectedItem,
                 )
                   ? []
                   : undefined,
@@ -390,7 +390,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
                   disableSave(
                     this.props.selectedItem,
                     this.state,
-                    this.props
+                    this.props,
                   ) === false
                 ) {
                   this.props.enableModal();
@@ -474,7 +474,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
               ]
                 .sort(azsort)
                 .concat("F5 Big IP"), // have f5 always be last
-              craig
+              craig,
             )}
             form={
               <>
@@ -531,7 +531,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
                       onImportedSubnetItemClick={(
                         vpcIndex,
                         field,
-                        itemIndex
+                        itemIndex,
                       ) => {
                         this.setSelection(vpcIndex, field, itemIndex);
                       }}
@@ -568,7 +568,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
                           this.setSelection(
                             vpcIndex,
                             "routing_tables",
-                            rtIndex
+                            rtIndex,
                           );
                         }}
                       />
@@ -585,7 +585,7 @@ class VpcDeploymentsDiagramPage extends React.Component {
                           this.setSelection(
                             vpcIndex,
                             "security_groups",
-                            sgIndex
+                            sgIndex,
                           );
                         }}
                       />
@@ -629,8 +629,8 @@ class VpcDeploymentsDiagramPage extends React.Component {
                           this.state.selectedItem === "f5_vsi"
                             ? "Editing F5 Big IP Deployment"
                             : this.state.selectedItem === "ssh_keys"
-                            ? "Editing SSH Keys"
-                            : "Editing " + this.selectRenderValue()
+                              ? "Editing SSH Keys"
+                              : "Editing " + this.selectRenderValue()
                         }
                         icon={this.getIcon(this.state.selectedItem)}
                         innerFormProps={{

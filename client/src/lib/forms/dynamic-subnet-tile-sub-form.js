@@ -31,15 +31,15 @@ function getSubnetData(props) {
           buildSubnet(
             props.parentProps.vpc_name,
             Object.keys(props.parentProps.craig.store.subnetTiers).indexOf(
-              props.parentProps.vpc_name
+              props.parentProps.vpc_name,
             ),
             props.parentState.name,
             nextTier,
             props.parentState.networkAcl,
             props.parentProps.data.resource_group,
             subnets.length + 1,
-            props.parentState.addPublicGateway
-          )
+            props.parentState.addPublicGateway,
+          ),
         );
       } else {
         subnets.push({
@@ -50,11 +50,11 @@ function getSubnetData(props) {
   } else {
     let parentVpc = new revision(props.parentProps.craig.store.json).child(
       "vpcs",
-      props.parentProps.vpc_name
+      props.parentProps.vpc_name,
     ).data;
     subnets = getTierSubnets(
       props.parentProps.data,
-      parentVpc
+      parentVpc,
     )(props.parentState);
   }
   return subnets;

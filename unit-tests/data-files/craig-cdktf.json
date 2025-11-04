@@ -119,7 +119,7 @@
       }
     },
     "ibm_container_vpc_worker_pool": {
-      "workload_vpc_workload_cluster_logging_pool_pool": {
+      "workload_vpc_workload_logging_pool": {
         "worker_pool_name": "${var.prefix}-workload-cluster-logging-pool",
         "vpc_id": "${module.workload_vpc.id}",
         "resource_group_id": "${ibm_resource_group.slz_workload_rg.id}",

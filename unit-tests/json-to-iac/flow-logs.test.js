@@ -243,7 +243,7 @@ describe("flow logs", () => {
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_flow_log" "management_flow_log_collector" {
@@ -265,7 +265,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct code"
+        "it should return correct code",
       );
     });
     it("should create flow logs terraform when disabled", () => {
@@ -504,13 +504,13 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = ``;
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct code"
+        "it should return correct code",
       );
     });
     it("should create flow logs terraform when no cos but bucket", () => {
@@ -749,7 +749,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_flow_log" "management_flow_log_collector" {
@@ -768,7 +768,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct code"
+        "it should return correct code",
       );
     });
     it("should create flow logs terraform when no bucket but cos", () => {
@@ -1007,7 +1007,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
               use_data: false,
             },
           ],
-        }
+        },
       );
       let expectedData = `
 resource "ibm_is_flow_log" "management_flow_log_collector" {
@@ -1026,7 +1026,7 @@ resource "ibm_is_flow_log" "management_flow_log_collector" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct code"
+        "it should return correct code",
       );
     });
   });
@@ -1121,7 +1121,7 @@ resource "ibm_iam_authorization_policy" "flow_logs_to_cos_object_storage_policy"
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct code"
+        "it should return correct code",
       );
     });
   });
@@ -1178,7 +1178,7 @@ resource "ibm_is_flow_log" "workload_flow_log_collector" {
       assert.deepEqual(
         actualData,
         expectedData,
-        "it should return correct terraform"
+        "it should return correct terraform",
       );
     });
   });

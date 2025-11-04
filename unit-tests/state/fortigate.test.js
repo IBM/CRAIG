@@ -20,7 +20,7 @@ describe("fortigate state store", () => {
     assert.deepEqual(
       craig.store.json.fortigate_vnf,
       [],
-      "it should initialize"
+      "it should initialize",
     );
   });
   it("should create a fortigate", () => {
@@ -50,7 +50,7 @@ describe("fortigate state store", () => {
           zone: "1",
         },
       ],
-      "it should have correct data"
+      "it should have correct data",
     );
   });
   it("should create a fortigate with correct params", () => {
@@ -80,7 +80,7 @@ describe("fortigate state store", () => {
           zone: "1",
         },
       ],
-      "it should have correct data"
+      "it should have correct data",
     );
   });
   it("should update a fortigate", () => {
@@ -112,7 +112,7 @@ describe("fortigate state store", () => {
         data: {
           name: "fortigate",
         },
-      }
+      },
     );
     assert.deepEqual(
       craig.store.json.fortigate_vnf,
@@ -129,7 +129,7 @@ describe("fortigate state store", () => {
           zone: "1",
         },
       ],
-      "it should have correct data"
+      "it should have correct data",
     );
   });
   it("should delete a fortigate", () => {
@@ -161,12 +161,12 @@ describe("fortigate state store", () => {
         data: {
           name: "fortigate",
         },
-      }
+      },
     );
     assert.deepEqual(
       craig.store.json.fortigate_vnf,
       [],
-      "it should have correct data"
+      "it should have correct data",
     );
   });
   describe("schema", () => {
@@ -185,19 +185,19 @@ describe("fortigate state store", () => {
           zone: null,
           vpc: "frog",
         },
-        "it should set other values"
+        "it should set other values",
       );
     });
     it("should return subnet groups", () => {
       assert.deepEqual(
         craig.fortigate_vnf.primary_subnet.groups({}),
         [],
-        "it should return empty array when no vpc"
+        "it should return empty array when no vpc",
       );
       assert.deepEqual(
         craig.fortigate_vnf.primary_subnet.groups(
           { vpc: "management" },
-          { craig: craig }
+          { craig: craig },
         ),
         [
           "vsi-zone-1",
@@ -208,15 +208,15 @@ describe("fortigate state store", () => {
           "vpe-zone-2",
           "vpe-zone-3",
         ],
-        "it should return subnets when no zone"
+        "it should return subnets when no zone",
       );
       assert.deepEqual(
         craig.fortigate_vnf.primary_subnet.groups(
           { vpc: "management", zone: "1" },
-          { craig: craig }
+          { craig: craig },
         ),
         ["vsi-zone-1", "vpn-zone-1", "vpe-zone-1"],
-        "it should return subnets when zone"
+        "it should return subnets when zone",
       );
     });
     it("should set zone on subnet state change", () => {
@@ -227,7 +227,7 @@ describe("fortigate state store", () => {
       craig.fortigate_vnf.primary_subnet.onStateChange(
         data,
         { craig: craig },
-        "vsi-zone-1"
+        "vsi-zone-1",
       );
       assert.deepEqual(
         data,
@@ -236,7 +236,7 @@ describe("fortigate state store", () => {
           primary_subnet: "vsi-zone-1",
           zone: 1,
         },
-        "it should set data"
+        "it should set data",
       );
     });
     it("should set not zone on subnet state change when zone", () => {
@@ -248,7 +248,7 @@ describe("fortigate state store", () => {
       craig.fortigate_vnf.primary_subnet.onStateChange(
         data,
         { craig: craig },
-        "vsi-zone-1"
+        "vsi-zone-1",
       );
       assert.deepEqual(
         data,
@@ -257,14 +257,14 @@ describe("fortigate state store", () => {
           primary_subnet: "vsi-zone-1",
           zone: 1,
         },
-        "it should set data"
+        "it should set data",
       );
     });
     it("should return api endpoint for profile with region", () => {
       assert.deepEqual(
         craig.fortigate_vnf.profile.apiEndpoint({}, { craig: craig }),
         "/api/vsi/us-south/instanceProfiles",
-        "it should return api endpoint"
+        "it should return api endpoint",
       );
     });
   });

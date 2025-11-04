@@ -48,7 +48,7 @@ function formatDnsService(dns, config) {
     "resource",
     "ibm_resource_instance",
     data.name,
-    data.data
+    data.data,
   );
 }
 
@@ -70,7 +70,7 @@ function ibmDnsZone(zone) {
       instance_id: tfRef(
         "ibm_resource_instance",
         zone.instance + " dns instance",
-        "guid"
+        "guid",
       ),
       description: zone.description,
       label: zone.label,
@@ -118,7 +118,7 @@ function ibmDnsResourceRecord(record) {
       instance_id: tfRef(
         "ibm_resource_instance",
         record.instance + " dns instance",
-        "guid"
+        "guid",
       ),
       zone_id: tfRef("ibm_dns_zone", zoneName, "zone_id"),
       type: record.type,
@@ -138,9 +138,9 @@ function ibmDnsResourceRecord(record) {
             exp.digit().literal("-").digit().stringEnd();
           })
           .done("g"),
-        "-vsi-"
+        "-vsi-",
       )}.primary_network_interface.0.primary_ip.0`,
-      "address"
+      "address",
     );
   }
   ["ttl", "weight", "priority", "port", "service", "protocol"].forEach(
@@ -148,7 +148,7 @@ function ibmDnsResourceRecord(record) {
       if (record[field]) {
         data.data[field] = record[field];
       }
-    }
+    },
   );
   return data;
 }
@@ -176,7 +176,7 @@ function formatDnsRecord(record) {
     "resource",
     "ibm_dns_resource_record",
     data.name,
-    data.data
+    data.data,
   );
 }
 
@@ -198,7 +198,7 @@ function ibmDnsPermittedNetwork(nw) {
       instance_id: tfRef(
         "ibm_resource_instance",
         nw.instance + " dns instance",
-        "guid"
+        "guid",
       ),
       zone_id: tfRef("ibm_dns_zone", zoneName, "zone_id"),
       vpc_crn: `\${module.${snakeCase(nw.vpc) + "_vpc"}.crn}`,
@@ -221,7 +221,7 @@ function formatDnsPermittedNetwork(nw) {
     "resource",
     "ibm_dns_permitted_network",
     data.name,
-    data.data
+    data.data,
   );
 }
 
@@ -247,7 +247,7 @@ function ibmDnsCustomResolver(resolver, config) {
       instance_id: tfRef(
         "ibm_resource_instance",
         resolver.instance + " dns instance",
-        "guid"
+        "guid",
       ),
       description: resolver.description,
       high_availability: resolver.high_availability,
@@ -289,7 +289,7 @@ function formatDnsCustomResolver(resolver, config) {
     "resource",
     "ibm_dns_custom_resolver",
     data.name,
-    data.data
+    data.data,
   );
 }
 

@@ -56,14 +56,14 @@ function ibmCbrZone(zone, config) {
   // add addresses
   zone?.addresses?.forEach((address) => {
     cbrZoneData.addresses.push(
-      ibmCbrZoneAddressAndExclusion(address, "address")
+      ibmCbrZoneAddressAndExclusion(address, "address"),
     );
   });
 
   // add excluded
   zone?.exclusions?.forEach((exclude) => {
     cbrZoneData.excluded.push(
-      ibmCbrZoneAddressAndExclusion(exclude, "exclude")
+      ibmCbrZoneAddressAndExclusion(exclude, "exclude"),
     );
   });
 

@@ -58,7 +58,7 @@ describe("invalid callbacks", () => {
         invalidCrnList([
           "crn:v1:bluemix:public:abcdf",
           "mooseeeeeeeeeeeeeeeeee",
-        ])
+        ]),
       );
     });
     it("should return false when no crns", () => {
@@ -72,7 +72,7 @@ describe("invalid callbacks", () => {
         invalidCrnList([
           "crn:v1:bluemix:public:abcdf",
           "crn:v1:bluemix:public:abcde",
-        ])
+        ]),
       );
     });
   });
@@ -97,8 +97,8 @@ describe("invalid callbacks", () => {
     it("should be true for valid url", () => {
       assert.isTrue(
         isValidUrl(
-          "https://declarations.s3.us-east.cloud-object-storage.appdomain.cloud/do_declaration.json"
-        )
+          "https://declarations.s3.us-east.cloud-object-storage.appdomain.cloud/do_declaration.json",
+        ),
       );
     });
   });
@@ -118,11 +118,11 @@ describe("invalid callbacks", () => {
           data: {
             name: "",
           },
-        }
+        },
       );
       assert.isTrue(
         actualData.invalid,
-        "it should return true when overlapping cidr"
+        "it should return true when overlapping cidr",
       );
     });
     it("should return false for power cidrs", () => {
@@ -140,11 +140,11 @@ describe("invalid callbacks", () => {
           data: {
             name: "",
           },
-        }
+        },
       );
       assert.isFalse(
         actualData.invalid,
-        "it should return true when overlapping cidr"
+        "it should return true when overlapping cidr",
       );
     });
     it("should return true if cidr does not already exist but does overlap", () => {
@@ -162,11 +162,11 @@ describe("invalid callbacks", () => {
           data: {
             name: "vsi-zone-1",
           },
-        }
+        },
       );
       assert.isTrue(
         actualData.invalid,
-        "it should return true when overlapping cidr"
+        "it should return true when overlapping cidr",
       );
     });
   });
@@ -174,28 +174,28 @@ describe("invalid callbacks", () => {
     it("should return true if cidr is null", () => {
       assert.isTrue(
         invalidCidr({})({ cidr: null }, { data: { cidr: "1.2.3.4/5" } }),
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return false if cidr is equal to props", () => {
       assert.isFalse(
         invalidCidr({})({ cidr: "1.2.3.4/5" }, { data: { cidr: "1.2.3.4/5" } }),
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return true if cidr is not valid", () => {
       assert.isTrue(
         invalidCidr({})({ cidr: "aaa" }, { data: { cidr: "1.2.3.4/5" } }),
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return true if cidr is too many addresses", () => {
       assert.isTrue(
         invalidCidr({})(
           { cidr: "10.0.0.0/11" },
-          { data: { cidr: "1.2.3.4/5" } }
+          { data: { cidr: "1.2.3.4/5" } },
         ),
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return true if cidr overlaps with existing cidr", () => {
@@ -207,7 +207,7 @@ describe("invalid callbacks", () => {
       assert.isTrue(
         invalidCidr(craig)({ cidr: "10.10.30.0/24" }, { data: {} }),
         "Warning: CIDR overlaps with 10.10.30.0/24",
-        "it should return correct data"
+        "it should return correct data",
       );
     });
     it("should return false if cidr does not overlap with existing cidr", () => {
@@ -218,7 +218,7 @@ describe("invalid callbacks", () => {
       };
       assert.isFalse(
         invalidCidr(craig)({ cidr: "10.10.80.0/24" }, { data: {} }),
-        "it should be true"
+        "it should be true",
       );
     });
   });
@@ -228,18 +228,18 @@ describe("invalid callbacks", () => {
       assert.isFalse(
         invalidProjectName(
           { name: "blue", description: "test description", json: {} },
-          { projects: { test: { name: "test", last_save } } }
+          { projects: { test: { name: "test", last_save } } },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
     it("it should be true if name is empty string", () => {
       assert.isTrue(
         invalidProjectName(
           { name: "", description: "test description", json: {} },
-          { projects: { test: { name: "test", last_save } } }
+          { projects: { test: { name: "test", last_save } } },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should be true if name is already in use", () => {
@@ -247,18 +247,18 @@ describe("invalid callbacks", () => {
       assert.isTrue(
         invalidProjectName(
           { name: "test", description: "test description", json: {} },
-          { projects: { test: { name: "test", last_save } } }
+          { projects: { test: { name: "test", last_save } } },
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("it should be false if name is in all caps", () => {
       assert.isFalse(
         invalidProjectName(
           { name: "ALLCAPSNAME", description: "test description", json: {} },
-          { projects: { test: { name: "test", last_save } } }
+          { projects: { test: { name: "test", last_save } } },
         ),
-        "it should be false"
+        "it should be false",
       );
     });
   });
@@ -269,15 +269,15 @@ describe("invalid callbacks", () => {
     it("should be true if more than 100 characters", () => {
       assert.isTrue(
         invalidProjectDescription(
-          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         ),
-        "it should be true"
+        "it should be true",
       );
     });
     it("should be true if contains invalid characters", () => {
       assert.isTrue(
         invalidProjectDescription("%%%$$@@@;{}"),
-        "it should be true"
+        "it should be true",
       );
     });
   });
@@ -296,7 +296,7 @@ describe("invalid callbacks", () => {
       assert.isTrue(
         invalidCbrRule("description", {
           description: longDescription,
-        })
+        }),
       );
     });
     it("should return true when empty string", () => {
@@ -304,7 +304,7 @@ describe("invalid callbacks", () => {
     });
     it("should return true if enforcement_mode not selected", () => {
       assert.isTrue(
-        invalidCbrRule("enforcement_mode", { enforcement_mode: "" })
+        invalidCbrRule("enforcement_mode", { enforcement_mode: "" }),
       );
     });
     it("should return false when operator is empty", () => {
@@ -326,22 +326,22 @@ describe("invalid callbacks", () => {
       assert.isTrue(
         invalidCbrRule("description", {
           description: longDescription,
-        })
+        }),
       );
     });
     it("should return true when invalid ip when type is ipAddress and ip is cidr", () => {
       assert.isTrue(
-        invalidCbrZone("value", { type: "ipAddress", value: "2.2.2.2/12" })
+        invalidCbrZone("value", { type: "ipAddress", value: "2.2.2.2/12" }),
       );
     });
     it("should return true when not ip", () => {
       assert.isTrue(
-        invalidCbrZone("value", { type: "ipAddress", value: "blah" })
+        invalidCbrZone("value", { type: "ipAddress", value: "blah" }),
       );
     });
     it("should return false when valid ip range", () => {
       assert.isFalse(
-        invalidCbrZone("value", { type: "ipRange", value: "2.2.2.2-2.2.2.2" })
+        invalidCbrZone("value", { type: "ipRange", value: "2.2.2.2-2.2.2.2" }),
       );
     });
     it("should check that all other value/type combos match regex", () => {
@@ -352,7 +352,7 @@ describe("invalid callbacks", () => {
     });
     it("should return true if invalid field that is typed in", () => {
       assert.isTrue(
-        invalidCbrZone("service_instance", { service_instance: "?@?#(#*" })
+        invalidCbrZone("service_instance", { service_instance: "?@?#(#*" }),
       );
     });
   });
@@ -371,8 +371,8 @@ describe("invalid callbacks", () => {
           {
             crns: ["aaa"],
           },
-          "it should be true"
-        )
+          "it should be true",
+        ),
       );
     });
   });

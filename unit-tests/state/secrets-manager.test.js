@@ -22,7 +22,7 @@ describe("secrets_manager", () => {
       assert.deepEqual(
         craig.store.json.secrets_manager,
         [],
-        "it should have secrets_manager initialized"
+        "it should have secrets_manager initialized",
       );
     });
   });
@@ -42,7 +42,7 @@ describe("secrets_manager", () => {
             certificates: [],
           },
         ],
-        "it should create secrets_manager"
+        "it should create secrets_manager",
       );
     });
     it("should save an secrets_manager instance", () => {
@@ -52,12 +52,12 @@ describe("secrets_manager", () => {
       });
       craig.secrets_manager.save(
         { resource_group: "service-rg" },
-        { data: { name: "default" } }
+        { data: { name: "default" } },
       );
       assert.deepEqual(
         craig.store.json.secrets_manager[0].resource_group,
         "service-rg",
-        "it should create secrets_manager"
+        "it should create secrets_manager",
       );
     });
     it("should update cluster.opaque_secrets.secret_manager name when secrets manager is renamed", () => {
@@ -71,12 +71,12 @@ describe("secrets_manager", () => {
       });
       craig.secrets_manager.save(
         { name: "new-name" },
-        { data: { name: "default" } }
+        { data: { name: "default" } },
       );
       assert.deepEqual(
         craig.store.json.clusters[0].opaque_secrets[0].secrets_manager,
         "new-name",
-        "it should update cluster.opaque_secrets"
+        "it should update cluster.opaque_secrets",
       );
     });
     it("should not update cluster.opaque_secrets.secret_manager name when unrelated secrets manager is renamed", () => {
@@ -90,12 +90,12 @@ describe("secrets_manager", () => {
       });
       craig.secrets_manager.save(
         { name: "new-name" },
-        { data: { name: "default" } }
+        { data: { name: "default" } },
       );
       assert.deepEqual(
         craig.store.json.clusters[0].opaque_secrets[0].secrets_manager,
         "frog",
-        "it should not update cluster.opaque_secrets"
+        "it should not update cluster.opaque_secrets",
       );
     });
     it("should not update cluster.opaque_secrets.secret_manager when no opaque secrets", () => {
@@ -106,12 +106,12 @@ describe("secrets_manager", () => {
       });
       craig.secrets_manager.save(
         { name: "new-name" },
-        { data: { name: "default" } }
+        { data: { name: "default" } },
       );
       assert.deepEqual(
         craig.store.json.clusters[0].opaque_secrets,
         [],
-        "it should update cluster.opaque_secrets"
+        "it should update cluster.opaque_secrets",
       );
     });
     it("should not update empty cluster secrets when secrets manager updates", () => {
@@ -122,12 +122,12 @@ describe("secrets_manager", () => {
       });
       craig.secrets_manager.save(
         { name: "updated-name" },
-        { data: { name: "new-secret-manager" } }
+        { data: { name: "new-secret-manager" } },
       );
       assert.deepEqual(
         craig.store.json.clusters[0].opaque_secrets,
         [],
-        "it should not update cluster.opaque_secrets"
+        "it should not update cluster.opaque_secrets",
       );
     });
     it("should delete an secrets_manager instance", () => {
@@ -136,7 +136,7 @@ describe("secrets_manager", () => {
       assert.deepEqual(
         craig.store.json.secrets_manager,
         [],
-        "it should create secrets_manager"
+        "it should create secrets_manager",
       );
     });
   });
@@ -155,9 +155,9 @@ describe("secrets_manager", () => {
               data: {
                 name: "frog",
               },
-            }
+            },
           ),
-          "it should be true"
+          "it should be true",
         );
       });
     });
@@ -171,9 +171,9 @@ describe("secrets_manager", () => {
               data: {
                 name: "test",
               },
-            }
+            },
           ),
-          "it should be false"
+          "it should be false",
         );
       });
     });
@@ -192,9 +192,9 @@ describe("secrets_manager", () => {
               data: {
                 name: "test",
               },
-            }
+            },
           ),
-          "it should be false"
+          "it should be false",
         );
       });
     });
@@ -203,27 +203,27 @@ describe("secrets_manager", () => {
         assert.deepEqual(
           craig.secrets_manager.plan.onRender({ plan: "standard" }, {}),
           "Standard",
-          "it should return correct plan"
+          "it should return correct plan",
         );
       });
       it("should return correct data on render when no plan in data", () => {
         assert.deepEqual(
           craig.secrets_manager.plan.onRender(
             { plan: "standard" },
-            { data: {} }
+            { data: {} },
           ),
           "Standard",
-          "it should return correct plan"
+          "it should return correct plan",
         );
       });
       it("should return correct data on render when no plan in data", () => {
         assert.deepEqual(
           craig.secrets_manager.plan.onRender(
             { plan: "standard" },
-            { data: { plan: "standard" } }
+            { data: { plan: "standard" } },
           ),
           "Standard",
-          "it should return correct plan"
+          "it should return correct plan",
         );
       });
     });
@@ -238,7 +238,7 @@ describe("secrets_manager", () => {
             innerFormProps: {
               arrayParentName: "default",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.secrets_manager,
@@ -258,7 +258,7 @@ describe("secrets_manager", () => {
               ],
             },
           ],
-          "it should create secrets_manager"
+          "it should create secrets_manager",
         );
       });
       it("should save an secrets_manager instance", () => {
@@ -272,16 +272,16 @@ describe("secrets_manager", () => {
             innerFormProps: {
               arrayParentName: "default",
             },
-          }
+          },
         );
         craig.secrets_manager.secrets_groups.save(
           { name: "frog" },
-          { data: { name: "group" }, arrayParentName: "default" }
+          { data: { name: "group" }, arrayParentName: "default" },
         );
         assert.deepEqual(
           craig.store.json.secrets_manager[0].secrets_groups[0].name,
           "frog",
-          "it should create secrets_manager"
+          "it should create secrets_manager",
         );
       });
       it("should delete an secrets_manager instance", () => {
@@ -295,16 +295,16 @@ describe("secrets_manager", () => {
             innerFormProps: {
               arrayParentName: "default",
             },
-          }
+          },
         );
         craig.secrets_manager.secrets_groups.delete(
           {},
-          { data: { name: "group" }, arrayParentName: "default" }
+          { data: { name: "group" }, arrayParentName: "default" },
         );
         assert.deepEqual(
           craig.store.json.secrets_manager[0].secrets_groups,
           [],
-          "it should create secrets_manager"
+          "it should create secrets_manager",
         );
       });
     });
@@ -317,7 +317,7 @@ describe("secrets_manager", () => {
             innerFormProps: {
               arrayParentName: "default",
             },
-          }
+          },
         );
         assert.isTrue(
           craig.secrets_manager.secrets_groups.name.invalid(
@@ -327,7 +327,7 @@ describe("secrets_manager", () => {
               data: {
                 name: "",
               },
-            }
+            },
           ) &&
             disableSave(
               "secrets_groups",
@@ -337,9 +337,9 @@ describe("secrets_manager", () => {
                 data: {
                   name: "",
                 },
-              }
+              },
             ),
-          "it should not be valid"
+          "it should not be valid",
         );
       });
     });
@@ -367,7 +367,7 @@ describe("secrets_manager", () => {
             innerFormProps: {
               arrayParentName: "default",
             },
-          }
+          },
         );
         craig.secrets_manager.certificates.create(
           {
@@ -392,7 +392,7 @@ describe("secrets_manager", () => {
             innerFormProps: {
               arrayParentName: "default",
             },
-          }
+          },
         );
         craig.secrets_manager.certificates.create(
           {
@@ -414,7 +414,7 @@ describe("secrets_manager", () => {
             innerFormProps: {
               arrayParentName: "default",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.store.json.secrets_manager,
@@ -505,7 +505,7 @@ describe("secrets_manager", () => {
               ],
             },
           ],
-          "it should create secrets_manager"
+          "it should create secrets_manager",
         );
       });
       it("should save an secrets_manager instance", () => {
@@ -519,16 +519,16 @@ describe("secrets_manager", () => {
             innerFormProps: {
               arrayParentName: "default",
             },
-          }
+          },
         );
         craig.secrets_manager.certificates.save(
           { name: "frog" },
-          { data: { name: "group" }, arrayParentName: "default" }
+          { data: { name: "group" }, arrayParentName: "default" },
         );
         assert.deepEqual(
           craig.store.json.secrets_manager[0].certificates[0].name,
           "frog",
-          "it should create secrets_manager"
+          "it should create secrets_manager",
         );
       });
       it("should delete an secrets_manager instance", () => {
@@ -542,16 +542,16 @@ describe("secrets_manager", () => {
             innerFormProps: {
               arrayParentName: "default",
             },
-          }
+          },
         );
         craig.secrets_manager.certificates.delete(
           {},
-          { data: { name: "group" }, arrayParentName: "default" }
+          { data: { name: "group" }, arrayParentName: "default" },
         );
         assert.deepEqual(
           craig.store.json.secrets_manager[0].certificates,
           [],
-          "it should create secrets_manager"
+          "it should create secrets_manager",
         );
       });
     });
@@ -560,43 +560,43 @@ describe("secrets_manager", () => {
         assert.deepEqual(
           craig.secrets_manager.certificates.type.onRender({ type: "root_ca" }),
           "Root CA",
-          "it should return correct text"
+          "it should return correct text",
         );
         assert.deepEqual(
           craig.secrets_manager.certificates.type.onInputChange({
             type: "Root CA",
           }),
           "root_ca",
-          "it should return correct text"
+          "it should return correct text",
         );
       });
       it("should correctly show invalid common name", () => {
         assert.isTrue(
           craig.secrets_manager.certificates.common_name.hideWhen({}),
-          "it should be hidden when no type and no common name"
+          "it should be hidden when no type and no common name",
         );
         assert.isTrue(
           craig.secrets_manager.certificates.common_name.hideWhen({
             type: "template",
           }),
-          "it should be hidden when template"
+          "it should be hidden when template",
         );
         assert.isFalse(
           craig.secrets_manager.certificates.common_name.invalid({}),
-          "it should not be invalid when no type"
+          "it should not be invalid when no type",
         );
         assert.isTrue(
           craig.secrets_manager.certificates.common_name.invalid({
             type: "root_ca",
           }),
-          "it should be invalid when type and no common name"
+          "it should be invalid when type and no common name",
         );
         assert.isFalse(
           craig.secrets_manager.certificates.common_name.invalid({
             type: "root_ca",
             common_name: "example.com",
           }),
-          "it should be invalid when type and common name"
+          "it should be invalid when type and common name",
         );
       });
       it("should return correct list of secrets groups", () => {
@@ -610,37 +610,37 @@ describe("secrets_manager", () => {
             innerFormProps: {
               arrayParentName: "default",
             },
-          }
+          },
         );
         assert.deepEqual(
           craig.secrets_manager.certificates.secrets_group.groups(
             {},
-            { arrayParentName: "default", craig: craig }
+            { arrayParentName: "default", craig: craig },
           ),
           ["group"],
-          "it should return list of groups"
+          "it should return list of groups",
         );
       });
       it("should handle country validity", () => {
         assert.isTrue(
           craig.secrets_manager.certificates.country.invalid({ country: "" }),
-          "it should not be valid"
+          "it should not be valid",
         );
         assert.isTrue(
           craig.secrets_manager.certificates.country.invalid({
             country: "aaaa",
           }),
-          "it should not be valid"
+          "it should not be valid",
         );
         assert.isTrue(
           craig.secrets_manager.certificates.country.invalid({
             country: "AAAAAA",
           }),
-          "it should not be valid"
+          "it should not be valid",
         );
         assert.isFalse(
           craig.secrets_manager.certificates.country.invalid({ country: "US" }),
-          "it should be valid"
+          "it should be valid",
         );
       });
       it("should return true if a description is not valid", () => {
@@ -648,11 +648,11 @@ describe("secrets_manager", () => {
           craig.secrets_manager.certificates.description.invalid({
             description: "@@@",
           }),
-          "it should not be valid"
+          "it should not be valid",
         );
         assert.isFalse(
           craig.secrets_manager.certificates.description.invalid({}),
-          "it should not be valid"
+          "it should not be valid",
         );
       });
       it("should return a list of groups for certificates", () => {
@@ -739,18 +739,18 @@ describe("secrets_manager", () => {
               data: {
                 name: "frog",
               },
-            }
+            },
           ),
           ["root-ca", "no-group"],
-          "it should return correct data"
+          "it should return correct data",
         );
 
         assert.isTrue(
           craig.secrets_manager.certificates.issuer.invalid(
             { type: "intermediate_ca" },
-            {}
+            {},
           ),
-          "it should not be valid"
+          "it should not be valid",
         );
       });
       it("should not hide server flag when type is template", () => {
@@ -758,7 +758,7 @@ describe("secrets_manager", () => {
           craig.secrets_manager.certificates.server_flag.hideWhen({
             type: "template",
           }),
-          "it should not be hidden"
+          "it should not be hidden",
         );
       });
       it("should return true when allowed domains is not a valid list", () => {
@@ -767,25 +767,25 @@ describe("secrets_manager", () => {
             allowed_domains: [],
             type: "template",
           }),
-          "it should not be valid when empty"
+          "it should not be valid when empty",
         );
         assert.isTrue(
           craig.secrets_manager.certificates.allowed_domains.invalid({
             allowed_domains: ["good-url.com", "b@durl"],
             type: "template",
           }),
-          "it should not be valid when list contains a bad url"
+          "it should not be valid when list contains a bad url",
         );
         assert.isFalse(
           craig.secrets_manager.certificates.allowed_domains.invalid({
             allowed_domains: ["good-url.com"],
             type: "template",
           }),
-          "it should be valid when list does not contain a bad url"
+          "it should be valid when list does not contain a bad url",
         );
         assert.isFalse(
           craig.secrets_manager.certificates.allowed_domains.invalid({}),
-          "it should be valid when not template"
+          "it should be valid when not template",
         );
       });
       it("should return a list of groups for certificate authority", () => {
@@ -872,18 +872,18 @@ describe("secrets_manager", () => {
               data: {
                 name: "frog",
               },
-            }
+            },
           ),
           ["inter-ca"],
-          "it should return correct data"
+          "it should return correct data",
         );
 
         assert.isTrue(
           craig.secrets_manager.certificates.certificate_authority.invalid(
             { type: "template" },
-            {}
+            {},
           ),
-          "it should not be valid"
+          "it should not be valid",
         );
       });
       it("should return a list of groups for certificate template", () => {
@@ -964,7 +964,7 @@ describe("secrets_manager", () => {
         craig.update();
         assert.isNull(
           craig.store.json.secrets_manager[0].certificates[0].description,
-          "it should be null"
+          "it should be null",
         );
         assert.deepEqual(
           craig.secrets_manager.certificates.certificate_template.groups(
@@ -977,10 +977,10 @@ describe("secrets_manager", () => {
               data: {
                 name: "frog",
               },
-            }
+            },
           ),
           ["inter-ca"],
-          "it should return correct data"
+          "it should return correct data",
         );
         assert.deepEqual(
           craig.secrets_manager.certificates.certificate_template.groups(
@@ -991,17 +991,17 @@ describe("secrets_manager", () => {
               data: {
                 name: "frog",
               },
-            }
+            },
           ),
           ["cert-sign-template"],
-          "it should return correct data"
+          "it should return correct data",
         );
         assert.isTrue(
           craig.secrets_manager.certificates.certificate_template.invalid(
             { type: "private" },
-            {}
+            {},
           ),
-          "it should not be valid"
+          "it should not be valid",
         );
       });
       it("should hide template when not private cert", () => {
@@ -1009,68 +1009,68 @@ describe("secrets_manager", () => {
           craig.secrets_manager.certificates.certificate_template.hideWhen({
             type: "intermediate_ca",
           }),
-          "it should be hidden"
+          "it should be hidden",
         );
       });
       describe("validation", () => {
         it("should test valid interval", () => {
           assert.isFalse(
             craig.secrets_manager.certificates.interval.invalid({}),
-            "it should be valid"
+            "it should be valid",
           );
           assert.isTrue(
             craig.secrets_manager.certificates.interval.invalid({
               type: "private",
             }),
-            "it should not be valid"
+            "it should not be valid",
           );
         });
         it("should test valid unit", () => {
           assert.isFalse(
             craig.secrets_manager.certificates.unit.invalid({}),
-            "it should be valid"
+            "it should be valid",
           );
           assert.isTrue(
             craig.secrets_manager.certificates.unit.invalid({
               type: "private",
             }),
-            "it should not be valid"
+            "it should not be valid",
           );
         });
         it("should test valid ttl", () => {
           assert.isFalse(
             craig.secrets_manager.certificates.ttl.invalid({}),
-            "it should be valid"
+            "it should be valid",
           );
           assert.isTrue(
             craig.secrets_manager.certificates.ttl.invalid({ type: "private" }),
-            "it should not be valid"
+            "it should not be valid",
           );
         });
         it("should test valid ext_key_usage", () => {
           assert.isFalse(
             craig.secrets_manager.certificates.ext_key_usage.invalid({}),
-            "it should be valid"
+            "it should be valid",
           );
           assert.isTrue(
             craig.secrets_manager.certificates.ext_key_usage.invalid({
               type: "template",
               ext_key_usage: [],
             }),
-            "it should not be valid"
+            "it should not be valid",
           );
         });
         it("should test valid key_usage", () => {
           assert.isFalse(
             craig.secrets_manager.certificates.key_usage.invalid({}),
-            "it should be valid"
+            "it should be valid",
           );
           assert.isTrue(
             craig.secrets_manager.certificates.key_usage.invalid({
               type: "template",
               key_usage: [],
             }),
-            "it should not be valid"
+            "it should not be valid",
           );
         });
         it("should hide certificate issuer when not an intermediate ca certificate", () => {
@@ -1078,7 +1078,7 @@ describe("secrets_manager", () => {
             craig.secrets_manager.certificates.issuer.hideWhen({
               type: "root_ca",
             }),
-            "it should be hidden"
+            "it should be hidden",
           );
         });
         it("should have correct validation for organization", () => {
@@ -1086,13 +1086,13 @@ describe("secrets_manager", () => {
             craig.secrets_manager.certificates.organization.invalid({
               type: "private",
             }),
-            "it should be valid"
+            "it should be valid",
           );
           assert.isTrue(
             craig.secrets_manager.certificates.organization.invalid({
               type: "root_ca",
             }),
-            "it should not be valid"
+            "it should not be valid",
           );
         });
         it("should have correct validation for country", () => {
@@ -1100,19 +1100,19 @@ describe("secrets_manager", () => {
             craig.secrets_manager.certificates.country.invalid({
               type: "private",
             }),
-            "it should be valid"
+            "it should be valid",
           );
           assert.isTrue(
             craig.secrets_manager.certificates.country.hideWhen({
               type: "private",
             }),
-            "it should not be hidden"
+            "it should not be hidden",
           );
           assert.isTrue(
             craig.secrets_manager.certificates.country.invalid({
               type: "root_ca",
             }),
-            "it should not be valid"
+            "it should not be valid",
           );
         });
         it("should have correct validation for max_ttl", () => {
@@ -1120,31 +1120,31 @@ describe("secrets_manager", () => {
             craig.secrets_manager.certificates.max_ttl.invalid({
               type: "private",
             }),
-            "it should be valid"
+            "it should be valid",
           );
           assert.isFalse(
             craig.secrets_manager.certificates.max_ttl.hideWhen({
               type: "template",
             }),
-            "it should be hidden"
+            "it should be hidden",
           );
           assert.isTrue(
             craig.secrets_manager.certificates.max_ttl.invalid({
               type: "root_ca",
             }),
-            "it should not be valid"
+            "it should not be valid",
           );
         });
         it("should hide description", () => {
           assert.isTrue(
             craig.secrets_manager.certificates.description.hideWhen({}),
-            "it should be hidden"
+            "it should be hidden",
           );
           assert.isTrue(
             craig.secrets_manager.certificates.description.hideWhen({
               type: "root_ca",
             }),
-            "it should be hidden"
+            "it should be hidden",
           );
         });
         it("should handle secrets group validation", () => {
@@ -1152,13 +1152,13 @@ describe("secrets_manager", () => {
             craig.secrets_manager.certificates.secrets_group.invalid({
               secrets_group: "",
             }),
-            "it should not be valid"
+            "it should not be valid",
           );
           assert.isFalse(
             craig.secrets_manager.certificates.secrets_group.invalid({
               type: "root_ca",
             }),
-            "it should not be valid"
+            "it should not be valid",
           );
         });
         it("should handle signing method validation", () => {
@@ -1166,19 +1166,19 @@ describe("secrets_manager", () => {
             craig.secrets_manager.certificates.signing_method.invalid({
               signing_method: "",
             }),
-            "it should be valid"
+            "it should be valid",
           );
           assert.isTrue(
             craig.secrets_manager.certificates.signing_method.invalid({
               type: "intermediate_ca",
             }),
-            "it should not be valid"
+            "it should not be valid",
           );
           assert.isFalse(
             craig.secrets_manager.certificates.signing_method.hideWhen({
               type: "intermediate_ca",
             }),
-            "it should not be valid"
+            "it should not be valid",
           );
         });
       });
@@ -1192,7 +1192,7 @@ describe("secrets_manager", () => {
             innerFormProps: {
               arrayParentName: "default",
             },
-          }
+          },
         );
         assert.isTrue(
           disableSave(
@@ -1204,9 +1204,9 @@ describe("secrets_manager", () => {
               data: {
                 name: "frog",
               },
-            }
+            },
           ),
-          "it should be disabled"
+          "it should be disabled",
         );
       });
     });

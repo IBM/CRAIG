@@ -15,9 +15,9 @@ describe("classic vlans", () => {
             name: "test",
           },
           craig: craig,
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
   it("should disable save for vlan with a name with more than twenty characters including the prefix", () => {
@@ -32,9 +32,9 @@ describe("classic vlans", () => {
             name: "test",
           },
           craig: craig,
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
   it("should be disabled when valid name and no datacenter", () => {
@@ -49,7 +49,7 @@ describe("classic vlans", () => {
           name: "egg",
         },
         craig: craig,
-      }
+      },
     );
     assert.isTrue(actualData, "it should be disabled");
   });
@@ -66,9 +66,9 @@ describe("classic vlans", () => {
             name: "test",
           },
           craig: craig,
-        }
+        },
       ),
-      "it should be disabled"
+      "it should be disabled",
     );
   });
 });

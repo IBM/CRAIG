@@ -52,7 +52,7 @@ function formatReservedIp(vpe, subnetName, useData) {
     "resource",
     "ibm_is_subnet_reserved_ip",
     ip.name,
-    ip.data
+    ip.data,
   );
 }
 
@@ -73,12 +73,12 @@ function formatReservedIp(vpe, subnetName, useData) {
 
 function ibmIsVirtualEndpointGateway(vpe, config) {
   let data = {
-    name: `${vpe.vpc} vpc ${vpe.service} vpe gateway`,
+    name: `${vpe.vpc} vpc ${vpe.service === "cluster" ? `${vpe.cluster_vpc} cluster` : vpe.service} vpe gateway`,
     data: {
       name: kebabName([
         vpe.vpc,
         vpe.instance ? vpe.instance : vpe.service,
-        "vpe-gw",
+        `${vpe.service === "cluster" ? "cluster-" : ""}vpe-gw`,
       ]),
       vpc: vpcRef(vpe.vpc, "id", true),
       resource_group: rgIdRef(vpe.resource_group, config),
@@ -88,7 +88,10 @@ function ibmIsVirtualEndpointGateway(vpe, config) {
     },
   };
   let target = {
-    crn: serviceToEndpointMap[vpe.service].replace(/\$REGION/g, varDotRegion),
+    crn:
+      vpe.service === "cluster"
+        ? `\${ibm_container_vpc_cluster.${snakeCase(vpe.cluster_vpc)}_vpc_${snakeCase(vpe.instance)}.crn}`
+        : serviceToEndpointMap[vpe.service].replace(/\$REGION/g, varDotRegion),
     resource_type: "provider_cloud_service",
   };
   if (vpe.service === "secrets-manager") {
@@ -99,7 +102,7 @@ function ibmIsVirtualEndpointGateway(vpe, config) {
   data.data.target.push(target);
   vpe.security_groups.forEach((group) => {
     data.data.security_groups.push(
-      `\${module.${snakeCase(vpe.vpc)}_vpc.${snakeCase(group)}_id}`
+      `\${module.${snakeCase(vpe.vpc)}_vpc.${snakeCase(group)}_id}`,
     );
   });
   return data;
@@ -117,7 +120,7 @@ function fortmatVpeGateway(vpe, config) {
     "resource",
     "ibm_is_virtual_endpoint_gateway",
     vpeData.name,
-    vpeData.data
+    vpeData.data,
   ).replace(/\[\n\s+\]/g, "[]");
 }
 
@@ -133,16 +136,16 @@ function fortmatVpeGateway(vpe, config) {
 
 function ibmIsVirtualEndpointGatewayIp(vpe, subnetName) {
   return {
-    name: `${vpe.vpc} vpc ${vpe.service} gw ${subnetName} gateway ip`,
+    name: `${vpe.vpc} vpc ${vpe.service === "cluster" ? `${vpe.cluster_vpc} cluster` : vpe.service} gw ${subnetName} gateway ip`,
     data: {
       gateway: tfRef(
         "ibm_is_virtual_endpoint_gateway",
-        `${vpe.vpc} vpc ${vpe.service} vpe gateway`
+        `${vpe.vpc} vpc ${vpe.service === "cluster" ? `${vpe.cluster_vpc} cluster` : vpe.service} vpe gateway`,
       ),
       reserved_ip: tfRef(
         "ibm_is_subnet_reserved_ip",
         `${vpe.vpc} vpc ${subnetName} subnet vpe ip ${vpe.name}`,
-        "reserved_ip"
+        "reserved_ip",
       ),
     },
   };
@@ -160,7 +163,7 @@ function fortmatVpeGatewayIp(vpe, subnetName) {
     "resource",
     "ibm_is_virtual_endpoint_gateway_ip",
     data.name,
-    data.data
+    data.data,
   );
 }
 
@@ -179,12 +182,12 @@ function vpeTf(config) {
       blockData += formatReservedIp(
         vpe,
         subnet,
-        getObjectFromArray(vpeVpcSubnets, "name", subnet).use_data
+        getObjectFromArray(vpeVpcSubnets, "name", subnet).use_data,
       );
     });
     blockData += fortmatVpeGateway(vpe, config);
     vpe.subnets.forEach(
-      (subnet) => (blockData += fortmatVpeGatewayIp(vpe, subnet))
+      (subnet) => (blockData += fortmatVpeGatewayIp(vpe, subnet)),
     );
     tf += tfBlock(vpe.vpc + " VPE resources", blockData) + "\n";
   });

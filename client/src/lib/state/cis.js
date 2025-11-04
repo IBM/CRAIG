@@ -60,7 +60,7 @@ function initCis(store) {
     },
     shouldDisableSave: shouldDisableComponentSave(
       ["name", "resource_group", "plan"],
-      "cis"
+      "cis",
     ),
     schema: {
       name: nameField("cis", { size: "small" }),
@@ -103,7 +103,7 @@ function initCis(store) {
         delete: function (config, stateData, componentProps) {
           let cis = new revision(config.store.json).child(
             "cis",
-            componentProps.arrayParentName
+            componentProps.arrayParentName,
           ).data;
           carve(cis.domains, "domain", componentProps.data.domain);
           config.update();
@@ -111,7 +111,7 @@ function initCis(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["domain", "type"],
           "cis",
-          "domains"
+          "domains",
         ),
         schema: {
           domain: {
@@ -136,7 +136,7 @@ function initCis(store) {
                     .set("a-z")
                     .oneOrMore()
                     .stringEnd()
-                    .done("g")
+                    .done("g"),
                 ) === null
               ) {
                 return true;
@@ -170,7 +170,7 @@ function initCis(store) {
             "cis",
             "dns_records",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         save: function (config, stateData, componentProps) {
@@ -179,7 +179,7 @@ function initCis(store) {
             "cis",
             "dns_records",
             stateData,
-            componentProps
+            componentProps,
           );
         },
         delete: function (config, stateData, componentProps) {
@@ -188,7 +188,7 @@ function initCis(store) {
         shouldDisableSave: shouldDisableComponentSave(
           ["name", "type", "domain", "content", "ttl"],
           "cis",
-          "dns_records"
+          "dns_records",
         ),
         schema: {
           name: nameField("cis_dns_record"),
@@ -209,9 +209,9 @@ function initCis(store) {
               return splat(
                 new revision(componentProps.craig.store.json).child(
                   "cis",
-                  componentProps.arrayParentName
+                  componentProps.arrayParentName,
                 ).data.domains,
-                "domain"
+                "domain",
               );
             },
           },

@@ -133,7 +133,7 @@ function schematicsRoutes(axios, controller) {
           let respData = response.data;
           if (respData.has_received_file !== true) {
             respData = Error(
-              `${workspaceName} has not received file. In uploadTar response data, has_received_file is false`
+              `${workspaceName} has not received file. In uploadTar response data, has_received_file is false`,
             );
           }
           controller.uploadResponse = response.data;

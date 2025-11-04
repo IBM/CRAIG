@@ -127,7 +127,7 @@ function optionsSave(config, stateData, componentProps) {
                   .literal("-zone-")
                   .digit()
                   .stringEnd()
-                  .done("g")
+                  .done("g"),
               ) !== null
             ) {
               newSubnetTier.networkAcl = subnet.network_acl;
@@ -177,7 +177,7 @@ function initOptions(store) {
     save: optionsSave,
     shouldDisableSave: shouldDisableComponentSave(
       ["prefix", "tags", "power_vs_zones", "region", "power_vs_ha_zone_1"],
-      "options"
+      "options",
     ),
     schema: {
       fs_cloud: {
@@ -213,7 +213,7 @@ function initOptions(store) {
             .concat(
               stateData.fs_cloud
                 ? []
-                : ["jp-tok", "jp-osa", "au-syd", "ca-tor", "br-sao"]
+                : ["jp-tok", "jp-osa", "au-syd", "ca-tor", "br-sao"],
             )
             .sort(azsort);
         },
@@ -332,7 +332,7 @@ function initOptions(store) {
         onStateChange: function (stateData) {
           stateData.power_vs_zones = [stateData.power_vs_ha_zone_1];
           stateData.power_vs_zones.push(
-            powerHaMap[stateData.power_vs_ha_zone_1]
+            powerHaMap[stateData.power_vs_ha_zone_1],
           );
         },
         invalid: function (stateData) {
@@ -433,7 +433,7 @@ function initOptions(store) {
         },
         invalidText: unconditionalInvalidText("One or more tags are invalid"),
         helperText: unconditionalInvalidText(
-          "Enter a comma separated list of tags"
+          "Enter a comma separated list of tags",
         ),
         onInputChange: onArrayInputChange("tags"),
         tooltip: {

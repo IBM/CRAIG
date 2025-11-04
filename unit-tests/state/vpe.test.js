@@ -37,7 +37,7 @@ describe("virtual_private_endpoints", () => {
       assert.deepEqual(
         state.store.json.virtual_private_endpoints,
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
   });
@@ -56,7 +56,7 @@ describe("virtual_private_endpoints", () => {
       assert.deepEqual(
         state.store.json.virtual_private_endpoints[0],
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
     it("should remove subnets from a vpc after deletion", () => {
@@ -76,7 +76,7 @@ describe("virtual_private_endpoints", () => {
           data: {
             name: "vpe-zone-1",
           },
-        }
+        },
       );
       state.vpcs.subnets.delete(
         {},
@@ -85,7 +85,7 @@ describe("virtual_private_endpoints", () => {
           data: {
             name: "vpe-zone-2",
           },
-        }
+        },
       );
       state.vpcs.subnets.delete(
         {},
@@ -94,12 +94,12 @@ describe("virtual_private_endpoints", () => {
           data: {
             name: "vpe-zone-3",
           },
-        }
+        },
       );
       assert.deepEqual(
         state.store.json.virtual_private_endpoints[0],
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
     it("should remove unfound resource groups", () => {
@@ -126,7 +126,7 @@ describe("virtual_private_endpoints", () => {
       assert.deepEqual(
         state.store.json.virtual_private_endpoints,
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
     it("should remove unfound security groups", () => {
@@ -153,7 +153,7 @@ describe("virtual_private_endpoints", () => {
       assert.deepEqual(
         state.store.json.virtual_private_endpoints,
         expectedData,
-        "it should have empty list for security groups"
+        "it should have empty list for security groups",
       );
     });
   });
@@ -162,7 +162,7 @@ describe("virtual_private_endpoints", () => {
       let state = newState();
       state.virtual_private_endpoints.delete(
         {},
-        { data: { name: "management-cos" } }
+        { data: { name: "management-cos" } },
       );
       assert.deepEqual(
         state.store.json.virtual_private_endpoints,
@@ -176,7 +176,7 @@ describe("virtual_private_endpoints", () => {
             subnets: ["vpe-zone-1", "vpe-zone-2", "vpe-zone-3"],
           },
         ],
-        "it should delete"
+        "it should delete",
       );
     });
   });
@@ -214,12 +214,12 @@ describe("virtual_private_endpoints", () => {
           data: {
             name: "management-cos",
           },
-        }
+        },
       );
       assert.deepEqual(
         state.store.json.virtual_private_endpoints,
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
   });
@@ -245,7 +245,7 @@ describe("virtual_private_endpoints", () => {
       assert.deepEqual(
         state.store.json.virtual_private_endpoints[2],
         expectedData,
-        "it should return data"
+        "it should return data",
       );
     });
   });
@@ -259,14 +259,14 @@ describe("virtual_private_endpoints", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.service.onRender({}),
           "",
-          "it should be empty string"
+          "it should be empty string",
         );
       });
       it("should return string onRender when service", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.service.onRender({ service: "icr" }),
           "Container Registry",
-          "it should be empty string"
+          "it should be empty string",
         );
       });
       it("should return string on input change", () => {
@@ -275,7 +275,7 @@ describe("virtual_private_endpoints", () => {
             service: "Container Registry",
           }),
           "icr",
-          "it should be empty string"
+          "it should be empty string",
         );
       });
     });
@@ -284,7 +284,7 @@ describe("virtual_private_endpoints", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.vpc.groups({}, { craig: craig }),
           ["management", "workload"],
-          "it should return vpc names"
+          "it should return vpc names",
         );
       });
       it("should reset security groups and subnets on state change", () => {
@@ -297,7 +297,25 @@ describe("virtual_private_endpoints", () => {
         assert.deepEqual(
           actualData,
           expectedData,
-          "it should return the correct data"
+          "it should return the correct data",
+        );
+      });
+      it("should reset security groups and subnets on state change", () => {
+        let expectedData = {
+          security_groups: [],
+          subnets: [],
+          service: "cluster",
+          instance: undefined,
+        };
+        let actualData = {
+          security_groups: [],
+          subnets: [],
+        };
+        craig.virtual_private_endpoints.vpc.onStateChange(actualData);
+        assert.deepEqual(
+          actualData,
+          expectedData,
+          "it should return the correct data",
         );
       });
     });
@@ -306,20 +324,20 @@ describe("virtual_private_endpoints", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.security_groups.groups(
             {},
-            { craig: craig }
+            { craig: craig },
           ),
           [],
-          "it should return empty array"
+          "it should return empty array",
         );
       });
       it("should return correct security groups when vpc", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.security_groups.groups(
             { vpc: "management" },
-            { craig: craig }
+            { craig: craig },
           ),
           ["management-vpe", "management-vsi"],
-          "it should return empty string"
+          "it should return empty string",
         );
       });
       it("should return the correct forceUpdateKey", () => {
@@ -328,7 +346,7 @@ describe("virtual_private_endpoints", () => {
             vpc: "management",
           }),
           "management",
-          "it should return correct key"
+          "it should return correct key",
         );
       });
     });
@@ -337,14 +355,14 @@ describe("virtual_private_endpoints", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.subnets.groups({}),
           [],
-          "it should return empty array"
+          "it should return empty array",
         );
       });
       it("should return correct groups when vpc", () => {
         assert.deepEqual(
           craig.virtual_private_endpoints.subnets.groups(
             { vpc: "management" },
-            { craig: craig }
+            { craig: craig },
           ),
           [
             "vsi-zone-1",
@@ -355,7 +373,7 @@ describe("virtual_private_endpoints", () => {
             "vpe-zone-2",
             "vpe-zone-3",
           ],
-          "it should return empty array"
+          "it should return empty array",
         );
       });
     });
@@ -363,7 +381,15 @@ describe("virtual_private_endpoints", () => {
       it("should be hidden when service is not secrets manager", () => {
         assert.isTrue(
           craig.virtual_private_endpoints.instance.hideWhen({ service: "icr" }),
-          "it should be hidden"
+          "it should be hidden",
+        );
+      });
+      it("should not be hidden when service is cluster", () => {
+        assert.isFalse(
+          craig.virtual_private_endpoints.instance.hideWhen({
+            service: "cluster",
+          }),
+          "it should be hidden",
         );
       });
       it("should be invalid if service is secrets manager and no instance", () => {
@@ -371,14 +397,178 @@ describe("virtual_private_endpoints", () => {
           craig.virtual_private_endpoints.instance.invalid({
             service: "secrets-manager",
           }),
-          "it should be hidden"
+          "it should not be valid",
+        );
+      });
+      it("should be invalid if service is cluster and no instance", () => {
+        assert.isTrue(
+          craig.virtual_private_endpoints.instance.invalid({
+            service: "cluster",
+          }),
+          "it should not be valid",
         );
       });
       it("should return groups", () => {
         assert.deepEqual(
-          craig.virtual_private_endpoints.instance.groups({}, { craig: craig }),
+          craig.virtual_private_endpoints.instance.groups(
+            { vpc: "workload" },
+            { craig: craig },
+          ),
           [],
-          "it should return groups"
+          "it should return groups",
+        );
+      });
+      it("should return an empty list when no vpc is selected and service is cluster", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.instance.groups(
+            { service: "cluster" },
+            { craig: craig },
+          ),
+          [],
+          "it should return groups",
+        );
+      });
+      it("should return an empty list when service is secrets-manager", () => {
+        assert.deepEqual(
+          craig.virtual_private_endpoints.instance.groups(
+            { service: "secrets-manager" },
+            { craig: craig },
+          ),
+          [],
+          "it should return groups",
+        );
+      });
+      it("should return a list of clusters not in the same vpc when a vpc is selected", () => {
+        craig.clusters.create({
+          logging: false,
+          monitoring: false,
+          cos: "cos",
+          entitlement: "cloud_pak",
+          kube_type: "openshift",
+          kube_version: "default",
+          flavor: "bx2.16x64",
+          name: "frog",
+          opaque_secrets: [],
+          kms: "kms",
+          resource_group: "workload-rg",
+          encryption_key: "roks-key",
+          private_endpoint: true,
+          subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+          update_all_workers: false,
+          vpc: "management",
+          worker_pools: [
+            {
+              cluster: "frog",
+              entitlement: "cloud_pak",
+              flavor: "bx2.16x64",
+              name: "logging-worker-pool",
+              subnets: [],
+              vpc: "management",
+              workers_per_subnet: 2,
+              resource_group: "workload-rg",
+            },
+          ],
+          workers_per_subnet: 2,
+        });
+        assert.deepEqual(
+          craig.virtual_private_endpoints.instance.groups(
+            { service: "cluster", vpc: "workload" },
+            { craig: craig },
+          ),
+          ["frog"],
+          "it should return groups",
+        );
+      });
+      it("should add cluster vpc to the vpe object when changing state", () => {
+        craig.clusters.create({
+          logging: false,
+          monitoring: false,
+          cos: "cos",
+          entitlement: "cloud_pak",
+          kube_type: "openshift",
+          kube_version: "default",
+          flavor: "bx2.16x64",
+          name: "frog",
+          opaque_secrets: [],
+          kms: "kms",
+          resource_group: "workload-rg",
+          encryption_key: "roks-key",
+          private_endpoint: true,
+          subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+          update_all_workers: false,
+          vpc: "management",
+          worker_pools: [
+            {
+              cluster: "frog",
+              entitlement: "cloud_pak",
+              flavor: "bx2.16x64",
+              name: "logging-worker-pool",
+              subnets: [],
+              vpc: "management",
+              workers_per_subnet: 2,
+              resource_group: "workload-rg",
+            },
+          ],
+          workers_per_subnet: 2,
+        });
+        let newVpe = { service: "cluster", vpc: "workload", instance: "frog" };
+
+        craig.virtual_private_endpoints.instance.onStateChange(newVpe, {
+          craig: craig,
+        });
+
+        assert.deepEqual(
+          newVpe.cluster_vpc,
+          "management",
+          "it should return groups",
+        );
+      });
+      it("should not update when not cluster update", () => {
+        craig.clusters.create({
+          logging: false,
+          monitoring: false,
+          cos: "cos",
+          entitlement: "cloud_pak",
+          kube_type: "openshift",
+          kube_version: "default",
+          flavor: "bx2.16x64",
+          name: "frog",
+          opaque_secrets: [],
+          kms: "kms",
+          resource_group: "workload-rg",
+          encryption_key: "roks-key",
+          private_endpoint: true,
+          subnets: ["vsi-zone-1", "vsi-zone-2", "vsi-zone-3"],
+          update_all_workers: false,
+          vpc: "management",
+          worker_pools: [
+            {
+              cluster: "frog",
+              entitlement: "cloud_pak",
+              flavor: "bx2.16x64",
+              name: "logging-worker-pool",
+              subnets: [],
+              vpc: "management",
+              workers_per_subnet: 2,
+              resource_group: "workload-rg",
+            },
+          ],
+          workers_per_subnet: 2,
+        });
+        let newVpe = {
+          service: "secrets-manager",
+          vpc: "workload",
+          instance: "frog",
+        };
+
+        craig.virtual_private_endpoints.instance.onStateChange(newVpe, {
+          craig: craig,
+        });
+
+        assert.deepEqual(
+          newVpe.cluster_vpc,
+          undefined,
+          "it should be undefine",
         );
       });
     });
