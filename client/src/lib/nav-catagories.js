@@ -207,8 +207,8 @@ const navCatagories = [
         path: "/form/agent",
         react_icon: "",
         toTf: agentTf,
-        jsonField: "agents"
-      }
+        jsonField: "agents",
+      },
     ],
   },
   {
