@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { state } = require("../client/src/lib");
+const { state } = require("../../client/src/lib");
 const {
   eachKey,
   isBoolean,
@@ -8,6 +8,7 @@ const {
   isArray,
   azsort,
 } = require("lazy-z");
+
 /**
  * initialize store
  * @returns {lazyZState} state store
