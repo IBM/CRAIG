@@ -44,7 +44,7 @@
     "express": "^5.0.0",
     "js-yaml": "^4.1.0",
     "json-to-tf": "^0.3.0",
-    "lazy-z": "1.12.1",
+    "lazy-z": "2.0.0",
     "next": "^16.0.0",
     "node": "^25.1.0",
     "regex-but-with-words": "^1.5.1",
