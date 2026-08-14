@@ -16,7 +16,7 @@
     "test": "next test --verbose a"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.10",
+    "@apollo/client": "^4.0.0",
     "@carbon/icons-react": "^11.69.0",
     "@carbon/react": "^1.93.0",
     "buffer": "^6.0.3",
