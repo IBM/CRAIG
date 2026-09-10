@@ -54,7 +54,7 @@
     "react-scripts": {
       "@svgr/webpack": "8.1.0",
       "typescript": "5.0.2",
-      "postcss": "8.4.38"
+      "postcss": "8.5.23"
     }
   },
   "peerDependencies": {
